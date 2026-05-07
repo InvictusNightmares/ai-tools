@@ -183,15 +183,12 @@ function getConfigPath({ platform = process.platform, env = process.env } = {}) 
 function getInstallPlan(platform) {
   if (platform === 'darwin') {
     return [
-      ['brew', ['install', 'anomalyco/tap/opencode']],
       ['npm', ['i', '-g', 'opencode-ai@latest']],
     ];
   }
 
   if (platform === 'win32') {
     return [
-      ['scoop', ['install', 'opencode']],
-      ['choco', ['install', 'opencode']],
       ['npm', ['i', '-g', 'opencode-ai@latest']],
     ];
   }

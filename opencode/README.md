@@ -211,19 +211,16 @@ $env:DASHSCOPE_API_KEY = "YOUR_API_KEY"
 如果机器上没有 `opencode`，脚本会尝试自动安装。
 
 ### macOS
-按顺序尝试：
+自动安装命令：
 
 ```bash
-brew install anomalyco/tap/opencode
 npm i -g opencode-ai@latest
 ```
 
 ### Windows
-按顺序尝试：
+自动安装命令：
 
 ```powershell
-scoop install opencode
-choco install opencode
 npm i -g opencode-ai@latest
 ```
 

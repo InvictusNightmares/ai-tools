@@ -31,7 +31,7 @@ function createExpectedProviderConfig({
 } = {}) {
   return {
     npm: '@ai-sdk/openai-compatible',
-    name: 'Model Studio Token Plan 团队版',
+    name: '启源阿里百炼Token Plan',
     options: {
       apiKey,
       baseURL,
@@ -351,25 +351,22 @@ test('getConfigPath throws for unsupported platforms', () => {
   assert.throws(() => getConfigPath({ platform: 'linux', env: {} }), /Unsupported platform: linux/);
 });
 
-test('getInstallPlan returns official macOS commands in order', () => {
+test('getInstallPlan returns npm-only macOS command', () => {
   assert.deepEqual(getInstallPlan('darwin'), [
-    ['brew', ['install', 'anomalyco/tap/opencode']],
     ['npm', ['i', '-g', 'opencode-ai@latest']],
   ]);
 });
 
-test('getInstallPlan returns Windows commands in order', () => {
+test('getInstallPlan returns npm-only Windows command', () => {
   assert.deepEqual(getInstallPlan('win32'), [
-    ['scoop', ['install', 'opencode']],
-    ['choco', ['install', 'opencode']],
     ['npm', ['i', '-g', 'opencode-ai@latest']],
   ]);
 });
 
-test('buildManualInstallHint joins commands with newlines', () => {
+test('buildManualInstallHint joins npm-only commands with newlines', () => {
   assert.equal(
     buildManualInstallHint('win32'),
-    'scoop install opencode\nchoco install opencode\nnpm i -g opencode-ai@latest'
+    'npm i -g opencode-ai@latest'
   );
 });
 
@@ -552,7 +549,7 @@ test('ensureOpencodeInstalled returns installed false/now false when opencode --
   ]);
 });
 
-test('ensureOpencodeInstalled tries install plan and returns installedNow true after success', () => {
+test('ensureOpencodeInstalled tries npm install plan and returns installedNow true after success', () => {
   const calls = [];
   let versionChecks = 0;
   const execFileSync = (command, args, options) => {
@@ -566,7 +563,7 @@ test('ensureOpencodeInstalled tries install plan and returns installedNow true a
       return '1.2.3';
     }
 
-    if (command === 'brew') {
+    if (command === 'npm') {
       return undefined;
     }
 
@@ -579,12 +576,12 @@ test('ensureOpencodeInstalled tries install plan and returns installedNow true a
   });
   assert.deepEqual(calls, [
     ['opencode', ['--version'], { stdio: 'pipe', encoding: 'utf8' }],
-    ['brew', ['install', 'anomalyco/tap/opencode'], { stdio: 'inherit' }],
+    ['npm', ['i', '-g', 'opencode-ai@latest'], { stdio: 'inherit' }],
     ['opencode', ['--version'], { stdio: 'pipe', encoding: 'utf8' }],
   ]);
 });
 
-test('ensureOpencodeInstalled throws manual hint after all install attempts fail', () => {
+test('ensureOpencodeInstalled throws npm-only manual hint after install attempt fails', () => {
   const execFileSync = (command) => {
     if (command === 'opencode') {
       throw Object.assign(new Error('missing'), { code: 'ENOENT' });
@@ -595,7 +592,7 @@ test('ensureOpencodeInstalled throws manual hint after all install attempts fail
 
   assert.throws(
     () => ensureOpencodeInstalled(execFileSync, 'win32'),
-    /Unable to install opencode automatically\. Try one of:\n[s\S]*scoop install opencode[\s\S]*choco install opencode[\s\S]*npm i -g opencode-ai@latest/
+    /Unable to install opencode automatically\. Try one of:\nnpm i -g opencode-ai@latest/
   );
 });
 
