@@ -261,13 +261,12 @@ function validateSelectedModel(providerConfig, model) {
 
 function ensureOpencodeInstalled(execFileSync, platform, env = process.env) {
   const opencodeCandidates = getOpencodeCandidates(platform, env);
-  const buildWindowsCommandLine = (command, args = []) =>
-    `""${command}"${args.length > 0 ? ` ${args.join(' ')}` : ''}"`;
   const runOpencodeVersion = (candidate) => {
     if (platform === 'win32') {
-      return execFileSync('cmd.exe', ['/d', '/s', '/c', buildWindowsCommandLine(candidate, ['--version'])], {
+      return execFileSync(candidate, ['--version'], {
         stdio: 'pipe',
         encoding: 'utf8',
+        shell: true,
       });
     }
 

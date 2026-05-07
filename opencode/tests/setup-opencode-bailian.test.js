@@ -602,7 +602,7 @@ test('ensureOpencodeInstalled uses cmd.exe wrapper for npm on Windows', () => {
   const execFileSync = (command, args, options) => {
     calls.push([command, args, options]);
 
-    if (command === 'cmd.exe' && args[3] === '""opencode.cmd" --version"') {
+    if (command === 'opencode.cmd') {
       versionChecks += 1;
       if (versionChecks === 1) {
         throw Object.assign(new Error('missing'), { code: 'ENOENT' });
@@ -622,9 +622,9 @@ test('ensureOpencodeInstalled uses cmd.exe wrapper for npm on Windows', () => {
     installedNow: true,
   });
   assert.deepEqual(calls, [
-    ['cmd.exe', ['/d', '/s', '/c', '""opencode.cmd" --version"'], { stdio: 'pipe', encoding: 'utf8' }],
+    ['opencode.cmd', ['--version'], { stdio: 'pipe', encoding: 'utf8', shell: true }],
     ['cmd.exe', ['/d', '/s', '/c', 'npm i -g opencode-ai@latest'], { stdio: 'inherit' }],
-    ['cmd.exe', ['/d', '/s', '/c', '""opencode.cmd" --version"'], { stdio: 'pipe', encoding: 'utf8' }],
+    ['opencode.cmd', ['--version'], { stdio: 'pipe', encoding: 'utf8', shell: true }],
   ]);
 });
 
@@ -635,7 +635,7 @@ test('ensureOpencodeInstalled falls back to APPDATA npm shim on Windows', () => 
   const execFileSync = (command, args, options) => {
     calls.push([command, args, options]);
 
-    if (command === 'cmd.exe' && args[3] === '""opencode.cmd" --version"') {
+    if (command === 'opencode.cmd') {
       pathVersionChecks += 1;
       throw Object.assign(new Error('missing'), { code: 'ENOENT' });
     }
@@ -644,7 +644,7 @@ test('ensureOpencodeInstalled falls back to APPDATA npm shim on Windows', () => 
       return undefined;
     }
 
-    if (command === 'cmd.exe' && args[3] === `""${appDataShim}" --version"`) {
+    if (command === appDataShim) {
       return '1.2.3';
     }
 
@@ -659,14 +659,14 @@ test('ensureOpencodeInstalled falls back to APPDATA npm shim on Windows', () => 
     }
   );
   assert.deepEqual(calls, [
-    ['cmd.exe', ['/d', '/s', '/c', '""opencode.cmd" --version"'], { stdio: 'pipe', encoding: 'utf8' }],
-    ['cmd.exe', ['/d', '/s', '/c', `""${appDataShim}" --version"`], { stdio: 'pipe', encoding: 'utf8' }],
+    ['opencode.cmd', ['--version'], { stdio: 'pipe', encoding: 'utf8', shell: true }],
+    [appDataShim, ['--version'], { stdio: 'pipe', encoding: 'utf8', shell: true }],
   ]);
 });
 
 test('ensureOpencodeInstalled throws npm-only manual hint after install attempt fails', () => {
   const execFileSync = (command, args) => {
-    if (command === 'cmd.exe' && args[3] === '""opencode.cmd" --version"') {
+    if (command === 'opencode.cmd') {
       throw Object.assign(new Error('missing'), { code: 'ENOENT' });
     }
 
@@ -681,7 +681,7 @@ test('ensureOpencodeInstalled throws npm-only manual hint after install attempt 
 
 test('ensureOpencodeInstalled shows Windows post-install hint when npm succeeds but binary is still not runnable', () => {
   const execFileSync = (command, args) => {
-    if (command === 'cmd.exe' && args[3] === '""opencode.cmd" --version"') {
+    if (command === 'opencode.cmd') {
       throw Object.assign(new Error('missing'), { code: 'ENOENT' });
     }
 
@@ -705,7 +705,7 @@ test('ensureOpencodeInstalled shows Windows post-install hint when npm succeeds 
 
 test('ensureOpencodeInstalled shows Windows EPERM hint when opencode.exe is locked during install cleanup', () => {
   const execFileSync = (command, args) => {
-    if (command === 'cmd.exe' && args[3] === '""opencode.cmd" --version"') {
+    if (command === 'opencode.cmd') {
       throw Object.assign(new Error('missing'), { code: 'ENOENT' });
     }
 
