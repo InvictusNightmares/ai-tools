@@ -164,17 +164,29 @@ function writeBackupFile(configPath) {
   return backupPath;
 }
 
+function getUserHomeDir(env = process.env) {
+  if (env.HOME) {
+    return env.HOME;
+  }
+
+  if (env.USERPROFILE) {
+    return env.USERPROFILE;
+  }
+
+  if (env.HOMEDRIVE && env.HOMEPATH) {
+    return `${env.HOMEDRIVE}${env.HOMEPATH}`;
+  }
+
+  return os.homedir();
+}
+
 function getConfigPath({ platform = process.platform, env = process.env } = {}) {
   if (platform === 'darwin') {
-    return path.join(env.HOME || os.homedir(), '.config', 'opencode', 'opencode.json');
+    return path.join(getUserHomeDir(env), '.config', 'opencode', 'opencode.json');
   }
 
   if (platform === 'win32') {
-    if (!env.APPDATA) {
-      throw new Error('APPDATA is required to resolve the OpenCode config path on Windows');
-    }
-
-    return path.join(env.APPDATA, 'opencode', 'opencode.json');
+    return path.join(getUserHomeDir(env), '.config', 'opencode', 'opencode.json');
   }
 
   throw new Error(`Unsupported platform: ${platform}`);
@@ -508,6 +520,7 @@ module.exports = {
   mergeProviderConfig,
   readConfigFile,
   writeBackupFile,
+  getUserHomeDir,
   getConfigPath,
   getInstallPlan,
   getOpencodeCommand,

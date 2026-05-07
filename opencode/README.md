@@ -224,6 +224,12 @@ npm i -g opencode-ai@latest
 npm i -g opencode-ai@latest
 ```
 
+全局配置文件会写到：
+
+```text
+C:\Users\<用户名>\.config\opencode\opencode.json
+```
+
 如果自动安装失败，脚本会打印手动安装建议。
 
 如果看到类似下面的输出：

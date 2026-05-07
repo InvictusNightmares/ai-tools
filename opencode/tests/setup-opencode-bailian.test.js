@@ -15,6 +15,7 @@ const {
   mergeProviderConfig,
   readConfigFile,
   writeBackupFile,
+  getUserHomeDir,
   getConfigPath,
   getInstallPlan,
   getOpencodeCommand,
@@ -327,6 +328,26 @@ test('readConfigFile missing file returns minimal default config', () => {
   });
 });
 
+test('getUserHomeDir resolves HOME first', () => {
+  assert.equal(
+    getUserHomeDir({
+      HOME: '/Users/demo',
+      USERPROFILE: 'C:\\Users\\demo',
+      HOMEDRIVE: 'C:',
+      HOMEPATH: '\\Users\\demo',
+    }),
+    '/Users/demo'
+  );
+});
+
+test('getUserHomeDir falls back to USERPROFILE then HOMEDRIVE/HOMEPATH', () => {
+  assert.equal(getUserHomeDir({ USERPROFILE: 'C:\\Users\\demo' }), 'C:\\Users\\demo');
+  assert.equal(
+    getUserHomeDir({ HOMEDRIVE: 'C:', HOMEPATH: '\\Users\\demo' }),
+    'C:\\Users\\demo'
+  );
+});
+
 test('getConfigPath resolves macOS config path', () => {
   const configPath = getConfigPath({
     platform: 'darwin',
@@ -339,14 +360,19 @@ test('getConfigPath resolves macOS config path', () => {
 test('getConfigPath resolves Windows config path', () => {
   const configPath = getConfigPath({
     platform: 'win32',
-    env: { APPDATA: 'C:\\Users\\demo\\AppData\\Roaming' },
+    env: { USERPROFILE: 'C:\\Users\\demo' },
   });
 
-  assert.equal(configPath, path.join('C:\\Users\\demo\\AppData\\Roaming', 'opencode', 'opencode.json'));
+  assert.equal(configPath, path.join('C:\\Users\\demo', '.config', 'opencode', 'opencode.json'));
 });
 
-test('getConfigPath throws when APPDATA is missing on Windows', () => {
-  assert.throws(() => getConfigPath({ platform: 'win32', env: {} }), /APPDATA/);
+test('getConfigPath resolves Windows config path from HOMEDRIVE/HOMEPATH', () => {
+  const configPath = getConfigPath({
+    platform: 'win32',
+    env: { HOMEDRIVE: 'C:', HOMEPATH: '\\Users\\demo' },
+  });
+
+  assert.equal(configPath, path.join('C:\\Users\\demo', '.config', 'opencode', 'opencode.json'));
 });
 
 test('getConfigPath throws for unsupported platforms', () => {
