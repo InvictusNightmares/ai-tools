@@ -63,7 +63,7 @@ function parseArgs(argv) {
 function buildProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
   return {
     npm: '@ai-sdk/openai-compatible',
-    name: 'Model Studio Token Plan 团队版',
+    name: '启源阿里百炼Token Plan',
     options: {
       apiKey,
       baseURL,
