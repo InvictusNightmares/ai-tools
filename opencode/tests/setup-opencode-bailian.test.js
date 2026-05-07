@@ -360,7 +360,7 @@ test('getInstallPlan returns npm-only macOS command', () => {
 
 test('getInstallPlan returns npm-only Windows command', () => {
   assert.deepEqual(getInstallPlan('win32'), [
-    ['npm.cmd', ['i', '-g', 'opencode-ai@latest']],
+    ['cmd.exe', ['/d', '/s', '/c', 'npm i -g opencode-ai@latest']],
   ]);
 });
 
@@ -372,7 +372,7 @@ test('getOpencodeCommand returns platform-specific command name', () => {
 test('buildManualInstallHint joins npm-only commands with newlines', () => {
   assert.equal(
     buildManualInstallHint('win32'),
-    'npm.cmd i -g opencode-ai@latest'
+    'npm i -g opencode-ai@latest'
   );
 });
 
@@ -587,7 +587,7 @@ test('ensureOpencodeInstalled tries npm install plan and returns installedNow tr
   ]);
 });
 
-test('ensureOpencodeInstalled uses cmd shims on Windows', () => {
+test('ensureOpencodeInstalled uses cmd.exe wrapper for npm on Windows', () => {
   const calls = [];
   let versionChecks = 0;
   const execFileSync = (command, args, options) => {
@@ -601,7 +601,7 @@ test('ensureOpencodeInstalled uses cmd shims on Windows', () => {
       return '1.2.3';
     }
 
-    if (command === 'npm.cmd') {
+    if (command === 'cmd.exe') {
       return undefined;
     }
 
@@ -614,7 +614,7 @@ test('ensureOpencodeInstalled uses cmd shims on Windows', () => {
   });
   assert.deepEqual(calls, [
     ['opencode.cmd', ['--version'], { stdio: 'pipe', encoding: 'utf8' }],
-    ['npm.cmd', ['i', '-g', 'opencode-ai@latest'], { stdio: 'inherit' }],
+    ['cmd.exe', ['/d', '/s', '/c', 'npm i -g opencode-ai@latest'], { stdio: 'inherit' }],
     ['opencode.cmd', ['--version'], { stdio: 'pipe', encoding: 'utf8' }],
   ]);
 });
@@ -630,7 +630,7 @@ test('ensureOpencodeInstalled throws npm-only manual hint after install attempt 
 
   assert.throws(
     () => ensureOpencodeInstalled(execFileSync, 'win32'),
-    /Unable to install opencode automatically\. Try one of:\nnpm\.cmd i -g opencode-ai@latest/
+    /Unable to install opencode automatically\. Try one of:\nnpm i -g opencode-ai@latest/
   );
 });
 

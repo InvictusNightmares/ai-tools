@@ -189,7 +189,7 @@ function getInstallPlan(platform) {
 
   if (platform === 'win32') {
     return [
-      ['npm.cmd', ['i', '-g', 'opencode-ai@latest']],
+      ['cmd.exe', ['/d', '/s', '/c', 'npm i -g opencode-ai@latest']],
     ];
   }
 
@@ -202,7 +202,13 @@ function getOpencodeCommand(platform) {
 
 function buildManualInstallHint(platform) {
   return getInstallPlan(platform)
-    .map(([command, args]) => `${command} ${args.join(' ')}`)
+    .map(([command, args]) => {
+      if (command === 'cmd.exe' && args[3]) {
+        return args[3];
+      }
+
+      return `${command} ${args.join(' ')}`;
+    })
     .join('\n');
 }
 
