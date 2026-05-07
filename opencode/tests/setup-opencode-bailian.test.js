@@ -18,6 +18,7 @@ const {
   getConfigPath,
   getInstallPlan,
   getOpencodeCommand,
+  getOpencodeCandidates,
   buildManualInstallHint,
   validateConfig,
   resolveRuntimeOptions,
@@ -369,6 +370,14 @@ test('getOpencodeCommand returns platform-specific command name', () => {
   assert.equal(getOpencodeCommand('win32'), 'opencode.cmd');
 });
 
+test('getOpencodeCandidates includes APPDATA shim on Windows', () => {
+  assert.deepEqual(getOpencodeCandidates('darwin', {}), ['opencode']);
+  assert.deepEqual(getOpencodeCandidates('win32', { APPDATA: 'C:\\Users\\demo\\AppData\\Roaming' }), [
+    'opencode.cmd',
+    path.join('C:\\Users\\demo\\AppData\\Roaming', 'npm', 'opencode.cmd'),
+  ]);
+});
+
 test('buildManualInstallHint joins npm-only commands with newlines', () => {
   assert.equal(
     buildManualInstallHint('win32'),
@@ -616,6 +625,42 @@ test('ensureOpencodeInstalled uses cmd.exe wrapper for npm on Windows', () => {
     ['opencode.cmd', ['--version'], { stdio: 'pipe', encoding: 'utf8' }],
     ['cmd.exe', ['/d', '/s', '/c', 'npm i -g opencode-ai@latest'], { stdio: 'inherit' }],
     ['opencode.cmd', ['--version'], { stdio: 'pipe', encoding: 'utf8' }],
+  ]);
+});
+
+test('ensureOpencodeInstalled falls back to APPDATA npm shim on Windows', () => {
+  const calls = [];
+  const appDataShim = path.join('C:\\Users\\demo\\AppData\\Roaming', 'npm', 'opencode.cmd');
+  let pathVersionChecks = 0;
+  const execFileSync = (command, args, options) => {
+    calls.push([command, args, options]);
+
+    if (command === 'opencode.cmd') {
+      pathVersionChecks += 1;
+      throw Object.assign(new Error('missing'), { code: 'ENOENT' });
+    }
+
+    if (command === 'cmd.exe') {
+      return undefined;
+    }
+
+    if (command === appDataShim) {
+      return '1.2.3';
+    }
+
+    throw new Error(`unexpected command: ${command}`);
+  };
+
+  assert.deepEqual(
+    ensureOpencodeInstalled(execFileSync, 'win32', { APPDATA: 'C:\\Users\\demo\\AppData\\Roaming' }),
+    {
+      installed: true,
+      installedNow: false,
+    }
+  );
+  assert.deepEqual(calls, [
+    ['opencode.cmd', ['--version'], { stdio: 'pipe', encoding: 'utf8' }],
+    [appDataShim, ['--version'], { stdio: 'pipe', encoding: 'utf8' }],
   ]);
 });
 

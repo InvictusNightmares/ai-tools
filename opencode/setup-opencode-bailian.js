@@ -200,6 +200,20 @@ function getOpencodeCommand(platform) {
   return platform === 'win32' ? 'opencode.cmd' : 'opencode';
 }
 
+function getOpencodeCandidates(platform, env = process.env) {
+  if (platform !== 'win32') {
+    return ['opencode'];
+  }
+
+  const candidates = ['opencode.cmd'];
+
+  if (env.APPDATA) {
+    candidates.push(path.join(env.APPDATA, 'npm', 'opencode.cmd'));
+  }
+
+  return candidates;
+}
+
 function buildManualInstallHint(platform) {
   return getInstallPlan(platform)
     .map(([command, args]) => {
@@ -245,43 +259,55 @@ function validateSelectedModel(providerConfig, model) {
   );
 }
 
-function ensureOpencodeInstalled(execFileSync, platform) {
-  const opencodeCommand = getOpencodeCommand(platform);
-
-  try {
-    execFileSync(opencodeCommand, ['--version'], { stdio: 'pipe', encoding: 'utf8' });
-    return { installed: true, installedNow: false };
-  } catch {
-    let lastInstallError;
-
-    for (const [command, args] of getInstallPlan(platform)) {
+function ensureOpencodeInstalled(execFileSync, platform, env = process.env) {
+  const opencodeCandidates = getOpencodeCandidates(platform, env);
+  const canRunOpencode = () => {
+    for (const candidate of opencodeCandidates) {
       try {
-        execFileSync(command, args, { stdio: 'inherit' });
-        execFileSync(opencodeCommand, ['--version'], { stdio: 'pipe', encoding: 'utf8' });
-        return { installed: true, installedNow: true };
-      } catch (error) {
-        lastInstallError = error;
+        execFileSync(candidate, ['--version'], { stdio: 'pipe', encoding: 'utf8' });
+        return true;
+      } catch {
       }
     }
 
-    if (
-      platform === 'win32' &&
-      lastInstallError &&
-      lastInstallError.code === 'EPERM' &&
-      lastInstallError.syscall === 'unlink' &&
-      /opencode\.exe/i.test(lastInstallError.path || '')
-    ) {
-      throw new Error(
-        'OpenCode may already be running and blocking the Windows install cleanup. Close OpenCode and try again.\n' +
-          'You can run: taskkill /F /IM opencode.exe\n' +
-          'Then retry: npm i -g opencode-ai@latest'
-      );
-    }
+    return false;
+  };
 
+  if (canRunOpencode()) {
+    return { installed: true, installedNow: false };
+  }
+
+  let lastInstallError;
+
+  for (const [command, args] of getInstallPlan(platform)) {
+    try {
+      execFileSync(command, args, { stdio: 'inherit' });
+
+      if (canRunOpencode()) {
+        return { installed: true, installedNow: true };
+      }
+    } catch (error) {
+      lastInstallError = error;
+    }
+  }
+
+  if (
+    platform === 'win32' &&
+    lastInstallError &&
+    lastInstallError.code === 'EPERM' &&
+    lastInstallError.syscall === 'unlink' &&
+    /opencode\.exe/i.test(lastInstallError.path || '')
+  ) {
     throw new Error(
-      'Unable to install opencode automatically. Try one of:\n' + buildManualInstallHint(platform)
+      'OpenCode may already be running and blocking the Windows install cleanup. Close OpenCode and try again.\n' +
+        'You can run: taskkill /F /IM opencode.exe\n' +
+        'Then retry: npm i -g opencode-ai@latest'
     );
   }
+
+  throw new Error(
+    'Unable to install opencode automatically. Try one of:\n' + buildManualInstallHint(platform)
+  );
 }
 
 async function resolveRuntimeOptions({
@@ -381,7 +407,7 @@ async function run({
     };
   }
 
-  const install = ensureOpencodeInstalled(execFileSync, platform);
+  const install = ensureOpencodeInstalled(execFileSync, platform, env);
 
   fsImpl.mkdirSync(configDir, { recursive: true });
   const existingConfig = readConfigFile(configPath);
@@ -425,6 +451,7 @@ module.exports = {
   getConfigPath,
   getInstallPlan,
   getOpencodeCommand,
+  getOpencodeCandidates,
   buildManualInstallHint,
   validateConfig,
   ensureOpencodeInstalled,
