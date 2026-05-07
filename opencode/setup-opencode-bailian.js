@@ -261,16 +261,53 @@ function validateSelectedModel(providerConfig, model) {
 
 function ensureOpencodeInstalled(execFileSync, platform, env = process.env) {
   const opencodeCandidates = getOpencodeCandidates(platform, env);
-  const canRunOpencode = () => {
+  const runOpencodeVersion = (candidate) => {
+    if (platform === 'win32') {
+      return execFileSync('cmd.exe', ['/d', '/s', '/c', `"${candidate}" --version`], {
+        stdio: 'pipe',
+        encoding: 'utf8',
+      });
+    }
+
+    return execFileSync(candidate, ['--version'], { stdio: 'pipe', encoding: 'utf8' });
+  };
+  const probeOpencode = () => {
+    const results = [];
+
     for (const candidate of opencodeCandidates) {
       try {
-        execFileSync(candidate, ['--version'], { stdio: 'pipe', encoding: 'utf8' });
-        return true;
-      } catch {
+        runOpencodeVersion(candidate);
+        results.push({ candidate, ok: true });
+      } catch (error) {
+        results.push({ candidate, ok: false, error });
       }
     }
 
-    return false;
+    return results;
+  };
+  const canRunOpencode = () => probeOpencode().some((result) => result.ok);
+  const formatProbeError = (error) => {
+    if (!error) {
+      return 'unknown error';
+    }
+
+    if (error.code && error.code !== 'UNKNOWN') {
+      return error.code;
+    }
+
+    return error.message || 'unknown error';
+  };
+  const getWindowsWhereOpencode = () => {
+    try {
+      const output = execFileSync('cmd.exe', ['/d', '/s', '/c', 'where opencode'], {
+        stdio: 'pipe',
+        encoding: 'utf8',
+      });
+
+      return output.trim() || 'resolved with empty output';
+    } catch {
+      return 'not found';
+    }
   };
 
   if (canRunOpencode()) {
@@ -294,13 +331,22 @@ function ensureOpencodeInstalled(execFileSync, platform, env = process.env) {
   }
 
   if (platform === 'win32' && installCommandSucceeded) {
+    const diagnostics = [
+      `where opencode: ${getWindowsWhereOpencode()}`,
+      ...probeOpencode().map((result) =>
+        `${result.candidate}: ${result.ok ? 'ok' : formatProbeError(result.error)}`
+      ),
+    ];
+
     throw new Error(
       'OpenCode install command completed, but the Windows binary is still not runnable.\n' +
         'This usually means opencode.exe is locked by a running process or security software.\n' +
         'You may also see npm warn cleanup / EPERM unlink messages for opencode.exe in this case.\n' +
         'Try: taskkill /F /IM opencode.exe\n' +
         'Then run: npm i -g opencode-ai@latest\n' +
-        'Finally check: "%APPDATA%\\npm\\opencode.cmd" --version'
+        'Finally check: "%APPDATA%\\npm\\opencode.cmd" --version\n' +
+        'Diagnostics:\n' +
+        diagnostics.map((line) => `- ${line}`).join('\n')
     );
   }
 
