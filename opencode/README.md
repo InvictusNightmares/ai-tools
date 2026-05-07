@@ -18,7 +18,8 @@
 
 - `setup-opencode-bailian.js`：主脚本
 - `run-setup.sh`：macOS/Linux shell 包装脚本
-- `run-setup.ps1`：Windows PowerShell 包装脚本
+- `run-setup.ps1`：Windows PowerShell 包装脚本，也支持 `irm ... | iex`
+- `run-setup.cmd`：Windows CMD 入口，也支持下载后直接运行
 
 ## 前提
 
@@ -64,10 +65,71 @@
 .\run-setup.ps1 --api-key YOUR_API_KEY
 ```
 
+### Windows CMD
+
+```cmd
+run-setup.cmd --api-key YOUR_API_KEY
+```
+
 ### 直接运行 Node 脚本
 
 ```bash
 node setup-opencode-bailian.js --api-key YOUR_API_KEY
+```
+
+## 远程一键执行
+
+### macOS / Linux
+
+```bash
+curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/opencode/run-setup.sh | bash -s -- --api-key YOUR_API_KEY
+```
+
+Dry run：
+
+```bash
+curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/opencode/run-setup.sh | bash -s -- --api-key YOUR_API_KEY --dry-run
+```
+
+### Windows PowerShell
+
+可直接传参数：
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/opencode/run-setup.ps1))) --api-key YOUR_API_KEY
+```
+
+例如指定模型：
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/opencode/run-setup.ps1))) --api-key YOUR_API_KEY --model glm-5
+```
+
+如果你更喜欢环境变量，也可以这样：
+
+```powershell
+$env:DASHSCOPE_API_KEY = "YOUR_API_KEY"
+irm https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/opencode/run-setup.ps1 | iex
+```
+
+### Windows CMD
+
+可直接传参数：
+
+```cmd
+curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/opencode/run-setup.cmd -o run-setup.cmd && run-setup.cmd --api-key YOUR_API_KEY && del run-setup.cmd
+```
+
+例如指定模型：
+
+```cmd
+curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/opencode/run-setup.cmd -o run-setup.cmd && run-setup.cmd --api-key YOUR_API_KEY --model glm-5 && del run-setup.cmd
+```
+
+如果你更喜欢环境变量，也可以这样：
+
+```cmd
+set DASHSCOPE_API_KEY=YOUR_API_KEY && curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/opencode/run-setup.cmd -o run-setup.cmd && run-setup.cmd && del run-setup.cmd
 ```
 
 ## Dry Run
