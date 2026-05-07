@@ -189,11 +189,15 @@ function getInstallPlan(platform) {
 
   if (platform === 'win32') {
     return [
-      ['npm', ['i', '-g', 'opencode-ai@latest']],
+      ['npm.cmd', ['i', '-g', 'opencode-ai@latest']],
     ];
   }
 
   throw new Error(`Unsupported platform: ${platform}`);
+}
+
+function getOpencodeCommand(platform) {
+  return platform === 'win32' ? 'opencode.cmd' : 'opencode';
 }
 
 function buildManualInstallHint(platform) {
@@ -236,14 +240,16 @@ function validateSelectedModel(providerConfig, model) {
 }
 
 function ensureOpencodeInstalled(execFileSync, platform) {
+  const opencodeCommand = getOpencodeCommand(platform);
+
   try {
-    execFileSync('opencode', ['--version'], { stdio: 'pipe', encoding: 'utf8' });
+    execFileSync(opencodeCommand, ['--version'], { stdio: 'pipe', encoding: 'utf8' });
     return { installed: true, installedNow: false };
   } catch {
     for (const [command, args] of getInstallPlan(platform)) {
       try {
         execFileSync(command, args, { stdio: 'inherit' });
-        execFileSync('opencode', ['--version'], { stdio: 'pipe', encoding: 'utf8' });
+        execFileSync(opencodeCommand, ['--version'], { stdio: 'pipe', encoding: 'utf8' });
         return { installed: true, installedNow: true };
       } catch {
       }
@@ -395,6 +401,7 @@ module.exports = {
   writeBackupFile,
   getConfigPath,
   getInstallPlan,
+  getOpencodeCommand,
   buildManualInstallHint,
   validateConfig,
   ensureOpencodeInstalled,

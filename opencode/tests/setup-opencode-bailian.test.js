@@ -17,6 +17,7 @@ const {
   writeBackupFile,
   getConfigPath,
   getInstallPlan,
+  getOpencodeCommand,
   buildManualInstallHint,
   validateConfig,
   resolveRuntimeOptions,
@@ -359,14 +360,19 @@ test('getInstallPlan returns npm-only macOS command', () => {
 
 test('getInstallPlan returns npm-only Windows command', () => {
   assert.deepEqual(getInstallPlan('win32'), [
-    ['npm', ['i', '-g', 'opencode-ai@latest']],
+    ['npm.cmd', ['i', '-g', 'opencode-ai@latest']],
   ]);
+});
+
+test('getOpencodeCommand returns platform-specific command name', () => {
+  assert.equal(getOpencodeCommand('darwin'), 'opencode');
+  assert.equal(getOpencodeCommand('win32'), 'opencode.cmd');
 });
 
 test('buildManualInstallHint joins npm-only commands with newlines', () => {
   assert.equal(
     buildManualInstallHint('win32'),
-    'npm i -g opencode-ai@latest'
+    'npm.cmd i -g opencode-ai@latest'
   );
 });
 
@@ -581,9 +587,41 @@ test('ensureOpencodeInstalled tries npm install plan and returns installedNow tr
   ]);
 });
 
+test('ensureOpencodeInstalled uses cmd shims on Windows', () => {
+  const calls = [];
+  let versionChecks = 0;
+  const execFileSync = (command, args, options) => {
+    calls.push([command, args, options]);
+
+    if (command === 'opencode.cmd') {
+      versionChecks += 1;
+      if (versionChecks === 1) {
+        throw Object.assign(new Error('missing'), { code: 'ENOENT' });
+      }
+      return '1.2.3';
+    }
+
+    if (command === 'npm.cmd') {
+      return undefined;
+    }
+
+    throw new Error(`unexpected command: ${command}`);
+  };
+
+  assert.deepEqual(ensureOpencodeInstalled(execFileSync, 'win32'), {
+    installed: true,
+    installedNow: true,
+  });
+  assert.deepEqual(calls, [
+    ['opencode.cmd', ['--version'], { stdio: 'pipe', encoding: 'utf8' }],
+    ['npm.cmd', ['i', '-g', 'opencode-ai@latest'], { stdio: 'inherit' }],
+    ['opencode.cmd', ['--version'], { stdio: 'pipe', encoding: 'utf8' }],
+  ]);
+});
+
 test('ensureOpencodeInstalled throws npm-only manual hint after install attempt fails', () => {
   const execFileSync = (command) => {
-    if (command === 'opencode') {
+    if (command === 'opencode.cmd') {
       throw Object.assign(new Error('missing'), { code: 'ENOENT' });
     }
 
@@ -592,7 +630,7 @@ test('ensureOpencodeInstalled throws npm-only manual hint after install attempt 
 
   assert.throws(
     () => ensureOpencodeInstalled(execFileSync, 'win32'),
-    /Unable to install opencode automatically\. Try one of:\nnpm i -g opencode-ai@latest/
+    /Unable to install opencode automatically\. Try one of:\nnpm\.cmd i -g opencode-ai@latest/
   );
 });
 
