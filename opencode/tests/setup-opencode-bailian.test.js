@@ -679,7 +679,27 @@ test('ensureOpencodeInstalled throws npm-only manual hint after install attempt 
   );
 });
 
-test('ensureOpencodeInstalled shows Windows EPERM hint when opencode.exe is locked', () => {
+test('ensureOpencodeInstalled shows Windows post-install hint when npm succeeds but binary is still not runnable', () => {
+  const execFileSync = (command) => {
+    if (command === 'opencode.cmd') {
+      throw Object.assign(new Error('missing'), { code: 'ENOENT' });
+    }
+
+    if (command === 'cmd.exe') {
+      return undefined;
+    }
+
+    throw new Error(`unexpected command: ${command}`);
+  };
+
+  assert.throws(
+    () => ensureOpencodeInstalled(execFileSync, 'win32'),
+    /OpenCode install command completed, but the Windows binary is still not runnable\.[\s\S]*taskkill \/F \/IM opencode\.exe[\s\S]*npm i -g opencode-ai@latest[\s\S]*%APPDATA%\\npm\\opencode\.cmd/
+  );
+});
+
+
+test('ensureOpencodeInstalled shows Windows EPERM hint when opencode.exe is locked during install cleanup', () => {
   const execFileSync = (command) => {
     if (command === 'opencode.cmd') {
       throw Object.assign(new Error('missing'), { code: 'ENOENT' });

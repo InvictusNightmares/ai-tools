@@ -278,10 +278,12 @@ function ensureOpencodeInstalled(execFileSync, platform, env = process.env) {
   }
 
   let lastInstallError;
+  let installCommandSucceeded = false;
 
   for (const [command, args] of getInstallPlan(platform)) {
     try {
       execFileSync(command, args, { stdio: 'inherit' });
+      installCommandSucceeded = true;
 
       if (canRunOpencode()) {
         return { installed: true, installedNow: true };
@@ -289,6 +291,17 @@ function ensureOpencodeInstalled(execFileSync, platform, env = process.env) {
     } catch (error) {
       lastInstallError = error;
     }
+  }
+
+  if (platform === 'win32' && installCommandSucceeded) {
+    throw new Error(
+      'OpenCode install command completed, but the Windows binary is still not runnable.\n' +
+        'This usually means opencode.exe is locked by a running process or security software.\n' +
+        'You may also see npm warn cleanup / EPERM unlink messages for opencode.exe in this case.\n' +
+        'Try: taskkill /F /IM opencode.exe\n' +
+        'Then run: npm i -g opencode-ai@latest\n' +
+        'Finally check: "%APPDATA%\\npm\\opencode.cmd" --version'
+    );
   }
 
   if (

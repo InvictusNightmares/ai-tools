@@ -226,6 +226,23 @@ npm i -g opencode-ai@latest
 
 如果自动安装失败，脚本会打印手动安装建议。
 
+如果看到类似下面的输出：
+
+```text
+npm warn cleanup Failed to remove some directories
+... EPERM ... unlink ... opencode.exe
+```
+
+通常不是包下载失败，而是旧的 `opencode.exe` 还被占用，导致 npm 清理临时目录时无法删掉 Windows 可执行文件。先关闭正在运行的 OpenCode，或者执行：
+
+```powershell
+taskkill /F /IM opencode.exe
+npm i -g opencode-ai@latest
+"$env:APPDATA\npm\opencode.cmd" --version
+```
+
+如果 `--version` 能输出版本号，说明安装已经恢复正常。
+
 ## 成功后会发生什么
 
 成功写入后，脚本会：
