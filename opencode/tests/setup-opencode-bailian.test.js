@@ -634,6 +634,25 @@ test('ensureOpencodeInstalled throws npm-only manual hint after install attempt 
   );
 });
 
+test('ensureOpencodeInstalled shows Windows EPERM hint when opencode.exe is locked', () => {
+  const execFileSync = (command) => {
+    if (command === 'opencode.cmd') {
+      throw Object.assign(new Error('missing'), { code: 'ENOENT' });
+    }
+
+    throw Object.assign(new Error('locked'), {
+      code: 'EPERM',
+      syscall: 'unlink',
+      path: 'C:\\Users\\demo\\AppData\\Roaming\\npm\\node_modules\\opencode-windows-x64\\bin\\opencode.exe',
+    });
+  };
+
+  assert.throws(
+    () => ensureOpencodeInstalled(execFileSync, 'win32'),
+    /OpenCode may already be running and blocking the Windows install cleanup\.[\s\S]*taskkill \/F \/IM opencode\.exe[\s\S]*npm i -g opencode-ai@latest/
+  );
+});
+
 test('run returns dry-run result without writing files', async () => {
   let mkdirCount = 0;
   let writeCount = 0;

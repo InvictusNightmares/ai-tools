@@ -252,13 +252,30 @@ function ensureOpencodeInstalled(execFileSync, platform) {
     execFileSync(opencodeCommand, ['--version'], { stdio: 'pipe', encoding: 'utf8' });
     return { installed: true, installedNow: false };
   } catch {
+    let lastInstallError;
+
     for (const [command, args] of getInstallPlan(platform)) {
       try {
         execFileSync(command, args, { stdio: 'inherit' });
         execFileSync(opencodeCommand, ['--version'], { stdio: 'pipe', encoding: 'utf8' });
         return { installed: true, installedNow: true };
-      } catch {
+      } catch (error) {
+        lastInstallError = error;
       }
+    }
+
+    if (
+      platform === 'win32' &&
+      lastInstallError &&
+      lastInstallError.code === 'EPERM' &&
+      lastInstallError.syscall === 'unlink' &&
+      /opencode\.exe/i.test(lastInstallError.path || '')
+    ) {
+      throw new Error(
+        'OpenCode may already be running and blocking the Windows install cleanup. Close OpenCode and try again.\n' +
+          'You can run: taskkill /F /IM opencode.exe\n' +
+          'Then retry: npm i -g opencode-ai@latest'
+      );
     }
 
     throw new Error(
