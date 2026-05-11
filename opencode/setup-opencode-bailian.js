@@ -159,17 +159,6 @@ function buildProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
           output: 16384,
         }
       },
-      'kimi-k2.5': {
-        name: 'Kimi K2.5',
-        modalities: {
-          input: ['text', 'image'],
-          output: ['text'],
-        },
-        limit: {
-          context: 131072,
-          output: 16384,
-        }
-      },
       'qwen3.6-flash': {
         name: 'Qwen3.6 Flash',
         modalities: {
