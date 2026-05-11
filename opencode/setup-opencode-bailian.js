@@ -131,6 +131,68 @@ function buildProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
           output: 16384,
         },
       },
+      'glm-5.1': {
+        name: 'GLM-5.1',
+        modalities: {
+          input: ['text'],
+          output: ['text'],
+        },
+        options: {
+          thinking: {
+            type: 'enabled',
+            budgetTokens: 8192,
+          },
+        },
+        limit: {
+          context: 202752,
+          output: 16384,
+        },
+      },
+      'kimi-2.6': {
+        name: 'Kimi 2.6',
+        modalities: {
+          input: ['text'],
+          output: ['text'],
+        },
+        options: {
+          thinking: {
+            type: 'enabled',
+            budgetTokens: 8192,
+          },
+        },
+        limit: {
+          context: 131072,
+          output: 16384,
+        },
+      },
+      'kimi-2.5': {
+        name: 'Kimi 2.5',
+        modalities: {
+          input: ['text'],
+          output: ['text'],
+        },
+        options: {
+          thinking: {
+            type: 'enabled',
+            budgetTokens: 8192,
+          },
+        },
+        limit: {
+          context: 131072,
+          output: 16384,
+        },
+      },
+      'qwen3.6-flash': {
+        name: 'Qwen3.6 Flash',
+        modalities: {
+          input: ['text', 'image'],
+          output: ['text'],
+        },
+        limit: {
+          context: 131072,
+          output: 16384,
+        },
+      },
     },
   };
 }
