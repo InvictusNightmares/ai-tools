@@ -84,7 +84,7 @@ function buildProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
         limit: {
           context: 1000000,
           output: 65536,
-        },
+        }
       },
       'MiniMax-M2.5': {
         name: 'MiniMax M2.5',
@@ -101,7 +101,7 @@ function buildProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
         limit: {
           context: 196608,
           output: 24576,
-        },
+        }
       },
       'glm-5': {
         name: 'GLM-5',
@@ -118,7 +118,7 @@ function buildProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
         limit: {
           context: 202752,
           output: 16384,
-        },
+        }
       },
       'deepseek-v3.2': {
         name: 'DeepSeek V3.2',
@@ -129,7 +129,7 @@ function buildProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
         limit: {
           context: 131072,
           output: 16384,
-        },
+        }
       },
       'glm-5.1': {
         name: 'GLM-5.1',
@@ -146,41 +146,29 @@ function buildProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
         limit: {
           context: 202752,
           output: 16384,
-        },
+        }
       },
       'kimi-2.6': {
         name: 'Kimi 2.6',
-        modalities: {
-          input: ['text'],
+      modalities: {
+          input: ['text', 'image'],
           output: ['text'],
-        },
-        options: {
-          thinking: {
-            type: 'enabled',
-            budgetTokens: 8192,
-          },
         },
         limit: {
           context: 131072,
           output: 16384,
-        },
+        }
       },
       'kimi-2.5': {
         name: 'Kimi 2.5',
         modalities: {
-          input: ['text'],
+          input: ['text', 'image'],
           output: ['text'],
-        },
-        options: {
-          thinking: {
-            type: 'enabled',
-            budgetTokens: 8192,
-          },
         },
         limit: {
           context: 131072,
           output: 16384,
-        },
+        }
       },
       'qwen3.6-flash': {
         name: 'Qwen3.6 Flash',
@@ -191,9 +179,9 @@ function buildProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
         limit: {
           context: 131072,
           output: 16384,
-        },
-      },
-    },
+        }
+      }
+    }
   };
 }
 
