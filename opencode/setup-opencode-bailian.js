@@ -148,9 +148,9 @@ function buildProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
           output: 16384,
         }
       },
-      'kimi-2.6': {
-        name: 'Kimi 2.6',
-      modalities: {
+      'kimi-k2.6': {
+        name: 'Kimi K2.6',
+        modalities: {
           input: ['text', 'image'],
           output: ['text'],
         },
@@ -159,8 +159,8 @@ function buildProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
           output: 16384,
         }
       },
-      'kimi-2.5': {
-        name: 'Kimi 2.5',
+      'kimi-k2.5': {
+        name: 'Kimi K2.5',
         modalities: {
           input: ['text', 'image'],
           output: ['text'],
