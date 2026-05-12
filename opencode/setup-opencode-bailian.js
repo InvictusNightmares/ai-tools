@@ -131,6 +131,28 @@ function buildProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
           output: 16384,
         }
       },
+      'deepseek-v4-pro': {
+        name: 'DeepSeek V4 Pro',
+        modalities: {
+          input: ['text'],
+          output: ['text'],
+        },
+        limit: {
+          context: 131072,
+          output: 16384,
+        }
+      },
+      'deepseek-v4-flash': {
+        name: 'DeepSeek V4 Flash',
+        modalities: {
+          input: ['text'],
+          output: ['text'],
+        },
+        limit: {
+          context: 131072,
+          output: 16384,
+        }
+      },
       'glm-5.1': {
         name: 'GLM-5.1',
         modalities: {
