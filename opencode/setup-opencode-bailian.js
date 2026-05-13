@@ -242,7 +242,7 @@ function buildCLIProxyProviderConfig({ apiKey, baseURL = CLIPROXY_DEFAULT_BASE_U
       'gpt-5.5': {
         name: 'GPT-5.5',
         modalities: {
-          input: ['text'],
+          input: ['text', 'image'],
           output: ['text'],
         },
         options: {
@@ -259,7 +259,7 @@ function buildCLIProxyProviderConfig({ apiKey, baseURL = CLIPROXY_DEFAULT_BASE_U
       'gpt-5.4': {
         name: 'GPT-5.4',
         modalities: {
-          input: ['text'],
+          input: ['text', 'image'],
           output: ['text'],
         },
         options: {
@@ -276,7 +276,7 @@ function buildCLIProxyProviderConfig({ apiKey, baseURL = CLIPROXY_DEFAULT_BASE_U
       'gpt-5.4-mini': {
         name: 'GPT-5.4 Mini',
         modalities: {
-          input: ['text'],
+          input: ['text', 'image'],
           output: ['text'],
         },
         options: {
@@ -293,7 +293,7 @@ function buildCLIProxyProviderConfig({ apiKey, baseURL = CLIPROXY_DEFAULT_BASE_U
       'gpt-5.3-codex': {
         name: 'GPT-5.3 Codex',
         modalities: {
-          input: ['text'],
+          input: ['text', 'image'],
           output: ['text'],
         },
         options: {
@@ -310,7 +310,7 @@ function buildCLIProxyProviderConfig({ apiKey, baseURL = CLIPROXY_DEFAULT_BASE_U
       'gpt-5.2': {
         name: 'GPT-5.2',
         modalities: {
-          input: ['text'],
+          input: ['text', 'image'],
           output: ['text'],
         },
         options: {
