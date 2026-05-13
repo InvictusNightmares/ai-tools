@@ -153,6 +153,19 @@ test('CLIProxy provider includes gpt-image-2', () => {
   });
 });
 
+test('Qwen, Kimi, and GPT chat models support image input', () => {
+  const bailianProvider = createBailianProviderConfig();
+  const cliproxyProvider = createCLIProxyProviderConfig();
+
+  for (const model of ['qwen3.6-plus', 'qwen3.6-flash', 'kimi-k2.6']) {
+    assert.deepEqual(bailianProvider.models[model].modalities.input, ['text', 'image']);
+  }
+
+  for (const model of ['gpt-5.5', 'gpt-5.4', 'gpt-5.4-mini', 'gpt-5.3-codex', 'gpt-5.2']) {
+    assert.deepEqual(cliproxyProvider.models[model].modalities.input, ['text', 'image']);
+  }
+});
+
 test('resolveRuntimeOptions supports both env groups and picks CLIProxyAPI as default when present', async () => {
   const runtime = await resolveRuntimeOptions({
     args: {
