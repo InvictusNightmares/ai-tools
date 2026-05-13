@@ -137,6 +137,22 @@ test('validateConfig validates only the configured providers', () => {
   );
 });
 
+test('CLIProxy provider includes gpt-image-2', () => {
+  const provider = createCLIProxyProviderConfig();
+
+  assert.deepEqual(provider.models['gpt-image-2'], {
+    name: 'GPT Image 2',
+    modalities: {
+      input: ['text', 'image'],
+      output: ['image'],
+    },
+    limit: {
+      context: 128000,
+      output: 8192,
+    },
+  });
+});
+
 test('resolveRuntimeOptions supports both env groups and picks CLIProxyAPI as default when present', async () => {
   const runtime = await resolveRuntimeOptions({
     args: {

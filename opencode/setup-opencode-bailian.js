@@ -307,23 +307,6 @@ function buildCLIProxyProviderConfig({ apiKey, baseURL = CLIPROXY_DEFAULT_BASE_U
           output: 32768,
         },
       },
-      'gpt-5.3-codex-spark': {
-        name: 'GPT-5.3 Codex Spark',
-        modalities: {
-          input: ['text'],
-          output: ['text'],
-        },
-        options: {
-          thinking: {
-            type: 'enabled',
-            budgetTokens: 8192,
-          },
-        },
-        limit: {
-          context: 400000,
-          output: 32768,
-        },
-      },
       'gpt-5.2': {
         name: 'GPT-5.2',
         modalities: {
@@ -339,6 +322,17 @@ function buildCLIProxyProviderConfig({ apiKey, baseURL = CLIPROXY_DEFAULT_BASE_U
         limit: {
           context: 300000,
           output: 16384,
+        },
+      },
+      'gpt-image-2': {
+        name: 'GPT Image 2',
+        modalities: {
+          input: ['text', 'image'],
+          output: ['image'],
+        },
+        limit: {
+          context: 128000,
+          output: 8192,
         },
       },
       'codex-auto-review': {
