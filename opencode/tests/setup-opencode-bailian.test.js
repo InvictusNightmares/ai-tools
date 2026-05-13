@@ -137,20 +137,10 @@ test('validateConfig validates only the configured providers', () => {
   );
 });
 
-test('CLIProxy provider includes gpt-image-2', () => {
+test('CLIProxy provider excludes image-only models unsupported by OpenCode', () => {
   const provider = createCLIProxyProviderConfig();
 
-  assert.deepEqual(provider.models['gpt-image-2'], {
-    name: 'GPT Image 2',
-    modalities: {
-      input: ['text', 'image'],
-      output: ['image'],
-    },
-    limit: {
-      context: 128000,
-      output: 8192,
-    },
-  });
+  assert.equal(provider.models['gpt-image-2'], undefined);
 });
 
 test('Qwen, Kimi, and GPT chat models support image input', () => {

@@ -324,17 +324,6 @@ function buildCLIProxyProviderConfig({ apiKey, baseURL = CLIPROXY_DEFAULT_BASE_U
           output: 16384,
         },
       },
-      'gpt-image-2': {
-        name: 'GPT Image 2',
-        modalities: {
-          input: ['text', 'image'],
-          output: ['image'],
-        },
-        limit: {
-          context: 128000,
-          output: 8192,
-        },
-      },
       'codex-auto-review': {
         name: 'Codex Auto Review',
         modalities: {
