@@ -1,1 +1,6 @@
 .DS_Store
+outlook_accounts.csv
+protonmail_accounts.csv
+debug_protonmail/
+__pycache__/
+*.pyc
