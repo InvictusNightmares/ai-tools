@@ -5,15 +5,25 @@ const os = require('node:os');
 const path = require('node:path');
 const readline = require('node:readline/promises');
 
-const PROVIDER_KEY = 'bailian-token-plan';
+const BAILIAN_PROVIDER_KEY = 'bailian-token-plan';
+const CLIPROXY_PROVIDER_KEY = 'cli-proxy-api';
+
+const PROVIDER_KEY = BAILIAN_PROVIDER_KEY;
 const DEFAULT_BASE_URL = 'https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1';
 const DEFAULT_MODEL = 'qwen3.6-plus';
+
+const CLIPROXY_DEFAULT_BASE_URL = 'http://8.216.44.189:8317/v1';
+const CLIPROXY_DEFAULT_MODEL = 'gpt-5.5';
 
 function parseArgs(argv) {
   const options = {
     apiKey: undefined,
     baseURL: undefined,
     model: undefined,
+    cliproxyApiKey: undefined,
+    cliproxyBaseURL: undefined,
+    cliproxyModel: undefined,
+    defaultProvider: undefined,
     dryRun: false,
     force: false,
   };
@@ -31,14 +41,22 @@ function parseArgs(argv) {
       continue;
     }
 
-    if (arg === '--api-key' || arg === '--base-url' || arg === '--model') {
+    if (
+      arg === '--ali-api-key' ||
+      arg === '--base-url' ||
+      arg === '--model' ||
+      arg === '--codex-api-key' ||
+      arg === '--cliproxy-base-url' ||
+      arg === '--cliproxy-model' ||
+      arg === '--default-provider'
+    ) {
       const value = argv[index + 1];
 
       if (!value || value.startsWith('--')) {
         throw new Error(`Missing value for ${arg}`);
       }
 
-      if (arg === '--api-key') {
+      if (arg === '--ali-api-key') {
         options.apiKey = value;
       }
 
@@ -48,6 +66,22 @@ function parseArgs(argv) {
 
       if (arg === '--model') {
         options.model = value;
+      }
+
+      if (arg === '--codex-api-key') {
+        options.cliproxyApiKey = value;
+      }
+
+      if (arg === '--cliproxy-base-url') {
+        options.cliproxyBaseURL = value;
+      }
+
+      if (arg === '--cliproxy-model') {
+        options.cliproxyModel = value;
+      }
+
+      if (arg === '--default-provider') {
+        options.defaultProvider = value;
       }
 
       index += 1;
@@ -60,7 +94,7 @@ function parseArgs(argv) {
   return options;
 }
 
-function buildProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
+function buildBailianProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
   return {
     npm: '@ai-sdk/openai-compatible',
     name: '启源阿里百炼Token Plan',
@@ -84,7 +118,7 @@ function buildProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
         limit: {
           context: 1000000,
           output: 65536,
-        }
+        },
       },
       'MiniMax-M2.5': {
         name: 'MiniMax M2.5',
@@ -101,7 +135,7 @@ function buildProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
         limit: {
           context: 196608,
           output: 24576,
-        }
+        },
       },
       'glm-5': {
         name: 'GLM-5',
@@ -118,7 +152,7 @@ function buildProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
         limit: {
           context: 202752,
           output: 16384,
-        }
+        },
       },
       'deepseek-v3.2': {
         name: 'DeepSeek V3.2',
@@ -129,7 +163,7 @@ function buildProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
         limit: {
           context: 131072,
           output: 16384,
-        }
+        },
       },
       'deepseek-v4-pro': {
         name: 'DeepSeek V4 Pro',
@@ -140,7 +174,7 @@ function buildProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
         limit: {
           context: 131072,
           output: 16384,
-        }
+        },
       },
       'deepseek-v4-flash': {
         name: 'DeepSeek V4 Flash',
@@ -151,7 +185,7 @@ function buildProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
         limit: {
           context: 131072,
           output: 16384,
-        }
+        },
       },
       'glm-5.1': {
         name: 'GLM-5.1',
@@ -168,7 +202,7 @@ function buildProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
         limit: {
           context: 202752,
           output: 16384,
-        }
+        },
       },
       'kimi-k2.6': {
         name: 'Kimi K2.6',
@@ -179,7 +213,7 @@ function buildProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
         limit: {
           context: 131072,
           output: 16384,
-        }
+        },
       },
       'qwen3.6-flash': {
         name: 'Qwen3.6 Flash',
@@ -190,10 +224,140 @@ function buildProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
         limit: {
           context: 131072,
           output: 16384,
-        }
-      }
-    }
+        },
+      },
+    },
   };
+}
+
+function buildCLIProxyProviderConfig({ apiKey, baseURL = CLIPROXY_DEFAULT_BASE_URL }) {
+  return {
+    npm: '@ai-sdk/openai-compatible',
+    name: '启源Codex',
+    options: {
+      apiKey,
+      baseURL,
+    },
+    models: {
+      'gpt-5.5': {
+        name: 'GPT-5.5',
+        modalities: {
+          input: ['text'],
+          output: ['text'],
+        },
+        options: {
+          thinking: {
+            type: 'enabled',
+            budgetTokens: 8192,
+          },
+        },
+        limit: {
+          context: 400000,
+          output: 65536,
+        },
+      },
+      'gpt-5.4': {
+        name: 'GPT-5.4',
+        modalities: {
+          input: ['text'],
+          output: ['text'],
+        },
+        options: {
+          thinking: {
+            type: 'enabled',
+            budgetTokens: 8192,
+          },
+        },
+        limit: {
+          context: 400000,
+          output: 65536,
+        },
+      },
+      'gpt-5.4-mini': {
+        name: 'GPT-5.4 Mini',
+        modalities: {
+          input: ['text'],
+          output: ['text'],
+        },
+        options: {
+          thinking: {
+            type: 'enabled',
+            budgetTokens: 8192,
+          },
+        },
+        limit: {
+          context: 200000,
+          output: 16384,
+        },
+      },
+      'gpt-5.3-codex': {
+        name: 'GPT-5.3 Codex',
+        modalities: {
+          input: ['text'],
+          output: ['text'],
+        },
+        options: {
+          thinking: {
+            type: 'enabled',
+            budgetTokens: 8192,
+          },
+        },
+        limit: {
+          context: 400000,
+          output: 32768,
+        },
+      },
+      'gpt-5.3-codex-spark': {
+        name: 'GPT-5.3 Codex Spark',
+        modalities: {
+          input: ['text'],
+          output: ['text'],
+        },
+        options: {
+          thinking: {
+            type: 'enabled',
+            budgetTokens: 8192,
+          },
+        },
+        limit: {
+          context: 400000,
+          output: 32768,
+        },
+      },
+      'gpt-5.2': {
+        name: 'GPT-5.2',
+        modalities: {
+          input: ['text'],
+          output: ['text'],
+        },
+        options: {
+          thinking: {
+            type: 'enabled',
+            budgetTokens: 8192,
+          },
+        },
+        limit: {
+          context: 300000,
+          output: 16384,
+        },
+      },
+      'codex-auto-review': {
+        name: 'Codex Auto Review',
+        modalities: {
+          input: ['text'],
+          output: ['text'],
+        },
+        limit: {
+          context: 200000,
+          output: 16384,
+        },
+      },
+    },
+  };
+}
+
+function buildProviderConfig({ apiKey, baseURL = DEFAULT_BASE_URL }) {
+  return buildBailianProviderConfig({ apiKey, baseURL });
 }
 
 function readConfigFile(configPath) {
@@ -255,15 +419,11 @@ function getConfigPath({ platform = process.platform, env = process.env } = {}) 
 
 function getInstallPlan(platform) {
   if (platform === 'darwin') {
-    return [
-      ['npm', ['i', '-g', 'opencode-ai@latest']],
-    ];
+    return [['npm', ['i', '-g', 'opencode-ai@latest']]];
   }
 
   if (platform === 'win32') {
-    return [
-      ['cmd.exe', ['/d', '/s', '/c', 'npm i -g opencode-ai@latest']],
-    ];
+    return [['cmd.exe', ['/d', '/s', '/c', 'npm i -g opencode-ai@latest']]];
   }
 
   throw new Error(`Unsupported platform: ${platform}`);
@@ -299,24 +459,49 @@ function buildManualInstallHint(platform) {
     .join('\n');
 }
 
-function validateConfig(config) {
+function validateProviderBlock(providerKey, provider, defaultModel) {
   const issues = [];
-  const provider = config.provider && config.provider[PROVIDER_KEY];
 
   if (!provider) {
-    issues.push(`Missing provider.${PROVIDER_KEY}`);
+    issues.push(`Missing provider.${providerKey}`);
+    return issues;
   }
 
   if (!provider?.options?.baseURL) {
-    issues.push('Missing provider options.baseURL');
+    issues.push(`Missing ${providerKey} options.baseURL`);
   }
 
   if (!provider?.options?.apiKey) {
-    issues.push('Missing provider options.apiKey');
+    issues.push(`Missing ${providerKey} options.apiKey`);
   }
 
-  if (!provider?.models?.[DEFAULT_MODEL]) {
-    issues.push(`Missing default model ${DEFAULT_MODEL}`);
+  if (!provider?.models?.[defaultModel]) {
+    issues.push(`Missing default model ${defaultModel} for ${providerKey}`);
+  }
+
+  return issues;
+}
+
+function validateConfig(config, configuredProviders) {
+  const providerMap = config.provider || {};
+  const providers =
+    configuredProviders && configuredProviders.length > 0
+      ? configuredProviders
+      : [
+          { key: BAILIAN_PROVIDER_KEY, defaultModel: DEFAULT_MODEL },
+          { key: CLIPROXY_PROVIDER_KEY, defaultModel: CLIPROXY_DEFAULT_MODEL },
+        ];
+
+  const issues = [];
+
+  for (const providerInfo of providers) {
+    issues.push(
+      ...validateProviderBlock(
+        providerInfo.key,
+        providerMap[providerInfo.key],
+        providerInfo.defaultModel
+      )
+    );
   }
 
   return issues;
@@ -443,40 +628,82 @@ function ensureOpencodeInstalled(execFileSync, platform, env = process.env) {
   );
 }
 
+function normalizeDefaultProvider(defaultProvider) {
+  if (
+    defaultProvider === undefined ||
+    defaultProvider === BAILIAN_PROVIDER_KEY ||
+    defaultProvider === CLIPROXY_PROVIDER_KEY
+  ) {
+    return defaultProvider;
+  }
+
+  throw new Error(
+    `Unsupported default provider: ${defaultProvider}. Choose one of: ${BAILIAN_PROVIDER_KEY}, ${CLIPROXY_PROVIDER_KEY}`
+  );
+}
+
 async function resolveRuntimeOptions({
   args,
   env = process.env,
   isInteractive,
   prompt,
 }) {
-  const missingApiKeyMessage = 'Missing API key. Pass --api-key or set DASHSCOPE_API_KEY.';
+  const missingApiKeyMessage =
+    'Missing API key. Pass --ali-api-key for Bailian and/or --codex-api-key for CLIProxyAPI.';
 
-  let apiKey = args.apiKey || env.DASHSCOPE_API_KEY || env.BAILIAN_API_KEY;
-  const baseURL = args.baseURL || env.BAILIAN_BASE_URL || DEFAULT_BASE_URL;
-  const model = args.model || env.BAILIAN_MODEL || DEFAULT_MODEL;
+  let bailianApiKey = args.apiKey || env.DASHSCOPE_API_KEY || env.BAILIAN_API_KEY;
+  let cliproxyApiKey = args.cliproxyApiKey || env.CLIPROXY_API_KEY || env.OPENAI_API_KEY;
 
-  if (!apiKey) {
-    if (!isInteractive) {
-      throw new Error(missingApiKeyMessage);
-    }
+  const bailianBaseURL = args.baseURL || env.BAILIAN_BASE_URL || DEFAULT_BASE_URL;
+  const bailianModel = args.model || env.BAILIAN_MODEL || DEFAULT_MODEL;
+  const cliproxyBaseURL =
+    args.cliproxyBaseURL || env.CLIPROXY_BASE_URL || CLIPROXY_DEFAULT_BASE_URL;
+  const cliproxyModel = args.cliproxyModel || env.CLIPROXY_MODEL || CLIPROXY_DEFAULT_MODEL;
 
-    apiKey = (await prompt('Enter Bailian API key: ')).trim();
+  if (!bailianApiKey && !cliproxyApiKey && isInteractive) {
+    bailianApiKey = (await prompt('Enter Bailian API key (leave empty to skip): ')).trim();
+    cliproxyApiKey = (
+      await prompt('Enter CLIProxyAPI API key (leave empty to skip): ')
+    ).trim();
+  }
 
-    if (!apiKey) {
-      throw new Error(missingApiKeyMessage);
-    }
+  if (!bailianApiKey && !cliproxyApiKey) {
+    throw new Error(missingApiKeyMessage);
+  }
+
+  const requestedDefaultProvider = normalizeDefaultProvider(
+    args.defaultProvider || env.OPENCODE_DEFAULT_PROVIDER
+  );
+  const defaultProvider =
+    requestedDefaultProvider ||
+    (cliproxyApiKey ? CLIPROXY_PROVIDER_KEY : BAILIAN_PROVIDER_KEY);
+
+  if (defaultProvider === BAILIAN_PROVIDER_KEY && !bailianApiKey) {
+    throw new Error(
+      `Default provider ${BAILIAN_PROVIDER_KEY} requires --ali-api-key or DASHSCOPE_API_KEY.`
+    );
+  }
+
+  if (defaultProvider === CLIPROXY_PROVIDER_KEY && !cliproxyApiKey) {
+    throw new Error(
+      `Default provider ${CLIPROXY_PROVIDER_KEY} requires --codex-api-key or CLIPROXY_API_KEY.`
+    );
   }
 
   return {
-    apiKey,
-    baseURL,
-    model,
+    bailianApiKey,
+    bailianBaseURL,
+    bailianModel,
+    cliproxyApiKey,
+    cliproxyBaseURL,
+    cliproxyModel,
+    defaultProvider,
     dryRun: args.dryRun,
     force: args.force,
   };
 }
 
-function mergeProviderConfig(existingConfig, providerConfig, options = {}) {
+function mergeProviderConfig(existingConfig, providerConfigs, options = {}) {
   const existingProvider = existingConfig.provider || {};
   const mergedConfig = {
     ...existingConfig,
@@ -486,11 +713,14 @@ function mergeProviderConfig(existingConfig, providerConfig, options = {}) {
     },
   };
 
-  if (Object.hasOwn(existingProvider, PROVIDER_KEY) && !options.force) {
-    throw new Error(`${PROVIDER_KEY} already exists`);
+  for (const [providerKey, providerConfig] of Object.entries(providerConfigs)) {
+    if (Object.hasOwn(existingProvider, providerKey) && !options.force) {
+      throw new Error(`${providerKey} already exists`);
+    }
+
+    mergedConfig.provider[providerKey] = providerConfig;
   }
 
-  mergedConfig.provider[PROVIDER_KEY] = providerConfig;
   return mergedConfig;
 }
 
@@ -528,15 +758,48 @@ async function run({
   const runtime = await resolveRuntimeOptions({ args, env, isInteractive, prompt });
   const configPath = getConfigPath({ platform, env });
   const configDir = path.dirname(configPath);
-  const providerConfig = buildProviderConfig(runtime);
 
-  validateSelectedModel(providerConfig, runtime.model);
+  const providerConfigs = {};
+  const configuredProviders = [];
+
+  if (runtime.bailianApiKey) {
+    const bailianProvider = buildBailianProviderConfig({
+      apiKey: runtime.bailianApiKey,
+      baseURL: runtime.bailianBaseURL,
+    });
+    validateSelectedModel(bailianProvider, runtime.bailianModel);
+    providerConfigs[BAILIAN_PROVIDER_KEY] = bailianProvider;
+    configuredProviders.push({
+      key: BAILIAN_PROVIDER_KEY,
+      defaultModel: DEFAULT_MODEL,
+    });
+  }
+
+  if (runtime.cliproxyApiKey) {
+    const cliproxyProvider = buildCLIProxyProviderConfig({
+      apiKey: runtime.cliproxyApiKey,
+      baseURL: runtime.cliproxyBaseURL,
+    });
+    validateSelectedModel(cliproxyProvider, runtime.cliproxyModel);
+    providerConfigs[CLIPROXY_PROVIDER_KEY] = cliproxyProvider;
+    configuredProviders.push({
+      key: CLIPROXY_PROVIDER_KEY,
+      defaultModel: CLIPROXY_DEFAULT_MODEL,
+    });
+  }
+
+  const defaultModel =
+    runtime.defaultProvider === CLIPROXY_PROVIDER_KEY
+      ? runtime.cliproxyModel
+      : runtime.bailianModel;
 
   if (args.dryRun) {
     return {
       mode: 'dry-run',
       configPath,
-      preview: providerConfig,
+      preview: providerConfigs,
+      providerKey: runtime.defaultProvider,
+      defaultModel,
     };
   }
 
@@ -549,14 +812,14 @@ async function run({
     writeBackupFile(configPath);
   }
 
-  const nextConfig = mergeProviderConfig(existingConfig, providerConfig, {
+  const nextConfig = mergeProviderConfig(existingConfig, providerConfigs, {
     force: runtime.force,
   });
-  nextConfig.model = `${PROVIDER_KEY}/${runtime.model}`;
+  nextConfig.model = `${runtime.defaultProvider}/${defaultModel}`;
 
   fsImpl.writeFileSync(configPath, JSON.stringify(nextConfig, null, 2) + '\n', 'utf8');
 
-  const issues = validateConfigImpl(nextConfig);
+  const issues = validateConfigImpl(nextConfig, configuredProviders);
 
   if (issues.length > 0) {
     throw new Error('Config validation failed:\n' + issues.join('\n'));
@@ -567,17 +830,23 @@ async function run({
     installed: install.installed,
     installedNow: install.installedNow,
     configPath,
-    providerKey: PROVIDER_KEY,
-    defaultModel: runtime.model,
+    providerKey: runtime.defaultProvider,
+    defaultModel,
   };
 }
 
 module.exports = {
+  BAILIAN_PROVIDER_KEY,
+  CLIPROXY_PROVIDER_KEY,
   PROVIDER_KEY,
   DEFAULT_BASE_URL,
   DEFAULT_MODEL,
+  CLIPROXY_DEFAULT_BASE_URL,
+  CLIPROXY_DEFAULT_MODEL,
   parseArgs,
   buildProviderConfig,
+  buildBailianProviderConfig,
+  buildCLIProxyProviderConfig,
   mergeProviderConfig,
   readConfigFile,
   writeBackupFile,
