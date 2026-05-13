@@ -1,0 +1,64 @@
+# Starter config for a Codex/OpenAI account pool based on CLIProxyAPI.
+# Copy to config.pool.yaml and adjust the secrets before running.
+
+host: ""
+port: 8317
+
+tls:
+  enable: false
+  cert: ""
+  key: ""
+
+remote-management:
+  # Keep remote management disabled for the first deployment.
+  # If you must expose it later, place it behind a trusted reverse proxy or VPN first.
+  allow-remote: false
+  secret-key: "change-this-management-secret"
+  disable-control-panel: false
+
+auth-dir: "~/.cli-proxy-api"
+
+api-keys:
+  - "pool-client-key-change-me"
+
+debug: false
+commercial-mode: false
+logging-to-file: true
+logs-max-total-size-mb: 1024
+usage-statistics-enabled: true
+
+proxy-url: ""
+force-model-prefix: false
+passthrough-headers: false
+
+request-retry: 3
+max-retry-credentials: 3
+max-retry-interval: 15
+disable-cooling: false
+
+quota-exceeded:
+  switch-project: true
+  switch-preview-model: true
+  antigravity-credits: true
+
+routing:
+  strategy: "round-robin"
+  session-affinity: true
+  session-affinity-ttl: "6h"
+
+ws-auth: false
+nonstream-keepalive-interval: 15
+
+# Optional: keep the client-visible name stable.
+# oauth-model-alias:
+#   codex:
+#     - name: "gpt-5"
+#       alias: "gpt-5-codex"
+#       fork: true
+
+# Optional: if you want to mix OAuth accounts with direct API keys, enable this block.
+# codex-api-key:
+#   - api-key: "sk-..."
+#     prefix: "paid"
+#     base-url: "https://api.openai.com/v1"
+
