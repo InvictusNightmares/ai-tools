@@ -53,7 +53,7 @@ Options:
 function parseArgs(argv) {
   const options = {
     agents: undefined,
-    apiKey: process.env.AI_TOOLS_API_KEY || process.env.OPENAI_API_KEY || '',
+    apiKey: '',
     mode: undefined,
     yes: false,
     force: false,
@@ -570,9 +570,9 @@ async function collectRuntime(options) {
     const agents = options.agents ? normalizeAgents(options.agents) : await collectAgents(rl);
     const mode = options.mode || (options.yes ? 'install-and-config' : await collectMode(rl));
 
-    let apiKey = options.apiKey;
+    let apiKey = options.apiKey || (options.yes ? process.env.AI_TOOLS_API_KEY || process.env.OPENAI_API_KEY || '' : '');
     if (mode !== 'install-only' && !apiKey) {
-      if (options.yes) throw new Error('Missing --api-key for non-interactive configuration.');
+      if (options.yes) throw new Error('Missing --api-key or AI_TOOLS_API_KEY/OPENAI_API_KEY for non-interactive configuration.');
       apiKey = await askSecret(rl, '请输入 API Key');
     }
 
