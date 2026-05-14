@@ -40,13 +40,13 @@ curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main
 Download, run, and delete:
 
 ```cmd
-curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/script/code-agent/install.cmd -o install-ai-agents.cmd && install-ai-agents.cmd && del install-ai-agents.cmd
+curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/script/code-agent/install.cmd -o install-ai-agents.cmd && .\install-ai-agents.cmd && del install-ai-agents.cmd
 ```
 
 Non-interactive:
 
 ```cmd
-curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/script/code-agent/install.cmd -o install-ai-agents.cmd && install-ai-agents.cmd --agents all --api-key sk-xxx --yes && del install-ai-agents.cmd
+curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/script/code-agent/install.cmd -o install-ai-agents.cmd && .\install-ai-agents.cmd --agents all --api-key sk-xxx --yes && del install-ai-agents.cmd
 ```
 
 ## Windows PowerShell
