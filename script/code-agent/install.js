@@ -6,8 +6,7 @@ const path = require('node:path');
 const readline = require('node:readline/promises');
 const { spawnSync } = require('node:child_process');
 
-const BASE_URL = 'http://8.216.44.189:8317/v1';
-const CLAUDE_BASE_URL = BASE_URL.replace(/\/v1\/?$/, '');
+const DEFAULT_BASE_URL = 'http://8.216.44.189:8317/v1';
 const DEFAULT_MODEL = 'gpt-5.5';
 const PROVIDER_KEY = '启源Code Model';
 
@@ -28,9 +27,7 @@ const OPENCODE_MODELS = {
   'gpt-5.4': 'GPT-5.4',
   'gpt-5.4-mini': 'GPT-5.4 Mini',
   'gpt-5.3-codex': 'GPT-5.3 Codex',
-  'gpt-5.3-codex-spark': 'GPT-5.3 Codex Spark',
-  'gpt-5.2': 'GPT-5.2',
-  'codex-auto-review': 'Codex Auto Review',
+  'gpt-5.2': 'GPT-5.2'
 };
 
 function supportsImageInput(modelId) {
@@ -43,6 +40,7 @@ function usage() {
 Options:
   --agents <list>       all or comma-separated: claude-code,codex,opencode
   --api-key <key>       API key for 启源Code Model
+  --base-url <url>      API base URL, defaults to ${DEFAULT_BASE_URL}
   --mode <mode>         install-and-config, install-only, config-only, verify-only
   --yes                 Do not prompt for confirmation
   --force               Reinstall or overwrite existing files without asking
@@ -55,6 +53,7 @@ function parseArgs(argv) {
   const options = {
     agents: undefined,
     apiKey: '',
+    baseURL: '',
     mode: undefined,
     yes: false,
     force: false,
@@ -90,7 +89,7 @@ function parseArgs(argv) {
       continue;
     }
 
-    if (['--agents', '--api-key', '--mode'].includes(arg)) {
+    if (['--agents', '--api-key', '--base-url', '--mode'].includes(arg)) {
       const value = argv[index + 1];
       if (!value || value.startsWith('--')) {
         throw new Error(`Missing value for ${arg}`);
@@ -98,6 +97,7 @@ function parseArgs(argv) {
 
       if (arg === '--agents') options.agents = value;
       if (arg === '--api-key') options.apiKey = value;
+      if (arg === '--base-url') options.baseURL = value;
       if (arg === '--mode') options.mode = value;
       index += 1;
       continue;
@@ -216,6 +216,20 @@ function normalizeAgents(raw) {
   }
 
   return selected;
+}
+
+function normalizeBaseURL(raw) {
+  const baseURL = String(raw || '').trim();
+  if (!baseURL) throw new Error('Base URL 不能为空。');
+  try {
+    return new URL(baseURL).toString().replace(/\/$/, '');
+  } catch {
+    throw new Error(`Invalid base URL: ${baseURL}`);
+  }
+}
+
+function claudeBaseURL(baseURL) {
+  return baseURL.replace(/\/v1\/?$/, '');
 }
 
 async function collectAgents(rl) {
@@ -383,7 +397,7 @@ function installNpmPackage(packageName, binaryName, options) {
   }
 }
 
-function opencodeConfig(apiKey) {
+function opencodeConfig(apiKey, baseURL) {
   const models = Object.fromEntries(
     Object.entries(OPENCODE_MODELS).map(([id, name]) => [
       id,
@@ -406,7 +420,7 @@ function opencodeConfig(apiKey) {
           name: PROVIDER_KEY,
           options: {
             apiKey,
-            baseURL: BASE_URL,
+            baseURL,
           },
           models,
         },
@@ -418,10 +432,10 @@ function opencodeConfig(apiKey) {
   );
 }
 
-function codexConfig() {
+function codexConfig(baseURL) {
   const catalogPath = path.join(homeDir(), '.codex', 'models.json');
   return `model = "${DEFAULT_MODEL}"
-openai_base_url = "${BASE_URL}"
+openai_base_url = "${baseURL}"
 forced_login_method = "api"
 cli_auth_credentials_store = "file"
 model_catalog_json = ${JSON.stringify(catalogPath)}`;
@@ -496,14 +510,14 @@ async function codexLogin(apiKey, options) {
   return result.status === 0;
 }
 
-function claudeSettings(apiKey) {
+function claudeSettings(apiKey, baseURL) {
   return JSON.stringify(
     {
       availableModels: Object.keys(OPENCODE_MODELS),
       env: {
         ANTHROPIC_API_KEY: apiKey,
         ANTHROPIC_AUTH_TOKEN: apiKey,
-        ANTHROPIC_BASE_URL: CLAUDE_BASE_URL,
+        ANTHROPIC_BASE_URL: claudeBaseURL(baseURL),
         ANTHROPIC_MODEL: DEFAULT_MODEL,
       },
     },
@@ -536,7 +550,7 @@ const agentDefinitions = {
   'claude-code': {
     install: (options) => installNpmPackage('@anthropic-ai/claude-code', 'claude', options),
     configure: async (runtime, options, rl) => {
-      await writeFileSafely(path.join(homeDir(), '.claude', 'settings.json'), claudeSettings(runtime.apiKey), options, rl);
+      await writeFileSafely(path.join(homeDir(), '.claude', 'settings.json'), claudeSettings(runtime.apiKey, runtime.baseURL), options, rl);
       const claudeJsonPath = path.join(homeDir(), '.claude.json');
       await writeFileSafely(claudeJsonPath, claudeGlobalConfig(readJsonFile(claudeJsonPath)), options, rl);
     },
@@ -546,7 +560,7 @@ const agentDefinitions = {
   codex: {
     install: (options) => installNpmPackage('@openai/codex', 'codex', options),
     configure: async (runtime, options, rl) => {
-      await writeFileSafely(path.join(homeDir(), '.codex', 'config.toml'), codexConfig(), options, rl);
+      await writeFileSafely(path.join(homeDir(), '.codex', 'config.toml'), codexConfig(runtime.baseURL), options, rl);
       await writeFileSafely(path.join(homeDir(), '.codex', 'models.json'), codexModelCatalog(), options, rl);
       if (!(await codexLogin(runtime.apiKey, options))) {
         await writeFileSafely(path.join(homeDir(), '.codex', 'auth.json'), codexAuth(runtime.apiKey), options, rl);
@@ -560,7 +574,7 @@ const agentDefinitions = {
     configure: async (runtime, options, rl) => {
       await writeFileSafely(
         path.join(configDir(), 'opencode', 'opencode.json'),
-        opencodeConfig(runtime.apiKey),
+        opencodeConfig(runtime.apiKey, runtime.baseURL),
         options,
         rl
       );
@@ -586,13 +600,13 @@ function verifyCommand(command, options) {
 
 function verifyApiModels(runtime, options) {
   if (options.dryRun) {
-    console.log(`[dry-run] curl -fsS -H "Authorization: Bearer ***" ${BASE_URL}/models`);
+    console.log(`[dry-run] curl -fsS -H "Authorization: Bearer ***" ${runtime.baseURL}/models`);
     return true;
   }
 
   const result = spawnSync(
     'curl',
-    ['-fsS', '-H', `Authorization: Bearer ${runtime.apiKey}`, `${BASE_URL}/models`],
+    ['-fsS', '-H', `Authorization: Bearer ${runtime.apiKey}`, `${runtime.baseURL}/models`],
     { stdio: 'ignore' }
   );
   return result.status === 0;
@@ -600,7 +614,7 @@ function verifyApiModels(runtime, options) {
 
 function verifyApiChat(runtime, options) {
   if (options.dryRun) {
-    console.log(`[dry-run] curl chat completion with model ${DEFAULT_MODEL}`);
+    console.log(`[dry-run] curl chat completion with model ${DEFAULT_MODEL} ${runtime.baseURL}/chat/completions`);
     return true;
   }
 
@@ -619,7 +633,7 @@ function verifyApiChat(runtime, options) {
       'Content-Type: application/json',
       '-d',
       payload,
-      `${BASE_URL}/chat/completions`,
+      `${runtime.baseURL}/chat/completions`,
     ],
     { stdio: 'ignore' }
   );
@@ -639,6 +653,11 @@ async function collectRuntime(options) {
     const agents = options.agents ? normalizeAgents(options.agents) : await collectAgents(rl);
     const mode = options.mode || (options.yes ? 'install-and-config' : await collectMode(rl));
 
+    const envBaseURL = process.env.AI_TOOLS_BASE_URL || process.env.OPENAI_BASE_URL || '';
+    const baseURL = normalizeBaseURL(
+      options.baseURL || (options.yes ? envBaseURL || DEFAULT_BASE_URL : await askText(rl, '请输入 Base URL', envBaseURL || DEFAULT_BASE_URL))
+    );
+
     let apiKey = options.apiKey || (options.yes ? process.env.AI_TOOLS_API_KEY || process.env.OPENAI_API_KEY || '' : '');
     if (mode !== 'install-only' && !apiKey) {
       if (options.yes) throw new Error('Missing --api-key or AI_TOOLS_API_KEY/OPENAI_API_KEY for non-interactive configuration.');
@@ -649,7 +668,7 @@ async function collectRuntime(options) {
       throw new Error('API Key 不能为空。');
     }
 
-    return { rl, runtime: { agents, mode, apiKey } };
+    return { rl, runtime: { agents, mode, apiKey, baseURL } };
   } catch (error) {
     rl.close();
     throw error;
@@ -658,7 +677,7 @@ async function collectRuntime(options) {
 
 function printPlan(runtime, options) {
   title('安装计划');
-  console.log(`Base URL: ${BASE_URL}`);
+  console.log(`Base URL: ${runtime.baseURL}`);
   console.log(`Default model: ${DEFAULT_MODEL}`);
   console.log(`Agents: ${runtime.agents.join(', ')}`);
   console.log(`Mode: ${runtime.mode}`);

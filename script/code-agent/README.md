@@ -2,13 +2,13 @@
 
 Team installer for Claude Code, Codex, and OpenCode.
 
-The installer uses one fixed endpoint:
+The installer asks for a Base URL. The default endpoint is:
 
 ```text
 http://8.216.44.189:8317/v1
 ```
 
-Claude Code uses the same endpoint without the `/v1` suffix:
+Claude Code uses the configured endpoint without the `/v1` suffix:
 
 ```text
 http://8.216.44.189:8317
@@ -20,7 +20,7 @@ The default model is fixed:
 gpt-5.5
 ```
 
-Users only provide an API key. The installer does not ask for a base URL or model.
+Users provide an API key and can accept the default Base URL. The model remains fixed.
 
 ## macOS / Linux
 
@@ -38,6 +38,7 @@ Non-interactive:
 curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/script/code-agent/install.sh | bash -s -- \
   --agents all \
   --api-key sk-xxx \
+  --base-url http://8.216.44.189:8317/v1 \
   --yes
 ```
 
@@ -52,7 +53,7 @@ curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main
 Non-interactive:
 
 ```cmd
-curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/script/code-agent/install.cmd -o install-ai-agents.cmd && .\install-ai-agents.cmd --agents all --api-key sk-xxx --yes && del install-ai-agents.cmd
+curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/script/code-agent/install.cmd -o install-ai-agents.cmd && .\install-ai-agents.cmd --agents all --api-key sk-xxx --base-url http://8.216.44.189:8317/v1 --yes && del install-ai-agents.cmd
 ```
 
 ## Windows PowerShell
@@ -66,7 +67,7 @@ Invoke-WebRequest -Uri "https://raw.giteeusercontent.com/InvictusNightmares/ai-t
 Non-interactive:
 
 ```powershell
-Invoke-WebRequest -Uri "https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/script/code-agent/install.ps1" -OutFile "install-ai-agents.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File .\install-ai-agents.ps1 --agents all --api-key sk-xxx --yes; Remove-Item .\install-ai-agents.ps1
+Invoke-WebRequest -Uri "https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/script/code-agent/install.ps1" -OutFile "install-ai-agents.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File .\install-ai-agents.ps1 --agents all --api-key sk-xxx --base-url http://8.216.44.189:8317/v1 --yes; Remove-Item .\install-ai-agents.ps1
 ```
 
 ## Local Usage
@@ -100,6 +101,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\script\code-agent\install.
 ```text
 --agents <list>       all or comma-separated: claude-code,codex,opencode
 --api-key <key>       API key for 启源Code Model
+--base-url <url>      API base URL, defaults to http://8.216.44.189:8317/v1
 --mode <mode>         install-and-config, install-only, config-only, verify-only
 --yes                 Do not prompt for confirmation
 --force               Reinstall or overwrite existing files without asking
@@ -170,7 +172,7 @@ Existing files are backed up before overwrite:
 ## Dry Run
 
 ```bash
-node script/code-agent/install.js --agents all --api-key sk-xxx --dry-run --yes
+node script/code-agent/install.js --agents all --api-key sk-xxx --base-url http://8.216.44.189:8317/v1 --dry-run --yes
 ```
 
 Dry run prints actions without installing packages or writing files.
