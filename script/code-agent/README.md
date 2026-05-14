@@ -131,6 +131,7 @@ macOS / Linux Codex:
 
 ```text
 ~/.codex/config.toml
+~/.codex/auth.json
 ~/.ai-agents/env
 ```
 
@@ -152,6 +153,7 @@ Windows Codex:
 
 ```text
 %USERPROFILE%\.codex\config.toml
+%USERPROFILE%\.codex\auth.json
 %USERPROFILE%\.ai-agents\env.cmd
 ```
 
