@@ -258,10 +258,6 @@ function configDir() {
   return process.env.XDG_CONFIG_HOME || path.join(homeDir(), '.config');
 }
 
-function aiAgentsDir() {
-  return path.join(homeDir(), '.ai-agents');
-}
-
 function timestamp() {
   const now = new Date();
   const pad = (value) => String(value).padStart(2, '0');
@@ -423,10 +419,57 @@ function opencodeConfig(apiKey) {
 }
 
 function codexConfig() {
+  const catalogPath = path.join(homeDir(), '.codex', 'models.json');
   return `model = "${DEFAULT_MODEL}"
 openai_base_url = "${BASE_URL}"
 forced_login_method = "api"
-cli_auth_credentials_store = "file"`;
+cli_auth_credentials_store = "file"
+model_catalog_json = ${JSON.stringify(catalogPath)}`;
+}
+
+function codexModelCatalog() {
+  return JSON.stringify(
+    {
+      models: Object.entries(OPENCODE_MODELS).map(([slug, displayName], index) => ({
+        slug,
+        display_name: displayName,
+        description: `${displayName} via ${PROVIDER_KEY}`,
+        default_reasoning_level: null,
+        supported_reasoning_levels: [],
+        shell_type: 'default',
+        visibility: 'list',
+        supported_in_api: true,
+        priority: index + 1,
+        additional_speed_tiers: [],
+        service_tiers: [],
+        availability_nux: null,
+        upgrade: null,
+        base_instructions: '',
+        model_messages: null,
+        supports_reasoning_summaries: false,
+        default_reasoning_summary: 'auto',
+        support_verbosity: false,
+        default_verbosity: null,
+        apply_patch_tool_type: null,
+        web_search_tool_type: 'text',
+        truncation_policy: {
+          mode: 'bytes',
+          limit: 10000,
+        },
+        supports_parallel_tool_calls: false,
+        supports_image_detail_original: false,
+        context_window: 272000,
+        max_context_window: 272000,
+        auto_compact_token_limit: null,
+        effective_context_window_percent: 95,
+        experimental_supported_tools: [],
+        input_modalities: supportsImageInput(slug) ? ['text', 'image'] : ['text'],
+        supports_search_tool: false,
+      })),
+    },
+    null,
+    2
+  );
 }
 
 function codexAuth(apiKey) {
@@ -489,24 +532,6 @@ function readJsonFile(filePath) {
   }
 }
 
-function envFile(apiKey) {
-  if (process.platform === 'win32') {
-    return `set "OPENAI_API_KEY=${apiKey}"
-set "OPENAI_BASE_URL=${BASE_URL}"
-set "ANTHROPIC_API_KEY=${apiKey}"
-set "ANTHROPIC_AUTH_TOKEN=${apiKey}"
-set "ANTHROPIC_BASE_URL=${CLAUDE_BASE_URL}"
-set "ANTHROPIC_MODEL=${DEFAULT_MODEL}"`;
-  }
-
-  return `export OPENAI_API_KEY="${apiKey}"
-export OPENAI_BASE_URL="${BASE_URL}"
-export ANTHROPIC_API_KEY="${apiKey}"
-export ANTHROPIC_AUTH_TOKEN="${apiKey}"
-export ANTHROPIC_BASE_URL="${CLAUDE_BASE_URL}"
-export ANTHROPIC_MODEL="${DEFAULT_MODEL}"`;
-}
-
 const agentDefinitions = {
   'claude-code': {
     install: (options) => installNpmPackage('@anthropic-ai/claude-code', 'claude', options),
@@ -514,26 +539,21 @@ const agentDefinitions = {
       await writeFileSafely(path.join(homeDir(), '.claude', 'settings.json'), claudeSettings(runtime.apiKey), options, rl);
       const claudeJsonPath = path.join(homeDir(), '.claude.json');
       await writeFileSafely(claudeJsonPath, claudeGlobalConfig(readJsonFile(claudeJsonPath)), options, rl);
-      await writeFileSafely(path.join(aiAgentsDir(), process.platform === 'win32' ? 'env.cmd' : 'env'), envFile(runtime.apiKey), options, rl);
     },
     verify: (options) => verifyCommand('claude', options),
-    next: () => process.platform === 'win32'
-      ? "Claude Code: run %USERPROFILE%\\.ai-agents\\env.cmd before using claude if needed."
-      : "Claude Code: run 'source ~/.ai-agents/env' before using claude if needed.",
+    next: () => 'Claude Code: run claude.',
   },
   codex: {
     install: (options) => installNpmPackage('@openai/codex', 'codex', options),
     configure: async (runtime, options, rl) => {
       await writeFileSafely(path.join(homeDir(), '.codex', 'config.toml'), codexConfig(), options, rl);
+      await writeFileSafely(path.join(homeDir(), '.codex', 'models.json'), codexModelCatalog(), options, rl);
       if (!(await codexLogin(runtime.apiKey, options))) {
         await writeFileSafely(path.join(homeDir(), '.codex', 'auth.json'), codexAuth(runtime.apiKey), options, rl);
       }
-      await writeFileSafely(path.join(aiAgentsDir(), process.platform === 'win32' ? 'env.cmd' : 'env'), envFile(runtime.apiKey), options, rl);
     },
     verify: (options) => verifyCommand('codex', options),
-    next: () => process.platform === 'win32'
-      ? "Codex: run %USERPROFILE%\\.ai-agents\\env.cmd if your shell does not already set OPENAI_API_KEY."
-      : "Codex: run 'source ~/.ai-agents/env' if your shell does not already export OPENAI_API_KEY.",
+    next: () => 'Codex: run codex.',
   },
   opencode: {
     install: (options) => installNpmPackage('opencode-ai@latest', 'opencode', options),
@@ -698,7 +718,6 @@ async function main() {
     for (const agent of runtime.agents) {
       console.log(agentDefinitions[agent].next());
     }
-    console.log(process.platform === 'win32' ? 'Shared env file: %USERPROFILE%\\.ai-agents\\env.cmd' : 'Shared env file: ~/.ai-agents/env');
   } finally {
     rl.close();
   }

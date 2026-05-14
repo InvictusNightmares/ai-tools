@@ -124,15 +124,14 @@ macOS / Linux Claude Code:
 ```text
 ~/.claude.json
 ~/.claude/settings.json
-~/.ai-agents/env
 ```
 
 macOS / Linux Codex:
 
 ```text
 ~/.codex/config.toml
+~/.codex/models.json
 ~/.codex/auth.json
-~/.ai-agents/env
 ```
 
 macOS / Linux OpenCode:
@@ -146,15 +145,14 @@ Windows Claude Code:
 ```text
 %USERPROFILE%\.claude.json
 %USERPROFILE%\.claude\settings.json
-%USERPROFILE%\.ai-agents\env.cmd
 ```
 
 Windows Codex:
 
 ```text
 %USERPROFILE%\.codex\config.toml
+%USERPROFILE%\.codex\models.json
 %USERPROFILE%\.codex\auth.json
-%USERPROFILE%\.ai-agents\env.cmd
 ```
 
 Windows OpenCode:
