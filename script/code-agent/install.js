@@ -436,6 +436,7 @@ wire_api = "chat"`;
 function claudeSettings(apiKey) {
   return JSON.stringify(
     {
+      availableModels: Object.keys(OPENCODE_MODELS),
       env: {
         ANTHROPIC_API_KEY: apiKey,
         ANTHROPIC_AUTH_TOKEN: apiKey,
