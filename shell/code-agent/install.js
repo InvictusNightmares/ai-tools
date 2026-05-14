@@ -8,7 +8,7 @@ const { spawnSync } = require('node:child_process');
 
 const BASE_URL = 'http://8.216.44.189:8317/v1';
 const DEFAULT_MODEL = 'gpt-5.5';
-const PROVIDER_KEY = 'ai-tools';
+const PROVIDER_KEY = '启源Code Model';
 
 const AGENTS = ['claude-code', 'codex', 'opencode'];
 const MODES = ['install-and-config', 'install-only', 'config-only', 'verify-only'];
