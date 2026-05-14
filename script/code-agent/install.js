@@ -7,6 +7,7 @@ const readline = require('node:readline/promises');
 const { spawnSync } = require('node:child_process');
 
 const BASE_URL = 'http://8.216.44.189:8317/v1';
+const CLAUDE_BASE_URL = BASE_URL.replace(/\/v1\/?$/, '');
 const DEFAULT_MODEL = 'gpt-5.5';
 const PROVIDER_KEY = '启源Code Model';
 
@@ -432,11 +433,13 @@ env_key = "OPENAI_API_KEY"
 wire_api = "chat"`;
 }
 
-function claudeSettings() {
+function claudeSettings(apiKey) {
   return JSON.stringify(
     {
       env: {
-        ANTHROPIC_BASE_URL: BASE_URL,
+        ANTHROPIC_API_KEY: apiKey,
+        ANTHROPIC_AUTH_TOKEN: apiKey,
+        ANTHROPIC_BASE_URL: CLAUDE_BASE_URL,
         ANTHROPIC_MODEL: DEFAULT_MODEL,
       },
     },
@@ -445,13 +448,33 @@ function claudeSettings() {
   );
 }
 
+function claudeGlobalConfig(existing = {}) {
+  return JSON.stringify(
+    {
+      ...existing,
+      hasCompletedOnboarding: true,
+    },
+    null,
+    2
+  );
+}
+
+function readJsonFile(filePath) {
+  if (!fs.existsSync(filePath)) return {};
+  try {
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  } catch {
+    return {};
+  }
+}
+
 function envFile(apiKey) {
   if (process.platform === 'win32') {
     return `set "OPENAI_API_KEY=${apiKey}"
 set "OPENAI_BASE_URL=${BASE_URL}"
 set "ANTHROPIC_API_KEY=${apiKey}"
 set "ANTHROPIC_AUTH_TOKEN=${apiKey}"
-set "ANTHROPIC_BASE_URL=${BASE_URL}"
+set "ANTHROPIC_BASE_URL=${CLAUDE_BASE_URL}"
 set "ANTHROPIC_MODEL=${DEFAULT_MODEL}"`;
   }
 
@@ -459,7 +482,7 @@ set "ANTHROPIC_MODEL=${DEFAULT_MODEL}"`;
 export OPENAI_BASE_URL="${BASE_URL}"
 export ANTHROPIC_API_KEY="${apiKey}"
 export ANTHROPIC_AUTH_TOKEN="${apiKey}"
-export ANTHROPIC_BASE_URL="${BASE_URL}"
+export ANTHROPIC_BASE_URL="${CLAUDE_BASE_URL}"
 export ANTHROPIC_MODEL="${DEFAULT_MODEL}"`;
 }
 
@@ -467,7 +490,9 @@ const agentDefinitions = {
   'claude-code': {
     install: (options) => installNpmPackage('@anthropic-ai/claude-code', 'claude', options),
     configure: async (runtime, options, rl) => {
-      await writeFileSafely(path.join(homeDir(), '.claude', 'settings.json'), claudeSettings(), options, rl);
+      await writeFileSafely(path.join(homeDir(), '.claude', 'settings.json'), claudeSettings(runtime.apiKey), options, rl);
+      const claudeJsonPath = path.join(homeDir(), '.claude.json');
+      await writeFileSafely(claudeJsonPath, claudeGlobalConfig(readJsonFile(claudeJsonPath)), options, rl);
       await writeFileSafely(path.join(aiAgentsDir(), process.platform === 'win32' ? 'env.cmd' : 'env'), envFile(runtime.apiKey), options, rl);
     },
     verify: (options) => verifyCommand('claude', options),
