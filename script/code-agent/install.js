@@ -424,13 +424,33 @@ function opencodeConfig(apiKey) {
 
 function codexConfig() {
   return `model = "${DEFAULT_MODEL}"
-model_provider = "qiyuan-code-model"
+openai_base_url = "${BASE_URL}"
+forced_login_method = "api"
+cli_auth_credentials_store = "file"`;
+}
 
-[model_providers.qiyuan-code-model]
-name = "${PROVIDER_KEY}"
-base_url = "${BASE_URL}"
-env_key = "OPENAI_API_KEY"
-wire_api = "chat"`;
+function codexAuth(apiKey) {
+  return JSON.stringify(
+    {
+      OPENAI_API_KEY: apiKey,
+    },
+    null,
+    2
+  );
+}
+
+async function codexLogin(apiKey, options) {
+  if (options.dryRun) {
+    console.log('[dry-run] codex login --with-api-key');
+    return false;
+  }
+
+  const result = spawnSync('codex', ['login', '--with-api-key'], {
+    input: `${apiKey}\n`,
+    stdio: ['pipe', options.verbose ? 'inherit' : 'ignore', options.verbose ? 'inherit' : 'ignore'],
+    shell: process.platform === 'win32',
+  });
+  return result.status === 0;
 }
 
 function claudeSettings(apiKey) {
@@ -505,6 +525,9 @@ const agentDefinitions = {
     install: (options) => installNpmPackage('@openai/codex', 'codex', options),
     configure: async (runtime, options, rl) => {
       await writeFileSafely(path.join(homeDir(), '.codex', 'config.toml'), codexConfig(), options, rl);
+      if (!(await codexLogin(runtime.apiKey, options))) {
+        await writeFileSafely(path.join(homeDir(), '.codex', 'auth.json'), codexAuth(runtime.apiKey), options, rl);
+      }
       await writeFileSafely(path.join(aiAgentsDir(), process.platform === 'win32' ? 'env.cmd' : 'env'), envFile(runtime.apiKey), options, rl);
     },
     verify: (options) => verifyCommand('codex', options),
