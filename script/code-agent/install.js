@@ -6,7 +6,7 @@ const path = require('node:path');
 const readline = require('node:readline/promises');
 const { spawnSync } = require('node:child_process');
 
-const DEFAULT_BASE_URL = 'http://8.216.44.189:8317/v1';
+const DEFAULT_BASE_URL = '';
 const DEFAULT_MODEL = 'gpt-5.5';
 const PROVIDER_KEY = '启源Code Model';
 
@@ -40,7 +40,7 @@ function usage() {
 Options:
   --agents <list>       all or comma-separated: claude-code,codex,opencode
   --api-key <key>       API key for 启源Code Model
-  --base-url <url>      API base URL, defaults to ${DEFAULT_BASE_URL}
+  --base-url <url>      API base URL
   --mode <mode>         install-and-config, install-only, config-only, verify-only
   --yes                 Do not prompt for confirmation
   --force               Reinstall or overwrite existing files without asking
@@ -613,7 +613,7 @@ async function collectRuntime(options) {
 
     const envBaseURL = process.env.AI_TOOLS_BASE_URL || process.env.OPENAI_BASE_URL || '';
     const baseURL = normalizeBaseURL(
-      options.baseURL || (options.yes ? envBaseURL || DEFAULT_BASE_URL : await askText(rl, '请输入 Base URL', envBaseURL || DEFAULT_BASE_URL))
+      options.baseURL || (options.yes ? envBaseURL : await askText(rl, '请输入 Base URL', envBaseURL))
     );
 
     let apiKey = options.apiKey || (options.yes ? process.env.AI_TOOLS_API_KEY || process.env.OPENAI_API_KEY || '' : '');
