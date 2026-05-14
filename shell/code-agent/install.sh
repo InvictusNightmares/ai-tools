@@ -8,6 +8,9 @@ SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" 2>/dev/null && pwd || pwd)
 LOCAL_SCRIPT="$SCRIPT_DIR/$SCRIPT_NAME"
 
 if [ -f "$LOCAL_SCRIPT" ]; then
+  if ( : < /dev/tty ) 2>/dev/null; then
+    exec node "$LOCAL_SCRIPT" "$@" < /dev/tty
+  fi
   exec node "$LOCAL_SCRIPT" "$@"
 fi
 
@@ -26,4 +29,7 @@ trap 'rm -rf "$TMP_DIR"' EXIT INT TERM
 DOWNLOADED_SCRIPT="$TMP_DIR/$SCRIPT_NAME"
 
 curl -fsSL "$BASE_URL/$SCRIPT_NAME" -o "$DOWNLOADED_SCRIPT"
+if ( : < /dev/tty ) 2>/dev/null; then
+  exec node "$DOWNLOADED_SCRIPT" "$@" < /dev/tty
+fi
 exec node "$DOWNLOADED_SCRIPT" "$@"

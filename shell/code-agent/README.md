@@ -24,6 +24,8 @@ Online install:
 curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/shell/code-agent/install.sh | bash
 ```
 
+The bootstrap reopens `/dev/tty`, so interactive prompts work even when the script is piped through `bash`.
+
 Non-interactive:
 
 ```bash

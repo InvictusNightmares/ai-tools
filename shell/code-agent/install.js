@@ -27,6 +27,7 @@ const OPENCODE_MODELS = {
   'gpt-5.4': 'GPT-5.4',
   'gpt-5.4-mini': 'GPT-5.4 Mini',
   'gpt-5.3-codex': 'GPT-5.3 Codex',
+  'gpt-5.3-codex-spark': 'GPT-5.3 Codex Spark',
   'gpt-5.2': 'GPT-5.2',
   'codex-auto-review': 'Codex Auto Review',
 };
@@ -136,7 +137,17 @@ function redact(value, apiKey) {
 }
 
 function createPrompt() {
-  return readline.createInterface({ input: process.stdin, output: process.stdout });
+  if (!process.stdin.isTTY && process.platform !== 'win32') {
+    try {
+      const fd = fs.openSync('/dev/tty', 'r');
+      const input = fs.createReadStream(null, { fd, autoClose: true });
+      return readline.createInterface({ input, output: process.stdout, terminal: true });
+    } catch {
+      // Fall back to stdin so non-interactive executions still fail with a clear error.
+    }
+  }
+
+  return readline.createInterface({ input: process.stdin, output: process.stdout, terminal: true });
 }
 
 async function askText(rl, prompt, defaultValue = '') {
@@ -203,7 +214,7 @@ function normalizeAgents(raw) {
 }
 
 async function collectAgents(rl) {
-  const choice = await askChoice(rl, '请选择要安装的平台', [
+  const choice = await askChoice(rl, '请选择要安装的Code Agent CLI', [
     { label: 'Claude Code', value: ['claude-code'] },
     { label: 'Codex', value: ['codex'] },
     { label: 'OpenCode', value: ['opencode'] },
@@ -536,6 +547,13 @@ function verifyApiChat(runtime, options) {
 async function collectRuntime(options) {
   const rl = createPrompt();
   try {
+    if (!process.stdin.isTTY && process.platform !== 'win32' && !options.agents && !options.yes) {
+      throw new Error(
+        'Interactive input is unavailable because stdin is not a TTY. ' +
+          'Run from a terminal or use: bash -s -- --agents all --api-key <key> --yes'
+      );
+    }
+
     const agents = options.agents ? normalizeAgents(options.agents) : await collectAgents(rl);
     const mode = options.mode || (options.yes ? 'install-and-config' : await collectMode(rl));
 
