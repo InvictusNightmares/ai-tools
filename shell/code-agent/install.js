@@ -37,7 +37,7 @@ function usage() {
 
 Options:
   --agents <list>       all or comma-separated: claude-code,codex,opencode
-  --api-key <key>       API key for AI Tools
+  --api-key <key>       API key for 启源Code Model
   --mode <mode>         install-and-config, install-only, config-only, verify-only
   --yes                 Do not prompt for confirmation
   --force               Reinstall or overwrite existing files without asking
@@ -393,7 +393,7 @@ function opencodeConfig(apiKey) {
       provider: {
         [PROVIDER_KEY]: {
           npm: '@ai-sdk/openai-compatible',
-          name: 'AI Tools',
+          name: PROVIDER_KEY,
           options: {
             apiKey,
             baseURL: BASE_URL,
@@ -410,10 +410,10 @@ function opencodeConfig(apiKey) {
 
 function codexConfig() {
   return `model = "${DEFAULT_MODEL}"
-model_provider = "ai-tools"
+model_provider = "qiyuan-code-model"
 
-[model_providers.ai-tools]
-name = "AI Tools"
+[model_providers.qiyuan-code-model]
+name = "${PROVIDER_KEY}"
 base_url = "${BASE_URL}"
 env_key = "OPENAI_API_KEY"
 wire_api = "chat"`;
