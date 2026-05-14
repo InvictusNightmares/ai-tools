@@ -21,13 +21,13 @@ Users only provide an API key. The installer does not ask for a base URL or mode
 Online install:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/InvictusNightmares/ai-tools/main/shell/code-agent/install.sh | bash
+curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/shell/code-agent/install.sh | bash
 ```
 
 Non-interactive:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/InvictusNightmares/ai-tools/main/shell/code-agent/install.sh | bash -s -- \
+curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/shell/code-agent/install.sh | bash -s -- \
   --agents all \
   --api-key sk-xxx \
   --yes
@@ -38,13 +38,13 @@ curl -fsSL https://raw.githubusercontent.com/InvictusNightmares/ai-tools/main/sh
 Download, run, and delete:
 
 ```cmd
-curl -fsSL https://raw.githubusercontent.com/InvictusNightmares/ai-tools/main/shell/code-agent/install.cmd -o install-ai-agents.cmd && install-ai-agents.cmd && del install-ai-agents.cmd
+curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/shell/code-agent/install.cmd -o install-ai-agents.cmd && install-ai-agents.cmd && del install-ai-agents.cmd
 ```
 
 Non-interactive:
 
 ```cmd
-curl -fsSL https://raw.githubusercontent.com/InvictusNightmares/ai-tools/main/shell/code-agent/install.cmd -o install-ai-agents.cmd && install-ai-agents.cmd --agents all --api-key sk-xxx --yes && del install-ai-agents.cmd
+curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/shell/code-agent/install.cmd -o install-ai-agents.cmd && install-ai-agents.cmd --agents all --api-key sk-xxx --yes && del install-ai-agents.cmd
 ```
 
 ## Windows PowerShell
@@ -52,13 +52,13 @@ curl -fsSL https://raw.githubusercontent.com/InvictusNightmares/ai-tools/main/sh
 Download, run, and delete:
 
 ```powershell
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/InvictusNightmares/ai-tools/main/shell/code-agent/install.ps1" -OutFile "install-ai-agents.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File .\install-ai-agents.ps1; Remove-Item .\install-ai-agents.ps1
+Invoke-WebRequest -Uri "https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/shell/code-agent/install.ps1" -OutFile "install-ai-agents.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File .\install-ai-agents.ps1; Remove-Item .\install-ai-agents.ps1
 ```
 
 Non-interactive:
 
 ```powershell
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/InvictusNightmares/ai-tools/main/shell/code-agent/install.ps1" -OutFile "install-ai-agents.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File .\install-ai-agents.ps1 --agents all --api-key sk-xxx --yes; Remove-Item .\install-ai-agents.ps1
+Invoke-WebRequest -Uri "https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/shell/code-agent/install.ps1" -OutFile "install-ai-agents.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File .\install-ai-agents.ps1 --agents all --api-key sk-xxx --yes; Remove-Item .\install-ai-agents.ps1
 ```
 
 ## Local Usage
@@ -167,7 +167,7 @@ Dry run prints actions without installing packages or writing files.
 
 ## Bootstrap Override
 
-The online launchers download `install.js` from GitHub by default. For testing a mirror or branch, set:
+The online launchers download `install.js` from Gitee by default. For testing a mirror or branch, set:
 
 ```bash
 AI_TOOLS_INSTALLER_BASE_URL="https://example.com/shell/code-agent" bash shell/code-agent/install.sh

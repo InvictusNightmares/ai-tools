@@ -2,7 +2,7 @@
 set -eu
 
 SCRIPT_NAME="install.js"
-DEFAULT_BASE_URL="https://raw.githubusercontent.com/InvictusNightmares/ai-tools/main/shell/code-agent"
+DEFAULT_BASE_URL="https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/shell/code-agent"
 BASE_URL="${AI_TOOLS_INSTALLER_BASE_URL:-$DEFAULT_BASE_URL}"
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" 2>/dev/null && pwd || pwd)
 LOCAL_SCRIPT="$SCRIPT_DIR/$SCRIPT_NAME"
