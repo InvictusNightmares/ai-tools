@@ -8,8 +8,8 @@ const { spawnSync } = require('node:child_process');
 
 const DEFAULT_BASE_URL = '';
 const DEFAULT_MODEL = 'gpt-5.5';
+const DEFAULT_CODEX_MODEL = DEFAULT_MODEL;
 const PROVIDER_KEY = '启源Code Model';
-const CODEX_PROVIDER_ID = 'qiyuan';
 
 const AGENTS = ['claude-code', 'codex', 'opencode'];
 const MODES = ['install-and-config', 'install-only', 'config-only', 'verify-only'];
@@ -434,20 +434,17 @@ function opencodeConfig(apiKey, baseURL) {
 }
 
 function codexConfig(baseURL) {
-  const catalogPath = path.join(homeDir(), '.codex', 'models.json');
-  return `model = "${DEFAULT_MODEL}"
-model_provider = "${CODEX_PROVIDER_ID}"
-forced_login_method = "api"
-cli_auth_credentials_store = "file"
-model_catalog_json = ${JSON.stringify(catalogPath)}
+  return `model_provider = "${PROVIDER_KEY}"
+model = "${DEFAULT_CODEX_MODEL}"
+model_reasoning_effort = "high"
+network_access = "enabled"
 disable_response_storage = true
 
-[model_providers.${CODEX_PROVIDER_ID}]
-name = "${PROVIDER_KEY}"
+[model_providers.${JSON.stringify(PROVIDER_KEY)}]
+name = "OpenAI"
 base_url = "${baseURL}"
 wire_api = "responses"
-requires_openai_auth = true
-supports_websockets = false`;
+requires_openai_auth = true`;
 }
 
 function codexModelCatalog() {
