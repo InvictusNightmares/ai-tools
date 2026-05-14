@@ -8,6 +8,12 @@ The installer uses one fixed endpoint:
 http://8.216.44.189:8317/v1
 ```
 
+Claude Code uses the same endpoint without the `/v1` suffix:
+
+```text
+http://8.216.44.189:8317
+```
+
 The default model is fixed:
 
 ```text
@@ -116,6 +122,7 @@ verify-only         Only verify commands and API
 macOS / Linux Claude Code:
 
 ```text
+~/.claude.json
 ~/.claude/settings.json
 ~/.ai-agents/env
 ```
@@ -136,6 +143,7 @@ macOS / Linux OpenCode:
 Windows Claude Code:
 
 ```text
+%USERPROFILE%\.claude.json
 %USERPROFILE%\.claude\settings.json
 %USERPROFILE%\.ai-agents\env.cmd
 ```
