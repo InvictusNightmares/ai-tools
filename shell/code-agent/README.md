@@ -93,7 +93,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\shell\code-agent\install.p
 
 ```text
 --agents <list>       all or comma-separated: claude-code,codex,opencode
---api-key <key>       API key for AI Tools
+--api-key <key>       API key for 启源Code Model
 --mode <mode>         install-and-config, install-only, config-only, verify-only
 --yes                 Do not prompt for confirmation
 --force               Reinstall or overwrite existing files without asking
