@@ -32,6 +32,10 @@ const OPENCODE_MODELS = {
   'codex-auto-review': 'Codex Auto Review',
 };
 
+function supportsImageInput(modelId) {
+  return /^(gpt|qwen|kimi)-/i.test(modelId);
+}
+
 function usage() {
   console.log(`Usage: node shell/install.js [options]
 
@@ -384,7 +388,16 @@ function installNpmPackage(packageName, binaryName, options) {
 
 function opencodeConfig(apiKey) {
   const models = Object.fromEntries(
-    Object.entries(OPENCODE_MODELS).map(([id, name]) => [id, { name }])
+    Object.entries(OPENCODE_MODELS).map(([id, name]) => [
+      id,
+      {
+        name,
+        modalities: {
+          input: supportsImageInput(id) ? ['text', 'image'] : ['text'],
+          output: ['text'],
+        },
+      },
+    ])
   );
 
   return JSON.stringify(
