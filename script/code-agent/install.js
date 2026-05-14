@@ -598,48 +598,6 @@ function verifyCommand(command, options) {
   }
 }
 
-function verifyApiModels(runtime, options) {
-  if (options.dryRun) {
-    console.log(`[dry-run] curl -fsS -H "Authorization: Bearer ***" ${runtime.baseURL}/models`);
-    return true;
-  }
-
-  const result = spawnSync(
-    'curl',
-    ['-fsS', '-H', `Authorization: Bearer ${runtime.apiKey}`, `${runtime.baseURL}/models`],
-    { stdio: 'ignore' }
-  );
-  return result.status === 0;
-}
-
-function verifyApiChat(runtime, options) {
-  if (options.dryRun) {
-    console.log(`[dry-run] curl chat completion with model ${DEFAULT_MODEL} ${runtime.baseURL}/chat/completions`);
-    return true;
-  }
-
-  const payload = JSON.stringify({
-    model: DEFAULT_MODEL,
-    messages: [{ role: 'user', content: 'ping' }],
-    max_tokens: 10,
-  });
-  const result = spawnSync(
-    'curl',
-    [
-      '-fsS',
-      '-H',
-      `Authorization: Bearer ${runtime.apiKey}`,
-      '-H',
-      'Content-Type: application/json',
-      '-d',
-      payload,
-      `${runtime.baseURL}/chat/completions`,
-    ],
-    { stdio: 'ignore' }
-  );
-  return result.status === 0;
-}
-
 async function collectRuntime(options) {
   const rl = createPrompt();
   try {
@@ -705,14 +663,6 @@ async function executePlan(runtime, options, rl) {
     agentDefinitions[agent].verify(options);
   }
 
-  if (runtime.mode !== 'install-only') {
-    step('验证 API');
-    if (verifyApiModels(runtime, options)) success('API /models 可用');
-    else warn('API /models 验证失败');
-
-    if (verifyApiChat(runtime, options)) success('API /chat/completions 可用');
-    else warn('API /chat/completions 验证失败');
-  }
 }
 
 async function main() {
