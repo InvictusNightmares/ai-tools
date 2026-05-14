@@ -434,11 +434,13 @@ function opencodeConfig(apiKey, baseURL) {
 }
 
 function codexConfig(baseURL) {
+  const catalogPath = path.join(homeDir(), '.codex', 'models.json');
   return `model_provider = "${PROVIDER_KEY}"
 model = "${DEFAULT_CODEX_MODEL}"
 model_reasoning_effort = "high"
 network_access = "enabled"
 disable_response_storage = true
+model_catalog_json = ${JSON.stringify(catalogPath)}
 
 [model_providers.${JSON.stringify(PROVIDER_KEY)}]
 name = "OpenAI"
