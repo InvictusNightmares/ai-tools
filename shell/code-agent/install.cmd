@@ -2,7 +2,7 @@
 setlocal
 
 set "SCRIPT_NAME=install.js"
-set "DEFAULT_BASE_URL=https://raw.githubusercontent.com/InvictusNightmares/ai-tools/main/shell/code-agent"
+set "DEFAULT_BASE_URL=https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/shell/code-agent"
 if "%AI_TOOLS_INSTALLER_BASE_URL%"=="" (
   set "BASE_URL=%DEFAULT_BASE_URL%"
 ) else (

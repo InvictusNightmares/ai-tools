@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 
 $ScriptName = "install.js"
-$DefaultBaseUrl = "https://raw.githubusercontent.com/InvictusNightmares/ai-tools/main/shell/code-agent"
+$DefaultBaseUrl = "https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/shell/code-agent"
 $BaseUrl = if ($env:AI_TOOLS_INSTALLER_BASE_URL) { $env:AI_TOOLS_INSTALLER_BASE_URL } else { $DefaultBaseUrl }
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $LocalScript = Join-Path $ScriptDir $ScriptName
