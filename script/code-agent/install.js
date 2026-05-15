@@ -382,6 +382,12 @@ function run(command, args, options, env = process.env) {
   }
 }
 
+function commandOutput(command, args) {
+  const result = spawnSync(command, args, { encoding: 'utf8', shell: process.platform === 'win32' });
+  if (result.status !== 0) return '';
+  return String(result.stdout || '').trim();
+}
+
 function installNpmPackage(packageName, binaryName, options) {
   if (commandExists(binaryName) && !options.force) {
     success(`${binaryName} 已安装`);
@@ -449,6 +455,78 @@ async function writeOpencodeConfig(runtime, options, rl) {
   await writeFileSafely(dacsConfigPath, opencodeConfig(runtime.apiKey, runtime.dacsBaseURL), options, rl);
   success(`OpenCode DACS 外配置: ${externalConfigPath}`);
   success(`OpenCode DACS 内配置: ${dacsConfigPath}`);
+  await writeOpencodeDacsMacAdapter(runtime, options, rl);
+}
+
+function findOpencodeBinary(binDir = '') {
+  if (process.platform === 'win32') return '';
+
+  const commandPath = commandOutput('command', ['-v', 'opencode']);
+  const candidates = [
+    commandPath,
+    path.join(homeDir(), '.opencode', 'bin', 'opencode'),
+    '/usr/local/bin/opencode',
+    '/opt/homebrew/bin/opencode',
+  ].filter(Boolean);
+
+  for (const candidate of [...new Set(candidates)]) {
+    if (binDir && path.resolve(candidate) === path.resolve(path.join(binDir, 'opencode'))) continue;
+    if (candidate.includes(`${path.sep}.globalBase${path.sep}usr${path.sep}bin${path.sep}opencode`)) continue;
+    if (fs.existsSync(candidate)) return candidate;
+  }
+
+  return '';
+}
+
+function opencodeDacsWrapper(runtime, realOpencode) {
+  const configJson = opencodeConfig(runtime.apiKey, runtime.dacsBaseURL);
+  return `#!/bin/bash
+set -eu
+
+REAL_OPENCODE=${shellSingleQuote(realOpencode)}
+OPENCODE_TMP_ROOT="\${TMPDIR:-/tmp}"
+OPENCODE_TMP_ROOT="\${OPENCODE_TMP_ROOT%/}"
+OPENCODE_HOME="$OPENCODE_TMP_ROOT/opencode-home-dacs-$$"
+OPENCODE_CONFIG_ROOT="$OPENCODE_HOME/config"
+OPENCODE_DATA_ROOT="$OPENCODE_HOME/data"
+OPENCODE_STATE_ROOT="$OPENCODE_HOME/state"
+OPENCODE_CACHE_ROOT="$OPENCODE_HOME/cache"
+OPENCODE_RUNTIME_ROOT="$OPENCODE_HOME/runtime"
+
+export XDG_CONFIG_HOME="$OPENCODE_CONFIG_ROOT"
+export XDG_DATA_HOME="$OPENCODE_DATA_ROOT"
+export XDG_STATE_HOME="$OPENCODE_STATE_ROOT"
+export XDG_CACHE_HOME="$OPENCODE_CACHE_ROOT"
+export XDG_RUNTIME_DIR="$OPENCODE_RUNTIME_ROOT"
+export OPENCODE_CONFIG_DIR="$OPENCODE_CONFIG_ROOT/opencode"
+export OPENCODE_MODELS_URL="http://localhost"
+
+mkdir -p "$OPENCODE_CONFIG_DIR" "$OPENCODE_DATA_ROOT" "$OPENCODE_STATE_ROOT" "$OPENCODE_CACHE_ROOT" "$OPENCODE_RUNTIME_ROOT"
+
+/bin/cat > "$OPENCODE_CONFIG_DIR/opencode.json" <<'OPENCODE_DACS_CONFIG'
+${configJson}
+OPENCODE_DACS_CONFIG
+
+exec "$REAL_OPENCODE" "$@"`;
+}
+
+async function writeOpencodeDacsMacAdapter(runtime, options, rl) {
+  if (process.platform !== 'darwin') return;
+
+  const binDir = dacsGlobalBaseBinDir();
+  if (!binDir) {
+    warn('未找到 DACS .globalBase/usr/bin，跳过 macOS OpenCode DACS 适配。可设置 AI_TOOLS_DACS_BIN_DIR 后重试。');
+    return;
+  }
+
+  const realOpencode = findOpencodeBinary(binDir);
+  if (!realOpencode) {
+    warn('未找到 OpenCode 可执行文件，跳过 DACS OpenCode 替身。请先安装 opencode 后重试。');
+    return;
+  }
+
+  await writeExecutableSafely(path.join(binDir, 'opencode'), opencodeDacsWrapper(runtime, realOpencode), options, rl);
+  success(`OpenCode macOS DACS 替身: ${path.join(binDir, 'opencode')}`);
 }
 
 function codexConfig(baseURL) {
@@ -522,6 +600,177 @@ function codexAuth(apiKey) {
   );
 }
 
+function writeExecutableSafely(filePath, content, options, rl) {
+  return writeFileSafely(filePath, content, options, rl).then(() => {
+    if (options.dryRun) {
+      console.log(`[dry-run] chmod 755 ${filePath}`);
+      return;
+    }
+    fs.chmodSync(filePath, 0o755);
+  });
+}
+
+function dacsGlobalBaseBinDir() {
+  const override = process.env.AI_TOOLS_DACS_BIN_DIR || process.env.DACS_GLOBAL_BASE_BIN;
+  if (override) return override;
+
+  const pathEntries = String(process.env.PATH || '').split(path.delimiter).filter(Boolean);
+  const globalBaseEntry = pathEntries.find((entry) => entry.includes(`${path.sep}.globalBase${path.sep}usr${path.sep}bin`));
+  if (globalBaseEntry) return globalBaseEntry;
+
+  const meiliDir = path.join(homeDir(), 'meili');
+  if (fs.existsSync(meiliDir)) {
+    for (const entry of fs.readdirSync(meiliDir, { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue;
+      const candidate = path.join(meiliDir, entry.name, 'Applications', '.globalBase', 'usr', 'bin');
+      if (fs.existsSync(path.dirname(candidate))) return candidate;
+    }
+  }
+
+  return '';
+}
+
+function codexDarwinTargetTriple() {
+  if (process.arch === 'arm64') return 'aarch64-apple-darwin';
+  if (process.arch === 'x64') return 'x86_64-apple-darwin';
+  return '';
+}
+
+function findCodexNativeBinary() {
+  if (process.platform !== 'darwin') return null;
+
+  const targetTriple = codexDarwinTargetTriple();
+  if (!targetTriple) return null;
+
+  const packageName = process.arch === 'arm64' ? '@openai/codex-darwin-arm64' : '@openai/codex-darwin-x64';
+  const npmRoot = commandOutput('npm', ['root', '-g']);
+  const codexCommand = commandOutput('command', ['-v', 'codex']);
+  const roots = [
+    npmRoot,
+    path.join(npmRoot, 'node_modules'),
+    path.join(npmRoot, 'lib', 'node_modules'),
+    codexCommand ? path.resolve(path.dirname(codexCommand), '..') : '',
+    codexCommand ? path.resolve(path.dirname(codexCommand), '..', 'lib', 'node_modules') : '',
+  ].filter(Boolean);
+
+  for (const root of [...new Set(roots)]) {
+    const vendorRoot = path.join(root, '@openai', 'codex', 'node_modules', packageName, 'vendor', targetTriple);
+    const binaryPath = path.join(vendorRoot, 'codex', 'codex');
+    const pathDir = path.join(vendorRoot, 'path');
+    if (fs.existsSync(binaryPath)) return { binaryPath, pathDir };
+  }
+
+  return null;
+}
+
+function shellSingleQuote(value) {
+  return `'${String(value).replace(/'/g, `'"'"'`)}'`;
+}
+
+function codexDacsWrapper(runtime, nativePaths) {
+  const providerKey = 'qiyuan-code-model';
+  const configArgs = [
+    `model_provider=${JSON.stringify(providerKey)}`,
+    `model=${JSON.stringify(DEFAULT_CODEX_MODEL)}`,
+    'model_reasoning_effort="high"',
+    'network_access="enabled"',
+    'disable_response_storage=true',
+    `model_providers.${providerKey}.name="OpenAI"`,
+    `model_providers.${providerKey}.base_url=${JSON.stringify(runtime.dacsBaseURL)}`,
+    `model_providers.${providerKey}.wire_api="responses"`,
+    `model_providers.${providerKey}.requires_openai_auth=true`,
+  ];
+  const configFlags = configArgs.map((entry) => `  -c ${shellSingleQuote(entry)} \\`).join('\n');
+
+  return `#!/bin/bash
+set -eu
+
+REAL_CODEX=${shellSingleQuote(nativePaths.binaryPath)}
+CODEX_PATH_DIR=${shellSingleQuote(nativePaths.pathDir)}
+CODEX_TMP_ROOT="\${TMPDIR:-/tmp}"
+CODEX_TMP_ROOT="\${CODEX_TMP_ROOT%/}"
+
+export CODEX_HOME="$CODEX_TMP_ROOT/codex-home-dacs-$$"
+export PATH="$CODEX_PATH_DIR:$PATH"
+export CODEX_MANAGED_BY_NPM=1
+mkdir -p "$CODEX_HOME"
+
+if [ -z "\${OPENAI_API_KEY:-}" ] && [ -f "$HOME/.codex/auth.json" ]; then
+  OPENAI_API_KEY="$(/usr/bin/sed -n 's/.*"OPENAI_API_KEY"[[:space:]]*:[[:space:]]*"\\([^"]*\\)".*/\\1/p' "$HOME/.codex/auth.json")"
+  export OPENAI_API_KEY
+fi
+
+exec -a codex "$REAL_CODEX" \\
+${configFlags}
+  "$@"`;
+}
+
+function dacsWritableProbe() {
+  return `#!/bin/bash
+set -u
+
+echo "PWD=$PWD"
+echo "HOME=$HOME"
+echo "TMPDIR=\${TMPDIR:-}"
+echo "PATH=$PATH"
+echo
+
+candidates=(
+  "$PWD"
+  "$HOME"
+  "\${TMPDIR:-}"
+  "/tmp"
+  "/private/tmp"
+  "$HOME/meili"
+)
+
+if [ -d "$HOME/meili" ]; then
+  for user_dir in "$HOME"/meili/*; do
+    [ -d "$user_dir" ] || continue
+    candidates+=(
+      "$user_dir"
+      "$user_dir/Applications"
+      "$user_dir/Applications/.globalBase"
+      "$user_dir/Applications/.globalBase/var"
+    )
+  done
+fi
+
+for dir in "\${candidates[@]}"; do
+  [ -n "$dir" ] || continue
+  test_root="$dir/.dacs-write-probe-$$"
+
+  if mkdir -p "$test_root" 2>/dev/null && printf test > "$test_root/file" 2>/dev/null; then
+    rm -rf "$test_root" 2>/dev/null || true
+    echo "OK    $dir"
+  else
+    rm -rf "$test_root" 2>/dev/null || true
+    echo "FAIL  $dir"
+  fi
+done`;
+}
+
+async function writeCodexDacsMacAdapter(runtime, options, rl) {
+  if (process.platform !== 'darwin') return;
+
+  const binDir = dacsGlobalBaseBinDir();
+  if (!binDir) {
+    warn('未找到 DACS .globalBase/usr/bin，跳过 macOS Codex DACS 适配。可设置 AI_TOOLS_DACS_BIN_DIR 后重试。');
+    return;
+  }
+
+  const nativePaths = findCodexNativeBinary();
+  if (!nativePaths) {
+    warn('未找到 Codex macOS 原生二进制，跳过 DACS Codex 替身。请先安装 @openai/codex 后重试。');
+    return;
+  }
+
+  await writeExecutableSafely(path.join(binDir, 'codex'), codexDacsWrapper(runtime, nativePaths), options, rl);
+  await writeExecutableSafely(path.join(binDir, 'dacs-writable-probe'), dacsWritableProbe(), options, rl);
+  success(`Codex macOS DACS 替身: ${path.join(binDir, 'codex')}`);
+  success(`DACS 可写目录探测: ${path.join(binDir, 'dacs-writable-probe')}`);
+}
+
 async function writeCodexConfig(runtime, options, rl) {
   const codexDir = path.join(homeDir(), '.codex');
   const activeConfigPath = path.join(codexDir, 'config.toml');
@@ -534,6 +783,7 @@ async function writeCodexConfig(runtime, options, rl) {
   await writeFileSafely(dacsConfigPath, codexConfig(runtime.dacsBaseURL), options, rl);
   success(`Codex DACS 外配置: ${externalConfigPath}`);
   success(`Codex DACS 内配置: ${dacsConfigPath}`);
+  await writeCodexDacsMacAdapter(runtime, options, rl);
 }
 
 async function codexLogin(apiKey, options) {
