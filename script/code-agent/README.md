@@ -2,17 +2,21 @@
 
 Team installer for Claude Code, Codex, and OpenCode.
 
-The installer asks for a Base URL. The default endpoint is:
+The installer uses fixed DACS external/internal endpoints and no longer accepts URL input.
+
+DACS external endpoint:
 
 ```text
-http://8.216.44.189:8317/v1
+http://192.168.64.16:4001/v1
 ```
 
-Claude Code uses the configured endpoint without the `/v1` suffix:
+DACS internal endpoint:
 
 ```text
-http://8.216.44.189:8317
+http://47.117.95.192:4001/v1
 ```
+
+Claude Code uses each configured endpoint without the `/v1` suffix.
 
 The default model is fixed:
 
@@ -20,7 +24,7 @@ The default model is fixed:
 gpt-5.5
 ```
 
-Users provide an API key and can accept the default Base URL. The model remains fixed.
+Users provide an API key. The model and DACS external/internal endpoints remain fixed.
 
 ## macOS / Linux
 
@@ -38,7 +42,6 @@ Non-interactive:
 curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/script/code-agent/install.sh | bash -s -- \
   --agents all \
   --api-key sk-xxx \
-  --base-url http://8.216.44.189:8317/v1 \
   --yes
 ```
 
@@ -53,7 +56,7 @@ curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main
 Non-interactive:
 
 ```cmd
-curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/script/code-agent/install.cmd -o install-ai-agents.cmd && .\install-ai-agents.cmd --agents all --api-key sk-xxx --base-url http://8.216.44.189:8317/v1 --yes && del install-ai-agents.cmd
+curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/script/code-agent/install.cmd -o install-ai-agents.cmd && .\install-ai-agents.cmd --agents all --api-key sk-xxx --yes && del install-ai-agents.cmd
 ```
 
 ## Windows PowerShell
@@ -67,7 +70,7 @@ Invoke-WebRequest -Uri "https://raw.giteeusercontent.com/InvictusNightmares/ai-t
 Non-interactive:
 
 ```powershell
-Invoke-WebRequest -Uri "https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/script/code-agent/install.ps1" -OutFile "install-ai-agents.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File .\install-ai-agents.ps1 --agents all --api-key sk-xxx --base-url http://8.216.44.189:8317/v1 --yes; Remove-Item .\install-ai-agents.ps1
+Invoke-WebRequest -Uri "https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main/script/code-agent/install.ps1" -OutFile "install-ai-agents.ps1"; powershell -NoProfile -ExecutionPolicy Bypass -File .\install-ai-agents.ps1 --agents all --api-key sk-xxx --yes; Remove-Item .\install-ai-agents.ps1
 ```
 
 ## Local Usage
@@ -101,7 +104,6 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\script\code-agent\install.
 ```text
 --agents <list>       all or comma-separated: claude-code,codex,opencode
 --api-key <key>       API key for 启源Code Model
---base-url <url>      API base URL, defaults to http://8.216.44.189:8317/v1
 --mode <mode>         install-and-config, install-only, config-only, verify-only
 --yes                 Do not prompt for confirmation
 --force               Reinstall or overwrite existing files without asking
@@ -126,12 +128,16 @@ macOS / Linux Claude Code:
 ```text
 ~/.claude.json
 ~/.claude/settings.json
+~/.claude/settings.external.json
+~/.claude/settings.dacs.json
 ```
 
 macOS / Linux Codex:
 
 ```text
 ~/.codex/config.toml
+~/.codex/config.external.toml
+~/.codex/config.dacs.toml
 ~/.codex/models.json
 ~/.codex/auth.json
 ```
@@ -140,6 +146,8 @@ macOS / Linux OpenCode:
 
 ```text
 ~/.config/opencode/opencode.json
+~/.config/opencode/opencode.external.json
+~/.config/opencode/opencode.dacs.json
 ```
 
 Windows Claude Code:
@@ -147,12 +155,16 @@ Windows Claude Code:
 ```text
 %USERPROFILE%\.claude.json
 %USERPROFILE%\.claude\settings.json
+%USERPROFILE%\.claude\settings.external.json
+%USERPROFILE%\.claude\settings.dacs.json
 ```
 
 Windows Codex:
 
 ```text
 %USERPROFILE%\.codex\config.toml
+%USERPROFILE%\.codex\config.external.toml
+%USERPROFILE%\.codex\config.dacs.toml
 %USERPROFILE%\.codex\models.json
 %USERPROFILE%\.codex\auth.json
 ```
@@ -161,6 +173,18 @@ Windows OpenCode:
 
 ```text
 %USERPROFILE%\.config\opencode\opencode.json
+%USERPROFILE%\.config\opencode\opencode.external.json
+%USERPROFILE%\.config\opencode\opencode.dacs.json
+```
+
+Active config files are written with the DACS external URL by default. DACS can switch to the internal URL by replacing or linking the active file to the `.dacs` file; switch back by pointing it to the `.external` file.
+
+Active/substitute files:
+
+```text
+Claude Code: ~/.claude/settings.json -> settings.external.json or settings.dacs.json
+Codex: ~/.codex/config.toml -> config.external.toml or config.dacs.toml
+OpenCode: ~/.config/opencode/opencode.json -> opencode.external.json or opencode.dacs.json
 ```
 
 Existing files are backed up before overwrite:
@@ -172,7 +196,7 @@ Existing files are backed up before overwrite:
 ## Dry Run
 
 ```bash
-node script/code-agent/install.js --agents all --api-key sk-xxx --base-url http://8.216.44.189:8317/v1 --dry-run --yes
+node script/code-agent/install.js --agents all --api-key sk-xxx --dry-run --yes
 ```
 
 Dry run prints actions without installing packages or writing files.
