@@ -771,7 +771,14 @@ CODEX_TMP_ROOT="\${CODEX_TMP_ROOT%/}"
 export CODEX_HOME="$CODEX_TMP_ROOT/codex-home-dacs-$$"
 export PATH="$CODEX_PATH_DIR:$PATH"
 export CODEX_MANAGED_BY_NPM=1
-mkdir -p "$CODEX_HOME"
+export HOME="$CODEX_HOME/home"
+export XDG_CONFIG_HOME="$CODEX_HOME/xdg/config"
+export XDG_DATA_HOME="$CODEX_HOME/xdg/data"
+export XDG_STATE_HOME="$CODEX_HOME/xdg/state"
+export XDG_CACHE_HOME="$CODEX_HOME/xdg/cache"
+export XDG_RUNTIME_DIR="$CODEX_HOME/xdg/runtime"
+export CODEX_SQLITE_HOME="$CODEX_HOME/sqlite"
+mkdir -p "$CODEX_HOME" "$HOME" "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" "$XDG_STATE_HOME" "$XDG_CACHE_HOME" "$XDG_RUNTIME_DIR" "$CODEX_SQLITE_HOME"
 
 export OPENAI_API_KEY=${shellSingleQuote(runtime.apiKey)}
 
@@ -783,10 +790,13 @@ export OPENAI_API_KEY=${shellSingleQuote(runtime.apiKey)}
 
 if [ "\${AI_TOOLS_DACS_DEBUG:-}" = "1" ]; then
   echo "Codex DACS config: $CODEX_HOME/config.toml" >&2
+  echo "Codex DACS home: $CODEX_HOME" >&2
   /usr/bin/grep 'base_url' "$CODEX_HOME/config.toml" >&2 || true
   /usr/bin/grep 'model_catalog_json' "$CODEX_HOME/config.toml" >&2 || true
   [ -s "$CODEX_HOME/auth.json" ] && echo "Codex DACS auth: $CODEX_HOME/auth.json" >&2
   [ -s "$CODEX_HOME/models.json" ] && echo "Codex DACS models: $CODEX_HOME/models.json" >&2
+  echo "Codex DACS HOME: $HOME" >&2
+  echo "Codex DACS CODEX_SQLITE_HOME: $CODEX_SQLITE_HOME" >&2
 fi
 
 exec -a codex "$REAL_CODEX" "$@"`;
