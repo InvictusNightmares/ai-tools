@@ -491,17 +491,25 @@ function findOpencodeBinary(binDir = '') {
   if (process.platform === 'win32') return '';
 
   const commandPath = commandOutput('command', ['-v', 'opencode']);
+  const npmRoot = commandOutput('npm', ['root', '-g']);
   const candidates = [
     commandPath,
     path.join(homeDir(), '.opencode', 'bin', 'opencode'),
+    path.join(npmRoot, 'opencode-ai', 'bin', 'opencode'),
+    path.join(npmRoot, 'node_modules', 'opencode-ai', 'bin', 'opencode'),
+    path.join(npmRoot, 'lib', 'node_modules', 'opencode-ai', 'bin', 'opencode'),
+    path.join(path.dirname(commandPath || '/'), '..', 'lib', 'node_modules', 'opencode-ai', 'bin', 'opencode'),
     '/usr/local/bin/opencode',
     '/opt/homebrew/bin/opencode',
   ].filter(Boolean);
 
   for (const candidate of [...new Set(candidates)]) {
     if (binDir && path.resolve(candidate) === path.resolve(path.join(binDir, 'opencode'))) continue;
+    if (binDir && path.resolve(candidate) === path.resolve(path.join(binDir, 'opencode-dacs'))) continue;
     if (candidate.includes(`${path.sep}.globalBase${path.sep}usr${path.sep}bin${path.sep}opencode`)) continue;
+    if (candidate.includes(`${path.sep}.globalBase${path.sep}usr${path.sep}bin${path.sep}opencode-dacs`)) continue;
     if (fs.existsSync(candidate)) return candidate;
+    if (candidate === commandPath) return candidate;
   }
 
   return '';
