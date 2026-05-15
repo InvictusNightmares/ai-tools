@@ -773,14 +773,7 @@ export PATH="$CODEX_PATH_DIR:$PATH"
 export CODEX_MANAGED_BY_NPM=1
 mkdir -p "$CODEX_HOME"
 
-if [ -z "\${OPENAI_API_KEY:-}" ] && [ -f "$HOME/.codex/auth.json" ]; then
-  OPENAI_API_KEY="$(/usr/bin/sed -n 's/.*"OPENAI_API_KEY"[[:space:]]*:[[:space:]]*"\\([^"]*\\)".*/\\1/p' "$HOME/.codex/auth.json")"
-  export OPENAI_API_KEY
-fi
-if [ -z "\${OPENAI_API_KEY:-}" ]; then
-  OPENAI_API_KEY=${shellSingleQuote(runtime.apiKey)}
-  export OPENAI_API_KEY
-fi
+export OPENAI_API_KEY=${shellSingleQuote(runtime.apiKey)}
 
 /usr/bin/printf '%s\n' ${configPrintfArgs} > "$CODEX_HOME/config.toml"
 /usr/bin/printf 'model_catalog_json = "%s/models.json"\n' "$CODEX_HOME" >> "$CODEX_HOME/config.toml"
