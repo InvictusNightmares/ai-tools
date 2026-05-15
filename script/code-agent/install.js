@@ -382,6 +382,20 @@ function run(command, args, options, env = process.env) {
   }
 }
 
+function runStatus(command, args, options, env = process.env) {
+  if (options.dryRun) {
+    console.log(`[dry-run] ${command} ${args.join(' ')}`);
+    return 0;
+  }
+
+  if (options.verbose) {
+    console.log(`$ ${command} ${args.join(' ')}`);
+  }
+
+  const result = spawnSync(command, args, { stdio: 'inherit', shell: process.platform === 'win32', env });
+  return result.status === null ? 1 : result.status;
+}
+
 function commandOutput(command, args) {
   const result = spawnSync(command, args, { encoding: 'utf8', shell: process.platform === 'win32' });
   if (result.status !== 0) return '';
@@ -398,7 +412,22 @@ function installNpmPackage(packageName, binaryName, options) {
     throw new Error('需要 Node.js 和 npm。请先安装 Node.js 18+ 后重试。');
   }
 
-  run('npm', ['install', '-g', packageName], options);
+  const status = runStatus('npm', ['install', '-g', packageName], options);
+  if (status !== 0) {
+    if (process.platform === 'win32') {
+      throw new Error(`Command failed: npm install -g ${packageName}`);
+    }
+
+    if (!commandExists('sudo')) {
+      throw new Error(`Command failed: npm install -g ${packageName}. sudo is not available to retry with elevated permissions.`);
+    }
+
+    warn(`npm 全局安装失败，使用 sudo 重试。系统可能会要求输入密码。`);
+    const sudoStatus = runStatus('sudo', ['npm', 'install', '-g', packageName], options);
+    if (sudoStatus !== 0) {
+      throw new Error(`Command failed: sudo npm install -g ${packageName}`);
+    }
+  }
 
   if (!options.dryRun && !commandExists(binaryName)) {
     const hint = process.platform === 'win32' && process.env.APPDATA
@@ -481,6 +510,7 @@ function findOpencodeBinary(binDir = '') {
 function opencodeDacsWrapper(runtime, realOpencode) {
   const configJson = opencodeConfig(runtime.apiKey, runtime.dacsBaseURL);
   return `#!/bin/bash
+# ai-tools generated OpenCode DACS command
 set -eu
 
 REAL_OPENCODE=${shellSingleQuote(realOpencode)}
@@ -503,9 +533,7 @@ export OPENCODE_MODELS_URL="http://localhost"
 
 mkdir -p "$OPENCODE_CONFIG_DIR" "$OPENCODE_DATA_ROOT" "$OPENCODE_STATE_ROOT" "$OPENCODE_CACHE_ROOT" "$OPENCODE_RUNTIME_ROOT"
 
-/bin/cat > "$OPENCODE_CONFIG_DIR/opencode.json" <<'OPENCODE_DACS_CONFIG'
-${configJson}
-OPENCODE_DACS_CONFIG
+/usr/bin/printf '%s\n' ${shellSingleQuote(configJson)} > "$OPENCODE_CONFIG_DIR/opencode.json"
 
 # Some OpenCode builds treat OPENCODE_CONFIG_DIR as the config directory itself,
 # while others follow XDG_CONFIG_HOME/opencode. Keep both paths in sync.
@@ -534,8 +562,9 @@ async function writeOpencodeDacsMacAdapter(runtime, options, rl) {
     return;
   }
 
-  await writeExecutableSafely(path.join(binDir, 'opencode'), opencodeDacsWrapper(runtime, realOpencode), options, rl);
-  success(`OpenCode macOS DACS 替身: ${path.join(binDir, 'opencode')}`);
+  await writeExecutableSafely(path.join(binDir, 'opencode-dacs'), opencodeDacsWrapper(runtime, realOpencode), options, rl);
+  await removeLegacyDacsShadow(path.join(binDir, 'opencode'), 'OpenCode', options);
+  success(`OpenCode macOS DACS 命令: ${path.join(binDir, 'opencode-dacs')}`);
 }
 
 function codexConfig(baseURL) {
@@ -619,6 +648,27 @@ function writeExecutableSafely(filePath, content, options, rl) {
   });
 }
 
+async function removeLegacyDacsShadow(filePath, label, options) {
+  if (!fs.existsSync(filePath)) return;
+
+  let content = '';
+  try {
+    content = fs.readFileSync(filePath, 'utf8');
+  } catch {
+    return;
+  }
+
+  if (!content.includes(`ai-tools generated ${label} DACS command`)) return;
+
+  if (options.dryRun) {
+    console.log(`[dry-run] remove legacy DACS shadow ${filePath}`);
+    return;
+  }
+
+  fs.unlinkSync(filePath);
+  success(`已移除旧 DACS 覆盖命令: ${filePath}`);
+}
+
 function dacsGlobalBaseBinDir() {
   const override = process.env.AI_TOOLS_DACS_BIN_DIR || process.env.DACS_GLOBAL_BASE_BIN;
   if (override) return override;
@@ -694,6 +744,7 @@ function codexDacsWrapper(runtime, nativePaths) {
   const configFlags = configArgs.map((entry) => `  -c ${shellSingleQuote(entry)} \\`).join('\n');
 
   return `#!/bin/bash
+# ai-tools generated Codex DACS command
 set -eu
 
 REAL_CODEX=${shellSingleQuote(nativePaths.binaryPath)}
@@ -776,9 +827,10 @@ async function writeCodexDacsMacAdapter(runtime, options, rl) {
     return;
   }
 
-  await writeExecutableSafely(path.join(binDir, 'codex'), codexDacsWrapper(runtime, nativePaths), options, rl);
+  await writeExecutableSafely(path.join(binDir, 'codex-dacs'), codexDacsWrapper(runtime, nativePaths), options, rl);
+  await removeLegacyDacsShadow(path.join(binDir, 'codex'), 'Codex', options);
   await writeExecutableSafely(path.join(binDir, 'dacs-writable-probe'), dacsWritableProbe(), options, rl);
-  success(`Codex macOS DACS 替身: ${path.join(binDir, 'codex')}`);
+  success(`Codex macOS DACS 命令: ${path.join(binDir, 'codex-dacs')}`);
   success(`DACS 可写目录探测: ${path.join(binDir, 'dacs-writable-probe')}`);
 }
 
@@ -882,7 +934,7 @@ const agentDefinitions = {
       }
     },
     verify: (options) => verifyCommand('codex', options),
-    next: () => 'Codex: run codex.',
+    next: () => 'Codex: run codex outside DACS; run codex-dacs inside DACS.',
   },
   opencode: {
     install: (options) => installNpmPackage('opencode-ai@latest', 'opencode', options),
@@ -890,7 +942,7 @@ const agentDefinitions = {
       await writeOpencodeConfig(runtime, options, rl);
     },
     verify: (options) => verifyCommand('opencode', options),
-    next: () => `OpenCode: run 'opencode' and use ${PROVIDER_KEY}/${DEFAULT_MODEL}.`,
+    next: () => `OpenCode: run opencode outside DACS; run opencode-dacs inside DACS. Use ${PROVIDER_KEY}/${DEFAULT_MODEL}.`,
   },
 };
 
@@ -921,13 +973,11 @@ async function collectRuntime(options) {
     const agents = options.agents ? normalizeAgents(options.agents) : await collectAgents(rl);
     const mode = options.mode || (options.yes ? 'install-and-config' : await collectMode(rl));
 
-    const envExternalBaseURL = process.env.AI_TOOLS_EXTERNAL_BASE_URL || process.env.AI_TOOLS_BASE_URL || process.env.OPENAI_BASE_URL || DEFAULT_EXTERNAL_BASE_URL;
-    const envDacsBaseURL = process.env.AI_TOOLS_DACS_BASE_URL || process.env.DACS_BASE_URL || DEFAULT_DACS_BASE_URL;
     const externalBaseURL = normalizeBaseURL(
-      options.externalBaseURL || (options.yes ? envExternalBaseURL : await askText(rl, '请输入 DACS 外 Base URL', envExternalBaseURL))
+      options.externalBaseURL || (options.yes ? DEFAULT_EXTERNAL_BASE_URL : await askText(rl, '请输入 DACS 外 Base URL', DEFAULT_EXTERNAL_BASE_URL))
     );
     const dacsBaseURL = normalizeBaseURL(
-      options.dacsBaseURL || (options.yes ? envDacsBaseURL : await askText(rl, '请输入 DACS 内 Base URL', envDacsBaseURL))
+      options.dacsBaseURL || (options.yes ? DEFAULT_DACS_BASE_URL : await askText(rl, '请输入 DACS 内 Base URL', DEFAULT_DACS_BASE_URL))
     );
 
     let apiKey = options.apiKey || (options.yes ? process.env.AI_TOOLS_API_KEY || process.env.OPENAI_API_KEY || '' : '');
