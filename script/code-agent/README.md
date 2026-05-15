@@ -142,6 +142,33 @@ macOS / Linux Codex:
 ~/.codex/auth.json
 ```
 
+macOS Codex DACS adapter:
+
+```text
+~/meili/<user>/Applications/.globalBase/usr/bin/codex
+~/meili/<user>/Applications/.globalBase/usr/bin/dacs-writable-probe
+```
+
+The adapter is only written on macOS when Codex is configured and a DACS `.globalBase/usr/bin` directory is found. The installer first checks `PATH`, then scans `~/meili/*/Applications/.globalBase/usr/bin`. Override the target directory with:
+
+```bash
+AI_TOOLS_DACS_BIN_DIR=/path/to/.globalBase/usr/bin node script/code-agent/install.js --agents codex --api-key sk-xxx --yes
+```
+
+Inside DACS, run:
+
+```bash
+codex
+```
+
+If Codex still fails with `Operation not permitted`, run:
+
+```bash
+dacs-writable-probe
+```
+
+The Codex DACS adapter uses a fresh `$TMPDIR/codex-home-dacs-<pid>` directory, reads `OPENAI_API_KEY` from `~/.codex/auth.json` when needed, and passes DACS provider settings through `codex -c` flags to avoid writing `config.toml` inside DACS.
+
 macOS / Linux OpenCode:
 
 ```text
@@ -149,6 +176,14 @@ macOS / Linux OpenCode:
 ~/.config/opencode/opencode.external.json
 ~/.config/opencode/opencode.dacs.json
 ```
+
+macOS OpenCode DACS adapter:
+
+```text
+~/meili/<user>/Applications/.globalBase/usr/bin/opencode
+```
+
+The adapter is written on macOS when OpenCode is configured and a DACS `.globalBase/usr/bin` directory is found. Outside DACS, `opencode` reads `~/.config/opencode/opencode.json` and uses the external URL. Inside DACS, the adapter creates a fresh `$TMPDIR/opencode-home-dacs-<pid>` runtime, writes an internal-URL `opencode.json`, points `XDG_*` and `OPENCODE_CONFIG_DIR` at that temporary runtime, and then starts the real OpenCode binary.
 
 Windows Claude Code:
 
