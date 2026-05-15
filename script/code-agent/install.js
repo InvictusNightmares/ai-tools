@@ -745,6 +745,8 @@ function codexDacsWrapper(runtime, nativePaths) {
     'model_reasoning_effort = "high"',
     'network_access = "enabled"',
     'disable_response_storage = true',
+  ];
+  const providerConfigLines = [
     '',
     `[model_providers.${JSON.stringify(PROVIDER_KEY)}]`,
     'name = "OpenAI"',
@@ -753,6 +755,7 @@ function codexDacsWrapper(runtime, nativePaths) {
     'requires_openai_auth = true',
   ];
   const configPrintfArgs = configLines.map(shellSingleQuote).join(' ');
+  const providerConfigPrintfArgs = providerConfigLines.map(shellSingleQuote).join(' ');
   const authJson = codexAuth(runtime.apiKey);
   const modelsJson = codexModelCatalog();
 
@@ -781,12 +784,16 @@ fi
 
 /usr/bin/printf '%s\n' ${configPrintfArgs} > "$CODEX_HOME/config.toml"
 /usr/bin/printf 'model_catalog_json = "%s/models.json"\n' "$CODEX_HOME" >> "$CODEX_HOME/config.toml"
+/usr/bin/printf '%s\n' ${providerConfigPrintfArgs} >> "$CODEX_HOME/config.toml"
 /usr/bin/printf '%s\n' ${shellSingleQuote(authJson)} > "$CODEX_HOME/auth.json"
 /usr/bin/printf '%s\n' ${shellSingleQuote(modelsJson)} > "$CODEX_HOME/models.json"
 
 if [ "\${AI_TOOLS_DACS_DEBUG:-}" = "1" ]; then
   echo "Codex DACS config: $CODEX_HOME/config.toml" >&2
   /usr/bin/grep 'base_url' "$CODEX_HOME/config.toml" >&2 || true
+  /usr/bin/grep 'model_catalog_json' "$CODEX_HOME/config.toml" >&2 || true
+  [ -s "$CODEX_HOME/auth.json" ] && echo "Codex DACS auth: $CODEX_HOME/auth.json" >&2
+  [ -s "$CODEX_HOME/models.json" ] && echo "Codex DACS models: $CODEX_HOME/models.json" >&2
 fi
 
 exec -a codex "$REAL_CODEX" "$@"`;
