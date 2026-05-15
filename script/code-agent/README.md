@@ -36,6 +36,14 @@ curl -fsSL https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/raw/main
 
 The bootstrap reopens `/dev/tty`, so interactive prompts work even when the script is piped through `bash`.
 
+On macOS / Linux, if `npm install -g` fails because the system global npm directory is not writable, the installer automatically retries with sudo:
+
+```bash
+sudo npm install -g <package>
+```
+
+The system may ask for the user's password.
+
 Non-interactive:
 
 ```bash
@@ -121,6 +129,58 @@ config-only         Only write config files
 verify-only         Only verify commands and API
 ```
 
+## DACS Usage
+
+The installer keeps external and internal startup separate.
+
+Outside DACS, use the normal commands:
+
+```bash
+codex
+opencode
+claude
+```
+
+Inside DACS, use the explicit DACS commands:
+
+```bash
+codex-dacs
+opencode-dacs
+```
+
+This prevents the DACS internal URL from leaking into normal terminal usage.
+
+On macOS, the installer writes the DACS commands into the DACS `.globalBase/usr/bin` directory when it can find one:
+
+```text
+~/meili/<user>/Applications/.globalBase/usr/bin/codex-dacs
+~/meili/<user>/Applications/.globalBase/usr/bin/opencode-dacs
+~/meili/<user>/Applications/.globalBase/usr/bin/dacs-writable-probe
+```
+
+Discovery order:
+
+```text
+1. AI_TOOLS_DACS_BIN_DIR
+2. DACS_GLOBAL_BASE_BIN
+3. Current PATH entries containing .globalBase/usr/bin
+4. ~/meili/*/Applications/.globalBase/usr/bin
+```
+
+Override the target directory when needed:
+
+```bash
+AI_TOOLS_DACS_BIN_DIR=/path/to/.globalBase/usr/bin node script/code-agent/install.js --agents codex,opencode --api-key sk-xxx --yes
+```
+
+If an older installer created `codex` or `opencode` shadow commands in `.globalBase/usr/bin`, the newer installer removes only the old ai-tools generated shadows and replaces them with `codex-dacs` / `opencode-dacs`.
+
+Troubleshooting DACS writable paths:
+
+```bash
+dacs-writable-probe
+```
+
 ## Written Files
 
 macOS / Linux Claude Code:
@@ -142,32 +202,26 @@ macOS / Linux Codex:
 ~/.codex/auth.json
 ```
 
-macOS Codex DACS adapter:
+macOS Codex DACS command:
 
 ```text
-~/meili/<user>/Applications/.globalBase/usr/bin/codex
+~/meili/<user>/Applications/.globalBase/usr/bin/codex-dacs
 ~/meili/<user>/Applications/.globalBase/usr/bin/dacs-writable-probe
 ```
 
-The adapter is only written on macOS when Codex is configured and a DACS `.globalBase/usr/bin` directory is found. The installer first checks `PATH`, then scans `~/meili/*/Applications/.globalBase/usr/bin`. Override the target directory with:
+Inside DACS:
 
 ```bash
-AI_TOOLS_DACS_BIN_DIR=/path/to/.globalBase/usr/bin node script/code-agent/install.js --agents codex --api-key sk-xxx --yes
+codex-dacs
 ```
 
-Inside DACS, run:
-
-```bash
-codex
-```
-
-If Codex still fails with `Operation not permitted`, run:
+If Codex fails with `Operation not permitted`, run:
 
 ```bash
 dacs-writable-probe
 ```
 
-The Codex DACS adapter uses a fresh `$TMPDIR/codex-home-dacs-<pid>` directory, reads `OPENAI_API_KEY` from `~/.codex/auth.json` when needed, and passes DACS provider settings through `codex -c` flags to avoid writing `config.toml` inside DACS.
+The Codex DACS command uses a fresh `$TMPDIR/codex-home-dacs-<pid>` directory, reads `OPENAI_API_KEY` from `~/.codex/auth.json` when needed, and passes DACS provider settings through `codex -c` flags to avoid writing `config.toml` inside DACS. Outside DACS, keep using `codex` so it reads the external URL config.
 
 macOS / Linux OpenCode:
 
@@ -177,13 +231,13 @@ macOS / Linux OpenCode:
 ~/.config/opencode/opencode.dacs.json
 ```
 
-macOS OpenCode DACS adapter:
+macOS OpenCode DACS command:
 
 ```text
-~/meili/<user>/Applications/.globalBase/usr/bin/opencode
+~/meili/<user>/Applications/.globalBase/usr/bin/opencode-dacs
 ```
 
-The adapter is written on macOS when OpenCode is configured and a DACS `.globalBase/usr/bin` directory is found. Outside DACS, `opencode` reads `~/.config/opencode/opencode.json` and uses the external URL. Inside DACS, the adapter creates a fresh `$TMPDIR/opencode-home-dacs-<pid>` runtime, writes an internal-URL `opencode.json`, points `XDG_*` and `OPENCODE_CONFIG_DIR` at that temporary runtime, and then starts the real OpenCode binary.
+Outside DACS, run `opencode`; it reads `~/.config/opencode/opencode.json` and uses the external URL. Inside DACS, run `opencode-dacs`; it creates a fresh `$TMPDIR/opencode-home-dacs-<pid>` runtime, writes an internal-URL `opencode.json`, points `XDG_*` and `OPENCODE_CONFIG_DIR` at that temporary runtime, and then starts the real OpenCode binary.
 
 Windows Claude Code:
 
