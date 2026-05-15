@@ -402,6 +402,26 @@ function commandOutput(command, args) {
   return String(result.stdout || '').trim();
 }
 
+function firstCommandPath(command) {
+  const output = process.platform === 'win32'
+    ? commandOutput('where', [command])
+    : commandOutput('command', ['-v', command]);
+  return output.split(/\r?\n/).map((line) => line.trim()).find(Boolean) || '';
+}
+
+function npmGlobalBinDir() {
+  if (process.platform === 'win32') {
+    if (process.env.APPDATA) return path.join(process.env.APPDATA, 'npm');
+    const npmPath = firstCommandPath('npm.cmd') || firstCommandPath('npm');
+    return npmPath ? path.dirname(npmPath) : '';
+  }
+
+  const binDir = commandOutput('npm', ['bin', '-g']);
+  if (binDir && !binDir.includes('Unknown command')) return binDir;
+  const npmPath = firstCommandPath('npm');
+  return npmPath ? path.dirname(npmPath) : '';
+}
+
 function installNpmPackage(packageName, binaryName, options) {
   if (commandExists(binaryName) && !options.force) {
     success(`${binaryName} 已安装`);
@@ -485,13 +505,33 @@ async function writeOpencodeConfig(runtime, options, rl) {
   success(`OpenCode DACS 外配置: ${externalConfigPath}`);
   success(`OpenCode DACS 内配置: ${dacsConfigPath}`);
   await writeOpencodeDacsMacAdapter(runtime, options, rl);
+  await writeOpencodeDacsWindowsAdapter(runtime, options, rl);
 }
 
 function findOpencodeBinary(binDir = '') {
-  if (process.platform === 'win32') return '';
-
-  const commandPath = commandOutput('command', ['-v', 'opencode']);
+  const commandPath = firstCommandPath(process.platform === 'win32' ? 'opencode.cmd' : 'opencode') ||
+    firstCommandPath('opencode');
   const npmRoot = commandOutput('npm', ['root', '-g']);
+  const npmBin = npmGlobalBinDir();
+  if (process.platform === 'win32') {
+    const candidates = [
+      commandPath,
+      npmBin ? path.join(npmBin, 'opencode.cmd') : '',
+      npmBin ? path.join(npmBin, 'opencode') : '',
+      process.env.APPDATA ? path.join(process.env.APPDATA, 'npm', 'opencode.cmd') : '',
+      process.env.APPDATA ? path.join(process.env.APPDATA, 'npm', 'opencode') : '',
+    ].filter(Boolean);
+
+    for (const candidate of [...new Set(candidates)]) {
+      if (binDir && path.resolve(candidate) === path.resolve(path.join(binDir, 'opencode.cmd'))) continue;
+      if (binDir && path.resolve(candidate) === path.resolve(path.join(binDir, 'opencode-dacs.cmd'))) continue;
+      if (fs.existsSync(candidate)) return candidate;
+      if (candidate === commandPath) return candidate;
+    }
+
+    return '';
+  }
+
   const candidates = [
     commandPath,
     path.join(homeDir(), '.opencode', 'bin', 'opencode'),
@@ -555,6 +595,66 @@ fi
 exec "$REAL_OPENCODE" "$@"`;
 }
 
+function windowsCmdShim(scriptPath) {
+  return `@ECHO off
+SETLOCAL
+node "${scriptPath}" %*
+EXIT /B %ERRORLEVEL%`;
+}
+
+function windowsNodeString(value) {
+  return JSON.stringify(String(value));
+}
+
+function opencodeDacsWindowsWrapper(runtime, realOpencode) {
+  const configJson = opencodeConfig(runtime.apiKey, runtime.dacsBaseURL);
+  return `#!/usr/bin/env node
+// ai-tools generated OpenCode DACS command
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const { spawnSync } = require('node:child_process');
+
+const realOpencode = ${windowsNodeString(realOpencode)};
+const configJson = ${windowsNodeString(configJson)};
+const opencodeHome = fs.mkdtempSync(path.join(os.tmpdir(), 'opencode-home-dacs-'));
+const configRoot = path.join(opencodeHome, 'config');
+const dataRoot = path.join(opencodeHome, 'data');
+const stateRoot = path.join(opencodeHome, 'state');
+const cacheRoot = path.join(opencodeHome, 'cache');
+const runtimeRoot = path.join(opencodeHome, 'runtime');
+const opencodeConfigDir = path.join(configRoot, 'opencode');
+
+for (const dir of [opencodeConfigDir, dataRoot, stateRoot, cacheRoot, runtimeRoot]) {
+  fs.mkdirSync(dir, { recursive: true });
+}
+
+const configPath = path.join(opencodeConfigDir, 'opencode.json');
+fs.writeFileSync(configPath, configJson + '\n', 'utf8');
+fs.copyFileSync(configPath, path.join(configRoot, 'opencode.json'));
+
+const env = {
+  ...process.env,
+  XDG_CONFIG_HOME: configRoot,
+  XDG_DATA_HOME: dataRoot,
+  XDG_STATE_HOME: stateRoot,
+  XDG_CACHE_HOME: cacheRoot,
+  XDG_RUNTIME_DIR: runtimeRoot,
+  OPENCODE_CONFIG_DIR: opencodeConfigDir,
+  OPENCODE_MODELS_URL: 'http://localhost',
+};
+
+if (process.env.AI_TOOLS_DACS_DEBUG === '1') {
+  console.error('OpenCode DACS config: ' + configPath);
+  const config = JSON.parse(configJson);
+  console.error('OpenCode DACS baseURL: ' + config.provider[${windowsNodeString(PROVIDER_KEY)}].options.baseURL);
+}
+
+const result = spawnSync(realOpencode, process.argv.slice(2), { stdio: 'inherit', shell: true, env });
+process.exit(result.status === null ? 1 : result.status);
+`;
+}
+
 async function writeOpencodeDacsMacAdapter(runtime, options, rl) {
   if (process.platform !== 'darwin') return;
 
@@ -573,6 +673,28 @@ async function writeOpencodeDacsMacAdapter(runtime, options, rl) {
   await writeExecutableSafely(path.join(binDir, 'opencode-dacs'), opencodeDacsWrapper(runtime, realOpencode), options, rl);
   await removeLegacyDacsShadow(path.join(binDir, 'opencode'), 'OpenCode', options);
   success(`OpenCode macOS DACS 命令: ${path.join(binDir, 'opencode-dacs')}`);
+}
+
+async function writeOpencodeDacsWindowsAdapter(runtime, options, rl) {
+  if (process.platform !== 'win32') return;
+
+  const binDir = npmGlobalBinDir();
+  if (!binDir) {
+    warn('未找到 npm 全局 bin 目录，跳过 Windows OpenCode DACS 适配。');
+    return;
+  }
+
+  const realOpencode = findOpencodeBinary(binDir);
+  if (!realOpencode) {
+    warn('未找到 OpenCode 可执行文件，跳过 DACS OpenCode 替身。请先安装 opencode 后重试。');
+    return;
+  }
+
+  const scriptPath = path.join(binDir, 'opencode-dacs.js');
+  const cmdPath = path.join(binDir, 'opencode-dacs.cmd');
+  await writeFileSafely(scriptPath, opencodeDacsWindowsWrapper(runtime, realOpencode), options, rl);
+  await writeFileSafely(cmdPath, windowsCmdShim(scriptPath), options, rl);
+  success(`OpenCode Windows DACS 命令: ${cmdPath}`);
 }
 
 function codexConfig(baseURL) {
@@ -734,6 +856,30 @@ function findCodexNativeBinary() {
   return null;
 }
 
+function findCodexCommand(binDir = '') {
+  const commandPath = firstCommandPath(process.platform === 'win32' ? 'codex.cmd' : 'codex') ||
+    firstCommandPath('codex');
+  const npmBin = npmGlobalBinDir();
+  const candidates = process.platform === 'win32'
+    ? [
+        commandPath,
+        npmBin ? path.join(npmBin, 'codex.cmd') : '',
+        npmBin ? path.join(npmBin, 'codex') : '',
+        process.env.APPDATA ? path.join(process.env.APPDATA, 'npm', 'codex.cmd') : '',
+        process.env.APPDATA ? path.join(process.env.APPDATA, 'npm', 'codex') : '',
+      ]
+    : [commandPath];
+
+  for (const candidate of [...new Set(candidates.filter(Boolean))]) {
+    if (binDir && path.resolve(candidate) === path.resolve(path.join(binDir, 'codex.cmd'))) continue;
+    if (binDir && path.resolve(candidate) === path.resolve(path.join(binDir, 'codex-dacs.cmd'))) continue;
+    if (fs.existsSync(candidate)) return candidate;
+    if (candidate === commandPath) return candidate;
+  }
+
+  return '';
+}
+
 function shellSingleQuote(value) {
   return `'${String(value).replace(/'/g, `'"'"'`)}'`;
 }
@@ -813,6 +959,86 @@ fi
 exec -a codex "$REAL_CODEX" "$@"`;
 }
 
+function codexDacsWindowsWrapper(runtime, realCodex) {
+  const configLines = [
+    `model_provider = ${JSON.stringify(PROVIDER_KEY)}`,
+    `model = ${JSON.stringify(DEFAULT_CODEX_MODEL)}`,
+    'model_reasoning_effort = "high"',
+    'network_access = "enabled"',
+    'disable_response_storage = true',
+    'model_catalog_json = "__CODEX_HOME__/models.json"',
+    '',
+    `[model_providers.${JSON.stringify(PROVIDER_KEY)}]`,
+    'name = "OpenAI"',
+    `base_url = ${JSON.stringify(runtime.dacsBaseURL)}`,
+    'wire_api = "responses"',
+    'requires_openai_auth = true',
+  ];
+  const configTemplate = configLines.join('\n');
+  const authJson = codexAuth(runtime.apiKey);
+  const modelsJson = codexModelCatalog();
+
+  return `#!/usr/bin/env node
+// ai-tools generated Codex DACS command
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const { spawnSync } = require('node:child_process');
+
+const realCodex = ${windowsNodeString(realCodex)};
+const apiKey = ${windowsNodeString(runtime.apiKey)};
+const configTemplate = ${windowsNodeString(configTemplate)};
+const authJson = ${windowsNodeString(authJson)};
+const modelsJson = ${windowsNodeString(modelsJson)};
+const codexHome = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-home-dacs-'));
+const homeDir = path.join(codexHome, 'home');
+const xdgConfigHome = path.join(codexHome, 'xdg', 'config');
+const xdgDataHome = path.join(codexHome, 'xdg', 'data');
+const xdgStateHome = path.join(codexHome, 'xdg', 'state');
+const xdgCacheHome = path.join(codexHome, 'xdg', 'cache');
+const xdgRuntimeDir = path.join(codexHome, 'xdg', 'runtime');
+const sqliteHome = path.join(codexHome, 'sqlite');
+
+for (const dir of [codexHome, homeDir, xdgConfigHome, xdgDataHome, xdgStateHome, xdgCacheHome, xdgRuntimeDir, sqliteHome]) {
+  fs.mkdirSync(dir, { recursive: true });
+}
+
+const configPath = path.join(codexHome, 'config.toml');
+fs.writeFileSync(configPath, configTemplate.replace('__CODEX_HOME__', codexHome.replace(/\\/g, '/')) + '\n', 'utf8');
+fs.writeFileSync(path.join(codexHome, 'auth.json'), authJson + '\n', 'utf8');
+fs.writeFileSync(path.join(codexHome, 'models.json'), modelsJson + '\n', 'utf8');
+
+const env = {
+  ...process.env,
+  CODEX_HOME: codexHome,
+  CODEX_MANAGED_BY_NPM: '1',
+  HOME: homeDir,
+  USERPROFILE: homeDir,
+  XDG_CONFIG_HOME: xdgConfigHome,
+  XDG_DATA_HOME: xdgDataHome,
+  XDG_STATE_HOME: xdgStateHome,
+  XDG_CACHE_HOME: xdgCacheHome,
+  XDG_RUNTIME_DIR: xdgRuntimeDir,
+  CODEX_SQLITE_HOME: sqliteHome,
+  OPENAI_API_KEY: apiKey,
+  CODEX_API_KEY: apiKey,
+};
+delete env.OPENAI_TOKEN;
+delete env.OPENAI_AUTH_TOKEN;
+delete env.CODEX_AUTH_TOKEN;
+delete env.CODEX_REFRESH_TOKEN;
+
+if (process.env.AI_TOOLS_DACS_DEBUG === '1') {
+  console.error('Codex DACS config: ' + configPath);
+  console.error('Codex DACS home: ' + codexHome);
+  console.error('Codex DACS OPENAI_API_KEY: ****' + apiKey.slice(-4));
+}
+
+const result = spawnSync(realCodex, process.argv.slice(2), { stdio: 'inherit', shell: true, env });
+process.exit(result.status === null ? 1 : result.status);
+`;
+}
+
 function dacsWritableProbe() {
   return `#!/bin/bash
 set -u
@@ -878,6 +1104,28 @@ async function writeCodexDacsMacAdapter(runtime, options, rl) {
   await writeExecutableSafely(path.join(binDir, 'dacs-writable-probe'), dacsWritableProbe(), options, rl);
   success(`Codex macOS DACS 命令: ${path.join(binDir, 'codex-dacs')}`);
   success(`DACS 可写目录探测: ${path.join(binDir, 'dacs-writable-probe')}`);
+}
+
+async function writeCodexDacsWindowsAdapter(runtime, options, rl) {
+  if (process.platform !== 'win32') return;
+
+  const binDir = npmGlobalBinDir();
+  if (!binDir) {
+    warn('未找到 npm 全局 bin 目录，跳过 Windows Codex DACS 适配。');
+    return;
+  }
+
+  const realCodex = findCodexCommand(binDir);
+  if (!realCodex) {
+    warn('未找到 Codex 可执行文件，跳过 DACS Codex 替身。请先安装 @openai/codex 后重试。');
+    return;
+  }
+
+  const scriptPath = path.join(binDir, 'codex-dacs.js');
+  const cmdPath = path.join(binDir, 'codex-dacs.cmd');
+  await writeFileSafely(scriptPath, codexDacsWindowsWrapper(runtime, realCodex), options, rl);
+  await writeFileSafely(cmdPath, windowsCmdShim(scriptPath), options, rl);
+  success(`Codex Windows DACS 命令: ${cmdPath}`);
 }
 
 async function writeCodexConfig(runtime, options, rl) {
@@ -975,11 +1223,15 @@ const agentDefinitions = {
       await writeCodexConfig(runtime, options, rl);
       await writeFileSafely(path.join(homeDir(), '.codex', 'models.json'), codexModelCatalog(), options, rl);
       await writeCodexDacsMacAdapter(runtime, options, rl);
+      await writeCodexDacsWindowsAdapter(runtime, options, rl);
       if (!(await codexLogin(runtime.apiKey, options))) {
         await writeFileSafely(path.join(homeDir(), '.codex', 'auth.json'), codexAuth(runtime.apiKey), options, rl);
       }
     },
-    verify: (options) => verifyCommand('codex', options),
+    verify: (options) => {
+      verifyCommand('codex', options);
+      verifyDacsCommand('codex', options);
+    },
     next: () => 'Codex: run codex outside DACS; run codex-dacs inside DACS.',
   },
   opencode: {
@@ -987,7 +1239,10 @@ const agentDefinitions = {
     configure: async (runtime, options, rl) => {
       await writeOpencodeConfig(runtime, options, rl);
     },
-    verify: (options) => verifyCommand('opencode', options),
+    verify: (options) => {
+      verifyCommand('opencode', options);
+      verifyDacsCommand('opencode', options);
+    },
     next: () => `OpenCode: run opencode outside DACS; run opencode-dacs inside DACS. Use ${PROVIDER_KEY}/${DEFAULT_MODEL}.`,
   },
 };
@@ -1003,6 +1258,21 @@ function verifyCommand(command, options) {
   } else {
     const candidates = commandCandidates(command).join(', ');
     warn(`${command} --version 执行失败。Checked: ${candidates}`);
+  }
+}
+
+function verifyDacsCommand(command, options) {
+  const dacsCommand = `${command}-dacs`;
+  if (options.dryRun) {
+    console.log(`[dry-run] ${commandCandidates(dacsCommand)[0]} --version`);
+    return;
+  }
+
+  if (commandExists(dacsCommand)) {
+    success(`${dacsCommand} 可用`);
+  } else {
+    const candidates = commandCandidates(dacsCommand).join(', ');
+    warn(`${dacsCommand} 未找到。Checked: ${candidates}`);
   }
 }
 
