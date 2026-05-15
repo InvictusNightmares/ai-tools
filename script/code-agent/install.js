@@ -658,7 +658,11 @@ async function removeLegacyDacsShadow(filePath, label, options) {
     return;
   }
 
-  if (!content.includes(`ai-tools generated ${label} DACS command`)) return;
+  const isGenerated = content.includes(`ai-tools generated ${label} DACS command`) ||
+    content.includes(`${label === 'Codex' ? 'codex' : 'opencode'}-home-dacs`) ||
+    (label === 'Codex' && content.includes('REAL_CODEX=') && content.includes('exec -a codex')) ||
+    (label === 'OpenCode' && content.includes('REAL_OPENCODE=') && content.includes('OPENCODE_CONFIG_DIR'));
+  if (!isGenerated) return;
 
   if (options.dryRun) {
     console.log(`[dry-run] remove legacy DACS shadow ${filePath}`);
@@ -727,21 +731,22 @@ function shellSingleQuote(value) {
 }
 
 function codexDacsWrapper(runtime, nativePaths) {
-  const providerKey = 'qiyuan-code-model';
-  const catalogPath = path.join(homeDir(), '.codex', 'models.json');
-  const configArgs = [
-    `model_provider=${JSON.stringify(providerKey)}`,
-    `model=${JSON.stringify(DEFAULT_CODEX_MODEL)}`,
-    'model_reasoning_effort="high"',
-    'network_access="enabled"',
-    'disable_response_storage=true',
-    `model_catalog_json=${JSON.stringify(catalogPath)}`,
-    `model_providers.${providerKey}.name="OpenAI"`,
-    `model_providers.${providerKey}.base_url=${JSON.stringify(runtime.dacsBaseURL)}`,
-    `model_providers.${providerKey}.wire_api="responses"`,
-    `model_providers.${providerKey}.requires_openai_auth=true`,
+  const configLines = [
+    `model_provider = ${JSON.stringify(PROVIDER_KEY)}`,
+    `model = ${JSON.stringify(DEFAULT_CODEX_MODEL)}`,
+    'model_reasoning_effort = "high"',
+    'network_access = "enabled"',
+    'disable_response_storage = true',
+    '',
+    `[model_providers.${JSON.stringify(PROVIDER_KEY)}]`,
+    'name = "OpenAI"',
+    `base_url = ${JSON.stringify(runtime.dacsBaseURL)}`,
+    'wire_api = "responses"',
+    'requires_openai_auth = true',
   ];
-  const configFlags = configArgs.map((entry) => `  -c ${shellSingleQuote(entry)} \\`).join('\n');
+  const configPrintfArgs = configLines.map(shellSingleQuote).join(' ');
+  const authJson = codexAuth(runtime.apiKey);
+  const modelsJson = codexModelCatalog();
 
   return `#!/bin/bash
 # ai-tools generated Codex DACS command
@@ -761,10 +766,22 @@ if [ -z "\${OPENAI_API_KEY:-}" ] && [ -f "$HOME/.codex/auth.json" ]; then
   OPENAI_API_KEY="$(/usr/bin/sed -n 's/.*"OPENAI_API_KEY"[[:space:]]*:[[:space:]]*"\\([^"]*\\)".*/\\1/p' "$HOME/.codex/auth.json")"
   export OPENAI_API_KEY
 fi
+if [ -z "\${OPENAI_API_KEY:-}" ]; then
+  OPENAI_API_KEY=${shellSingleQuote(runtime.apiKey)}
+  export OPENAI_API_KEY
+fi
 
-exec -a codex "$REAL_CODEX" \\
-${configFlags}
-  "$@"`;
+/usr/bin/printf '%s\n' ${configPrintfArgs} > "$CODEX_HOME/config.toml"
+/usr/bin/printf 'model_catalog_json = "%s/models.json"\n' "$CODEX_HOME" >> "$CODEX_HOME/config.toml"
+/usr/bin/printf '%s\n' ${shellSingleQuote(authJson)} > "$CODEX_HOME/auth.json"
+/usr/bin/printf '%s\n' ${shellSingleQuote(modelsJson)} > "$CODEX_HOME/models.json"
+
+if [ "\${AI_TOOLS_DACS_DEBUG:-}" = "1" ]; then
+  echo "Codex DACS config: $CODEX_HOME/config.toml" >&2
+  /usr/bin/grep 'base_url' "$CODEX_HOME/config.toml" >&2 || true
+fi
+
+exec -a codex "$REAL_CODEX" "$@"`;
 }
 
 function dacsWritableProbe() {
