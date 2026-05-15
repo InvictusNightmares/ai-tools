@@ -6,7 +6,8 @@ const path = require('node:path');
 const readline = require('node:readline/promises');
 const { spawnSync } = require('node:child_process');
 
-const DEFAULT_BASE_URL = '';
+const DEFAULT_EXTERNAL_BASE_URL = 'http://192.168.64.16:4001/v1';
+const DEFAULT_DACS_BASE_URL = 'http://47.117.95.192:4001/v1';
 const DEFAULT_MODEL = 'gpt-5.5';
 const DEFAULT_CODEX_MODEL = DEFAULT_MODEL;
 const PROVIDER_KEY = '启源Code Model';
@@ -41,7 +42,8 @@ function usage() {
 Options:
   --agents <list>       all or comma-separated: claude-code,codex,opencode
   --api-key <key>       API key for 启源Code Model
-  --base-url <url>      API base URL
+  --external-url <url>  DACS external API base URL
+  --dacs-url <url>      DACS internal API base URL
   --mode <mode>         install-and-config, install-only, config-only, verify-only
   --yes                 Do not prompt for confirmation
   --force               Reinstall or overwrite existing files without asking
@@ -54,7 +56,8 @@ function parseArgs(argv) {
   const options = {
     agents: undefined,
     apiKey: '',
-    baseURL: '',
+    externalBaseURL: '',
+    dacsBaseURL: '',
     mode: undefined,
     yes: false,
     force: false,
@@ -90,7 +93,7 @@ function parseArgs(argv) {
       continue;
     }
 
-    if (['--agents', '--api-key', '--base-url', '--mode'].includes(arg)) {
+    if (['--agents', '--api-key', '--external-url', '--dacs-url', '--mode'].includes(arg)) {
       const value = argv[index + 1];
       if (!value || value.startsWith('--')) {
         throw new Error(`Missing value for ${arg}`);
@@ -98,7 +101,8 @@ function parseArgs(argv) {
 
       if (arg === '--agents') options.agents = value;
       if (arg === '--api-key') options.apiKey = value;
-      if (arg === '--base-url') options.baseURL = value;
+      if (arg === '--external-url') options.externalBaseURL = value;
+      if (arg === '--dacs-url') options.dacsBaseURL = value;
       if (arg === '--mode') options.mode = value;
       index += 1;
       continue;
@@ -433,6 +437,20 @@ function opencodeConfig(apiKey, baseURL) {
   );
 }
 
+async function writeOpencodeConfig(runtime, options, rl) {
+  const opencodeDir = path.join(configDir(), 'opencode');
+  const activeConfigPath = path.join(opencodeDir, 'opencode.json');
+  const externalConfigPath = path.join(opencodeDir, 'opencode.external.json');
+  const dacsConfigPath = path.join(opencodeDir, 'opencode.dacs.json');
+  const externalConfig = opencodeConfig(runtime.apiKey, runtime.externalBaseURL);
+
+  await writeFileSafely(activeConfigPath, externalConfig, options, rl);
+  await writeFileSafely(externalConfigPath, externalConfig, options, rl);
+  await writeFileSafely(dacsConfigPath, opencodeConfig(runtime.apiKey, runtime.dacsBaseURL), options, rl);
+  success(`OpenCode DACS 外配置: ${externalConfigPath}`);
+  success(`OpenCode DACS 内配置: ${dacsConfigPath}`);
+}
+
 function codexConfig(baseURL) {
   const catalogPath = path.join(homeDir(), '.codex', 'models.json');
   return `model_provider = "${PROVIDER_KEY}"
@@ -504,6 +522,20 @@ function codexAuth(apiKey) {
   );
 }
 
+async function writeCodexConfig(runtime, options, rl) {
+  const codexDir = path.join(homeDir(), '.codex');
+  const activeConfigPath = path.join(codexDir, 'config.toml');
+  const externalConfigPath = path.join(codexDir, 'config.external.toml');
+  const dacsConfigPath = path.join(codexDir, 'config.dacs.toml');
+  const externalConfig = codexConfig(runtime.externalBaseURL);
+
+  await writeFileSafely(activeConfigPath, externalConfig, options, rl);
+  await writeFileSafely(externalConfigPath, externalConfig, options, rl);
+  await writeFileSafely(dacsConfigPath, codexConfig(runtime.dacsBaseURL), options, rl);
+  success(`Codex DACS 外配置: ${externalConfigPath}`);
+  success(`Codex DACS 内配置: ${dacsConfigPath}`);
+}
+
 async function codexLogin(apiKey, options) {
   if (options.dryRun) {
     console.log('[dry-run] codex login --with-api-key');
@@ -545,6 +577,20 @@ function claudeGlobalConfig(existing = {}) {
   );
 }
 
+async function writeClaudeSettings(runtime, options, rl) {
+  const claudeDir = path.join(homeDir(), '.claude');
+  const activeSettingsPath = path.join(claudeDir, 'settings.json');
+  const externalSettingsPath = path.join(claudeDir, 'settings.external.json');
+  const dacsSettingsPath = path.join(claudeDir, 'settings.dacs.json');
+  const externalSettings = claudeSettings(runtime.apiKey, runtime.externalBaseURL);
+
+  await writeFileSafely(activeSettingsPath, externalSettings, options, rl);
+  await writeFileSafely(externalSettingsPath, externalSettings, options, rl);
+  await writeFileSafely(dacsSettingsPath, claudeSettings(runtime.apiKey, runtime.dacsBaseURL), options, rl);
+  success(`Claude Code DACS 外配置: ${externalSettingsPath}`);
+  success(`Claude Code DACS 内配置: ${dacsSettingsPath}`);
+}
+
 function readJsonFile(filePath) {
   if (!fs.existsSync(filePath)) return {};
   try {
@@ -558,7 +604,7 @@ const agentDefinitions = {
   'claude-code': {
     install: (options) => installNpmPackage('@anthropic-ai/claude-code', 'claude', options),
     configure: async (runtime, options, rl) => {
-      await writeFileSafely(path.join(homeDir(), '.claude', 'settings.json'), claudeSettings(runtime.apiKey, runtime.baseURL), options, rl);
+      await writeClaudeSettings(runtime, options, rl);
       const claudeJsonPath = path.join(homeDir(), '.claude.json');
       await writeFileSafely(claudeJsonPath, claudeGlobalConfig(readJsonFile(claudeJsonPath)), options, rl);
     },
@@ -568,7 +614,7 @@ const agentDefinitions = {
   codex: {
     install: (options) => installNpmPackage('@openai/codex', 'codex', options),
     configure: async (runtime, options, rl) => {
-      await writeFileSafely(path.join(homeDir(), '.codex', 'config.toml'), codexConfig(runtime.baseURL), options, rl);
+      await writeCodexConfig(runtime, options, rl);
       await writeFileSafely(path.join(homeDir(), '.codex', 'models.json'), codexModelCatalog(), options, rl);
       if (!(await codexLogin(runtime.apiKey, options))) {
         await writeFileSafely(path.join(homeDir(), '.codex', 'auth.json'), codexAuth(runtime.apiKey), options, rl);
@@ -580,12 +626,7 @@ const agentDefinitions = {
   opencode: {
     install: (options) => installNpmPackage('opencode-ai@latest', 'opencode', options),
     configure: async (runtime, options, rl) => {
-      await writeFileSafely(
-        path.join(configDir(), 'opencode', 'opencode.json'),
-        opencodeConfig(runtime.apiKey, runtime.baseURL),
-        options,
-        rl
-      );
+      await writeOpencodeConfig(runtime, options, rl);
     },
     verify: (options) => verifyCommand('opencode', options),
     next: () => `OpenCode: run 'opencode' and use ${PROVIDER_KEY}/${DEFAULT_MODEL}.`,
@@ -619,9 +660,13 @@ async function collectRuntime(options) {
     const agents = options.agents ? normalizeAgents(options.agents) : await collectAgents(rl);
     const mode = options.mode || (options.yes ? 'install-and-config' : await collectMode(rl));
 
-    const envBaseURL = process.env.AI_TOOLS_BASE_URL || process.env.OPENAI_BASE_URL || '';
-    const baseURL = normalizeBaseURL(
-      options.baseURL || (options.yes ? envBaseURL : await askText(rl, '请输入 Base URL', envBaseURL))
+    const envExternalBaseURL = process.env.AI_TOOLS_EXTERNAL_BASE_URL || process.env.AI_TOOLS_BASE_URL || process.env.OPENAI_BASE_URL || DEFAULT_EXTERNAL_BASE_URL;
+    const envDacsBaseURL = process.env.AI_TOOLS_DACS_BASE_URL || process.env.DACS_BASE_URL || DEFAULT_DACS_BASE_URL;
+    const externalBaseURL = normalizeBaseURL(
+      options.externalBaseURL || (options.yes ? envExternalBaseURL : await askText(rl, '请输入 DACS 外 Base URL', envExternalBaseURL))
+    );
+    const dacsBaseURL = normalizeBaseURL(
+      options.dacsBaseURL || (options.yes ? envDacsBaseURL : await askText(rl, '请输入 DACS 内 Base URL', envDacsBaseURL))
     );
 
     let apiKey = options.apiKey || (options.yes ? process.env.AI_TOOLS_API_KEY || process.env.OPENAI_API_KEY || '' : '');
@@ -634,7 +679,7 @@ async function collectRuntime(options) {
       throw new Error('API Key 不能为空。');
     }
 
-    return { rl, runtime: { agents, mode, apiKey, baseURL } };
+    return { rl, runtime: { agents, mode, apiKey, externalBaseURL, dacsBaseURL } };
   } catch (error) {
     rl.close();
     throw error;
@@ -643,7 +688,8 @@ async function collectRuntime(options) {
 
 function printPlan(runtime, options) {
   title('安装计划');
-  console.log(`Base URL: ${runtime.baseURL}`);
+  console.log(`DACS 外 Base URL: ${runtime.externalBaseURL}`);
+  console.log(`DACS 内 Base URL: ${runtime.dacsBaseURL}`);
   console.log(`Default model: ${DEFAULT_MODEL}`);
   console.log(`Agents: ${runtime.agents.join(', ')}`);
   console.log(`Mode: ${runtime.mode}`);
