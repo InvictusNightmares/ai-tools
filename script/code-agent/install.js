@@ -507,6 +507,15 @@ mkdir -p "$OPENCODE_CONFIG_DIR" "$OPENCODE_DATA_ROOT" "$OPENCODE_STATE_ROOT" "$O
 ${configJson}
 OPENCODE_DACS_CONFIG
 
+# Some OpenCode builds treat OPENCODE_CONFIG_DIR as the config directory itself,
+# while others follow XDG_CONFIG_HOME/opencode. Keep both paths in sync.
+/bin/cp "$OPENCODE_CONFIG_DIR/opencode.json" "$OPENCODE_CONFIG_ROOT/opencode.json" 2>/dev/null || true
+
+if [ "\${AI_TOOLS_DACS_DEBUG:-}" = "1" ]; then
+  echo "OpenCode DACS config: $OPENCODE_CONFIG_DIR/opencode.json" >&2
+  /usr/bin/grep '"baseURL"' "$OPENCODE_CONFIG_DIR/opencode.json" >&2 || true
+fi
+
 exec "$REAL_OPENCODE" "$@"`;
 }
 
@@ -669,12 +678,14 @@ function shellSingleQuote(value) {
 
 function codexDacsWrapper(runtime, nativePaths) {
   const providerKey = 'qiyuan-code-model';
+  const catalogPath = path.join(homeDir(), '.codex', 'models.json');
   const configArgs = [
     `model_provider=${JSON.stringify(providerKey)}`,
     `model=${JSON.stringify(DEFAULT_CODEX_MODEL)}`,
     'model_reasoning_effort="high"',
     'network_access="enabled"',
     'disable_response_storage=true',
+    `model_catalog_json=${JSON.stringify(catalogPath)}`,
     `model_providers.${providerKey}.name="OpenAI"`,
     `model_providers.${providerKey}.base_url=${JSON.stringify(runtime.dacsBaseURL)}`,
     `model_providers.${providerKey}.wire_api="responses"`,
@@ -783,7 +794,6 @@ async function writeCodexConfig(runtime, options, rl) {
   await writeFileSafely(dacsConfigPath, codexConfig(runtime.dacsBaseURL), options, rl);
   success(`Codex DACS 外配置: ${externalConfigPath}`);
   success(`Codex DACS 内配置: ${dacsConfigPath}`);
-  await writeCodexDacsMacAdapter(runtime, options, rl);
 }
 
 async function codexLogin(apiKey, options) {
@@ -866,6 +876,7 @@ const agentDefinitions = {
     configure: async (runtime, options, rl) => {
       await writeCodexConfig(runtime, options, rl);
       await writeFileSafely(path.join(homeDir(), '.codex', 'models.json'), codexModelCatalog(), options, rl);
+      await writeCodexDacsMacAdapter(runtime, options, rl);
       if (!(await codexLogin(runtime.apiKey, options))) {
         await writeFileSafely(path.join(homeDir(), '.codex', 'auth.json'), codexAuth(runtime.apiKey), options, rl);
       }
