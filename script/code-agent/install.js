@@ -742,7 +742,6 @@ function codexDacsWrapper(runtime, nativePaths) {
   const configLines = [
     `model_provider = ${JSON.stringify(PROVIDER_KEY)}`,
     `model = ${JSON.stringify(DEFAULT_CODEX_MODEL)}`,
-    'model_reasoning_effort = "high"',
     'network_access = "enabled"',
     'disable_response_storage = true',
   ];
@@ -791,12 +790,17 @@ export OPENAI_API_KEY=${shellSingleQuote(runtime.apiKey)}
 if [ "\${AI_TOOLS_DACS_DEBUG:-}" = "1" ]; then
   echo "Codex DACS config: $CODEX_HOME/config.toml" >&2
   echo "Codex DACS home: $CODEX_HOME" >&2
+  /usr/bin/grep '^model =' "$CODEX_HOME/config.toml" >&2 || true
   /usr/bin/grep 'base_url' "$CODEX_HOME/config.toml" >&2 || true
   /usr/bin/grep 'model_catalog_json' "$CODEX_HOME/config.toml" >&2 || true
   [ -s "$CODEX_HOME/auth.json" ] && echo "Codex DACS auth: $CODEX_HOME/auth.json" >&2
   [ -s "$CODEX_HOME/models.json" ] && echo "Codex DACS models: $CODEX_HOME/models.json" >&2
   echo "Codex DACS HOME: $HOME" >&2
   echo "Codex DACS CODEX_SQLITE_HOME: $CODEX_SQLITE_HOME" >&2
+  if [ -n "\${OPENAI_API_KEY:-}" ]; then
+    key_tail="\${OPENAI_API_KEY: -4}"
+    echo "Codex DACS OPENAI_API_KEY: ****$key_tail" >&2
+  fi
 fi
 
 exec -a codex "$REAL_CODEX" "$@"`;
