@@ -9,6 +9,7 @@ if "%AI_TOOLS_INSTALLER_BASE_URL%"=="" (
 ) else (
   set "BASE_URL=%AI_TOOLS_INSTALLER_BASE_URL%"
 )
+if "%AI_TOOLS_INSTALLER_DEBUG%"=="1" echo install.cmd args: %* 1>&2
 
 set "LOCAL_SCRIPT=%~dp0%SCRIPT_NAME%"
 if exist "%~dp0README.md" if exist "%~dp0install.sh" set "USE_LOCAL_SCRIPT=1"

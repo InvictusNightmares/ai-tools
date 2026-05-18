@@ -1432,6 +1432,10 @@ async function collectRuntime(options) {
       );
     }
 
+    if (options.yes && !options.agents) {
+      throw new Error('Missing --agents for --yes. Use --agents all or choose agents interactively without --yes.');
+    }
+
     const agents = options.agents ? normalizeAgents(options.agents) : await collectAgents(rl);
     const mode = options.mode || (options.yes ? 'install-and-config' : await collectMode(rl));
 
@@ -1461,6 +1465,7 @@ async function collectRuntime(options) {
 
 function printPlan(runtime, options) {
   title('安装计划');
+  if (options.verbose) console.log(`Args: ${process.argv.slice(2).join(' ') || '(none)'}`);
   console.log(`DACS 外 Base URL: ${runtime.externalBaseURL}`);
   console.log(`DACS 内 Base URL: ${runtime.dacsBaseURL}`);
   console.log(`Default model: ${DEFAULT_MODEL}`);
