@@ -5,6 +5,7 @@ $DefaultBaseUrl = "https://raw.giteeusercontent.com/InvictusNightmares/ai-tools/
 $BaseUrl = if ($env:AI_TOOLS_INSTALLER_BASE_URL) { $env:AI_TOOLS_INSTALLER_BASE_URL } else { $DefaultBaseUrl }
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $LocalScript = Join-Path $ScriptDir $ScriptName
+$UseLocalScript = $env:AI_TOOLS_INSTALLER_USE_LOCAL -eq "1" -or ((Test-Path (Join-Path $ScriptDir "README.md")) -and (Test-Path (Join-Path $ScriptDir "install.sh")))
 
 function Test-Command($Name) {
   return [bool](Get-Command $Name -ErrorAction SilentlyContinue)
@@ -15,7 +16,7 @@ if (-not (Test-Command "node")) {
   exit 1
 }
 
-if (Test-Path $LocalScript) {
+if ($UseLocalScript -and (Test-Path $LocalScript)) {
   & node $LocalScript @args
   exit $LASTEXITCODE
 }
