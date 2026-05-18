@@ -462,6 +462,20 @@ function npmPackageVersion(packageName) {
   return commandOutput('npm', ['view', packageName, 'version']);
 }
 
+function installedNpmPackageVersion(packageName) {
+  const npmRoot = commandOutput('npm', ['root', '-g']);
+  if (!npmRoot) return '';
+
+  const packageJsonPath = path.join(npmRoot, packageName, 'package.json');
+  if (!fs.existsSync(packageJsonPath)) return '';
+
+  try {
+    return JSON.parse(fs.readFileSync(packageJsonPath, 'utf8')).version || '';
+  } catch {
+    return '';
+  }
+}
+
 function preferOpencodeWindowsAvx2Binary(options) {
   if (process.platform !== 'win32' || process.arch !== 'x64') return '';
 
@@ -471,11 +485,11 @@ function preferOpencodeWindowsAvx2Binary(options) {
     return '';
   }
 
-  const version = npmPackageVersion('opencode-ai@latest') || 'latest';
-  const packageName = `opencode-windows-x64@${version}`;
   const sourcePath = path.join(npmRoot, 'opencode-windows-x64', 'bin', 'opencode.exe');
 
   if (!fs.existsSync(sourcePath)) {
+    const version = installedNpmPackageVersion('opencode-ai') || npmPackageVersion('opencode-ai@latest') || 'latest';
+    const packageName = `opencode-windows-x64@${version}`;
     const status = runStatus('npm', ['install', '-g', '--ignore-scripts', packageName], options);
     if (status !== 0) {
       if (fs.existsSync(sourcePath)) {
