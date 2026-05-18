@@ -657,6 +657,7 @@ exec "$REAL_OPENCODE" "$@"`;
 function windowsCmdShim(scriptPath) {
   return `@ECHO off
 SETLOCAL
+IF "%AI_TOOLS_DACS_DEBUG%"=="1" ECHO OpenCode DACS shim: ${scriptPath} 1>&2
 node "${scriptPath}" %*
 EXIT /B %ERRORLEVEL%`;
 }
@@ -757,20 +758,26 @@ const env = minimalWindowsEnv(realOpencode, {
   OPENCODE_MODELS_URL: 'http://localhost',
 });
 
-if (process.env.AI_TOOLS_DACS_DEBUG === '1') {
+const args = process.argv.slice(2);
+const dacsDebugIndex = args.indexOf('--dacs-debug');
+const dacsDebug = process.env.AI_TOOLS_DACS_DEBUG === '1' || dacsDebugIndex !== -1;
+if (dacsDebugIndex !== -1) args.splice(dacsDebugIndex, 1);
+
+if (dacsDebug) {
   console.error('OpenCode DACS executable: ' + realOpencode);
   console.error('OpenCode DACS config: ' + configPath);
+  console.error('OpenCode DACS PATH: ' + env.PATH);
   const config = JSON.parse(configJson);
   console.error('OpenCode DACS baseURL: ' + config.provider[${windowsNodeString(PROVIDER_KEY)}].options.baseURL);
 }
 
-const args = process.argv.slice(2);
 if (args.length === 0) args.push('run');
 const result = spawnSync(realOpencode, args, { stdio: 'inherit', shell: false, env, windowsHide: false });
 if (result.error) {
   console.error('Failed to start OpenCode: ' + result.error.message);
   process.exit(1);
 }
+if (dacsDebug) console.error('OpenCode DACS exit status: ' + (result.status === null ? 1 : result.status));
 process.exit(result.status === null ? 1 : result.status);
 `;
 }
