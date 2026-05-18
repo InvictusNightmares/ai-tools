@@ -565,6 +565,10 @@ function findOpencodeBinary(binDir = '') {
   const npmBin = npmGlobalBinDir();
   if (process.platform === 'win32') {
     const candidates = [
+      npmRoot ? path.join(npmRoot, 'opencode-windows-x64', 'bin', 'opencode.exe') : '',
+      npmRoot ? path.join(npmRoot, 'node_modules', 'opencode-windows-x64', 'bin', 'opencode.exe') : '',
+      npmRoot ? path.join(npmRoot, 'lib', 'node_modules', 'opencode-windows-x64', 'bin', 'opencode.exe') : '',
+      process.env.APPDATA ? path.join(process.env.APPDATA, 'npm', 'node_modules', 'opencode-windows-x64', 'bin', 'opencode.exe') : '',
       npmRoot ? path.join(npmRoot, 'opencode-ai', 'bin', 'opencode.exe') : '',
       npmRoot ? path.join(npmRoot, 'node_modules', 'opencode-ai', 'bin', 'opencode.exe') : '',
       npmRoot ? path.join(npmRoot, 'lib', 'node_modules', 'opencode-ai', 'bin', 'opencode.exe') : '',
@@ -754,6 +758,7 @@ const env = minimalWindowsEnv(realOpencode, {
 });
 
 if (process.env.AI_TOOLS_DACS_DEBUG === '1') {
+  console.error('OpenCode DACS executable: ' + realOpencode);
   console.error('OpenCode DACS config: ' + configPath);
   const config = JSON.parse(configJson);
   console.error('OpenCode DACS baseURL: ' + config.provider[${windowsNodeString(PROVIDER_KEY)}].options.baseURL);
