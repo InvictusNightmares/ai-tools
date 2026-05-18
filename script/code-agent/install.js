@@ -11,6 +11,7 @@ const DEFAULT_DACS_BASE_URL = 'http://47.117.95.192:4001/v1';
 const DEFAULT_MODEL = 'gpt-5.5';
 const DEFAULT_CODEX_MODEL = DEFAULT_MODEL;
 const PROVIDER_KEY = '启源Code Model';
+const OPENCODE_PACKAGE = 'opencode-ai@latest';
 
 const AGENTS = ['claude-code', 'codex', 'opencode'];
 const MODES = ['install-and-config', 'install-only', 'config-only', 'verify-only'];
@@ -503,7 +504,7 @@ function preferOpencodeWindowsAvx2Binary(options) {
 }
 
 function installOpencodePackage(options) {
-  installNpmPackage('opencode-ai@latest', 'opencode', options);
+  installNpmPackage(OPENCODE_PACKAGE, 'opencode', options);
   preferOpencodeWindowsAvx2Binary(options);
 }
 
@@ -679,13 +680,7 @@ function warnWindowsCommandShadows(command) {
   }
 }
 
-function opencodeDacsWindowsCmdShim(runtime, realOpencode, dacsHome) {
-  const configRoot = path.join(dacsHome, 'config');
-  const dataRoot = path.join(dacsHome, 'data');
-  const stateRoot = path.join(dacsHome, 'state');
-  const cacheRoot = path.join(dacsHome, 'cache');
-  const runtimeRoot = path.join(dacsHome, 'runtime');
-  const opencodeConfigDir = path.join(configRoot, 'opencode');
+function opencodeDacsWindowsCmdShim(runtime, realOpencode, sourceConfigPath) {
   const exeDir = path.dirname(realOpencode);
 
   const safePath = [
@@ -714,33 +709,47 @@ IF "%AI_TOOLS_DACS_DEBUG%"=="1" SET "DACS_DEBUG=1"
 
 ECHO [ai-tools] opencode-dacs CMD wrapper 1>&2
 
-mkdir "${opencodeConfigDir}" 2>NUL
-mkdir "${dataRoot}" 2>NUL
-mkdir "${stateRoot}" 2>NUL
-mkdir "${cacheRoot}" 2>NUL
-mkdir "${runtimeRoot}" 2>NUL
+SET "OPENCODE_TMP_ROOT=%TEMP%"
+IF "%OPENCODE_TMP_ROOT%"=="" SET "OPENCODE_TMP_ROOT=%TMP%"
+IF "%OPENCODE_TMP_ROOT%"=="" SET "OPENCODE_TMP_ROOT=C:\\Windows\\Temp"
+SET "OPENCODE_HOME=%OPENCODE_TMP_ROOT%\\opencode-home-dacs-%RANDOM%-%RANDOM%"
+SET "OPENCODE_CONFIG_ROOT=%OPENCODE_HOME%\\config"
+SET "OPENCODE_DATA_ROOT=%OPENCODE_HOME%\\data"
+SET "OPENCODE_STATE_ROOT=%OPENCODE_HOME%\\state"
+SET "OPENCODE_CACHE_ROOT=%OPENCODE_HOME%\\cache"
+SET "OPENCODE_RUNTIME_ROOT=%OPENCODE_HOME%\\runtime"
+SET "OPENCODE_CONFIG_DIR=%OPENCODE_CONFIG_ROOT%\\opencode"
 
-SET "XDG_CONFIG_HOME=${configRoot}"
-SET "XDG_DATA_HOME=${dataRoot}"
-SET "XDG_STATE_HOME=${stateRoot}"
-SET "XDG_CACHE_HOME=${cacheRoot}"
-SET "XDG_RUNTIME_DIR=${runtimeRoot}"
-SET "OPENCODE_CONFIG_DIR=${opencodeConfigDir}"
+mkdir "%OPENCODE_CONFIG_DIR%" 2>NUL
+mkdir "%OPENCODE_DATA_ROOT%" 2>NUL
+mkdir "%OPENCODE_STATE_ROOT%" 2>NUL
+mkdir "%OPENCODE_CACHE_ROOT%" 2>NUL
+mkdir "%OPENCODE_RUNTIME_ROOT%" 2>NUL
+
+IF NOT EXIST "${sourceConfigPath}" (
+  ECHO OpenCode DACS source config not found: ${sourceConfigPath} 1>&2
+  EXIT /B 1
+)
+copy /Y "${sourceConfigPath}" "%OPENCODE_CONFIG_DIR%\\opencode.json" >NUL
+copy /Y "${sourceConfigPath}" "%OPENCODE_CONFIG_ROOT%\\opencode.json" >NUL
+
+SET "XDG_CONFIG_HOME=%OPENCODE_CONFIG_ROOT%"
+SET "XDG_DATA_HOME=%OPENCODE_DATA_ROOT%"
+SET "XDG_STATE_HOME=%OPENCODE_STATE_ROOT%"
+SET "XDG_CACHE_HOME=%OPENCODE_CACHE_ROOT%"
+SET "XDG_RUNTIME_DIR=%OPENCODE_RUNTIME_ROOT%"
 SET "OPENCODE_MODELS_URL=http://localhost"
 SET "PATH=${safePath}"
 
 IF "%DACS_DEBUG%"=="1" (
   ECHO OpenCode DACS exe: ${realOpencode} 1>&2
-  ECHO OpenCode DACS config: ${opencodeConfigDir}\\opencode.json 1>&2
+  ECHO OpenCode DACS source config: ${sourceConfigPath} 1>&2
+  ECHO OpenCode DACS runtime config: %OPENCODE_CONFIG_DIR%\\opencode.json 1>&2
   ECHO OpenCode DACS PATH: %PATH% 1>&2
   ECHO OpenCode DACS XDG_CONFIG_HOME: %XDG_CONFIG_HOME% 1>&2
 )
 
-IF "%~1"=="" (
-  "${realOpencode}" run
-) ELSE (
-  "${realOpencode}" %*
-)
+"${realOpencode}" %*
 EXIT /B %ERRORLEVEL%`;
 }
 
@@ -843,21 +852,15 @@ async function writeOpencodeDacsWindowsAdapter(runtime, options, rl) {
   }
 
   const dacsHome = path.join(homeDir(), '.opencode-dacs');
-  const dacsConfigDir = path.join(dacsHome, 'config', 'opencode');
-  ensureDir(dacsConfigDir, options);
+  ensureDir(dacsHome, options);
   const dacsConfig = opencodeConfig(runtime.apiKey, runtime.dacsBaseURL);
-  const dacsConfigPath = path.join(dacsConfigDir, 'opencode.json');
+  const dacsConfigPath = path.join(dacsHome, 'opencode.json');
   backupFile(dacsConfigPath, options);
   if (!options.dryRun) fs.writeFileSync(dacsConfigPath, `${dacsConfig}\n`, 'utf8');
   success(`OpenCode Windows DACS 配置: ${dacsConfigPath}`);
 
-  const fallbackConfigPath = path.join(dacsHome, 'config', 'opencode.json');
-  ensureDir(path.dirname(fallbackConfigPath), options);
-  backupFile(fallbackConfigPath, options);
-  if (!options.dryRun) fs.writeFileSync(fallbackConfigPath, `${dacsConfig}\n`, 'utf8');
-
   const cmdPath = path.join(binDir, 'opencode-dacs.cmd');
-  const shim = `${opencodeDacsWindowsCmdShim(runtime, realOpencode, dacsHome)}\n`;
+  const shim = `${opencodeDacsWindowsCmdShim(runtime, realOpencode, dacsConfigPath)}\n`;
   const commandPaths = [cmdPath, ...windowsExistingCommandPaths('opencode-dacs')];
   for (const targetPath of [...new Set(commandPaths.map((candidate) => path.resolve(candidate)))]) {
     backupFile(targetPath, options);
@@ -1446,6 +1449,7 @@ function printPlan(runtime, options) {
   console.log(`Default model: ${DEFAULT_MODEL}`);
   console.log(`Agents: ${runtime.agents.join(', ')}`);
   console.log(`Mode: ${runtime.mode}`);
+  if (runtime.agents.includes('opencode')) console.log(`OpenCode package: ${OPENCODE_PACKAGE}`);
   console.log(`API Key: ${runtime.apiKey ? maskSecret(runtime.apiKey) : 'not required for this mode'}`);
   console.log(`Dry run: ${options.dryRun ? 'yes' : 'no'}`);
   console.log(`Force: ${options.force ? 'yes' : 'no'}`);

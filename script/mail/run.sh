@@ -1,4 +1,3 @@
 #!/bin/bash
 cd "$(dirname "$0")"
-source venv/bin/activate
-python batch_register_outlook.py "$@"
+exec ./venv/bin/python batch_register_outlook.py "$@"
