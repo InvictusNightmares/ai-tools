@@ -148,16 +148,6 @@ function redact(value, apiKey) {
 }
 
 function createPrompt() {
-  if (!process.stdin.isTTY && process.platform === 'win32') {
-    try {
-      const fd = fs.openSync('CONIN$', 'r');
-      const input = fs.createReadStream(null, { fd, autoClose: true });
-      return readline.createInterface({ input, output: process.stdout, terminal: true });
-    } catch {
-      // Fall back to stdin so non-interactive executions still fail with a clear error.
-    }
-  }
-
   if (!process.stdin.isTTY && process.platform !== 'win32') {
     try {
       const fd = fs.openSync('/dev/tty', 'r');
@@ -1403,12 +1393,12 @@ function verifyCommand(command, options) {
 function verifyDacsCommand(command, options) {
   const dacsCommand = `${command}-dacs`;
   if (options.dryRun) {
-    console.log(`[dry-run] check ${commandCandidates(dacsCommand)[0]}`);
+    console.log(`[dry-run] ${commandCandidates(dacsCommand)[0]} --version`);
     return;
   }
 
   if (commandExists(dacsCommand)) {
-    success(`${dacsCommand} 已安装`);
+    success(`${dacsCommand} 可用`);
   } else {
     const candidates = commandCandidates(dacsCommand).join(', ');
     warn(`${dacsCommand} 未找到。Checked: ${candidates}`);
@@ -1418,22 +1408,11 @@ function verifyDacsCommand(command, options) {
 async function collectRuntime(options) {
   const rl = createPrompt();
   try {
-    if (!process.stdin.isTTY && !options.agents && !options.yes && process.platform !== 'win32') {
+    if (!process.stdin.isTTY && process.platform !== 'win32' && !options.agents && !options.yes) {
       throw new Error(
         'Interactive input is unavailable because stdin is not a TTY. ' +
           'Run from a terminal or use: bash -s -- --agents all --api-key <key> --yes'
       );
-    }
-
-    if (!process.stdin.isTTY && process.platform === 'win32' && !options.agents && !options.yes && !rl.terminal) {
-      throw new Error(
-        'Interactive input is unavailable because stdin is not a TTY. ' +
-          'Run from a terminal or use: install.cmd --agents all --api-key <key> --yes'
-      );
-    }
-
-    if (options.yes && !options.agents) {
-      throw new Error('Missing --agents for --yes. Use --agents all or choose agents interactively without --yes.');
     }
 
     const agents = options.agents ? normalizeAgents(options.agents) : await collectAgents(rl);
@@ -1465,7 +1444,6 @@ async function collectRuntime(options) {
 
 function printPlan(runtime, options) {
   title('安装计划');
-  if (options.verbose) console.log(`Args: ${process.argv.slice(2).join(' ') || '(none)'}`);
   console.log(`DACS 外 Base URL: ${runtime.externalBaseURL}`);
   console.log(`DACS 内 Base URL: ${runtime.dacsBaseURL}`);
   console.log(`Default model: ${DEFAULT_MODEL}`);
