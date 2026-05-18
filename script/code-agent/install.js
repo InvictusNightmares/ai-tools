@@ -539,6 +539,15 @@ function codexWindowsNativeBinaryPath() {
   );
 }
 
+function codexWindowsNodeEntryPath() {
+  if (process.platform !== 'win32') return '';
+
+  const npmRoot = commandOutput('npm', ['root', '-g']);
+  if (!npmRoot) return '';
+
+  return path.join(npmRoot, '@openai', 'codex', 'bin', 'codex.js');
+}
+
 function ensureCodexWindowsNativePackage(options) {
   if (process.platform !== 'win32') return;
 
@@ -557,6 +566,34 @@ function ensureCodexWindowsNativePackage(options) {
 function installCodexPackage(options) {
   installNpmPackage('@openai/codex', 'codex', options);
   ensureCodexWindowsNativePackage(options);
+}
+
+function codexDoctorWindowsCmd() {
+  const nodeEntry = codexWindowsNodeEntryPath();
+  const nativeBinary = codexWindowsNativeBinaryPath();
+
+  return `@ECHO off
+SETLOCAL EnableExtensions
+ECHO Codex command resolution:
+where codex
+ECHO.
+ECHO Node version:
+node --version
+ECHO.
+ECHO Codex node entry: ${nodeEntry}
+IF EXIST "${nodeEntry}" (
+  node "${nodeEntry}" --version
+) ELSE (
+  ECHO Missing Codex node entry
+)
+ECHO.
+ECHO Codex native binary: ${nativeBinary}
+IF EXIST "${nativeBinary}" (
+  "${nativeBinary}" --version
+) ELSE (
+  ECHO Missing Codex native binary
+)
+EXIT /B 0`;
 }
 
 function opencodeConfig(apiKey, baseURL) {
@@ -1290,6 +1327,11 @@ async function writeCodexDacsWindowsAdapter(runtime, options, rl) {
     success(`Codex Windows DACS 命令: ${targetPath}`);
   }
   warnWindowsCommandShadows('codex-dacs');
+
+  const doctorPath = path.join(binDir, 'codex-doctor.cmd');
+  backupFile(doctorPath, options);
+  if (!options.dryRun) fs.writeFileSync(doctorPath, `${codexDoctorWindowsCmd()}\n`, 'utf8');
+  success(`Codex Windows 诊断命令: ${doctorPath}`);
 
   const oldJsPath = path.join(binDir, 'codex-dacs.js');
   if (fs.existsSync(oldJsPath)) {
