@@ -476,11 +476,15 @@ function preferOpencodeWindowsAvx2Binary(options) {
   const sourcePath = path.join(npmRoot, 'opencode-windows-x64', 'bin', 'opencode.exe');
   const targetPath = path.join(npmRoot, 'opencode-ai', 'bin', 'opencode.exe');
 
-  if (!fs.existsSync(sourcePath) || options.force) {
+  if (!fs.existsSync(sourcePath)) {
     const status = runStatus('npm', ['install', '-g', '--ignore-scripts', packageName], options);
     if (status !== 0) {
-      warn(`安装 ${packageName} 失败，继续使用 opencode-ai 默认二进制。`);
-      return '';
+      if (fs.existsSync(sourcePath)) {
+        warn(`安装 ${packageName} 返回失败，但非 baseline 二进制已存在，继续使用: ${sourcePath}`);
+      } else {
+        warn(`安装 ${packageName} 失败，继续使用 opencode-ai 默认二进制。`);
+        return '';
+      }
     }
   }
 
@@ -496,6 +500,11 @@ function preferOpencodeWindowsAvx2Binary(options) {
 
   if (!fs.existsSync(path.dirname(targetPath))) {
     warn(`未找到 opencode-ai bin 目录: ${path.dirname(targetPath)}`);
+    return sourcePath;
+  }
+
+  if (options.force) {
+    success(`OpenCode Windows x64 非 baseline 二进制已可用: ${sourcePath}`);
     return sourcePath;
   }
 
