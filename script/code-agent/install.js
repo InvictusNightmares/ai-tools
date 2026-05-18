@@ -764,66 +764,79 @@ cd /d "${userProfile}"
 EXIT /B %ERRORLEVEL%`;
 }
 
-function codexDacsWindowsCmdShim(runtime, realCodex, dacsHome) {
+function codexDacsWindowsCmdShim(runtime, realCodex, sourceHome) {
   const exeDir = path.dirname(realCodex);
+  const systemRoot = process.env.SYSTEMROOT || process.env.WINDIR || 'C:\\Windows';
+  const tempRoot = process.env.TEMP || process.env.TMP || path.join(homeDir(), 'AppData', 'Local', 'Temp');
+  const userProfile = process.env.USERPROFILE || homeDir();
+  const appData = process.env.APPDATA || path.join(userProfile, 'AppData', 'Roaming');
+  const localAppData = process.env.LOCALAPPDATA || path.join(userProfile, 'AppData', 'Local');
+  const comspec = process.env.COMSPEC || path.join(systemRoot, 'System32', 'cmd.exe');
+  const homeDrive = process.env.HOMEDRIVE || path.parse(userProfile).root.replace(/\\$/, '');
+  const homePath = process.env.HOMEPATH || userProfile.slice(homeDrive.length) || '\\';
 
   const safePath = [
     exeDir,
-    path.join(process.env.SYSTEMROOT || process.env.WINDIR || 'C:\\Windows', 'System32'),
-    process.env.SYSTEMROOT || process.env.WINDIR || 'C:\\Windows',
-    path.join(process.env.SYSTEMROOT || process.env.WINDIR || 'C:\\Windows', 'System32', 'Wbem'),
-    path.join(process.env.SYSTEMROOT || process.env.WINDIR || 'C:\\Windows', 'System32', 'WindowsPowerShell', 'v1.0'),
-    process.env.APPDATA ? path.join(process.env.APPDATA, 'npm') : '',
+    path.join(systemRoot, 'System32'),
+    systemRoot,
+    path.join(systemRoot, 'System32', 'Wbem'),
+    path.join(systemRoot, 'System32', 'WindowsPowerShell', 'v1.0'),
+    path.join(appData, 'npm'),
   ].filter(Boolean).join(';');
 
   return `@ECHO off
 SETLOCAL EnableExtensions
 
-IF "%1"=="--dacs-version" (
-  ECHO ai-tools codex-dacs CMD wrapper
-  EXIT /B 0
-)
+FOR /F "tokens=1 delims==" %%E IN ('set') DO SET "%%E="
 
-SET "DACS_DEBUG=0"
-IF "%1"=="--dacs-debug" (
-  SET "DACS_DEBUG=1"
-  SHIFT
-)
-IF "%AI_TOOLS_DACS_DEBUG%"=="1" SET "DACS_DEBUG=1"
-
-ECHO [ai-tools] codex-dacs CMD wrapper 1>&2
-
-mkdir "${dacsHome}" 2>NUL
-mkdir "${dacsHome}\\home" 2>NUL
-mkdir "${dacsHome}\\xdg\\config" 2>NUL
-mkdir "${dacsHome}\\xdg\\data" 2>NUL
-mkdir "${dacsHome}\\xdg\\state" 2>NUL
-mkdir "${dacsHome}\\xdg\\cache" 2>NUL
-mkdir "${dacsHome}\\xdg\\runtime" 2>NUL
-mkdir "${dacsHome}\\sqlite" 2>NUL
-
-SET "CODEX_HOME=${dacsHome}"
-SET "CODEX_MANAGED_BY_NPM=1"
-SET "HOME=${dacsHome}\\home"
-SET "USERPROFILE=${dacsHome}\\home"
-SET "XDG_CONFIG_HOME=${dacsHome}\\xdg\\config"
-SET "XDG_DATA_HOME=${dacsHome}\\xdg\\data"
-SET "XDG_STATE_HOME=${dacsHome}\\xdg\\state"
-SET "XDG_CACHE_HOME=${dacsHome}\\xdg\\cache"
-SET "XDG_RUNTIME_DIR=${dacsHome}\\xdg\\runtime"
-SET "CODEX_SQLITE_HOME=${dacsHome}\\sqlite"
-SET "OPENAI_API_KEY=${runtime.apiKey}"
-SET "CODEX_API_KEY=${runtime.apiKey}"
+SET "SYSTEMROOT=${systemRoot}"
+SET "WINDIR=${systemRoot}"
+SET "COMSPEC=${comspec}"
+SET "TEMP=${tempRoot}"
+SET "TMP=${tempRoot}"
+SET "USERPROFILE=${userProfile}"
+SET "APPDATA=${appData}"
+SET "LOCALAPPDATA=${localAppData}"
+SET "HOMEDRIVE=${homeDrive}"
+SET "HOMEPATH=${homePath}"
+SET "PATHEXT=.COM;.EXE;.BAT;.CMD"
 SET "PATH=${safePath}"
 
-IF "%DACS_DEBUG%"=="1" (
-  ECHO Codex DACS exe: ${realCodex} 1>&2
-  ECHO Codex DACS HOME: %HOME% 1>&2
-  ECHO Codex DACS PATH: %PATH% 1>&2
-  ECHO Codex DACS OPENAI_API_KEY: ****%OPENAI_API_KEY:~-4% 1>&2
-)
+SET "CODEX_TMP_ROOT=${tempRoot}"
+SET "CODEX_HOME=%CODEX_TMP_ROOT%\\codex-home-dacs-%RANDOM%-%RANDOM%"
+mkdir "%CODEX_HOME%" 2>NUL
+mkdir "%CODEX_HOME%\\home" 2>NUL
+mkdir "%CODEX_HOME%\\xdg\\config" 2>NUL
+mkdir "%CODEX_HOME%\\xdg\\data" 2>NUL
+mkdir "%CODEX_HOME%\\xdg\\state" 2>NUL
+mkdir "%CODEX_HOME%\\xdg\\cache" 2>NUL
+mkdir "%CODEX_HOME%\\xdg\\runtime" 2>NUL
+mkdir "%CODEX_HOME%\\sqlite" 2>NUL
 
-"${realCodex}" %*
+IF NOT EXIST "${sourceHome}\\config.toml" (
+  ECHO Codex DACS source config not found: ${sourceHome}\\config.toml 1>&2
+  EXIT /B 1
+)
+copy /Y "${sourceHome}\\config.toml" "%CODEX_HOME%\\config.toml" >NUL
+copy /Y "${sourceHome}\\auth.json" "%CODEX_HOME%\\auth.json" >NUL
+copy /Y "${sourceHome}\\models.json" "%CODEX_HOME%\\models.json" >NUL
+powershell -NoProfile -NonInteractive -Command "(Get-Content -LiteralPath '%CODEX_HOME%\\config.toml' -Raw).Replace('__CODEX_HOME__', $env:CODEX_HOME.Replace('\\', '/')) | Set-Content -LiteralPath '%CODEX_HOME%\\config.toml' -Encoding UTF8"
+
+SET "CODEX_MANAGED_BY_NPM=1"
+SET "HOME=%CODEX_HOME%\\home"
+SET "USERPROFILE=%CODEX_HOME%\\home"
+SET "XDG_CONFIG_HOME=%CODEX_HOME%\\xdg\\config"
+SET "XDG_DATA_HOME=%CODEX_HOME%\\xdg\\data"
+SET "XDG_STATE_HOME=%CODEX_HOME%\\xdg\\state"
+SET "XDG_CACHE_HOME=%CODEX_HOME%\\xdg\\cache"
+SET "XDG_RUNTIME_DIR=%CODEX_HOME%\\xdg\\runtime"
+SET "CODEX_SQLITE_HOME=%CODEX_HOME%\\sqlite"
+SET "OPENAI_API_KEY=${runtime.apiKey}"
+SET "CODEX_API_KEY=${runtime.apiKey}"
+
+cd /d "${userProfile}"
+
+"${realCodex}" %1 %2 %3 %4 %5 %6 %7 %8 %9
 EXIT /B %ERRORLEVEL%`;
 }
 
@@ -903,6 +916,21 @@ model_catalog_json = ${JSON.stringify(catalogPath)}
 [model_providers.${JSON.stringify(PROVIDER_KEY)}]
 name = "OpenAI"
 base_url = "${baseURL}"
+wire_api = "responses"
+requires_openai_auth = true`;
+}
+
+function codexDacsConfig(baseURL, catalogPath = '__CODEX_HOME__/models.json') {
+  return `model_provider = ${JSON.stringify(PROVIDER_KEY)}
+model = ${JSON.stringify(DEFAULT_CODEX_MODEL)}
+model_reasoning_effort = "high"
+network_access = "enabled"
+disable_response_storage = true
+model_catalog_json = ${JSON.stringify(catalogPath)}
+
+[model_providers.${JSON.stringify(PROVIDER_KEY)}]
+name = "OpenAI"
+base_url = ${JSON.stringify(baseURL)}
 wire_api = "responses"
 requires_openai_auth = true`;
 }
@@ -1238,7 +1266,7 @@ async function writeCodexDacsWindowsAdapter(runtime, options, rl) {
   const dacsHome = path.join(homeDir(), '.codex-dacs');
   ensureDir(dacsHome, options);
 
-  const configToml = codexConfig(runtime.dacsBaseURL).replace('__CODEX_HOME__', dacsHome.replace(/\\/g, '/'));
+  const configToml = codexDacsConfig(runtime.dacsBaseURL);
   const configTomlPath = path.join(dacsHome, 'config.toml');
   backupFile(configTomlPath, options);
   if (!options.dryRun) fs.writeFileSync(configTomlPath, `${configToml}\n`, 'utf8');
