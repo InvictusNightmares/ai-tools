@@ -933,6 +933,13 @@ async function writeOpencodeDacsWindowsAdapter(runtime, options, rl) {
 }
 
 function codexConfig(baseURL) {
+  if (process.platform === 'win32') {
+    return `model = "${DEFAULT_CODEX_MODEL}"
+model_reasoning_effort = "high"
+network_access = "enabled"
+disable_response_storage = true`;
+  }
+
   return `model_provider = "${PROVIDER_KEY}"
 model = "${DEFAULT_CODEX_MODEL}"
 model_reasoning_effort = "high"
@@ -1307,6 +1314,8 @@ async function writeCodexConfig(runtime, options, rl) {
 }
 
 async function codexLogin(apiKey, options) {
+  if (process.platform === 'win32') return false;
+
   if (options.dryRun) {
     console.log('[dry-run] codex login --with-api-key');
     return false;
