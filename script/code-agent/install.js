@@ -766,7 +766,6 @@ EXIT /B %ERRORLEVEL%`;
 
 function codexDacsWindowsCmdShim(runtime, realCodex, sourceHome) {
   const exeDir = path.dirname(realCodex);
-  const codexPathDir = path.resolve(exeDir, '..', 'path');
   const systemRoot = process.env.SYSTEMROOT || process.env.WINDIR || 'C:\\Windows';
   const tempRoot = process.env.TEMP || process.env.TMP || path.join(homeDir(), 'AppData', 'Local', 'Temp');
   const userProfile = process.env.USERPROFILE || homeDir();
@@ -778,7 +777,6 @@ function codexDacsWindowsCmdShim(runtime, realCodex, sourceHome) {
 
   const safePath = [
     exeDir,
-    codexPathDir,
     path.join(systemRoot, 'System32'),
     systemRoot,
     path.join(systemRoot, 'System32', 'Wbem'),
@@ -822,7 +820,6 @@ IF NOT EXIST "${sourceHome}\\config.toml" (
 copy /Y "${sourceHome}\\config.toml" "%CODEX_HOME%\\config.toml" >NUL
 copy /Y "${sourceHome}\\auth.json" "%CODEX_HOME%\\auth.json" >NUL
 copy /Y "${sourceHome}\\models.json" "%CODEX_HOME%\\models.json" >NUL
-powershell -NoProfile -NonInteractive -Command "(Get-Content -LiteralPath '%CODEX_HOME%\\config.toml' -Raw).Replace('__CODEX_HOME__', $env:CODEX_HOME.Replace('\\', '/')) | Set-Content -LiteralPath '%CODEX_HOME%\\config.toml' -Encoding UTF8"
 
 SET "CODEX_MANAGED_BY_NPM=1"
 SET "HOME=%CODEX_HOME%\\home"
@@ -838,7 +835,7 @@ SET "CODEX_API_KEY=${runtime.apiKey}"
 
 cd /d "${userProfile}"
 
-${/\.(cmd|bat)$/i.test(realCodex) ? `call "${realCodex}" %1 %2 %3 %4 %5 %6 %7 %8 %9` : `"${realCodex}" %1 %2 %3 %4 %5 %6 %7 %8 %9`}
+call "${realCodex}" %1 %2 %3 %4 %5 %6 %7 %8 %9
 EXIT /B %ERRORLEVEL%`;
 }
 
@@ -922,7 +919,7 @@ wire_api = "responses"
 requires_openai_auth = true`;
 }
 
-function codexDacsConfig(baseURL, catalogPath = '__CODEX_HOME__/models.json') {
+function codexDacsConfig(baseURL, catalogPath = path.join(homeDir(), '.codex-dacs', 'models.json').replace(/\\/g, '/')) {
   return `model_provider = ${JSON.stringify(PROVIDER_KEY)}
 model = ${JSON.stringify(DEFAULT_CODEX_MODEL)}
 model_reasoning_effort = "high"
@@ -1084,12 +1081,8 @@ function findCodexCommand(binDir = '') {
   const commandPath = firstCommandPath(process.platform === 'win32' ? 'codex.cmd' : 'codex') ||
     firstCommandPath('codex');
   const npmBin = npmGlobalBinDir();
-  const npmRoot = commandOutput('npm', ['root', '-g']);
   const candidates = process.platform === 'win32'
     ? [
-        npmRoot ? path.join(npmRoot, '@openai', 'codex', 'node_modules', '@openai', 'codex-win32-x64', 'vendor', 'x86_64-pc-windows-msvc', 'codex', 'codex.exe') : '',
-        npmRoot ? path.join(npmRoot, '@openai', 'codex-win32-x64', 'vendor', 'x86_64-pc-windows-msvc', 'codex', 'codex.exe') : '',
-        process.env.APPDATA ? path.join(process.env.APPDATA, 'npm', 'node_modules', '@openai', 'codex', 'node_modules', '@openai', 'codex-win32-x64', 'vendor', 'x86_64-pc-windows-msvc', 'codex', 'codex.exe') : '',
         commandPath,
         npmBin ? path.join(npmBin, 'codex.cmd') : '',
         npmBin ? path.join(npmBin, 'codex') : '',
@@ -1106,22 +1099,6 @@ function findCodexCommand(binDir = '') {
   }
 
   return '';
-}
-
-function ensureCodexWindowsNativeBinary(options) {
-  if (process.platform !== 'win32') return '';
-
-  const npmRoot = commandOutput('npm', ['root', '-g']);
-  if (!npmRoot) return '';
-
-  const binaryPath = path.join(npmRoot, '@openai', 'codex', 'node_modules', '@openai', 'codex-win32-x64', 'vendor', 'x86_64-pc-windows-msvc', 'codex', 'codex.exe');
-  if (fs.existsSync(binaryPath)) return binaryPath;
-
-  const version = installedNpmPackageVersion(path.join('@openai', 'codex')) || npmPackageVersion('@openai/codex@latest') || 'latest';
-  const status = runStatus('npm', ['install', '-g', '--ignore-scripts', `@openai/codex-win32-x64@npm:@openai/codex@${version}-win32-x64`], options);
-  if (status !== 0) return fs.existsSync(binaryPath) ? binaryPath : '';
-
-  return fs.existsSync(binaryPath) ? binaryPath : '';
 }
 
 function shellSingleQuote(value) {
@@ -1279,7 +1256,7 @@ async function writeCodexDacsWindowsAdapter(runtime, options, rl) {
     return;
   }
 
-  const realCodex = ensureCodexWindowsNativeBinary(options) || findCodexCommand(binDir);
+  const realCodex = findCodexCommand(binDir);
   if (!realCodex) {
     warn('未找到 Codex 可执行文件，跳过 DACS Codex 替身。请先安装 @openai/codex 后重试。');
     return;
@@ -1288,7 +1265,7 @@ async function writeCodexDacsWindowsAdapter(runtime, options, rl) {
   const dacsHome = path.join(homeDir(), '.codex-dacs');
   ensureDir(dacsHome, options);
 
-  const configToml = codexDacsConfig(runtime.dacsBaseURL);
+  const configToml = codexDacsConfig(runtime.dacsBaseURL, path.join(dacsHome, 'models.json').replace(/\\/g, '/'));
   const configTomlPath = path.join(dacsHome, 'config.toml');
   backupFile(configTomlPath, options);
   if (!options.dryRun) fs.writeFileSync(configTomlPath, `${configToml}\n`, 'utf8');
