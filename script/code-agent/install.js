@@ -327,11 +327,11 @@ async function writeFileSafely(filePath, content, options, rl) {
 function commandCandidates(command) {
   if (process.platform !== 'win32') return [command];
 
-  const candidates = [`${command}.cmd`, command];
+  const candidates = [`${command}.cmd`];
   if (process.env.APPDATA) {
     candidates.push(path.join(process.env.APPDATA, 'npm', `${command}.cmd`));
-    candidates.push(path.join(process.env.APPDATA, 'npm', command));
   }
+  candidates.push(command);
   return [...new Set(candidates)];
 }
 
@@ -566,6 +566,7 @@ function ensureCodexWindowsNativePackage(options) {
 function installCodexPackage(options) {
   installNpmPackage('@openai/codex', 'codex', options);
   ensureCodexWindowsNativePackage(options);
+  removeWindowsExtensionlessCommand('codex', options);
 }
 
 function codexDoctorWindowsCmd() {
@@ -583,6 +584,7 @@ ECHO.
 ECHO Codex node entry: ${nodeEntry}
 IF EXIST "${nodeEntry}" (
   node "${nodeEntry}" --version
+  ECHO Node entry exit code: %ERRORLEVEL%
 ) ELSE (
   ECHO Missing Codex node entry
 )
@@ -590,10 +592,24 @@ ECHO.
 ECHO Codex native binary: ${nativeBinary}
 IF EXIST "${nativeBinary}" (
   "${nativeBinary}" --version
+  ECHO Native binary exit code: %ERRORLEVEL%
 ) ELSE (
   ECHO Missing Codex native binary
 )
 EXIT /B 0`;
+}
+
+function removeWindowsExtensionlessCommand(command, options) {
+  if (process.platform !== 'win32') return;
+  const binDir = npmGlobalBinDir();
+  if (!binDir) return;
+
+  const filePath = path.join(binDir, command);
+  if (!fs.existsSync(filePath)) return;
+
+  backupFile(filePath, options);
+  if (!options.dryRun) fs.unlinkSync(filePath);
+  success(`已移除 Windows 无扩展名命令，避免遮蔽 .cmd: ${filePath}`);
 }
 
 function opencodeConfig(apiKey, baseURL) {
@@ -1436,6 +1452,7 @@ const agentDefinitions = {
     install: (options) => installCodexPackage(options),
     configure: async (runtime, options, rl) => {
       ensureCodexWindowsNativePackage(options);
+      removeWindowsExtensionlessCommand('codex', options);
       await writeCodexConfig(runtime, options, rl);
       await writeFileSafely(path.join(homeDir(), '.codex', 'models.json'), codexModelCatalog(), options, rl);
       await writeCodexDacsMacAdapter(runtime, options, rl);
