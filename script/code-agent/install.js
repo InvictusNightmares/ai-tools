@@ -474,7 +474,6 @@ function preferOpencodeWindowsAvx2Binary(options) {
   const version = npmPackageVersion('opencode-ai@latest') || 'latest';
   const packageName = `opencode-windows-x64@${version}`;
   const sourcePath = path.join(npmRoot, 'opencode-windows-x64', 'bin', 'opencode.exe');
-  const targetPath = path.join(npmRoot, 'opencode-ai', 'bin', 'opencode.exe');
 
   if (!fs.existsSync(sourcePath)) {
     const status = runStatus('npm', ['install', '-g', '--ignore-scripts', packageName], options);
@@ -489,7 +488,7 @@ function preferOpencodeWindowsAvx2Binary(options) {
   }
 
   if (options.dryRun) {
-    console.log(`[dry-run] copy ${sourcePath} ${targetPath}`);
+    console.log(`[dry-run] use ${sourcePath}`);
     return sourcePath;
   }
 
@@ -498,22 +497,6 @@ function preferOpencodeWindowsAvx2Binary(options) {
     return '';
   }
 
-  if (!fs.existsSync(path.dirname(targetPath))) {
-    warn(`未找到 opencode-ai bin 目录: ${path.dirname(targetPath)}`);
-    return sourcePath;
-  }
-
-  if (options.force) {
-    success(`OpenCode Windows x64 非 baseline 二进制已可用: ${sourcePath}`);
-    return sourcePath;
-  }
-
-  try {
-    fs.copyFileSync(sourcePath, targetPath);
-    success(`已替换 OpenCode Windows x64 非 baseline 二进制: ${targetPath}`);
-  } catch (error) {
-    warn(`无法覆盖 opencode-ai 默认二进制，DACS 将直接使用非 baseline 二进制: ${error.message}`);
-  }
   return sourcePath;
 }
 
@@ -717,54 +700,6 @@ function opencodeDacsWindowsCmdShim(runtime, realOpencode, sourceConfigPath) {
   return `@ECHO off
 SETLOCAL EnableExtensions
 
-IF "%1"=="--dacs-version" (
-  ECHO ai-tools opencode-dacs CMD wrapper
-  EXIT /B 0
-)
-
-SET "DACS_DEBUG=0"
-SET "DACS_DOCTOR=0"
-SET "DACS_DIRECT=0"
-SET "DACS_ENV_DUMP=0"
-IF "%1"=="--dacs-debug" (
-  SET "DACS_DEBUG=1"
-  SHIFT
-)
-IF "%1"=="--dacs-doctor" (
-  SET "DACS_DEBUG=1"
-  SET "DACS_DOCTOR=1"
-  SHIFT
-)
-IF "%1"=="--dacs-direct" (
-  SET "DACS_DIRECT=1"
-  SHIFT
-)
-IF "%1"=="--dacs-env-dump" (
-  SET "DACS_ENV_DUMP=1"
-  SHIFT
-)
-IF "%AI_TOOLS_DACS_DEBUG%"=="1" SET "DACS_DEBUG=1"
-
-ECHO [ai-tools] opencode-dacs CMD wrapper 1>&2
-
-IF "%DACS_DIRECT%"=="1" (
-  ECHO OpenCode DACS direct exe: ${realOpencode} 1>&2
-  cd /d "${userProfile}"
-  "${realOpencode}" %1 %2 %3 %4 %5 %6 %7 %8 %9
-  EXIT /B %ERRORLEVEL%
-)
-
-IF "%DACS_DEBUG%"=="1" (
-  ECHO OpenCode DACS exe: ${realOpencode} 1>&2
-  ECHO OpenCode DACS source config: ${sourceConfigPath} 1>&2
-  ECHO OpenCode DACS planned PATH: ${safePath} 1>&2
-)
-
-IF "%DACS_DOCTOR%"=="1" (
-  ECHO OpenCode DACS doctor completed without launching opencode.exe. 1>&2
-  EXIT /B 0
-)
-
 FOR /F "tokens=1 delims==" %%E IN ('set') DO SET "%%E="
 
 SET "SYSTEMROOT=${systemRoot}"
@@ -810,15 +745,6 @@ SET "XDG_RUNTIME_DIR=%OPENCODE_RUNTIME_ROOT%"
 SET "OPENCODE_MODELS_URL=http://localhost"
 
 cd /d "${userProfile}"
-
-IF "%DACS_ENV_DUMP%"=="1" (
-  ECHO OpenCode DACS cwd: %CD% 1>&2
-  ECHO OpenCode DACS PATH: %PATH% 1>&2
-  ECHO OpenCode DACS TEMP: %TEMP% 1>&2
-  ECHO OpenCode DACS USERPROFILE: %USERPROFILE% 1>&2
-  ECHO OpenCode DACS XDG_CONFIG_HOME: %XDG_CONFIG_HOME% 1>&2
-  EXIT /B 0
-)
 
 "${realOpencode}" %1 %2 %3 %4 %5 %6 %7 %8 %9
 EXIT /B %ERRORLEVEL%`;
@@ -923,12 +849,6 @@ async function writeOpencodeDacsWindowsAdapter(runtime, options, rl) {
   if (!realOpencode) {
     warn('未找到 OpenCode 可执行文件，跳过 DACS OpenCode 替身。请先安装 opencode 后重试。');
     return;
-  }
-
-  if (realOpencode.includes(`${path.sep}opencode-ai${path.sep}`)) {
-    warn(`OpenCode Windows DACS 仍绑定 opencode-ai 二进制，可能是 baseline: ${realOpencode}`);
-  } else {
-    success(`OpenCode Windows DACS 真实命令: ${realOpencode}`);
   }
 
   const dacsHome = path.join(homeDir(), '.opencode-dacs');
