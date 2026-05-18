@@ -463,12 +463,12 @@ function npmPackageVersion(packageName) {
 }
 
 function preferOpencodeWindowsAvx2Binary(options) {
-  if (process.platform !== 'win32' || process.arch !== 'x64') return;
+  if (process.platform !== 'win32' || process.arch !== 'x64') return '';
 
   const npmRoot = commandOutput('npm', ['root', '-g']);
   if (!npmRoot) {
     warn('未找到 npm 全局 root，无法替换 OpenCode Windows 非 baseline 二进制。');
-    return;
+    return '';
   }
 
   const version = npmPackageVersion('opencode-ai@latest') || 'latest';
@@ -480,27 +480,28 @@ function preferOpencodeWindowsAvx2Binary(options) {
     const status = runStatus('npm', ['install', '-g', '--ignore-scripts', packageName], options);
     if (status !== 0) {
       warn(`安装 ${packageName} 失败，继续使用 opencode-ai 默认二进制。`);
-      return;
+      return '';
     }
   }
 
   if (options.dryRun) {
     console.log(`[dry-run] copy ${sourcePath} ${targetPath}`);
-    return;
+    return sourcePath;
   }
 
   if (!fs.existsSync(sourcePath)) {
     warn(`未找到 OpenCode Windows x64 二进制: ${sourcePath}`);
-    return;
+    return '';
   }
 
   if (!fs.existsSync(path.dirname(targetPath))) {
     warn(`未找到 opencode-ai bin 目录: ${path.dirname(targetPath)}`);
-    return;
+    return sourcePath;
   }
 
   fs.copyFileSync(sourcePath, targetPath);
   success(`已替换 OpenCode Windows x64 非 baseline 二进制: ${targetPath}`);
+  return sourcePath;
 }
 
 function installOpencodePackage(options) {
@@ -848,6 +849,7 @@ async function writeOpencodeDacsMacAdapter(runtime, options, rl) {
   }
 
   const realOpencode = findOpencodeBinary(binDir);
+
   if (!realOpencode) {
     warn('未找到 OpenCode 可执行文件，跳过 DACS OpenCode 替身。请先安装 opencode 后重试。');
     return;
@@ -867,10 +869,18 @@ async function writeOpencodeDacsWindowsAdapter(runtime, options, rl) {
     return;
   }
 
-  const realOpencode = findOpencodeBinary(binDir);
+  let realOpencode = findOpencodeBinary(binDir);
+  const avx2Opencode = preferOpencodeWindowsAvx2Binary(options);
+  if (avx2Opencode) realOpencode = avx2Opencode;
   if (!realOpencode) {
     warn('未找到 OpenCode 可执行文件，跳过 DACS OpenCode 替身。请先安装 opencode 后重试。');
     return;
+  }
+
+  if (realOpencode.includes(`${path.sep}opencode-ai${path.sep}`)) {
+    warn(`OpenCode Windows DACS 仍绑定 opencode-ai 二进制，可能是 baseline: ${realOpencode}`);
+  } else {
+    success(`OpenCode Windows DACS 真实命令: ${realOpencode}`);
   }
 
   const dacsHome = path.join(homeDir(), '.opencode-dacs');
