@@ -725,6 +725,7 @@ IF "%1"=="--dacs-version" (
 SET "DACS_DEBUG=0"
 SET "DACS_DOCTOR=0"
 SET "DACS_DIRECT=0"
+SET "DACS_ENV_DUMP=0"
 IF "%1"=="--dacs-debug" (
   SET "DACS_DEBUG=1"
   SHIFT
@@ -738,12 +739,17 @@ IF "%1"=="--dacs-direct" (
   SET "DACS_DIRECT=1"
   SHIFT
 )
+IF "%1"=="--dacs-env-dump" (
+  SET "DACS_ENV_DUMP=1"
+  SHIFT
+)
 IF "%AI_TOOLS_DACS_DEBUG%"=="1" SET "DACS_DEBUG=1"
 
 ECHO [ai-tools] opencode-dacs CMD wrapper 1>&2
 
 IF "%DACS_DIRECT%"=="1" (
   ECHO OpenCode DACS direct exe: ${realOpencode} 1>&2
+  cd /d "${userProfile}"
   "${realOpencode}" %1 %2 %3 %4 %5 %6 %7 %8 %9
   EXIT /B %ERRORLEVEL%
 )
@@ -802,6 +808,17 @@ SET "XDG_STATE_HOME=%OPENCODE_STATE_ROOT%"
 SET "XDG_CACHE_HOME=%OPENCODE_CACHE_ROOT%"
 SET "XDG_RUNTIME_DIR=%OPENCODE_RUNTIME_ROOT%"
 SET "OPENCODE_MODELS_URL=http://localhost"
+
+cd /d "${userProfile}"
+
+IF "%DACS_ENV_DUMP%"=="1" (
+  ECHO OpenCode DACS cwd: %CD% 1>&2
+  ECHO OpenCode DACS PATH: %PATH% 1>&2
+  ECHO OpenCode DACS TEMP: %TEMP% 1>&2
+  ECHO OpenCode DACS USERPROFILE: %USERPROFILE% 1>&2
+  ECHO OpenCode DACS XDG_CONFIG_HOME: %XDG_CONFIG_HOME% 1>&2
+  EXIT /B 0
+)
 
 "${realOpencode}" %1 %2 %3 %4 %5 %6 %7 %8 %9
 EXIT /B %ERRORLEVEL%`;
