@@ -457,6 +457,56 @@ function installNpmPackage(packageName, binaryName, options) {
   }
 }
 
+function npmPackageVersion(packageName) {
+  return commandOutput('npm', ['view', packageName, 'version']);
+}
+
+function preferOpencodeWindowsAvx2Binary(options) {
+  if (process.platform !== 'win32' || process.arch !== 'x64') return;
+
+  const npmRoot = commandOutput('npm', ['root', '-g']);
+  if (!npmRoot) {
+    warn('未找到 npm 全局 root，无法替换 OpenCode Windows 非 baseline 二进制。');
+    return;
+  }
+
+  const version = npmPackageVersion('opencode-ai@latest') || 'latest';
+  const packageName = `opencode-windows-x64@${version}`;
+  const sourcePath = path.join(npmRoot, 'opencode-windows-x64', 'bin', 'opencode.exe');
+  const targetPath = path.join(npmRoot, 'opencode-ai', 'bin', 'opencode.exe');
+
+  if (!fs.existsSync(sourcePath) || options.force) {
+    const status = runStatus('npm', ['install', '-g', '--ignore-scripts', packageName], options);
+    if (status !== 0) {
+      warn(`安装 ${packageName} 失败，继续使用 opencode-ai 默认二进制。`);
+      return;
+    }
+  }
+
+  if (options.dryRun) {
+    console.log(`[dry-run] copy ${sourcePath} ${targetPath}`);
+    return;
+  }
+
+  if (!fs.existsSync(sourcePath)) {
+    warn(`未找到 OpenCode Windows x64 二进制: ${sourcePath}`);
+    return;
+  }
+
+  if (!fs.existsSync(path.dirname(targetPath))) {
+    warn(`未找到 opencode-ai bin 目录: ${path.dirname(targetPath)}`);
+    return;
+  }
+
+  fs.copyFileSync(sourcePath, targetPath);
+  success(`已替换 OpenCode Windows x64 非 baseline 二进制: ${targetPath}`);
+}
+
+function installOpencodePackage(options) {
+  installNpmPackage('opencode-ai@latest', 'opencode', options);
+  preferOpencodeWindowsAvx2Binary(options);
+}
+
 function opencodeConfig(apiKey, baseURL) {
   const models = Object.fromEntries(
     Object.entries(OPENCODE_MODELS).map(([id, name]) => [
@@ -1300,7 +1350,7 @@ const agentDefinitions = {
     next: () => 'Codex: run codex outside DACS; run codex-dacs inside DACS.',
   },
   opencode: {
-    install: (options) => installNpmPackage('opencode-ai@latest', 'opencode', options),
+    install: (options) => installOpencodePackage(options),
     configure: async (runtime, options, rl) => {
       await writeOpencodeConfig(runtime, options, rl);
     },
