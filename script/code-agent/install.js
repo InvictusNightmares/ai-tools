@@ -519,6 +519,46 @@ function installOpencodePackage(options) {
   preferOpencodeWindowsAvx2Binary(options);
 }
 
+function codexWindowsNativeBinaryPath() {
+  if (process.platform !== 'win32') return '';
+
+  const npmRoot = commandOutput('npm', ['root', '-g']);
+  if (!npmRoot) return '';
+
+  return path.join(
+    npmRoot,
+    '@openai',
+    'codex',
+    'node_modules',
+    '@openai',
+    process.arch === 'arm64' ? 'codex-win32-arm64' : 'codex-win32-x64',
+    'vendor',
+    process.arch === 'arm64' ? 'aarch64-pc-windows-msvc' : 'x86_64-pc-windows-msvc',
+    'codex',
+    'codex.exe'
+  );
+}
+
+function ensureCodexWindowsNativePackage(options) {
+  if (process.platform !== 'win32') return;
+
+  const binaryPath = codexWindowsNativeBinaryPath();
+  if (binaryPath && fs.existsSync(binaryPath)) return;
+
+  const version = installedNpmPackageVersion(path.join('@openai', 'codex')) || npmPackageVersion('@openai/codex@latest') || 'latest';
+  const archPackage = process.arch === 'arm64' ? 'codex-win32-arm64' : 'codex-win32-x64';
+  const packageName = `@openai/${archPackage}@npm:@openai/codex@${version}-${process.arch === 'arm64' ? 'win32-arm64' : 'win32-x64'}`;
+  const status = runStatus('npm', ['install', '-g', '--no-save', packageName], options);
+  if (status !== 0 && (!binaryPath || !fs.existsSync(binaryPath))) {
+    warn(`Codex Windows 原生包安装失败，codex 可能无法启动: ${packageName}`);
+  }
+}
+
+function installCodexPackage(options) {
+  installNpmPackage('@openai/codex', 'codex', options);
+  ensureCodexWindowsNativePackage(options);
+}
+
 function opencodeConfig(apiKey, baseURL) {
   const models = Object.fromEntries(
     Object.entries(OPENCODE_MODELS).map(([id, name]) => [
@@ -1342,8 +1382,9 @@ const agentDefinitions = {
     next: () => 'Claude Code: run claude.',
   },
   codex: {
-    install: (options) => installNpmPackage('@openai/codex', 'codex', options),
+    install: (options) => installCodexPackage(options),
     configure: async (runtime, options, rl) => {
+      ensureCodexWindowsNativePackage(options);
       await writeCodexConfig(runtime, options, rl);
       await writeFileSafely(path.join(homeDir(), '.codex', 'models.json'), codexModelCatalog(), options, rl);
       await writeCodexDacsMacAdapter(runtime, options, rl);
