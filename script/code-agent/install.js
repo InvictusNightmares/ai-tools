@@ -904,7 +904,7 @@ async function writeOpencodeDacsWindowsAdapter(runtime, options, rl) {
 }
 
 function codexConfig(baseURL) {
-  const catalogPath = path.join(homeDir(), '.codex', 'models.json');
+  const catalogPath = path.join(homeDir(), '.codex', 'models.json').replace(/\\/g, '/');
   return `model_provider = "${PROVIDER_KEY}"
 model = "${DEFAULT_CODEX_MODEL}"
 model_reasoning_effort = "high"
