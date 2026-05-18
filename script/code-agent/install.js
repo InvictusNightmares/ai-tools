@@ -658,6 +658,27 @@ function windowsNodeString(value) {
   return JSON.stringify(String(value));
 }
 
+function windowsExistingCommandPaths(command) {
+  if (process.platform !== 'win32') return [];
+  return commandOutput('where', [command])
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .filter((candidate) => /\.(cmd|bat)$/i.test(candidate));
+}
+
+function warnWindowsCommandShadows(command) {
+  if (process.platform !== 'win32') return;
+  const shadows = commandOutput('where', [command])
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .filter((candidate) => !/\.(cmd|bat)$/i.test(candidate));
+  for (const shadow of shadows) {
+    warn(`${command} 还有非 CMD 入口，可能遮蔽新 wrapper: ${shadow}`);
+  }
+}
+
 function opencodeDacsWindowsCmdShim(runtime, realOpencode, dacsHome) {
   const configRoot = path.join(dacsHome, 'config');
   const dataRoot = path.join(dacsHome, 'data');
@@ -691,6 +712,8 @@ IF "%1"=="--dacs-debug" (
 )
 IF "%AI_TOOLS_DACS_DEBUG%"=="1" SET "DACS_DEBUG=1"
 
+ECHO [ai-tools] opencode-dacs CMD wrapper 1>&2
+
 mkdir "${opencodeConfigDir}" 2>NUL
 mkdir "${dataRoot}" 2>NUL
 mkdir "${stateRoot}" 2>NUL
@@ -707,14 +730,17 @@ SET "OPENCODE_MODELS_URL=http://localhost"
 SET "PATH=${safePath}"
 
 IF "%DACS_DEBUG%"=="1" (
-  ECHO [ai-tools] opencode-dacs CMD wrapper 1>&2
   ECHO OpenCode DACS exe: ${realOpencode} 1>&2
   ECHO OpenCode DACS config: ${opencodeConfigDir}\\opencode.json 1>&2
   ECHO OpenCode DACS PATH: %PATH% 1>&2
   ECHO OpenCode DACS XDG_CONFIG_HOME: %XDG_CONFIG_HOME% 1>&2
 )
 
-"${realOpencode}" %*
+IF "%~1"=="" (
+  "${realOpencode}" run
+) ELSE (
+  "${realOpencode}" %*
+)
 EXIT /B %ERRORLEVEL%`;
 }
 
@@ -745,6 +771,8 @@ IF "%1"=="--dacs-debug" (
 )
 IF "%AI_TOOLS_DACS_DEBUG%"=="1" SET "DACS_DEBUG=1"
 
+ECHO [ai-tools] codex-dacs CMD wrapper 1>&2
+
 mkdir "${dacsHome}" 2>NUL
 mkdir "${dacsHome}\\home" 2>NUL
 mkdir "${dacsHome}\\xdg\\config" 2>NUL
@@ -769,7 +797,6 @@ SET "CODEX_API_KEY=${runtime.apiKey}"
 SET "PATH=${safePath}"
 
 IF "%DACS_DEBUG%"=="1" (
-  ECHO [ai-tools] codex-dacs CMD wrapper 1>&2
   ECHO Codex DACS exe: ${realCodex} 1>&2
   ECHO Codex DACS HOME: %HOME% 1>&2
   ECHO Codex DACS PATH: %PATH% 1>&2
@@ -830,9 +857,14 @@ async function writeOpencodeDacsWindowsAdapter(runtime, options, rl) {
   if (!options.dryRun) fs.writeFileSync(fallbackConfigPath, `${dacsConfig}\n`, 'utf8');
 
   const cmdPath = path.join(binDir, 'opencode-dacs.cmd');
-  backupFile(cmdPath, options);
-  if (!options.dryRun) fs.writeFileSync(cmdPath, `${opencodeDacsWindowsCmdShim(runtime, realOpencode, dacsHome)}\n`, 'utf8');
-  success(`OpenCode Windows DACS 命令: ${cmdPath}`);
+  const shim = `${opencodeDacsWindowsCmdShim(runtime, realOpencode, dacsHome)}\n`;
+  const commandPaths = [cmdPath, ...windowsExistingCommandPaths('opencode-dacs')];
+  for (const targetPath of [...new Set(commandPaths.map((candidate) => path.resolve(candidate)))]) {
+    backupFile(targetPath, options);
+    if (!options.dryRun) fs.writeFileSync(targetPath, shim, 'utf8');
+    success(`OpenCode Windows DACS 命令: ${targetPath}`);
+  }
+  warnWindowsCommandShadows('opencode-dacs');
 
   const oldJsPath = path.join(binDir, 'opencode-dacs.js');
   if (fs.existsSync(oldJsPath)) {
@@ -1205,9 +1237,14 @@ async function writeCodexDacsWindowsAdapter(runtime, options, rl) {
   success(`Codex Windows DACS 配置: ${dacsHome}`);
 
   const cmdPath = path.join(binDir, 'codex-dacs.cmd');
-  backupFile(cmdPath, options);
-  if (!options.dryRun) fs.writeFileSync(cmdPath, `${codexDacsWindowsCmdShim(runtime, realCodex, dacsHome)}\n`, 'utf8');
-  success(`Codex Windows DACS 命令: ${cmdPath}`);
+  const shim = `${codexDacsWindowsCmdShim(runtime, realCodex, dacsHome)}\n`;
+  const commandPaths = [cmdPath, ...windowsExistingCommandPaths('codex-dacs')];
+  for (const targetPath of [...new Set(commandPaths.map((candidate) => path.resolve(candidate)))]) {
+    backupFile(targetPath, options);
+    if (!options.dryRun) fs.writeFileSync(targetPath, shim, 'utf8');
+    success(`Codex Windows DACS 命令: ${targetPath}`);
+  }
+  warnWindowsCommandShadows('codex-dacs');
 
   const oldJsPath = path.join(binDir, 'codex-dacs.js');
   if (fs.existsSync(oldJsPath)) {
