@@ -764,7 +764,7 @@ cd /d "${userProfile}"
 EXIT /B %ERRORLEVEL%`;
 }
 
-function codexDacsWindowsCmdShim(runtime, realCodex, sourceHome) {
+function codexDacsWindowsCmdShim(runtime, realCodex) {
   const exeDir = path.dirname(realCodex);
   const systemRoot = process.env.SYSTEMROOT || process.env.WINDIR || 'C:\\Windows';
   const tempRoot = process.env.TEMP || process.env.TMP || path.join(homeDir(), 'AppData', 'Local', 'Temp');
@@ -805,7 +805,6 @@ SET "PATH=${safePath}"
 SET "CODEX_TMP_ROOT=${tempRoot}"
 SET "CODEX_HOME=%CODEX_TMP_ROOT%\\codex-home-dacs-%RANDOM%-%RANDOM%"
 mkdir "%CODEX_HOME%" 2>NUL
-mkdir "%CODEX_HOME%\\home" 2>NUL
 mkdir "%CODEX_HOME%\\xdg\\config" 2>NUL
 mkdir "%CODEX_HOME%\\xdg\\data" 2>NUL
 mkdir "%CODEX_HOME%\\xdg\\state" 2>NUL
@@ -813,17 +812,7 @@ mkdir "%CODEX_HOME%\\xdg\\cache" 2>NUL
 mkdir "%CODEX_HOME%\\xdg\\runtime" 2>NUL
 mkdir "%CODEX_HOME%\\sqlite" 2>NUL
 
-IF NOT EXIST "${sourceHome}\\config.toml" (
-  ECHO Codex DACS source config not found: ${sourceHome}\\config.toml 1>&2
-  EXIT /B 1
-)
-copy /Y "${sourceHome}\\config.toml" "%CODEX_HOME%\\config.toml" >NUL
-copy /Y "${sourceHome}\\auth.json" "%CODEX_HOME%\\auth.json" >NUL
-copy /Y "${sourceHome}\\models.json" "%CODEX_HOME%\\models.json" >NUL
-
 SET "CODEX_MANAGED_BY_NPM=1"
-SET "HOME=%CODEX_HOME%\\home"
-SET "USERPROFILE=%CODEX_HOME%\\home"
 SET "XDG_CONFIG_HOME=%CODEX_HOME%\\xdg\\config"
 SET "XDG_DATA_HOME=%CODEX_HOME%\\xdg\\data"
 SET "XDG_STATE_HOME=%CODEX_HOME%\\xdg\\state"
@@ -835,7 +824,7 @@ SET "CODEX_API_KEY=${runtime.apiKey}"
 
 cd /d "${userProfile}"
 
-call "${realCodex}" %1 %2 %3 %4 %5 %6 %7 %8 %9
+call "${realCodex}" -c model_provider=${JSON.stringify(PROVIDER_KEY)} -c model=${JSON.stringify(DEFAULT_CODEX_MODEL)} -c model_reasoning_effort="high" -c network_access="enabled" -c disable_response_storage=true -c model_providers.${JSON.stringify(PROVIDER_KEY)}.name="OpenAI" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.base_url=${JSON.stringify(runtime.dacsBaseURL)} -c model_providers.${JSON.stringify(PROVIDER_KEY)}.wire_api="responses" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.requires_openai_auth=true %1 %2 %3 %4 %5 %6 %7 %8 %9
 EXIT /B %ERRORLEVEL%`;
 }
 
@@ -904,32 +893,15 @@ async function writeOpencodeDacsWindowsAdapter(runtime, options, rl) {
 }
 
 function codexConfig(baseURL) {
-  const catalogPath = path.join(homeDir(), '.codex', 'models.json').replace(/\\/g, '/');
   return `model_provider = "${PROVIDER_KEY}"
 model = "${DEFAULT_CODEX_MODEL}"
 model_reasoning_effort = "high"
 network_access = "enabled"
 disable_response_storage = true
-model_catalog_json = ${JSON.stringify(catalogPath)}
 
 [model_providers.${JSON.stringify(PROVIDER_KEY)}]
 name = "OpenAI"
 base_url = "${baseURL}"
-wire_api = "responses"
-requires_openai_auth = true`;
-}
-
-function codexDacsConfig(baseURL, catalogPath = path.join(homeDir(), '.codex-dacs', 'models.json').replace(/\\/g, '/')) {
-  return `model_provider = ${JSON.stringify(PROVIDER_KEY)}
-model = ${JSON.stringify(DEFAULT_CODEX_MODEL)}
-model_reasoning_effort = "high"
-network_access = "enabled"
-disable_response_storage = true
-model_catalog_json = ${JSON.stringify(catalogPath)}
-
-[model_providers.${JSON.stringify(PROVIDER_KEY)}]
-name = "OpenAI"
-base_url = ${JSON.stringify(baseURL)}
 wire_api = "responses"
 requires_openai_auth = true`;
 }
@@ -1262,26 +1234,8 @@ async function writeCodexDacsWindowsAdapter(runtime, options, rl) {
     return;
   }
 
-  const dacsHome = path.join(homeDir(), '.codex-dacs');
-  ensureDir(dacsHome, options);
-
-  const configToml = codexDacsConfig(runtime.dacsBaseURL, path.join(dacsHome, 'models.json').replace(/\\/g, '/'));
-  const configTomlPath = path.join(dacsHome, 'config.toml');
-  backupFile(configTomlPath, options);
-  if (!options.dryRun) fs.writeFileSync(configTomlPath, `${configToml}\n`, 'utf8');
-
-  const authJsonPath = path.join(dacsHome, 'auth.json');
-  backupFile(authJsonPath, options);
-  if (!options.dryRun) fs.writeFileSync(authJsonPath, `${codexAuth(runtime.apiKey)}\n`, 'utf8');
-
-  const modelsJsonPath = path.join(dacsHome, 'models.json');
-  backupFile(modelsJsonPath, options);
-  if (!options.dryRun) fs.writeFileSync(modelsJsonPath, `${codexModelCatalog()}\n`, 'utf8');
-
-  success(`Codex Windows DACS 配置: ${dacsHome}`);
-
   const cmdPath = path.join(binDir, 'codex-dacs.cmd');
-  const shim = `${codexDacsWindowsCmdShim(runtime, realCodex, dacsHome)}\n`;
+  const shim = `${codexDacsWindowsCmdShim(runtime, realCodex)}\n`;
   const commandPaths = [cmdPath, ...windowsExistingCommandPaths('codex-dacs')];
   for (const targetPath of [...new Set(commandPaths.map((candidate) => path.resolve(candidate)))]) {
     backupFile(targetPath, options);
