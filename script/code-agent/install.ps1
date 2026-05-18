@@ -6,6 +6,7 @@ $BaseUrl = if ($env:AI_TOOLS_INSTALLER_BASE_URL) { $env:AI_TOOLS_INSTALLER_BASE_
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $LocalScript = Join-Path $ScriptDir $ScriptName
 $UseLocalScript = $env:AI_TOOLS_INSTALLER_USE_LOCAL -eq "1" -or ((Test-Path (Join-Path $ScriptDir "README.md")) -and (Test-Path (Join-Path $ScriptDir "install.sh")))
+if ($env:AI_TOOLS_INSTALLER_DEBUG -eq "1") { Write-Error "install.ps1 args: $($args -join ' ')" }
 
 function Test-Command($Name) {
   return [bool](Get-Command $Name -ErrorAction SilentlyContinue)
