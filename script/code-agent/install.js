@@ -630,7 +630,7 @@ for (const dir of [opencodeConfigDir, dataRoot, stateRoot, cacheRoot, runtimeRoo
 }
 
 const configPath = path.join(opencodeConfigDir, 'opencode.json');
-fs.writeFileSync(configPath, configJson + '\n', 'utf8');
+fs.writeFileSync(configPath, configJson + '\\n', 'utf8');
 fs.copyFileSync(configPath, path.join(configRoot, 'opencode.json'));
 
 const env = {
@@ -1004,9 +1004,9 @@ for (const dir of [codexHome, homeDir, xdgConfigHome, xdgDataHome, xdgStateHome,
 }
 
 const configPath = path.join(codexHome, 'config.toml');
-fs.writeFileSync(configPath, configTemplate.replace('__CODEX_HOME__', codexHome.replace(/\\/g, '/')) + '\n', 'utf8');
-fs.writeFileSync(path.join(codexHome, 'auth.json'), authJson + '\n', 'utf8');
-fs.writeFileSync(path.join(codexHome, 'models.json'), modelsJson + '\n', 'utf8');
+fs.writeFileSync(configPath, configTemplate.replace('__CODEX_HOME__', codexHome.replace(/\\\\/g, '/')) + '\\n', 'utf8');
+fs.writeFileSync(path.join(codexHome, 'auth.json'), authJson + '\\n', 'utf8');
+fs.writeFileSync(path.join(codexHome, 'models.json'), modelsJson + '\\n', 'utf8');
 
 const env = {
   ...process.env,
