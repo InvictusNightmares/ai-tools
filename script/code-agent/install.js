@@ -612,7 +612,20 @@ function windowsNodeString(value) {
 }
 
 function windowsMinimalEnvFunction() {
-  return `function minimalWindowsEnv(extra) {
+  return `function safeWindowsPath(realCommand) {
+  const systemRoot = process.env.SYSTEMROOT || process.env.WINDIR || 'C:\\\\Windows';
+  const entries = [
+    path.dirname(realCommand),
+    path.join(systemRoot, 'System32'),
+    systemRoot,
+    path.join(systemRoot, 'System32', 'Wbem'),
+    path.join(systemRoot, 'System32', 'WindowsPowerShell', 'v1.0'),
+    process.env.APPDATA ? path.join(process.env.APPDATA, 'npm') : '',
+  ].filter(Boolean);
+  return [...new Set(entries)].join(path.delimiter);
+}
+
+function minimalWindowsEnv(realCommand, extra) {
   const keep = [
     'ALLUSERSPROFILE',
     'APPDATA',
@@ -622,7 +635,6 @@ function windowsMinimalEnvFunction() {
     'LOCALAPPDATA',
     'NUMBER_OF_PROCESSORS',
     'OS',
-    'PATH',
     'PATHEXT',
     'PROCESSOR_ARCHITECTURE',
     'PROCESSOR_IDENTIFIER',
@@ -643,6 +655,8 @@ function windowsMinimalEnvFunction() {
   for (const key of keep) {
     if (process.env[key] !== undefined) env[key] = process.env[key];
   }
+  env.PATH = safeWindowsPath(realCommand);
+  env.Path = env.PATH;
   return { ...env, ...extra };
 }`;
 }
@@ -679,7 +693,7 @@ const configPath = path.join(opencodeConfigDir, 'opencode.json');
 fs.writeFileSync(configPath, configJson + '\\n', 'utf8');
 fs.copyFileSync(configPath, path.join(configRoot, 'opencode.json'));
 
-const env = minimalWindowsEnv({
+const env = minimalWindowsEnv(realOpencode, {
   XDG_CONFIG_HOME: configRoot,
   XDG_DATA_HOME: dataRoot,
   XDG_STATE_HOME: stateRoot,
@@ -696,7 +710,7 @@ if (process.env.AI_TOOLS_DACS_DEBUG === '1') {
 }
 
 const args = process.argv.slice(2);
-if (args.length === 0 && process.stdin.isTTY) args.push('run');
+if (args.length === 0) args.push('run');
 const result = spawnSync(realOpencode, args, { stdio: 'inherit', shell: false, env, windowsHide: false });
 if (result.error) {
   console.error('Failed to start OpenCode: ' + result.error.message);
