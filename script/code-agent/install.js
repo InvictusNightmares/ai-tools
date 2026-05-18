@@ -701,13 +701,30 @@ IF "%1"=="--dacs-version" (
 )
 
 SET "DACS_DEBUG=0"
+SET "DACS_DOCTOR=0"
+SET "DACS_DIRECT=0"
 IF "%1"=="--dacs-debug" (
   SET "DACS_DEBUG=1"
+  SHIFT
+)
+IF "%1"=="--dacs-doctor" (
+  SET "DACS_DEBUG=1"
+  SET "DACS_DOCTOR=1"
+  SHIFT
+)
+IF "%1"=="--dacs-direct" (
+  SET "DACS_DIRECT=1"
   SHIFT
 )
 IF "%AI_TOOLS_DACS_DEBUG%"=="1" SET "DACS_DEBUG=1"
 
 ECHO [ai-tools] opencode-dacs CMD wrapper 1>&2
+
+IF "%DACS_DIRECT%"=="1" (
+  ECHO OpenCode DACS direct exe: ${realOpencode} 1>&2
+  "${realOpencode}" %*
+  EXIT /B %ERRORLEVEL%
+)
 
 SET "OPENCODE_TMP_ROOT=%TEMP%"
 IF "%OPENCODE_TMP_ROOT%"=="" SET "OPENCODE_TMP_ROOT=%TMP%"
@@ -747,6 +764,11 @@ IF "%DACS_DEBUG%"=="1" (
   ECHO OpenCode DACS runtime config: %OPENCODE_CONFIG_DIR%\\opencode.json 1>&2
   ECHO OpenCode DACS PATH: %PATH% 1>&2
   ECHO OpenCode DACS XDG_CONFIG_HOME: %XDG_CONFIG_HOME% 1>&2
+)
+
+IF "%DACS_DOCTOR%"=="1" (
+  ECHO OpenCode DACS doctor completed without launching opencode.exe. 1>&2
+  EXIT /B 0
 )
 
 "${realOpencode}" %*
