@@ -499,8 +499,12 @@ function preferOpencodeWindowsAvx2Binary(options) {
     return sourcePath;
   }
 
-  fs.copyFileSync(sourcePath, targetPath);
-  success(`已替换 OpenCode Windows x64 非 baseline 二进制: ${targetPath}`);
+  try {
+    fs.copyFileSync(sourcePath, targetPath);
+    success(`已替换 OpenCode Windows x64 非 baseline 二进制: ${targetPath}`);
+  } catch (error) {
+    warn(`无法覆盖 opencode-ai 默认二进制，DACS 将直接使用非 baseline 二进制: ${error.message}`);
+  }
   return sourcePath;
 }
 
