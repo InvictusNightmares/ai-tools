@@ -654,132 +654,130 @@ fi
 exec "$REAL_OPENCODE" "$@"`;
 }
 
-function windowsCmdShim(scriptPath) {
-  return `@ECHO off
-SETLOCAL
-IF "%AI_TOOLS_DACS_DEBUG%"=="1" ECHO OpenCode DACS shim: ${scriptPath} 1>&2
-node "${scriptPath}" %*
-EXIT /B %ERRORLEVEL%`;
-}
-
 function windowsNodeString(value) {
   return JSON.stringify(String(value));
 }
 
-function windowsMinimalEnvFunction() {
-  return `function safeWindowsPath(realCommand) {
-  const systemRoot = process.env.SYSTEMROOT || process.env.WINDIR || 'C:\\\\Windows';
-  const entries = [
-    path.dirname(realCommand),
-    path.join(systemRoot, 'System32'),
-    systemRoot,
-    path.join(systemRoot, 'System32', 'Wbem'),
-    path.join(systemRoot, 'System32', 'WindowsPowerShell', 'v1.0'),
+function opencodeDacsWindowsCmdShim(runtime, realOpencode, dacsHome) {
+  const configRoot = path.join(dacsHome, 'config');
+  const dataRoot = path.join(dacsHome, 'data');
+  const stateRoot = path.join(dacsHome, 'state');
+  const cacheRoot = path.join(dacsHome, 'cache');
+  const runtimeRoot = path.join(dacsHome, 'runtime');
+  const opencodeConfigDir = path.join(configRoot, 'opencode');
+  const exeDir = path.dirname(realOpencode);
+
+  const safePath = [
+    exeDir,
+    path.join(process.env.SYSTEMROOT || process.env.WINDIR || 'C:\\Windows', 'System32'),
+    process.env.SYSTEMROOT || process.env.WINDIR || 'C:\\Windows',
+    path.join(process.env.SYSTEMROOT || process.env.WINDIR || 'C:\\Windows', 'System32', 'Wbem'),
+    path.join(process.env.SYSTEMROOT || process.env.WINDIR || 'C:\\Windows', 'System32', 'WindowsPowerShell', 'v1.0'),
     process.env.APPDATA ? path.join(process.env.APPDATA, 'npm') : '',
-  ].filter(Boolean);
-  return [...new Set(entries)].join(path.delimiter);
+  ].filter(Boolean).join(';');
+
+  return `@ECHO off
+SETLOCAL EnableExtensions
+
+IF "%1"=="--dacs-version" (
+  ECHO ai-tools opencode-dacs CMD wrapper
+  EXIT /B 0
+)
+
+SET "DACS_DEBUG=0"
+IF "%1"=="--dacs-debug" (
+  SET "DACS_DEBUG=1"
+  SHIFT
+)
+IF "%AI_TOOLS_DACS_DEBUG%"=="1" SET "DACS_DEBUG=1"
+
+mkdir "${opencodeConfigDir}" 2>NUL
+mkdir "${dataRoot}" 2>NUL
+mkdir "${stateRoot}" 2>NUL
+mkdir "${cacheRoot}" 2>NUL
+mkdir "${runtimeRoot}" 2>NUL
+
+SET "XDG_CONFIG_HOME=${configRoot}"
+SET "XDG_DATA_HOME=${dataRoot}"
+SET "XDG_STATE_HOME=${stateRoot}"
+SET "XDG_CACHE_HOME=${cacheRoot}"
+SET "XDG_RUNTIME_DIR=${runtimeRoot}"
+SET "OPENCODE_CONFIG_DIR=${opencodeConfigDir}"
+SET "OPENCODE_MODELS_URL=http://localhost"
+SET "PATH=${safePath}"
+
+IF "%DACS_DEBUG%"=="1" (
+  ECHO [ai-tools] opencode-dacs CMD wrapper 1>&2
+  ECHO OpenCode DACS exe: ${realOpencode} 1>&2
+  ECHO OpenCode DACS config: ${opencodeConfigDir}\\opencode.json 1>&2
+  ECHO OpenCode DACS PATH: %PATH% 1>&2
+  ECHO OpenCode DACS XDG_CONFIG_HOME: %XDG_CONFIG_HOME% 1>&2
+)
+
+"${realOpencode}" %*
+EXIT /B %ERRORLEVEL%`;
 }
 
-function minimalWindowsEnv(realCommand, extra) {
-  const keep = [
-    'ALLUSERSPROFILE',
-    'APPDATA',
-    'COMSPEC',
-    'HOMEDRIVE',
-    'HOMEPATH',
-    'LOCALAPPDATA',
-    'NUMBER_OF_PROCESSORS',
-    'OS',
-    'PATHEXT',
-    'PROCESSOR_ARCHITECTURE',
-    'PROCESSOR_IDENTIFIER',
-    'PROGRAMDATA',
-    'PROGRAMFILES',
-    'PROGRAMFILES(X86)',
-    'PROGRAMW6432',
-    'SYSTEMDRIVE',
-    'SYSTEMROOT',
-    'TEMP',
-    'TMP',
-    'USERDOMAIN',
-    'USERNAME',
-    'USERPROFILE',
-    'WINDIR',
-  ];
-  const env = {};
-  for (const key of keep) {
-    if (process.env[key] !== undefined) env[key] = process.env[key];
-  }
-  env.PATH = safeWindowsPath(realCommand);
-  env.Path = env.PATH;
-  return { ...env, ...extra };
-}`;
-}
+function codexDacsWindowsCmdShim(runtime, realCodex, dacsHome) {
+  const exeDir = path.dirname(realCodex);
 
-function opencodeDacsWindowsWrapper(runtime, realOpencode) {
-  const configJson = opencodeConfig(runtime.apiKey, runtime.dacsBaseURL);
-  return `#!/usr/bin/env node
-// ai-tools generated OpenCode DACS command
-const fs = require('node:fs');
-const os = require('node:os');
-const path = require('node:path');
-const { spawnSync } = require('node:child_process');
+  const safePath = [
+    exeDir,
+    path.join(process.env.SYSTEMROOT || process.env.WINDIR || 'C:\\Windows', 'System32'),
+    process.env.SYSTEMROOT || process.env.WINDIR || 'C:\\Windows',
+    path.join(process.env.SYSTEMROOT || process.env.WINDIR || 'C:\\Windows', 'System32', 'Wbem'),
+    path.join(process.env.SYSTEMROOT || process.env.WINDIR || 'C:\\Windows', 'System32', 'WindowsPowerShell', 'v1.0'),
+    process.env.APPDATA ? path.join(process.env.APPDATA, 'npm') : '',
+  ].filter(Boolean).join(';');
 
-const realOpencode = ${windowsNodeString(realOpencode)};
-const configJson = ${windowsNodeString(configJson)};
-${windowsMinimalEnvFunction()}
-if (!fs.existsSync(realOpencode)) {
-  console.error('OpenCode executable not found: ' + realOpencode);
-  process.exit(1);
-}
-const opencodeHome = fs.mkdtempSync(path.join(os.tmpdir(), 'opencode-home-dacs-'));
-const configRoot = path.join(opencodeHome, 'config');
-const dataRoot = path.join(opencodeHome, 'data');
-const stateRoot = path.join(opencodeHome, 'state');
-const cacheRoot = path.join(opencodeHome, 'cache');
-const runtimeRoot = path.join(opencodeHome, 'runtime');
-const opencodeConfigDir = path.join(configRoot, 'opencode');
+  return `@ECHO off
+SETLOCAL EnableExtensions
 
-for (const dir of [opencodeConfigDir, dataRoot, stateRoot, cacheRoot, runtimeRoot]) {
-  fs.mkdirSync(dir, { recursive: true });
-}
+IF "%1"=="--dacs-version" (
+  ECHO ai-tools codex-dacs CMD wrapper
+  EXIT /B 0
+)
 
-const configPath = path.join(opencodeConfigDir, 'opencode.json');
-fs.writeFileSync(configPath, configJson + '\\n', 'utf8');
-fs.copyFileSync(configPath, path.join(configRoot, 'opencode.json'));
+SET "DACS_DEBUG=0"
+IF "%1"=="--dacs-debug" (
+  SET "DACS_DEBUG=1"
+  SHIFT
+)
+IF "%AI_TOOLS_DACS_DEBUG%"=="1" SET "DACS_DEBUG=1"
 
-const env = minimalWindowsEnv(realOpencode, {
-  XDG_CONFIG_HOME: configRoot,
-  XDG_DATA_HOME: dataRoot,
-  XDG_STATE_HOME: stateRoot,
-  XDG_CACHE_HOME: cacheRoot,
-  XDG_RUNTIME_DIR: runtimeRoot,
-  OPENCODE_CONFIG_DIR: opencodeConfigDir,
-  OPENCODE_MODELS_URL: 'http://localhost',
-});
+mkdir "${dacsHome}" 2>NUL
+mkdir "${dacsHome}\\home" 2>NUL
+mkdir "${dacsHome}\\xdg\\config" 2>NUL
+mkdir "${dacsHome}\\xdg\\data" 2>NUL
+mkdir "${dacsHome}\\xdg\\state" 2>NUL
+mkdir "${dacsHome}\\xdg\\cache" 2>NUL
+mkdir "${dacsHome}\\xdg\\runtime" 2>NUL
+mkdir "${dacsHome}\\sqlite" 2>NUL
 
-const args = process.argv.slice(2);
-const dacsDebugIndex = args.indexOf('--dacs-debug');
-const dacsDebug = process.env.AI_TOOLS_DACS_DEBUG === '1' || dacsDebugIndex !== -1;
-if (dacsDebugIndex !== -1) args.splice(dacsDebugIndex, 1);
+SET "CODEX_HOME=${dacsHome}"
+SET "CODEX_MANAGED_BY_NPM=1"
+SET "HOME=${dacsHome}\\home"
+SET "USERPROFILE=${dacsHome}\\home"
+SET "XDG_CONFIG_HOME=${dacsHome}\\xdg\\config"
+SET "XDG_DATA_HOME=${dacsHome}\\xdg\\data"
+SET "XDG_STATE_HOME=${dacsHome}\\xdg\\state"
+SET "XDG_CACHE_HOME=${dacsHome}\\xdg\\cache"
+SET "XDG_RUNTIME_DIR=${dacsHome}\\xdg\\runtime"
+SET "CODEX_SQLITE_HOME=${dacsHome}\\sqlite"
+SET "OPENAI_API_KEY=${runtime.apiKey}"
+SET "CODEX_API_KEY=${runtime.apiKey}"
+SET "PATH=${safePath}"
 
-if (dacsDebug) {
-  console.error('OpenCode DACS executable: ' + realOpencode);
-  console.error('OpenCode DACS config: ' + configPath);
-  console.error('OpenCode DACS PATH: ' + env.PATH);
-  const config = JSON.parse(configJson);
-  console.error('OpenCode DACS baseURL: ' + config.provider[${windowsNodeString(PROVIDER_KEY)}].options.baseURL);
-}
+IF "%DACS_DEBUG%"=="1" (
+  ECHO [ai-tools] codex-dacs CMD wrapper 1>&2
+  ECHO Codex DACS exe: ${realCodex} 1>&2
+  ECHO Codex DACS HOME: %HOME% 1>&2
+  ECHO Codex DACS PATH: %PATH% 1>&2
+  ECHO Codex DACS OPENAI_API_KEY: ****%OPENAI_API_KEY:~-4% 1>&2
+)
 
-if (args.length === 0) args.push('run');
-const result = spawnSync(realOpencode, args, { stdio: 'inherit', shell: false, env, windowsHide: false });
-if (result.error) {
-  console.error('Failed to start OpenCode: ' + result.error.message);
-  process.exit(1);
-}
-if (dacsDebug) console.error('OpenCode DACS exit status: ' + (result.status === null ? 1 : result.status));
-process.exit(result.status === null ? 1 : result.status);
-`;
+"${realCodex}" %*
+EXIT /B %ERRORLEVEL%`;
 }
 
 async function writeOpencodeDacsMacAdapter(runtime, options, rl) {
@@ -817,11 +815,31 @@ async function writeOpencodeDacsWindowsAdapter(runtime, options, rl) {
     return;
   }
 
-  const scriptPath = path.join(binDir, 'opencode-dacs.js');
+  const dacsHome = path.join(homeDir(), '.opencode-dacs');
+  const dacsConfigDir = path.join(dacsHome, 'config', 'opencode');
+  ensureDir(dacsConfigDir, options);
+  const dacsConfig = opencodeConfig(runtime.apiKey, runtime.dacsBaseURL);
+  const dacsConfigPath = path.join(dacsConfigDir, 'opencode.json');
+  backupFile(dacsConfigPath, options);
+  if (!options.dryRun) fs.writeFileSync(dacsConfigPath, `${dacsConfig}\n`, 'utf8');
+  success(`OpenCode Windows DACS 配置: ${dacsConfigPath}`);
+
+  const fallbackConfigPath = path.join(dacsHome, 'config', 'opencode.json');
+  ensureDir(path.dirname(fallbackConfigPath), options);
+  backupFile(fallbackConfigPath, options);
+  if (!options.dryRun) fs.writeFileSync(fallbackConfigPath, `${dacsConfig}\n`, 'utf8');
+
   const cmdPath = path.join(binDir, 'opencode-dacs.cmd');
-  await writeFileSafely(scriptPath, opencodeDacsWindowsWrapper(runtime, realOpencode), options, rl);
-  await writeFileSafely(cmdPath, windowsCmdShim(scriptPath), options, rl);
+  backupFile(cmdPath, options);
+  if (!options.dryRun) fs.writeFileSync(cmdPath, `${opencodeDacsWindowsCmdShim(runtime, realOpencode, dacsHome)}\n`, 'utf8');
   success(`OpenCode Windows DACS 命令: ${cmdPath}`);
+
+  const oldJsPath = path.join(binDir, 'opencode-dacs.js');
+  if (fs.existsSync(oldJsPath)) {
+    backupFile(oldJsPath, options);
+    if (!options.dryRun) fs.unlinkSync(oldJsPath);
+    success(`已移除旧 Node.js wrapper: ${oldJsPath}`);
+  }
 }
 
 function codexConfig(baseURL) {
@@ -1086,86 +1104,6 @@ fi
 exec -a codex "$REAL_CODEX" "$@"`;
 }
 
-function codexDacsWindowsWrapper(runtime, realCodex) {
-  const configLines = [
-    `model_provider = ${JSON.stringify(PROVIDER_KEY)}`,
-    `model = ${JSON.stringify(DEFAULT_CODEX_MODEL)}`,
-    'model_reasoning_effort = "high"',
-    'network_access = "enabled"',
-    'disable_response_storage = true',
-    'model_catalog_json = "__CODEX_HOME__/models.json"',
-    '',
-    `[model_providers.${JSON.stringify(PROVIDER_KEY)}]`,
-    'name = "OpenAI"',
-    `base_url = ${JSON.stringify(runtime.dacsBaseURL)}`,
-    'wire_api = "responses"',
-    'requires_openai_auth = true',
-  ];
-  const configTemplate = configLines.join('\n');
-  const authJson = codexAuth(runtime.apiKey);
-  const modelsJson = codexModelCatalog();
-
-  return `#!/usr/bin/env node
-// ai-tools generated Codex DACS command
-const fs = require('node:fs');
-const os = require('node:os');
-const path = require('node:path');
-const { spawnSync } = require('node:child_process');
-
-const realCodex = ${windowsNodeString(realCodex)};
-const apiKey = ${windowsNodeString(runtime.apiKey)};
-const configTemplate = ${windowsNodeString(configTemplate)};
-const authJson = ${windowsNodeString(authJson)};
-const modelsJson = ${windowsNodeString(modelsJson)};
-const codexHome = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-home-dacs-'));
-const homeDir = path.join(codexHome, 'home');
-const xdgConfigHome = path.join(codexHome, 'xdg', 'config');
-const xdgDataHome = path.join(codexHome, 'xdg', 'data');
-const xdgStateHome = path.join(codexHome, 'xdg', 'state');
-const xdgCacheHome = path.join(codexHome, 'xdg', 'cache');
-const xdgRuntimeDir = path.join(codexHome, 'xdg', 'runtime');
-const sqliteHome = path.join(codexHome, 'sqlite');
-
-for (const dir of [codexHome, homeDir, xdgConfigHome, xdgDataHome, xdgStateHome, xdgCacheHome, xdgRuntimeDir, sqliteHome]) {
-  fs.mkdirSync(dir, { recursive: true });
-}
-
-const configPath = path.join(codexHome, 'config.toml');
-fs.writeFileSync(configPath, configTemplate.replace('__CODEX_HOME__', codexHome.replace(/\\\\/g, '/')) + '\\n', 'utf8');
-fs.writeFileSync(path.join(codexHome, 'auth.json'), authJson + '\\n', 'utf8');
-fs.writeFileSync(path.join(codexHome, 'models.json'), modelsJson + '\\n', 'utf8');
-
-const env = {
-  ...process.env,
-  CODEX_HOME: codexHome,
-  CODEX_MANAGED_BY_NPM: '1',
-  HOME: homeDir,
-  USERPROFILE: homeDir,
-  XDG_CONFIG_HOME: xdgConfigHome,
-  XDG_DATA_HOME: xdgDataHome,
-  XDG_STATE_HOME: xdgStateHome,
-  XDG_CACHE_HOME: xdgCacheHome,
-  XDG_RUNTIME_DIR: xdgRuntimeDir,
-  CODEX_SQLITE_HOME: sqliteHome,
-  OPENAI_API_KEY: apiKey,
-  CODEX_API_KEY: apiKey,
-};
-delete env.OPENAI_TOKEN;
-delete env.OPENAI_AUTH_TOKEN;
-delete env.CODEX_AUTH_TOKEN;
-delete env.CODEX_REFRESH_TOKEN;
-
-if (process.env.AI_TOOLS_DACS_DEBUG === '1') {
-  console.error('Codex DACS config: ' + configPath);
-  console.error('Codex DACS home: ' + codexHome);
-  console.error('Codex DACS OPENAI_API_KEY: ****' + apiKey.slice(-4));
-}
-
-const result = spawnSync(realCodex, process.argv.slice(2), { stdio: 'inherit', shell: true, env });
-process.exit(result.status === null ? 1 : result.status);
-`;
-}
-
 function dacsWritableProbe() {
   return `#!/bin/bash
 set -u
@@ -1248,11 +1186,35 @@ async function writeCodexDacsWindowsAdapter(runtime, options, rl) {
     return;
   }
 
-  const scriptPath = path.join(binDir, 'codex-dacs.js');
+  const dacsHome = path.join(homeDir(), '.codex-dacs');
+  ensureDir(dacsHome, options);
+
+  const configToml = codexConfig(runtime.dacsBaseURL).replace('__CODEX_HOME__', dacsHome.replace(/\\/g, '/'));
+  const configTomlPath = path.join(dacsHome, 'config.toml');
+  backupFile(configTomlPath, options);
+  if (!options.dryRun) fs.writeFileSync(configTomlPath, `${configToml}\n`, 'utf8');
+
+  const authJsonPath = path.join(dacsHome, 'auth.json');
+  backupFile(authJsonPath, options);
+  if (!options.dryRun) fs.writeFileSync(authJsonPath, `${codexAuth(runtime.apiKey)}\n`, 'utf8');
+
+  const modelsJsonPath = path.join(dacsHome, 'models.json');
+  backupFile(modelsJsonPath, options);
+  if (!options.dryRun) fs.writeFileSync(modelsJsonPath, `${codexModelCatalog()}\n`, 'utf8');
+
+  success(`Codex Windows DACS 配置: ${dacsHome}`);
+
   const cmdPath = path.join(binDir, 'codex-dacs.cmd');
-  await writeFileSafely(scriptPath, codexDacsWindowsWrapper(runtime, realCodex), options, rl);
-  await writeFileSafely(cmdPath, windowsCmdShim(scriptPath), options, rl);
+  backupFile(cmdPath, options);
+  if (!options.dryRun) fs.writeFileSync(cmdPath, `${codexDacsWindowsCmdShim(runtime, realCodex, dacsHome)}\n`, 'utf8');
   success(`Codex Windows DACS 命令: ${cmdPath}`);
+
+  const oldJsPath = path.join(binDir, 'codex-dacs.js');
+  if (fs.existsSync(oldJsPath)) {
+    backupFile(oldJsPath, options);
+    if (!options.dryRun) fs.unlinkSync(oldJsPath);
+    success(`已移除旧 Node.js wrapper: ${oldJsPath}`);
+  }
 }
 
 async function writeCodexConfig(runtime, options, rl) {
