@@ -606,6 +606,42 @@ function windowsNodeString(value) {
   return JSON.stringify(String(value));
 }
 
+function windowsMinimalEnvFunction() {
+  return `function minimalWindowsEnv(extra) {
+  const keep = [
+    'ALLUSERSPROFILE',
+    'APPDATA',
+    'COMSPEC',
+    'HOMEDRIVE',
+    'HOMEPATH',
+    'LOCALAPPDATA',
+    'NUMBER_OF_PROCESSORS',
+    'OS',
+    'PATH',
+    'PATHEXT',
+    'PROCESSOR_ARCHITECTURE',
+    'PROCESSOR_IDENTIFIER',
+    'PROGRAMDATA',
+    'PROGRAMFILES',
+    'PROGRAMFILES(X86)',
+    'PROGRAMW6432',
+    'SYSTEMDRIVE',
+    'SYSTEMROOT',
+    'TEMP',
+    'TMP',
+    'USERDOMAIN',
+    'USERNAME',
+    'USERPROFILE',
+    'WINDIR',
+  ];
+  const env = {};
+  for (const key of keep) {
+    if (process.env[key] !== undefined) env[key] = process.env[key];
+  }
+  return { ...env, ...extra };
+}`;
+}
+
 function opencodeDacsWindowsWrapper(runtime, realOpencode) {
   const configJson = opencodeConfig(runtime.apiKey, runtime.dacsBaseURL);
   return `#!/usr/bin/env node
@@ -617,6 +653,7 @@ const { spawnSync } = require('node:child_process');
 
 const realOpencode = ${windowsNodeString(realOpencode)};
 const configJson = ${windowsNodeString(configJson)};
+${windowsMinimalEnvFunction()}
 const opencodeHome = fs.mkdtempSync(path.join(os.tmpdir(), 'opencode-home-dacs-'));
 const configRoot = path.join(opencodeHome, 'config');
 const dataRoot = path.join(opencodeHome, 'data');
@@ -633,8 +670,7 @@ const configPath = path.join(opencodeConfigDir, 'opencode.json');
 fs.writeFileSync(configPath, configJson + '\\n', 'utf8');
 fs.copyFileSync(configPath, path.join(configRoot, 'opencode.json'));
 
-const env = {
-  ...process.env,
+const env = minimalWindowsEnv({
   XDG_CONFIG_HOME: configRoot,
   XDG_DATA_HOME: dataRoot,
   XDG_STATE_HOME: stateRoot,
@@ -642,7 +678,7 @@ const env = {
   XDG_RUNTIME_DIR: runtimeRoot,
   OPENCODE_CONFIG_DIR: opencodeConfigDir,
   OPENCODE_MODELS_URL: 'http://localhost',
-};
+});
 
 if (process.env.AI_TOOLS_DACS_DEBUG === '1') {
   console.error('OpenCode DACS config: ' + configPath);
@@ -650,7 +686,7 @@ if (process.env.AI_TOOLS_DACS_DEBUG === '1') {
   console.error('OpenCode DACS baseURL: ' + config.provider[${windowsNodeString(PROVIDER_KEY)}].options.baseURL);
 }
 
-const result = spawnSync(realOpencode, process.argv.slice(2), { stdio: 'inherit', shell: true, env });
+const result = spawnSync(realOpencode, process.argv.slice(2), { stdio: 'inherit', shell: false, env, windowsHide: false });
 process.exit(result.status === null ? 1 : result.status);
 `;
 }
