@@ -515,8 +515,13 @@ function findOpencodeBinary(binDir = '') {
   const npmBin = npmGlobalBinDir();
   if (process.platform === 'win32') {
     const candidates = [
+      npmRoot ? path.join(npmRoot, 'opencode-ai', 'bin', 'opencode.exe') : '',
+      npmRoot ? path.join(npmRoot, 'node_modules', 'opencode-ai', 'bin', 'opencode.exe') : '',
+      npmRoot ? path.join(npmRoot, 'lib', 'node_modules', 'opencode-ai', 'bin', 'opencode.exe') : '',
+      process.env.APPDATA ? path.join(process.env.APPDATA, 'npm', 'node_modules', 'opencode-ai', 'bin', 'opencode.exe') : '',
       commandPath,
       npmBin ? path.join(npmBin, 'opencode.cmd') : '',
+      npmBin ? path.join(npmBin, 'node_modules', 'opencode-ai', 'bin', 'opencode.exe') : '',
       npmBin ? path.join(npmBin, 'opencode') : '',
       process.env.APPDATA ? path.join(process.env.APPDATA, 'npm', 'opencode.cmd') : '',
       process.env.APPDATA ? path.join(process.env.APPDATA, 'npm', 'opencode') : '',
@@ -654,6 +659,10 @@ const { spawnSync } = require('node:child_process');
 const realOpencode = ${windowsNodeString(realOpencode)};
 const configJson = ${windowsNodeString(configJson)};
 ${windowsMinimalEnvFunction()}
+if (!fs.existsSync(realOpencode)) {
+  console.error('OpenCode executable not found: ' + realOpencode);
+  process.exit(1);
+}
 const opencodeHome = fs.mkdtempSync(path.join(os.tmpdir(), 'opencode-home-dacs-'));
 const configRoot = path.join(opencodeHome, 'config');
 const dataRoot = path.join(opencodeHome, 'data');
@@ -686,7 +695,13 @@ if (process.env.AI_TOOLS_DACS_DEBUG === '1') {
   console.error('OpenCode DACS baseURL: ' + config.provider[${windowsNodeString(PROVIDER_KEY)}].options.baseURL);
 }
 
-const result = spawnSync(realOpencode, process.argv.slice(2), { stdio: 'inherit', shell: false, env, windowsHide: false });
+const args = process.argv.slice(2);
+if (args.length === 0 && process.stdin.isTTY) args.push('run');
+const result = spawnSync(realOpencode, args, { stdio: 'inherit', shell: false, env, windowsHide: false });
+if (result.error) {
+  console.error('Failed to start OpenCode: ' + result.error.message);
+  process.exit(1);
+}
 process.exit(result.status === null ? 1 : result.status);
 `;
 }
