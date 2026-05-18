@@ -696,14 +696,22 @@ function warnWindowsCommandShadows(command) {
 
 function opencodeDacsWindowsCmdShim(runtime, realOpencode, sourceConfigPath) {
   const exeDir = path.dirname(realOpencode);
+  const systemRoot = process.env.SYSTEMROOT || process.env.WINDIR || 'C:\\Windows';
+  const tempRoot = process.env.TEMP || process.env.TMP || path.join(homeDir(), 'AppData', 'Local', 'Temp');
+  const userProfile = process.env.USERPROFILE || homeDir();
+  const appData = process.env.APPDATA || path.join(userProfile, 'AppData', 'Roaming');
+  const localAppData = process.env.LOCALAPPDATA || path.join(userProfile, 'AppData', 'Local');
+  const comspec = process.env.COMSPEC || path.join(systemRoot, 'System32', 'cmd.exe');
+  const homeDrive = process.env.HOMEDRIVE || path.parse(userProfile).root.replace(/\\$/, '');
+  const homePath = process.env.HOMEPATH || userProfile.slice(homeDrive.length) || '\\';
 
   const safePath = [
     exeDir,
-    path.join(process.env.SYSTEMROOT || process.env.WINDIR || 'C:\\Windows', 'System32'),
-    process.env.SYSTEMROOT || process.env.WINDIR || 'C:\\Windows',
-    path.join(process.env.SYSTEMROOT || process.env.WINDIR || 'C:\\Windows', 'System32', 'Wbem'),
-    path.join(process.env.SYSTEMROOT || process.env.WINDIR || 'C:\\Windows', 'System32', 'WindowsPowerShell', 'v1.0'),
-    process.env.APPDATA ? path.join(process.env.APPDATA, 'npm') : '',
+    path.join(systemRoot, 'System32'),
+    systemRoot,
+    path.join(systemRoot, 'System32', 'Wbem'),
+    path.join(systemRoot, 'System32', 'WindowsPowerShell', 'v1.0'),
+    path.join(appData, 'npm'),
   ].filter(Boolean).join(';');
 
   return `@ECHO off
@@ -736,13 +744,37 @@ ECHO [ai-tools] opencode-dacs CMD wrapper 1>&2
 
 IF "%DACS_DIRECT%"=="1" (
   ECHO OpenCode DACS direct exe: ${realOpencode} 1>&2
-  "${realOpencode}" %*
+  "${realOpencode}" %1 %2 %3 %4 %5 %6 %7 %8 %9
   EXIT /B %ERRORLEVEL%
 )
 
-SET "OPENCODE_TMP_ROOT=%TEMP%"
-IF "%OPENCODE_TMP_ROOT%"=="" SET "OPENCODE_TMP_ROOT=%TMP%"
-IF "%OPENCODE_TMP_ROOT%"=="" SET "OPENCODE_TMP_ROOT=C:\\Windows\\Temp"
+IF "%DACS_DEBUG%"=="1" (
+  ECHO OpenCode DACS exe: ${realOpencode} 1>&2
+  ECHO OpenCode DACS source config: ${sourceConfigPath} 1>&2
+  ECHO OpenCode DACS planned PATH: ${safePath} 1>&2
+)
+
+IF "%DACS_DOCTOR%"=="1" (
+  ECHO OpenCode DACS doctor completed without launching opencode.exe. 1>&2
+  EXIT /B 0
+)
+
+FOR /F "tokens=1 delims==" %%E IN ('set') DO SET "%%E="
+
+SET "SYSTEMROOT=${systemRoot}"
+SET "WINDIR=${systemRoot}"
+SET "COMSPEC=${comspec}"
+SET "TEMP=${tempRoot}"
+SET "TMP=${tempRoot}"
+SET "USERPROFILE=${userProfile}"
+SET "APPDATA=${appData}"
+SET "LOCALAPPDATA=${localAppData}"
+SET "HOMEDRIVE=${homeDrive}"
+SET "HOMEPATH=${homePath}"
+SET "PATHEXT=.COM;.EXE;.BAT;.CMD"
+SET "PATH=${safePath}"
+
+SET "OPENCODE_TMP_ROOT=${tempRoot}"
 SET "OPENCODE_HOME=%OPENCODE_TMP_ROOT%\\opencode-home-dacs-%RANDOM%-%RANDOM%"
 SET "OPENCODE_CONFIG_ROOT=%OPENCODE_HOME%\\config"
 SET "OPENCODE_DATA_ROOT=%OPENCODE_HOME%\\data"
@@ -770,22 +802,8 @@ SET "XDG_STATE_HOME=%OPENCODE_STATE_ROOT%"
 SET "XDG_CACHE_HOME=%OPENCODE_CACHE_ROOT%"
 SET "XDG_RUNTIME_DIR=%OPENCODE_RUNTIME_ROOT%"
 SET "OPENCODE_MODELS_URL=http://localhost"
-SET "PATH=${safePath}"
 
-IF "%DACS_DEBUG%"=="1" (
-  ECHO OpenCode DACS exe: ${realOpencode} 1>&2
-  ECHO OpenCode DACS source config: ${sourceConfigPath} 1>&2
-  ECHO OpenCode DACS runtime config: %OPENCODE_CONFIG_DIR%\\opencode.json 1>&2
-  ECHO OpenCode DACS PATH: %PATH% 1>&2
-  ECHO OpenCode DACS XDG_CONFIG_HOME: %XDG_CONFIG_HOME% 1>&2
-)
-
-IF "%DACS_DOCTOR%"=="1" (
-  ECHO OpenCode DACS doctor completed without launching opencode.exe. 1>&2
-  EXIT /B 0
-)
-
-"${realOpencode}" %*
+"${realOpencode}" %1 %2 %3 %4 %5 %6 %7 %8 %9
 EXIT /B %ERRORLEVEL%`;
 }
 
