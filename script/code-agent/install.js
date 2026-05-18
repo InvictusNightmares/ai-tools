@@ -766,6 +766,7 @@ EXIT /B %ERRORLEVEL%`;
 
 function codexDacsWindowsCmdShim(runtime, realCodex, sourceHome) {
   const exeDir = path.dirname(realCodex);
+  const codexPathDir = path.resolve(exeDir, '..', 'path');
   const systemRoot = process.env.SYSTEMROOT || process.env.WINDIR || 'C:\\Windows';
   const tempRoot = process.env.TEMP || process.env.TMP || path.join(homeDir(), 'AppData', 'Local', 'Temp');
   const userProfile = process.env.USERPROFILE || homeDir();
@@ -777,6 +778,7 @@ function codexDacsWindowsCmdShim(runtime, realCodex, sourceHome) {
 
   const safePath = [
     exeDir,
+    codexPathDir,
     path.join(systemRoot, 'System32'),
     systemRoot,
     path.join(systemRoot, 'System32', 'Wbem'),
@@ -836,7 +838,7 @@ SET "CODEX_API_KEY=${runtime.apiKey}"
 
 cd /d "${userProfile}"
 
-"${realCodex}" %1 %2 %3 %4 %5 %6 %7 %8 %9
+${/\.(cmd|bat)$/i.test(realCodex) ? `call "${realCodex}" %1 %2 %3 %4 %5 %6 %7 %8 %9` : `"${realCodex}" %1 %2 %3 %4 %5 %6 %7 %8 %9`}
 EXIT /B %ERRORLEVEL%`;
 }
 
@@ -1082,8 +1084,12 @@ function findCodexCommand(binDir = '') {
   const commandPath = firstCommandPath(process.platform === 'win32' ? 'codex.cmd' : 'codex') ||
     firstCommandPath('codex');
   const npmBin = npmGlobalBinDir();
+  const npmRoot = commandOutput('npm', ['root', '-g']);
   const candidates = process.platform === 'win32'
     ? [
+        npmRoot ? path.join(npmRoot, '@openai', 'codex', 'node_modules', '@openai', 'codex-win32-x64', 'vendor', 'x86_64-pc-windows-msvc', 'codex', 'codex.exe') : '',
+        npmRoot ? path.join(npmRoot, '@openai', 'codex-win32-x64', 'vendor', 'x86_64-pc-windows-msvc', 'codex', 'codex.exe') : '',
+        process.env.APPDATA ? path.join(process.env.APPDATA, 'npm', 'node_modules', '@openai', 'codex', 'node_modules', '@openai', 'codex-win32-x64', 'vendor', 'x86_64-pc-windows-msvc', 'codex', 'codex.exe') : '',
         commandPath,
         npmBin ? path.join(npmBin, 'codex.cmd') : '',
         npmBin ? path.join(npmBin, 'codex') : '',
@@ -1100,6 +1106,22 @@ function findCodexCommand(binDir = '') {
   }
 
   return '';
+}
+
+function ensureCodexWindowsNativeBinary(options) {
+  if (process.platform !== 'win32') return '';
+
+  const npmRoot = commandOutput('npm', ['root', '-g']);
+  if (!npmRoot) return '';
+
+  const binaryPath = path.join(npmRoot, '@openai', 'codex', 'node_modules', '@openai', 'codex-win32-x64', 'vendor', 'x86_64-pc-windows-msvc', 'codex', 'codex.exe');
+  if (fs.existsSync(binaryPath)) return binaryPath;
+
+  const version = installedNpmPackageVersion(path.join('@openai', 'codex')) || npmPackageVersion('@openai/codex@latest') || 'latest';
+  const status = runStatus('npm', ['install', '-g', '--ignore-scripts', `@openai/codex-win32-x64@npm:@openai/codex@${version}-win32-x64`], options);
+  if (status !== 0) return fs.existsSync(binaryPath) ? binaryPath : '';
+
+  return fs.existsSync(binaryPath) ? binaryPath : '';
 }
 
 function shellSingleQuote(value) {
@@ -1257,7 +1279,7 @@ async function writeCodexDacsWindowsAdapter(runtime, options, rl) {
     return;
   }
 
-  const realCodex = findCodexCommand(binDir);
+  const realCodex = ensureCodexWindowsNativeBinary(options) || findCodexCommand(binDir);
   if (!realCodex) {
     warn('未找到 Codex 可执行文件，跳过 DACS Codex 替身。请先安装 @openai/codex 后重试。');
     return;
