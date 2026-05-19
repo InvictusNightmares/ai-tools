@@ -663,26 +663,24 @@ ECHO Now run: codex --version
 EXIT /B 0`;
 }
 
-function codexWindowsCommandShim(runtime, nativeBinary) {
+function codexWindowsCommandShim(nodeEntry) {
   return `@ECHO off
 SETLOCAL EnableExtensions
-SET "OPENAI_API_KEY=${runtime.apiKey}"
-SET "CODEX_API_KEY=${runtime.apiKey}"
 cd /d "${homeDir()}"
-"${nativeBinary}" -c model_provider=${JSON.stringify(PROVIDER_KEY)} -c model=${JSON.stringify(DEFAULT_CODEX_MODEL)} -c model_reasoning_effort="high" -c network_access="enabled" -c disable_response_storage=true -c model_providers.${JSON.stringify(PROVIDER_KEY)}.name="OpenAI" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.base_url=${JSON.stringify(runtime.externalBaseURL)} -c model_providers.${JSON.stringify(PROVIDER_KEY)}.wire_api="responses" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.requires_openai_auth=true %*
+node "${nodeEntry}" %*
 EXIT /B %ERRORLEVEL%`;
 }
 
-async function writeCodexWindowsCommandShim(runtime, options, rl) {
+async function writeCodexWindowsCommandShim(options, rl) {
   if (process.platform !== 'win32') return;
 
   const binDir = npmGlobalBinDir();
-  const nativeBinary = codexWindowsNativeBinaryPath();
-  if (!binDir || !nativeBinary || !fs.existsSync(nativeBinary)) return;
+  const nodeEntry = codexWindowsNodeEntryPath();
+  if (!binDir || !nodeEntry || !fs.existsSync(nodeEntry)) return;
 
   const cmdPath = path.join(binDir, 'codex.cmd');
-  await writeFileSafely(cmdPath, codexWindowsCommandShim(runtime, nativeBinary), options, rl);
-  success(`Codex Windows 命令已改为直接启动原生二进制: ${cmdPath}`);
+  await writeFileSafely(cmdPath, codexWindowsCommandShim(nodeEntry), options, rl);
+  success(`Codex Windows 命令已恢复为官方 Node 入口: ${cmdPath}`);
 }
 
 function removeWindowsExtensionlessCommand(command, options) {
@@ -1007,43 +1005,11 @@ call "${realCodex}" -c model_provider=${JSON.stringify(PROVIDER_KEY)} -c model=$
 EXIT /B %ERRORLEVEL%`;
 }
 
-function codexDacsWindowsNativeShim(runtime, nativeBinary) {
-  const systemRoot = process.env.SystemRoot || process.env.WINDIR || 'C:\\Windows';
-  const comspec = process.env.ComSpec || path.join(systemRoot, 'System32', 'cmd.exe');
-  const tempRoot = process.env.TEMP || process.env.TMP || path.join(homeDir(), 'AppData', 'Local', 'Temp');
-  const userProfile = homeDir();
-  const appData = process.env.APPDATA || path.join(userProfile, 'AppData', 'Roaming');
-  const localAppData = process.env.LOCALAPPDATA || path.join(userProfile, 'AppData', 'Local');
-  const homeDrive = process.env.HOMEDRIVE || path.parse(userProfile).root.replace(/[\\/]$/, '') || 'C:';
-  const homePath = process.env.HOMEPATH || userProfile.slice(homeDrive.length) || '\\Users\\Default';
-  const exeDir = path.dirname(nativeBinary);
-  const safePath = [
-    exeDir,
-    path.join(systemRoot, 'System32'),
-    systemRoot,
-    path.join(systemRoot, 'System32', 'Wbem'),
-    path.join(systemRoot, 'System32', 'WindowsPowerShell', 'v1.0'),
-    path.join(appData, 'npm'),
-  ].filter(Boolean).join(';');
+function codexDacsWindowsNativeShim(runtime, nodeEntry) {
+  const tempRoot = process.env.TEMP || process.env.TMP || '%TEMP%';
 
   return `@ECHO off
 SETLOCAL EnableExtensions
-
-FOR /F "tokens=1 delims==" %%E IN ('set') DO SET "%%E="
-
-SET "SYSTEMROOT=${systemRoot}"
-SET "WINDIR=${systemRoot}"
-SET "COMSPEC=${comspec}"
-SET "TEMP=${tempRoot}"
-SET "TMP=${tempRoot}"
-SET "USERPROFILE=${userProfile}"
-SET "APPDATA=${appData}"
-SET "LOCALAPPDATA=${localAppData}"
-SET "HOMEDRIVE=${homeDrive}"
-SET "HOMEPATH=${homePath}"
-SET "PATHEXT=.COM;.EXE;.BAT;.CMD"
-SET "PATH=${safePath}"
-
 SET "CODEX_TMP_ROOT=${tempRoot}"
 SET "CODEX_HOME=%CODEX_TMP_ROOT%\\codex-home-dacs-%RANDOM%-%RANDOM%"
 mkdir "%CODEX_HOME%" 2>NUL
@@ -1064,9 +1030,9 @@ SET "CODEX_SQLITE_HOME=%CODEX_HOME%\\sqlite"
 SET "OPENAI_API_KEY=${runtime.apiKey}"
 SET "CODEX_API_KEY=${runtime.apiKey}"
 
-cd /d "${userProfile}"
+cd /d "${homeDir()}"
 
-"${nativeBinary}" -c model_provider=${JSON.stringify(PROVIDER_KEY)} -c model=${JSON.stringify(DEFAULT_CODEX_MODEL)} -c model_reasoning_effort="high" -c network_access="enabled" -c disable_response_storage=true -c model_providers.${JSON.stringify(PROVIDER_KEY)}.name="OpenAI" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.base_url=${JSON.stringify(runtime.dacsBaseURL)} -c model_providers.${JSON.stringify(PROVIDER_KEY)}.wire_api="responses" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.requires_openai_auth=true %*
+node "${nodeEntry}" -c model_provider=${JSON.stringify(PROVIDER_KEY)} -c model=${JSON.stringify(DEFAULT_CODEX_MODEL)} -c model_reasoning_effort="high" -c network_access="enabled" -c disable_response_storage=true -c model_providers.${JSON.stringify(PROVIDER_KEY)}.name="OpenAI" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.base_url=${JSON.stringify(runtime.dacsBaseURL)} -c model_providers.${JSON.stringify(PROVIDER_KEY)}.wire_api="responses" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.requires_openai_auth=true %*
 EXIT /B %ERRORLEVEL%`;
 }
 
@@ -1477,14 +1443,14 @@ async function writeCodexDacsWindowsAdapter(runtime, options, rl) {
     return;
   }
 
-  const nativeBinary = codexWindowsNativeBinaryPath();
-  if (!nativeBinary || !fs.existsSync(nativeBinary)) {
-    warn('未找到 Codex Windows 原生二进制，跳过 DACS Codex 替身。请先安装 @openai/codex 后重试。');
+  const nodeEntry = codexWindowsNodeEntryPath();
+  if (!nodeEntry || !fs.existsSync(nodeEntry)) {
+    warn('未找到 Codex Windows Node 入口，跳过 DACS Codex 替身。请先安装 @openai/codex 后重试。');
     return;
   }
 
   const cmdPath = path.join(binDir, 'codex-dacs.cmd');
-  const shim = `${codexDacsWindowsNativeShim(runtime, nativeBinary)}\n`;
+  const shim = `${codexDacsWindowsNativeShim(runtime, nodeEntry)}\n`;
   const commandPaths = [cmdPath, ...windowsExistingCommandPaths('codex-dacs')];
   for (const targetPath of [...new Set(commandPaths.map((candidate) => path.resolve(candidate)))]) {
     backupFile(targetPath, options);
@@ -1610,7 +1576,7 @@ const agentDefinitions = {
       removeWindowsExtensionlessCommand('codex', options);
       await writeCodexConfig(runtime, options, rl);
       await writeFileSafely(path.join(homeDir(), '.codex', 'models.json'), codexModelCatalog(), options, rl);
-      await writeCodexWindowsCommandShim(runtime, options, rl);
+      await writeCodexWindowsCommandShim(options, rl);
       await writeCodexDacsMacAdapter(runtime, options, rl);
       await writeCodexDacsWindowsAdapter(runtime, options, rl);
       if (!(await codexLogin(runtime.apiKey, options))) {
