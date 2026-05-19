@@ -574,7 +574,9 @@ function codexDoctorWindowsCmd() {
   const nativeBinary = codexWindowsNativeBinaryPath();
 
   return `@ECHO off
-SETLOCAL EnableExtensions
+SETLOCAL EnableExtensions EnableDelayedExpansion
+SET "DOCTOR_TMP=%TEMP%\\codex-doctor-%RANDOM%-%RANDOM%"
+mkdir "%DOCTOR_TMP%" 2>NUL
 ECHO Codex command resolution:
 where codex
 ECHO.
@@ -583,20 +585,69 @@ node --version
 ECHO.
 ECHO Codex node entry: ${nodeEntry}
 IF EXIST "${nodeEntry}" (
-  node "${nodeEntry}" --version
-  ECHO Node entry exit code: %ERRORLEVEL%
+  node "${nodeEntry}" --version >"%DOCTOR_TMP%\\node.out" 2>"%DOCTOR_TMP%\\node.err"
+  SET "NODE_EXIT=!ERRORLEVEL!"
+  ECHO Node entry exit code: !NODE_EXIT!
+  ECHO Node stdout:
+  type "%DOCTOR_TMP%\\node.out"
+  ECHO Node stderr:
+  type "%DOCTOR_TMP%\\node.err"
 ) ELSE (
   ECHO Missing Codex node entry
 )
 ECHO.
 ECHO Codex native binary: ${nativeBinary}
 IF EXIST "${nativeBinary}" (
-  "${nativeBinary}" --version
-  ECHO Native binary exit code: %ERRORLEVEL%
+  "${nativeBinary}" --version >"%DOCTOR_TMP%\\native.out" 2>"%DOCTOR_TMP%\\native.err"
+  SET "NATIVE_EXIT=!ERRORLEVEL!"
+  ECHO Native binary exit code: !NATIVE_EXIT!
+  ECHO Native stdout:
+  type "%DOCTOR_TMP%\\native.out"
+  ECHO Native stderr:
+  type "%DOCTOR_TMP%\\native.err"
 ) ELSE (
   ECHO Missing Codex native binary
 )
+rd /s /q "%DOCTOR_TMP%" 2>NUL
 EXIT /B 0`;
+}
+
+function codexCleanWindowsCmd() {
+  const codexDir = path.join(homeDir(), '.codex');
+  const backupDir = `${codexDir}.disabled.${timestamp()}`;
+
+  return `@ECHO off
+SETLOCAL EnableExtensions
+IF EXIST "${codexDir}" (
+  ren "${codexDir}" "${path.basename(backupDir)}"
+  ECHO Moved ${codexDir} to ${backupDir}
+) ELSE (
+  ECHO Codex config directory not found: ${codexDir}
+)
+ECHO Now run: codex --version
+EXIT /B 0`;
+}
+
+function codexWindowsCommandShim(runtime, nativeBinary) {
+  return `@ECHO off
+SETLOCAL EnableExtensions
+SET "OPENAI_API_KEY=${runtime.apiKey}"
+SET "CODEX_API_KEY=${runtime.apiKey}"
+cd /d "${homeDir()}"
+"${nativeBinary}" -c model_provider=${JSON.stringify(PROVIDER_KEY)} -c model=${JSON.stringify(DEFAULT_CODEX_MODEL)} -c model_reasoning_effort="high" -c network_access="enabled" -c disable_response_storage=true -c model_providers.${JSON.stringify(PROVIDER_KEY)}.name="OpenAI" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.base_url=${JSON.stringify(runtime.externalBaseURL)} -c model_providers.${JSON.stringify(PROVIDER_KEY)}.wire_api="responses" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.requires_openai_auth=true %*
+EXIT /B %ERRORLEVEL%`;
+}
+
+async function writeCodexWindowsCommandShim(runtime, options, rl) {
+  if (process.platform !== 'win32') return;
+
+  const binDir = npmGlobalBinDir();
+  const nativeBinary = codexWindowsNativeBinaryPath();
+  if (!binDir || !nativeBinary || !fs.existsSync(nativeBinary)) return;
+
+  const cmdPath = path.join(binDir, 'codex.cmd');
+  await writeFileSafely(cmdPath, codexWindowsCommandShim(runtime, nativeBinary), options, rl);
+  success(`Codex Windows 命令已改为直接启动原生二进制: ${cmdPath}`);
 }
 
 function removeWindowsExtensionlessCommand(command, options) {
@@ -918,6 +969,69 @@ SET "CODEX_API_KEY=${runtime.apiKey}"
 cd /d "${userProfile}"
 
 call "${realCodex}" -c model_provider=${JSON.stringify(PROVIDER_KEY)} -c model=${JSON.stringify(DEFAULT_CODEX_MODEL)} -c model_reasoning_effort="high" -c network_access="enabled" -c disable_response_storage=true -c model_providers.${JSON.stringify(PROVIDER_KEY)}.name="OpenAI" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.base_url=${JSON.stringify(runtime.dacsBaseURL)} -c model_providers.${JSON.stringify(PROVIDER_KEY)}.wire_api="responses" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.requires_openai_auth=true %1 %2 %3 %4 %5 %6 %7 %8 %9
+EXIT /B %ERRORLEVEL%`;
+}
+
+function codexDacsWindowsNativeShim(runtime, nativeBinary) {
+  const systemRoot = process.env.SystemRoot || process.env.WINDIR || 'C:\\Windows';
+  const comspec = process.env.ComSpec || path.join(systemRoot, 'System32', 'cmd.exe');
+  const tempRoot = process.env.TEMP || process.env.TMP || path.join(homeDir(), 'AppData', 'Local', 'Temp');
+  const userProfile = homeDir();
+  const appData = process.env.APPDATA || path.join(userProfile, 'AppData', 'Roaming');
+  const localAppData = process.env.LOCALAPPDATA || path.join(userProfile, 'AppData', 'Local');
+  const homeDrive = process.env.HOMEDRIVE || path.parse(userProfile).root.replace(/[\\/]$/, '') || 'C:';
+  const homePath = process.env.HOMEPATH || userProfile.slice(homeDrive.length) || '\\Users\\Default';
+  const exeDir = path.dirname(nativeBinary);
+  const safePath = [
+    exeDir,
+    path.join(systemRoot, 'System32'),
+    systemRoot,
+    path.join(systemRoot, 'System32', 'Wbem'),
+    path.join(systemRoot, 'System32', 'WindowsPowerShell', 'v1.0'),
+    path.join(appData, 'npm'),
+  ].filter(Boolean).join(';');
+
+  return `@ECHO off
+SETLOCAL EnableExtensions
+
+FOR /F "tokens=1 delims==" %%E IN ('set') DO SET "%%E="
+
+SET "SYSTEMROOT=${systemRoot}"
+SET "WINDIR=${systemRoot}"
+SET "COMSPEC=${comspec}"
+SET "TEMP=${tempRoot}"
+SET "TMP=${tempRoot}"
+SET "USERPROFILE=${userProfile}"
+SET "APPDATA=${appData}"
+SET "LOCALAPPDATA=${localAppData}"
+SET "HOMEDRIVE=${homeDrive}"
+SET "HOMEPATH=${homePath}"
+SET "PATHEXT=.COM;.EXE;.BAT;.CMD"
+SET "PATH=${safePath}"
+
+SET "CODEX_TMP_ROOT=${tempRoot}"
+SET "CODEX_HOME=%CODEX_TMP_ROOT%\\codex-home-dacs-%RANDOM%-%RANDOM%"
+mkdir "%CODEX_HOME%" 2>NUL
+mkdir "%CODEX_HOME%\\xdg\\config" 2>NUL
+mkdir "%CODEX_HOME%\\xdg\\data" 2>NUL
+mkdir "%CODEX_HOME%\\xdg\\state" 2>NUL
+mkdir "%CODEX_HOME%\\xdg\\cache" 2>NUL
+mkdir "%CODEX_HOME%\\xdg\\runtime" 2>NUL
+mkdir "%CODEX_HOME%\\sqlite" 2>NUL
+
+SET "CODEX_MANAGED_BY_NPM=1"
+SET "XDG_CONFIG_HOME=%CODEX_HOME%\\xdg\\config"
+SET "XDG_DATA_HOME=%CODEX_HOME%\\xdg\\data"
+SET "XDG_STATE_HOME=%CODEX_HOME%\\xdg\\state"
+SET "XDG_CACHE_HOME=%CODEX_HOME%\\xdg\\cache"
+SET "XDG_RUNTIME_DIR=%CODEX_HOME%\\xdg\\runtime"
+SET "CODEX_SQLITE_HOME=%CODEX_HOME%\\sqlite"
+SET "OPENAI_API_KEY=${runtime.apiKey}"
+SET "CODEX_API_KEY=${runtime.apiKey}"
+
+cd /d "${userProfile}"
+
+"${nativeBinary}" -c model_provider=${JSON.stringify(PROVIDER_KEY)} -c model=${JSON.stringify(DEFAULT_CODEX_MODEL)} -c model_reasoning_effort="high" -c network_access="enabled" -c disable_response_storage=true -c model_providers.${JSON.stringify(PROVIDER_KEY)}.name="OpenAI" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.base_url=${JSON.stringify(runtime.dacsBaseURL)} -c model_providers.${JSON.stringify(PROVIDER_KEY)}.wire_api="responses" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.requires_openai_auth=true %*
 EXIT /B %ERRORLEVEL%`;
 }
 
@@ -1328,14 +1442,14 @@ async function writeCodexDacsWindowsAdapter(runtime, options, rl) {
     return;
   }
 
-  const realCodex = findCodexCommand(binDir);
-  if (!realCodex) {
-    warn('未找到 Codex 可执行文件，跳过 DACS Codex 替身。请先安装 @openai/codex 后重试。');
+  const nativeBinary = codexWindowsNativeBinaryPath();
+  if (!nativeBinary || !fs.existsSync(nativeBinary)) {
+    warn('未找到 Codex Windows 原生二进制，跳过 DACS Codex 替身。请先安装 @openai/codex 后重试。');
     return;
   }
 
   const cmdPath = path.join(binDir, 'codex-dacs.cmd');
-  const shim = `${codexDacsWindowsCmdShim(runtime, realCodex)}\n`;
+  const shim = `${codexDacsWindowsNativeShim(runtime, nativeBinary)}\n`;
   const commandPaths = [cmdPath, ...windowsExistingCommandPaths('codex-dacs')];
   for (const targetPath of [...new Set(commandPaths.map((candidate) => path.resolve(candidate)))]) {
     backupFile(targetPath, options);
@@ -1348,6 +1462,11 @@ async function writeCodexDacsWindowsAdapter(runtime, options, rl) {
   backupFile(doctorPath, options);
   if (!options.dryRun) fs.writeFileSync(doctorPath, `${codexDoctorWindowsCmd()}\n`, 'utf8');
   success(`Codex Windows 诊断命令: ${doctorPath}`);
+
+  const cleanPath = path.join(binDir, 'codex-clean.cmd');
+  backupFile(cleanPath, options);
+  if (!options.dryRun) fs.writeFileSync(cleanPath, `${codexCleanWindowsCmd()}\n`, 'utf8');
+  success(`Codex Windows 配置隔离诊断命令: ${cleanPath}`);
 
   const oldJsPath = path.join(binDir, 'codex-dacs.js');
   if (fs.existsSync(oldJsPath)) {
@@ -1455,6 +1574,7 @@ const agentDefinitions = {
       removeWindowsExtensionlessCommand('codex', options);
       await writeCodexConfig(runtime, options, rl);
       await writeFileSafely(path.join(homeDir(), '.codex', 'models.json'), codexModelCatalog(), options, rl);
+      await writeCodexWindowsCommandShim(runtime, options, rl);
       await writeCodexDacsMacAdapter(runtime, options, rl);
       await writeCodexDacsWindowsAdapter(runtime, options, rl);
       if (!(await codexLogin(runtime.apiKey, options))) {
