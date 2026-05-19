@@ -563,8 +563,43 @@ function ensureCodexWindowsNativePackage(options) {
   }
 }
 
+function windowsVCRuntimePath() {
+  if (process.platform !== 'win32') return '';
+  const systemRoot = process.env.SystemRoot || process.env.WINDIR || 'C:\\Windows';
+  const candidates = [
+    path.join(systemRoot, 'System32', 'VCRUNTIME140_1.dll'),
+    path.join(systemRoot, 'SysWOW64', 'VCRUNTIME140_1.dll'),
+  ];
+  return candidates.find((candidate) => fs.existsSync(candidate)) || '';
+}
+
+function ensureWindowsVCRuntime(options) {
+  if (process.platform !== 'win32') return;
+  if (windowsVCRuntimePath()) return;
+
+  warn('缺少 Microsoft Visual C++ 2015-2022 Runtime: VCRUNTIME140_1.dll。Codex Windows 原生二进制无法启动。');
+  if (commandExists('winget')) {
+    warn('正在尝试通过 winget 安装 Microsoft Visual C++ 2015-2022 Redistributable x64。系统可能会弹出权限确认。');
+    const status = runStatus('winget', [
+      'install',
+      '--id',
+      'Microsoft.VCRedist.2015+.x64',
+      '-e',
+      '--accept-package-agreements',
+      '--accept-source-agreements',
+    ], options);
+    if (status === 0 && windowsVCRuntimePath()) {
+      success('Microsoft Visual C++ Runtime 已安装。');
+      return;
+    }
+  }
+
+  warn('请安装 Microsoft Visual C++ Redistributable 2015-2022 x64 后重新运行安装脚本: https://aka.ms/vs/17/release/vc_redist.x64.exe');
+}
+
 function installCodexPackage(options) {
   installNpmPackage('@openai/codex', 'codex', options);
+  ensureWindowsVCRuntime(options);
   ensureCodexWindowsNativePackage(options);
   removeWindowsExtensionlessCommand('codex', options);
 }
@@ -1570,6 +1605,7 @@ const agentDefinitions = {
   codex: {
     install: (options) => installCodexPackage(options),
     configure: async (runtime, options, rl) => {
+      ensureWindowsVCRuntime(options);
       ensureCodexWindowsNativePackage(options);
       removeWindowsExtensionlessCommand('codex', options);
       await writeCodexConfig(runtime, options, rl);
