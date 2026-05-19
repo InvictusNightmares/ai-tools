@@ -604,65 +604,6 @@ function installCodexPackage(options) {
   removeWindowsExtensionlessCommand('codex', options);
 }
 
-function codexDoctorWindowsCmd() {
-  const nodeEntry = codexWindowsNodeEntryPath();
-  const nativeBinary = codexWindowsNativeBinaryPath();
-
-  return `@ECHO off
-SETLOCAL EnableExtensions EnableDelayedExpansion
-SET "DOCTOR_TMP=%TEMP%\\codex-doctor-%RANDOM%-%RANDOM%"
-mkdir "%DOCTOR_TMP%" 2>NUL
-ECHO Codex command resolution:
-where codex
-ECHO.
-ECHO Node version:
-node --version
-ECHO.
-ECHO Codex node entry: ${nodeEntry}
-IF EXIST "${nodeEntry}" (
-  node "${nodeEntry}" --version >"%DOCTOR_TMP%\\node.out" 2>"%DOCTOR_TMP%\\node.err"
-  SET "NODE_EXIT=!ERRORLEVEL!"
-  ECHO Node entry exit code: !NODE_EXIT!
-  ECHO Node stdout:
-  type "%DOCTOR_TMP%\\node.out"
-  ECHO Node stderr:
-  type "%DOCTOR_TMP%\\node.err"
-) ELSE (
-  ECHO Missing Codex node entry
-)
-ECHO.
-ECHO Codex native binary: ${nativeBinary}
-IF EXIST "${nativeBinary}" (
-  "${nativeBinary}" --version >"%DOCTOR_TMP%\\native.out" 2>"%DOCTOR_TMP%\\native.err"
-  SET "NATIVE_EXIT=!ERRORLEVEL!"
-  ECHO Native binary exit code: !NATIVE_EXIT!
-  ECHO Native stdout:
-  type "%DOCTOR_TMP%\\native.out"
-  ECHO Native stderr:
-  type "%DOCTOR_TMP%\\native.err"
-) ELSE (
-  ECHO Missing Codex native binary
-)
-rd /s /q "%DOCTOR_TMP%" 2>NUL
-EXIT /B 0`;
-}
-
-function codexCleanWindowsCmd() {
-  const codexDir = path.join(homeDir(), '.codex');
-  const backupDir = `${codexDir}.disabled.${timestamp()}`;
-
-  return `@ECHO off
-SETLOCAL EnableExtensions
-IF EXIST "${codexDir}" (
-  ren "${codexDir}" "${path.basename(backupDir)}"
-  ECHO Moved ${codexDir} to ${backupDir}
-) ELSE (
-  ECHO Codex config directory not found: ${codexDir}
-)
-ECHO Now run: codex --version
-EXIT /B 0`;
-}
-
 function codexWindowsCommandShim(nodeEntry) {
   return `@ECHO off
 SETLOCAL EnableExtensions
@@ -1446,16 +1387,6 @@ async function writeCodexDacsWindowsAdapter(runtime, options, rl) {
     success(`Codex Windows DACS 命令: ${targetPath}`);
   }
   warnWindowsCommandShadows('codex-dacs');
-
-  const doctorPath = path.join(binDir, 'codex-doctor.cmd');
-  backupFile(doctorPath, options);
-  if (!options.dryRun) fs.writeFileSync(doctorPath, windowsCmdContent(`${codexDoctorWindowsCmd()}\n`), 'utf8');
-  success(`Codex Windows 诊断命令: ${doctorPath}`);
-
-  const cleanPath = path.join(binDir, 'codex-clean.cmd');
-  backupFile(cleanPath, options);
-  if (!options.dryRun) fs.writeFileSync(cleanPath, windowsCmdContent(`${codexCleanWindowsCmd()}\n`), 'utf8');
-  success(`Codex Windows 配置隔离诊断命令: ${cleanPath}`);
 
   const oldJsPath = path.join(binDir, 'codex-dacs.js');
   if (fs.existsSync(oldJsPath)) {
