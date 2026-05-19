@@ -679,7 +679,7 @@ async function writeCodexWindowsCommandShim(options, rl) {
   if (!binDir || !nodeEntry || !fs.existsSync(nodeEntry)) return;
 
   const cmdPath = path.join(binDir, 'codex.cmd');
-  await writeFileSafely(cmdPath, codexWindowsCommandShim(nodeEntry), options, rl);
+  await writeFileSafely(cmdPath, windowsCmdContent(codexWindowsCommandShim(nodeEntry)), options, rl);
   success(`Codex Windows 命令已恢复为官方 Node 入口: ${cmdPath}`);
 }
 
@@ -1006,33 +1006,16 @@ EXIT /B %ERRORLEVEL%`;
 }
 
 function codexDacsWindowsNativeShim(runtime, nodeEntry) {
-  const tempRoot = process.env.TEMP || process.env.TMP || '%TEMP%';
+  const modelsPath = path.join(homeDir(), '.codex', 'models.json').replace(/\\/g, '\\\\');
 
   return `@ECHO off
 SETLOCAL EnableExtensions
-SET "CODEX_TMP_ROOT=${tempRoot}"
-SET "CODEX_HOME=%CODEX_TMP_ROOT%\\codex-home-dacs-%RANDOM%-%RANDOM%"
-mkdir "%CODEX_HOME%" 2>NUL
-mkdir "%CODEX_HOME%\\xdg\\config" 2>NUL
-mkdir "%CODEX_HOME%\\xdg\\data" 2>NUL
-mkdir "%CODEX_HOME%\\xdg\\state" 2>NUL
-mkdir "%CODEX_HOME%\\xdg\\cache" 2>NUL
-mkdir "%CODEX_HOME%\\xdg\\runtime" 2>NUL
-mkdir "%CODEX_HOME%\\sqlite" 2>NUL
-
-SET "CODEX_MANAGED_BY_NPM=1"
-SET "XDG_CONFIG_HOME=%CODEX_HOME%\\xdg\\config"
-SET "XDG_DATA_HOME=%CODEX_HOME%\\xdg\\data"
-SET "XDG_STATE_HOME=%CODEX_HOME%\\xdg\\state"
-SET "XDG_CACHE_HOME=%CODEX_HOME%\\xdg\\cache"
-SET "XDG_RUNTIME_DIR=%CODEX_HOME%\\xdg\\runtime"
-SET "CODEX_SQLITE_HOME=%CODEX_HOME%\\sqlite"
 SET "OPENAI_API_KEY=${runtime.apiKey}"
 SET "CODEX_API_KEY=${runtime.apiKey}"
 
 cd /d "${homeDir()}"
 
-node "${nodeEntry}" -c model_provider=${JSON.stringify(PROVIDER_KEY)} -c model=${JSON.stringify(DEFAULT_CODEX_MODEL)} -c model_reasoning_effort="high" -c network_access="enabled" -c disable_response_storage=true -c model_providers.${JSON.stringify(PROVIDER_KEY)}.name="OpenAI" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.base_url=${JSON.stringify(runtime.dacsBaseURL)} -c model_providers.${JSON.stringify(PROVIDER_KEY)}.wire_api="responses" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.requires_openai_auth=true %*
+node "${nodeEntry}" -c model_catalog_json="${modelsPath}" -c model_provider=${JSON.stringify(PROVIDER_KEY)} -c model=${JSON.stringify(DEFAULT_CODEX_MODEL)} -c model_reasoning_effort="high" -c network_access="enabled" -c disable_response_storage=true -c model_providers.${JSON.stringify(PROVIDER_KEY)}.name="OpenAI" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.base_url=${JSON.stringify(runtime.dacsBaseURL)} -c model_providers.${JSON.stringify(PROVIDER_KEY)}.wire_api="responses" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.requires_openai_auth=true %*
 EXIT /B %ERRORLEVEL%`;
 }
 
@@ -1083,7 +1066,7 @@ async function writeOpencodeDacsWindowsAdapter(runtime, options, rl) {
   success(`OpenCode Windows DACS 配置: ${dacsConfigPath}`);
 
   const cmdPath = path.join(binDir, 'opencode-dacs.cmd');
-  const shim = `${opencodeDacsWindowsCmdShim(runtime, realOpencode, dacsConfigPath)}\n`;
+  const shim = windowsCmdContent(`${opencodeDacsWindowsCmdShim(runtime, realOpencode, dacsConfigPath)}\n`);
   const commandPaths = [cmdPath, ...windowsExistingCommandPaths('opencode-dacs')];
   for (const targetPath of [...new Set(commandPaths.map((candidate) => path.resolve(candidate)))]) {
     backupFile(targetPath, options);
@@ -1105,7 +1088,8 @@ function codexConfig(baseURL) {
     return `model = "${DEFAULT_CODEX_MODEL}"
 model_reasoning_effort = "high"
 network_access = "enabled"
-disable_response_storage = true`;
+disable_response_storage = true
+model_catalog_json = "${path.join(homeDir(), '.codex', 'models.json').replace(/\\/g, '\\\\')}"`;
   }
 
   return `model_provider = "${PROVIDER_KEY}"
@@ -1184,6 +1168,10 @@ function writeExecutableSafely(filePath, content, options, rl) {
     }
     fs.chmodSync(filePath, 0o755);
   });
+}
+
+function windowsCmdContent(content) {
+  return String(content).replace(/\r?\n/g, '\r\n');
 }
 
 async function removeLegacyDacsShadow(filePath, label, options) {
@@ -1450,7 +1438,7 @@ async function writeCodexDacsWindowsAdapter(runtime, options, rl) {
   }
 
   const cmdPath = path.join(binDir, 'codex-dacs.cmd');
-  const shim = `${codexDacsWindowsNativeShim(runtime, nodeEntry)}\n`;
+  const shim = windowsCmdContent(`${codexDacsWindowsNativeShim(runtime, nodeEntry)}\n`);
   const commandPaths = [cmdPath, ...windowsExistingCommandPaths('codex-dacs')];
   for (const targetPath of [...new Set(commandPaths.map((candidate) => path.resolve(candidate)))]) {
     backupFile(targetPath, options);
@@ -1461,12 +1449,12 @@ async function writeCodexDacsWindowsAdapter(runtime, options, rl) {
 
   const doctorPath = path.join(binDir, 'codex-doctor.cmd');
   backupFile(doctorPath, options);
-  if (!options.dryRun) fs.writeFileSync(doctorPath, `${codexDoctorWindowsCmd()}\n`, 'utf8');
+  if (!options.dryRun) fs.writeFileSync(doctorPath, windowsCmdContent(`${codexDoctorWindowsCmd()}\n`), 'utf8');
   success(`Codex Windows 诊断命令: ${doctorPath}`);
 
   const cleanPath = path.join(binDir, 'codex-clean.cmd');
   backupFile(cleanPath, options);
-  if (!options.dryRun) fs.writeFileSync(cleanPath, `${codexCleanWindowsCmd()}\n`, 'utf8');
+  if (!options.dryRun) fs.writeFileSync(cleanPath, windowsCmdContent(`${codexCleanWindowsCmd()}\n`), 'utf8');
   success(`Codex Windows 配置隔离诊断命令: ${cleanPath}`);
 
   const oldJsPath = path.join(binDir, 'codex-dacs.js');
