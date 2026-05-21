@@ -12,6 +12,8 @@ const DEFAULT_MODEL = 'gpt-5.5';
 const DEFAULT_CODEX_MODEL = DEFAULT_MODEL;
 const PROVIDER_KEY = '启源Code Model';
 const OPENCODE_PACKAGE = 'opencode-ai@latest';
+const MIN_NODE_MAJOR = 18;
+const NODE_INSTALL_MAJOR = 22;
 
 const AGENTS = ['claude-code', 'codex', 'opencode'];
 const MODES = ['install-and-config', 'install-only', 'config-only', 'verify-only'];
@@ -324,6 +326,41 @@ async function writeFileSafely(filePath, content, options, rl) {
   fs.writeFileSync(filePath, `${content}\n`, 'utf8');
 }
 
+function pathEntries() {
+  return String(process.env.PATH || '').split(path.delimiter).filter(Boolean);
+}
+
+function addToPathIfExists(dir) {
+  if (!dir || !fs.existsSync(dir)) return;
+  const existing = pathEntries().map((entry) => process.platform === 'win32' ? entry.toLowerCase() : entry);
+  const normalized = process.platform === 'win32' ? dir.toLowerCase() : dir;
+  if (existing.includes(normalized)) return;
+  process.env.PATH = [dir, process.env.PATH || ''].filter(Boolean).join(path.delimiter);
+}
+
+function refreshNodePath() {
+  addToPathIfExists(path.dirname(process.execPath || ''));
+
+  if (process.platform === 'win32') {
+    const programFiles = [
+      process.env.ProgramFiles,
+      process.env['ProgramFiles(x86)'],
+      process.env.LOCALAPPDATA ? path.join(process.env.LOCALAPPDATA, 'Programs') : '',
+    ].filter(Boolean);
+
+    for (const root of programFiles) {
+      addToPathIfExists(path.join(root, 'nodejs'));
+      addToPathIfExists(path.join(root, 'nodejs', 'node_modules', 'npm', 'bin'));
+    }
+    if (process.env.APPDATA) addToPathIfExists(path.join(process.env.APPDATA, 'npm'));
+    return;
+  }
+
+  addToPathIfExists('/opt/homebrew/bin');
+  addToPathIfExists('/usr/local/bin');
+  addToPathIfExists('/usr/bin');
+}
+
 function commandCandidates(command) {
   if (process.platform !== 'win32') return [command];
 
@@ -403,6 +440,132 @@ function commandOutput(command, args) {
   return String(result.stdout || '').trim();
 }
 
+function nodeMajor(version) {
+  const match = String(version || '').trim().match(/^v?(\d+)\./);
+  return match ? Number(match[1]) : 0;
+}
+
+function installedNodeVersion() {
+  return commandOutput('node', ['--version']) || process.version || '';
+}
+
+function findMacNodePkgName() {
+  const arch = process.arch === 'arm64' ? 'arm64' : 'x64';
+  const suffix = `darwin-${arch}.pkg`;
+  const shasums = commandOutput('curl', ['-fsSL', `https://nodejs.org/dist/latest-v${NODE_INSTALL_MAJOR}.x/SHASUMS256.txt`]);
+  return shasums
+    .split(/\r?\n/)
+    .map((line) => line.trim().split(/\s+/).pop() || '')
+    .find((fileName) => fileName.endsWith(suffix)) || '';
+}
+
+function installNodeOnMac(options) {
+  if (commandExists('brew')) {
+    step('安装 Node.js: brew install node');
+    run('brew', ['install', 'node'], options);
+    return;
+  }
+
+  if (!commandExists('curl')) {
+    throw new Error('未找到 Node.js，也未找到 curl，无法下载 Node.js 安装包。请先安装 curl 或手动安装 Node.js 18+。');
+  }
+
+  if (!commandExists('sudo')) {
+    throw new Error('未找到 Node.js，也未找到 sudo，无法安装官方 Node.js pkg。请手动安装 Node.js 18+ 后重试。');
+  }
+
+  if (options.dryRun) {
+    console.log(`[dry-run] curl -fsSL https://nodejs.org/dist/latest-v${NODE_INSTALL_MAJOR}.x/<node-darwin.pkg> -o <tmp.pkg>`);
+    console.log('[dry-run] sudo installer -pkg <tmp.pkg> -target /');
+    return;
+  }
+
+  const pkgName = findMacNodePkgName();
+  if (!pkgName) {
+    throw new Error(`无法解析 Node.js v${NODE_INSTALL_MAJOR} macOS 安装包地址。请手动安装 Node.js 18+ 后重试。`);
+  }
+
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ai-tools-node-'));
+  const pkgPath = path.join(tempDir, pkgName);
+  try {
+    step(`下载 Node.js: ${pkgName}`);
+    run('curl', ['-fsSL', `https://nodejs.org/dist/latest-v${NODE_INSTALL_MAJOR}.x/${pkgName}`, '-o', pkgPath], options);
+    step('安装 Node.js 官方 pkg');
+    run('sudo', ['installer', '-pkg', pkgPath, '-target', '/'], options);
+  } finally {
+    try {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    } catch {
+      // Best effort cleanup only.
+    }
+  }
+}
+
+function installNodeOnWindows(options) {
+  if (commandExists('winget')) {
+    step('安装 Node.js: winget install OpenJS.NodeJS.LTS');
+    run('winget', [
+      'install',
+      '--id',
+      'OpenJS.NodeJS.LTS',
+      '-e',
+      '--accept-package-agreements',
+      '--accept-source-agreements',
+    ], options);
+    return;
+  }
+
+  throw new Error('未找到 Node.js，也未找到 winget，无法自动安装 Node.js。请手动安装 Node.js 18+ 后重试: https://nodejs.org/');
+}
+
+function installNode(options) {
+  if (process.platform === 'darwin') {
+    installNodeOnMac(options);
+    return;
+  }
+
+  if (process.platform === 'win32') {
+    installNodeOnWindows(options);
+    return;
+  }
+
+  throw new Error(`未找到 Node.js，但当前平台 ${process.platform} 暂不支持自动安装。请手动安装 Node.js 18+ 后重试。`);
+}
+
+function ensureNodeRuntime(options) {
+  refreshNodePath();
+
+  const version = installedNodeVersion();
+  const hasNode = commandExists('node');
+  const hasNpm = commandExists('npm');
+  const major = nodeMajor(version);
+
+  if (hasNode && hasNpm && major >= MIN_NODE_MAJOR) {
+    success(`Node.js ${version} 可用`);
+    return;
+  }
+
+  if (!hasNode) {
+    warn(`未检测到 Node.js，先安装 Node.js ${NODE_INSTALL_MAJOR}.x LTS。`);
+  } else if (major > 0 && major < MIN_NODE_MAJOR) {
+    warn(`Node.js ${version} 版本过低，先安装 Node.js ${NODE_INSTALL_MAJOR}.x LTS。`);
+  } else if (!hasNpm) {
+    warn('未检测到 npm，先安装完整 Node.js。');
+  } else {
+    warn('Node.js 状态无法确认，先安装 Node.js。');
+  }
+
+  installNode(options);
+  refreshNodePath();
+
+  const nextVersion = installedNodeVersion();
+  if (!options.dryRun && (!commandExists('node') || nodeMajor(nextVersion) < MIN_NODE_MAJOR || !commandExists('npm'))) {
+    throw new Error(`Node.js 安装后仍不可用。请重新打开终端，确认 node --version >= ${MIN_NODE_MAJOR} 且 npm 可用后重试。`);
+  }
+
+  if (!options.dryRun) success(`Node.js ${nextVersion} 可用`);
+}
+
 function firstCommandPath(command) {
   const output = process.platform === 'win32'
     ? commandOutput('where', [command])
@@ -429,9 +592,7 @@ function installNpmPackage(packageName, binaryName, options) {
     return;
   }
 
-  if (!commandExists('node') || !commandExists('npm')) {
-    throw new Error('需要 Node.js 和 npm。请先安装 Node.js 18+ 后重试。');
-  }
+  ensureNodeRuntime(options);
 
   const status = runStatus('npm', ['install', '-g', packageName], options);
   if (status !== 0) {
@@ -1601,6 +1762,9 @@ function printPlan(runtime, options) {
 }
 
 async function executePlan(runtime, options, rl) {
+  step('检查 Node.js');
+  ensureNodeRuntime(options);
+
   for (const agent of runtime.agents) {
     const definition = agentDefinitions[agent];
     if (runtime.mode === 'install-and-config' || runtime.mode === 'install-only') {

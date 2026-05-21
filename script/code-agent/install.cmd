@@ -10,15 +10,42 @@ if "%AI_TOOLS_INSTALLER_BASE_URL%"=="" (
 )
 
 set "LOCAL_SCRIPT=%~dp0%SCRIPT_NAME%"
-if exist "%LOCAL_SCRIPT%" (
-  node "%LOCAL_SCRIPT%" %*
-  exit /b %ERRORLEVEL%
-)
 
 where node >nul 2>nul
 if errorlevel 1 (
-  echo Error: Node.js is required. Install Node.js 18+ and retry. 1>&2
-  exit /b 1
+  echo Node.js was not found. Installing Node.js first...
+  where winget >nul 2>nul
+  if errorlevel 1 (
+    echo Error: Node.js is required and winget is unavailable. Install Node.js 18+ from https://nodejs.org/ and retry. 1>&2
+    exit /b 1
+  )
+  winget install --id OpenJS.NodeJS.LTS -e --accept-package-agreements --accept-source-agreements
+  if errorlevel 1 (
+    echo Error: Failed to install Node.js with winget. 1>&2
+    exit /b 1
+  )
+  set "PATH=%ProgramFiles%\nodejs;%APPDATA%\npm;%PATH%"
+)
+
+where npm >nul 2>nul
+if errorlevel 1 (
+  echo npm was not found. Installing Node.js first...
+  where winget >nul 2>nul
+  if errorlevel 1 (
+    echo Error: npm is required and winget is unavailable. Install Node.js 18+ from https://nodejs.org/ and retry. 1>&2
+    exit /b 1
+  )
+  winget install --id OpenJS.NodeJS.LTS -e --accept-package-agreements --accept-source-agreements
+  if errorlevel 1 (
+    echo Error: Failed to install Node.js with winget. 1>&2
+    exit /b 1
+  )
+  set "PATH=%ProgramFiles%\nodejs;%APPDATA%\npm;%PATH%"
+)
+
+if exist "%LOCAL_SCRIPT%" (
+  node "%LOCAL_SCRIPT%" %*
+  exit /b %ERRORLEVEL%
 )
 
 where curl >nul 2>nul
