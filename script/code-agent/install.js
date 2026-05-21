@@ -361,23 +361,40 @@ function refreshNodePath() {
   addToPathIfExists('/usr/bin');
 }
 
+function windowsCmdArg(value) {
+  return `"${String(value).replace(/"/g, '""')}"`;
+}
+
+function windowsWhere(command) {
+  if (process.platform !== 'win32') return [];
+  return commandOutputLines('where', [command]);
+}
+
 function commandCandidates(command) {
   if (process.platform !== 'win32') return [command];
 
-  const candidates = [`${command}.cmd`];
+  const binDir = npmGlobalBinDir();
+  const candidates = [
+    ...windowsWhere(command),
+    ...windowsWhere(`${command}.cmd`),
+    binDir ? path.join(binDir, `${command}.cmd`) : '',
+    binDir ? path.join(binDir, `${command}.bat`) : '',
+    `${command}.cmd`,
+    `${command}.bat`,
+  ];
   if (process.env.APPDATA) {
     candidates.push(path.join(process.env.APPDATA, 'npm', `${command}.cmd`));
+    candidates.push(path.join(process.env.APPDATA, 'npm', `${command}.bat`));
   }
   candidates.push(command);
-  return [...new Set(candidates)];
+  return [...new Set(candidates.filter(Boolean))];
 }
 
 function commandExists(command) {
   if (process.platform === 'win32') {
     return commandCandidates(command).some((candidate) => {
-      const result = spawnSync('where', [candidate], { stdio: 'ignore', shell: true });
-      if (result.status === 0) return true;
-      return fs.existsSync(candidate);
+      if (fs.existsSync(candidate)) return true;
+      return spawnSync('where', [candidate], { stdio: 'ignore', shell: true }).status === 0;
     });
   }
 
@@ -388,17 +405,34 @@ function commandExists(command) {
 }
 
 function runCommandCandidate(command, args, options) {
+  refreshNodePath();
+  addToPathIfExists(npmGlobalBinDir());
+
   for (const candidate of commandCandidates(command)) {
+    const display = `${candidate} ${args.join(' ')}`;
     if (options.dryRun) {
-      console.log(`[dry-run] ${candidate} ${args.join(' ')}`);
+      console.log(`[dry-run] ${display}`);
       return true;
     }
 
+    if (options.verbose) {
+      console.log(`$ ${display}`);
+    }
+
+    const windowsCommand = /\.(cmd|bat)$/i.test(candidate)
+      ? ['call', windowsCmdArg(candidate), ...args.map(windowsCmdArg)].join(' ')
+      : [windowsCmdArg(candidate), ...args.map(windowsCmdArg)].join(' ');
     const result = process.platform === 'win32'
-      ? spawnSync('cmd.exe', ['/d', '/s', '/c', `"${candidate}" ${args.join(' ')}`], {
-          stdio: 'ignore',
+      ? spawnSync('cmd.exe', [
+          '/d',
+          '/s',
+          '/c',
+          windowsCommand,
+        ], {
+          stdio: options.verbose ? 'inherit' : 'ignore',
+          env: process.env,
         })
-      : spawnSync(candidate, args, { stdio: 'ignore' });
+      : spawnSync(candidate, args, { stdio: options.verbose ? 'inherit' : 'ignore', env: process.env });
     if (result.status === 0) return true;
   }
   return false;
@@ -671,6 +705,8 @@ function firstCommandPath(command) {
 
 function npmGlobalBinDir() {
   if (process.platform === 'win32') {
+    const prefix = commandOutputNpm(['prefix', '-g']);
+    if (prefix) return prefix;
     if (process.env.APPDATA) return path.join(process.env.APPDATA, 'npm');
     const npmPath = firstCommandPath('npm.cmd') || firstCommandPath('npm');
     return npmPath ? path.dirname(npmPath) : '';
@@ -706,6 +742,9 @@ function installNpmPackage(packageName, binaryName, options) {
       throw new Error(`Command failed: sudo npm install -g ${packageName}`);
     }
   }
+
+  refreshNodePath();
+  addToPathIfExists(npmGlobalBinDir());
 
   if (!options.dryRun && !commandExists(binaryName)) {
     const hint = process.platform === 'win32' && process.env.APPDATA
@@ -1799,11 +1838,11 @@ function verifyDacsCommand(command, options) {
     return;
   }
 
-  if (commandExists(dacsCommand)) {
+  if (runCommandCandidate(dacsCommand, ['--version'], options)) {
     success(`${dacsCommand} 可用`);
   } else {
     const candidates = commandCandidates(dacsCommand).join(', ');
-    warn(`${dacsCommand} 未找到。Checked: ${candidates}`);
+    warn(`${dacsCommand} --version 执行失败。Checked: ${candidates}`);
   }
 }
 
