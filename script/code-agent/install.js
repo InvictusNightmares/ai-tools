@@ -1914,6 +1914,11 @@ async function executePlan(runtime, options, rl) {
   }
 
   step('验证 CLI');
+  if (process.platform === 'win32') {
+    warn('Windows 下跳过 CLI 验证。请重新打开终端后手动运行 claude --version、codex --version 或 opencode --version。');
+    return;
+  }
+
   for (const agent of runtime.agents) {
     agentDefinitions[agent].verify(options);
   }
