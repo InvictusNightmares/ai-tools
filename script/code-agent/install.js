@@ -274,7 +274,7 @@ function homeDir() {
 }
 
 function configDir() {
-  if (process.platform === 'win32' || process.platform === 'darwin') {
+  if (process.platform === 'win32') {
     return path.join(homeDir(), '.config');
   }
   return process.env.XDG_CONFIG_HOME || path.join(homeDir(), '.config');
