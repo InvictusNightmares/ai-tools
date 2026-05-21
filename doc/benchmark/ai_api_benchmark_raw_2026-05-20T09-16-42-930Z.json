@@ -1,0 +1,2900 @@
+{
+  "api_base": "http://192.168.64.16:4000",
+  "model": "gpt-5.5",
+  "requests_per_scenario": 20,
+  "concurrency": 20,
+  "timeout_ms": 600000,
+  "max_output_tokens": 128,
+  "benchmark_mode": "mapped",
+  "prompt_profile": "large",
+  "large_prompt_targets": [
+    110000,
+    160000,
+    220000
+  ],
+  "format_agent_map": {
+    "chat": "opencode",
+    "responses": "codex",
+    "messages": "claude_code"
+  },
+  "summary": [
+    {
+      "format": "chat",
+      "size": "short",
+      "size_label": "短(~110k tokens)",
+      "target_input_tokens": 110000,
+      "prompt_chars": 462933,
+      "agent": "opencode",
+      "agent_label": "opencode",
+      "requests": 20,
+      "success": 20,
+      "errors": 0,
+      "success_rate": 1,
+      "avg_ms": 30595.62139185,
+      "p50_ms": 24841.12575,
+      "p95_ms": 48634.950082999996,
+      "min_ms": 16307.205417,
+      "max_ms": 128871.38808399999,
+      "avg_total_tokens": 105379.65,
+      "error_samples": []
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "size_label": "中(~160k tokens)",
+      "target_input_tokens": 160000,
+      "prompt_chars": 672798,
+      "agent": "opencode",
+      "agent_label": "opencode",
+      "requests": 20,
+      "success": 20,
+      "errors": 0,
+      "success_rate": 1,
+      "avg_ms": 36961.55976874998,
+      "p50_ms": 37702.400666,
+      "p95_ms": 43946.87416699999,
+      "min_ms": 26525.013957999996,
+      "max_ms": 44298.76525,
+      "avg_total_tokens": 152971.85,
+      "error_samples": []
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "size_label": "长(~220k tokens)",
+      "target_input_tokens": 220000,
+      "prompt_chars": 924527,
+      "agent": "opencode",
+      "agent_label": "opencode",
+      "requests": 20,
+      "success": 20,
+      "errors": 0,
+      "success_rate": 1,
+      "avg_ms": 46071.660812550006,
+      "p50_ms": 47126.410041999974,
+      "p95_ms": 57114.90945899999,
+      "min_ms": 32435.18075,
+      "max_ms": 59302.446000000025,
+      "avg_total_tokens": 209778.7,
+      "error_samples": []
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "size_label": "短(~110k tokens)",
+      "target_input_tokens": 110000,
+      "prompt_chars": 462933,
+      "agent": "codex",
+      "agent_label": "codex",
+      "requests": 20,
+      "success": 20,
+      "errors": 0,
+      "success_rate": 1,
+      "avg_ms": 25978.01167074999,
+      "p50_ms": 24987.420999999973,
+      "p95_ms": 41448.84258299999,
+      "min_ms": 18358.573208000016,
+      "max_ms": 41475.242750000005,
+      "avg_total_tokens": 105396.45,
+      "error_samples": []
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "size_label": "中(~160k tokens)",
+      "target_input_tokens": 160000,
+      "prompt_chars": 672798,
+      "agent": "codex",
+      "agent_label": "codex",
+      "requests": 20,
+      "success": 19,
+      "errors": 1,
+      "success_rate": 0.95,
+      "avg_ms": 42208.69249121051,
+      "p50_ms": 39277.106792000006,
+      "p95_ms": 64896.93033299997,
+      "min_ms": 28887.012915999978,
+      "max_ms": 64896.93033299997,
+      "avg_total_tokens": 152978.94736842104,
+      "error_samples": [
+        "litellm.RateLimitError: RateLimitError: OpenAIException - {\"error\":{\"type\":\"usage_limit_reached\",\"message\":\"The usage limit has been reached\",\"plan_type\":\"plus\",\"resets_at\":1779273816,\"eligible_promo\":null,\"resets_in_seconds\":5438}}. Received Model Group=gpt-5.5\nAvailable Model Group Fallbacks=None"
+      ]
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "size_label": "长(~220k tokens)",
+      "target_input_tokens": 220000,
+      "prompt_chars": 924527,
+      "agent": "codex",
+      "agent_label": "codex",
+      "requests": 20,
+      "success": 19,
+      "errors": 1,
+      "success_rate": 0.95,
+      "avg_ms": 46260.76601536843,
+      "p50_ms": 48481.46800000005,
+      "p95_ms": 60096.397042000026,
+      "min_ms": 32242.85362499999,
+      "max_ms": 60096.397042000026,
+      "avg_total_tokens": 209768.47368421053,
+      "error_samples": [
+        "litellm.RateLimitError: RateLimitError: OpenAIException - {\"error\":{\"type\":\"usage_limit_reached\",\"message\":\"The usage limit has been reached\",\"plan_type\":\"plus\",\"resets_at\":1779274993,\"eligible_promo\":null,\"resets_in_seconds\":6538}}. Received Model Group=gpt-5.5\nAvailable Model Group Fallbacks=None"
+      ]
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "size_label": "短(~110k tokens)",
+      "target_input_tokens": 110000,
+      "prompt_chars": 462933,
+      "agent": "claude_code",
+      "agent_label": "claude code",
+      "requests": 20,
+      "success": 20,
+      "errors": 0,
+      "success_rate": 1,
+      "avg_ms": 24306.42204595,
+      "p50_ms": 25059.538584000024,
+      "p95_ms": 29967.482332999993,
+      "min_ms": 16627.623666999978,
+      "max_ms": 33181.057042,
+      "avg_total_tokens": 105403.6,
+      "error_samples": []
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "size_label": "中(~160k tokens)",
+      "target_input_tokens": 160000,
+      "prompt_chars": 672798,
+      "agent": "claude_code",
+      "agent_label": "claude code",
+      "requests": 20,
+      "success": 20,
+      "errors": 0,
+      "success_rate": 1,
+      "avg_ms": 37925.12062079999,
+      "p50_ms": 37951.972583000024,
+      "p95_ms": 46723.12991700001,
+      "min_ms": 27757.725083000027,
+      "max_ms": 49249.33841699996,
+      "avg_total_tokens": 152988.7,
+      "error_samples": []
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "size_label": "长(~220k tokens)",
+      "target_input_tokens": 220000,
+      "prompt_chars": 924527,
+      "agent": "claude_code",
+      "agent_label": "claude code",
+      "requests": 20,
+      "success": 20,
+      "errors": 0,
+      "success_rate": 1,
+      "avg_ms": 47729.212039499995,
+      "p50_ms": 46790.19300000003,
+      "p95_ms": 60616.07608299999,
+      "min_ms": 29585.744999999995,
+      "max_ms": 61022.19287500001,
+      "avg_total_tokens": 209768.6,
+      "error_samples": []
+    }
+  ],
+  "results": [
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 4,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 16307.205417,
+      "usage": {
+        "input_tokens": 104993,
+        "output_tokens": 338,
+        "total_tokens": 105331
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 5,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 18232.048084,
+      "usage": {
+        "input_tokens": 104993,
+        "output_tokens": 476,
+        "total_tokens": 105469
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 2,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 20693.549375,
+      "usage": {
+        "input_tokens": 104993,
+        "output_tokens": 393,
+        "total_tokens": 105386
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 7,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 21225.348749999997,
+      "usage": {
+        "input_tokens": 104993,
+        "output_tokens": 332,
+        "total_tokens": 105325
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 13,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 21853.066375,
+      "usage": {
+        "input_tokens": 104993,
+        "output_tokens": 435,
+        "total_tokens": 105428
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 8,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 23232.208334,
+      "usage": {
+        "input_tokens": 104993,
+        "output_tokens": 317,
+        "total_tokens": 105310
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 14,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 23646.375,
+      "usage": {
+        "input_tokens": 104993,
+        "output_tokens": 318,
+        "total_tokens": 105311
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 18,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 23792.287125,
+      "usage": {
+        "input_tokens": 104993,
+        "output_tokens": 406,
+        "total_tokens": 105399
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 1,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 23994.361500000003,
+      "usage": {
+        "input_tokens": 104993,
+        "output_tokens": 404,
+        "total_tokens": 105397
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 11,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 24841.12575,
+      "usage": {
+        "input_tokens": 104993,
+        "output_tokens": 395,
+        "total_tokens": 105388
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 9,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 25275.491333,
+      "usage": {
+        "input_tokens": 104993,
+        "output_tokens": 335,
+        "total_tokens": 105328
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 12,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 26108.645709,
+      "usage": {
+        "input_tokens": 104993,
+        "output_tokens": 356,
+        "total_tokens": 105349
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 10,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 26852.045749999997,
+      "usage": {
+        "input_tokens": 104993,
+        "output_tokens": 383,
+        "total_tokens": 105376
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 6,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 26875.097542,
+      "usage": {
+        "input_tokens": 104993,
+        "output_tokens": 367,
+        "total_tokens": 105360
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 15,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 27136.254042,
+      "usage": {
+        "input_tokens": 104993,
+        "output_tokens": 486,
+        "total_tokens": 105479
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 16,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 27299.37525,
+      "usage": {
+        "input_tokens": 104993,
+        "output_tokens": 433,
+        "total_tokens": 105426
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 19,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 27965.688667000002,
+      "usage": {
+        "input_tokens": 104993,
+        "output_tokens": 383,
+        "total_tokens": 105376
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 17,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 29075.915667,
+      "usage": {
+        "input_tokens": 104993,
+        "output_tokens": 387,
+        "total_tokens": 105380
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 3,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 48634.950082999996,
+      "usage": {
+        "input_tokens": 104993,
+        "output_tokens": 440,
+        "total_tokens": 105433
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 0,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 128871.38808399999,
+      "usage": {
+        "input_tokens": 104993,
+        "output_tokens": 349,
+        "total_tokens": 105342
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 4,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 26525.013957999996,
+      "usage": {
+        "input_tokens": 152359,
+        "output_tokens": 606,
+        "total_tokens": 152965
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 12,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 26761.971875000017,
+      "usage": {
+        "input_tokens": 152359,
+        "output_tokens": 587,
+        "total_tokens": 152946
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 10,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 27752.37274999998,
+      "usage": {
+        "input_tokens": 152359,
+        "output_tokens": 585,
+        "total_tokens": 152944
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 3,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 30187.467709000004,
+      "usage": {
+        "input_tokens": 152359,
+        "output_tokens": 614,
+        "total_tokens": 152973
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 14,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 30654.277166000014,
+      "usage": {
+        "input_tokens": 152359,
+        "output_tokens": 518,
+        "total_tokens": 152877
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 15,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 34564.943,
+      "usage": {
+        "input_tokens": 152359,
+        "output_tokens": 691,
+        "total_tokens": 153050
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 17,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 34974.34637500001,
+      "usage": {
+        "input_tokens": 152359,
+        "output_tokens": 546,
+        "total_tokens": 152905
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 6,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 36281.027458,
+      "usage": {
+        "input_tokens": 152359,
+        "output_tokens": 583,
+        "total_tokens": 152942
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 2,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 36434.27620799998,
+      "usage": {
+        "input_tokens": 152359,
+        "output_tokens": 608,
+        "total_tokens": 152967
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 11,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 37702.400666,
+      "usage": {
+        "input_tokens": 152359,
+        "output_tokens": 796,
+        "total_tokens": 153155
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 1,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 39112.106417,
+      "usage": {
+        "input_tokens": 152359,
+        "output_tokens": 640,
+        "total_tokens": 152999
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 5,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 39894.22954199999,
+      "usage": {
+        "input_tokens": 152359,
+        "output_tokens": 525,
+        "total_tokens": 152884
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 16,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 40221.46475,
+      "usage": {
+        "input_tokens": 152359,
+        "output_tokens": 570,
+        "total_tokens": 152929
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 8,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 40921.12866700001,
+      "usage": {
+        "input_tokens": 152359,
+        "output_tokens": 718,
+        "total_tokens": 153077
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 13,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 41128.282042000006,
+      "usage": {
+        "input_tokens": 152359,
+        "output_tokens": 630,
+        "total_tokens": 152989
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 18,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 41958.531124999994,
+      "usage": {
+        "input_tokens": 152359,
+        "output_tokens": 532,
+        "total_tokens": 152891
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 0,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 42985.300249999986,
+      "usage": {
+        "input_tokens": 152359,
+        "output_tokens": 550,
+        "total_tokens": 152909
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 19,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 42926.41599999998,
+      "usage": {
+        "input_tokens": 152359,
+        "output_tokens": 590,
+        "total_tokens": 152949
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 7,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 43946.87416699999,
+      "usage": {
+        "input_tokens": 152359,
+        "output_tokens": 680,
+        "total_tokens": 153039
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 9,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 44298.76525,
+      "usage": {
+        "input_tokens": 152359,
+        "output_tokens": 688,
+        "total_tokens": 153047
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 4,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 32435.18075,
+      "usage": {
+        "input_tokens": 209194,
+        "output_tokens": 686,
+        "total_tokens": 209880
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 0,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 32680.03695899999,
+      "usage": {
+        "input_tokens": 209194,
+        "output_tokens": 553,
+        "total_tokens": 209747
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 6,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 34377.613041000004,
+      "usage": {
+        "input_tokens": 209194,
+        "output_tokens": 608,
+        "total_tokens": 209802
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 1,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 36959.879999999976,
+      "usage": {
+        "input_tokens": 209194,
+        "output_tokens": 670,
+        "total_tokens": 209864
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 7,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 38546.380000000005,
+      "usage": {
+        "input_tokens": 209194,
+        "output_tokens": 542,
+        "total_tokens": 209736
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 14,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 40207.25483300001,
+      "usage": {
+        "input_tokens": 209194,
+        "output_tokens": 513,
+        "total_tokens": 209707
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 16,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 40546.96229200001,
+      "usage": {
+        "input_tokens": 209194,
+        "output_tokens": 514,
+        "total_tokens": 209708
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 10,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 41179.805083000014,
+      "usage": {
+        "input_tokens": 209194,
+        "output_tokens": 614,
+        "total_tokens": 209808
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 11,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 45725.526124999975,
+      "usage": {
+        "input_tokens": 209194,
+        "output_tokens": 543,
+        "total_tokens": 209737
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 13,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 47126.410041999974,
+      "usage": {
+        "input_tokens": 209194,
+        "output_tokens": 586,
+        "total_tokens": 209780
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 18,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 49354.79458399999,
+      "usage": {
+        "input_tokens": 209194,
+        "output_tokens": 694,
+        "total_tokens": 209888
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 8,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 50912.313834,
+      "usage": {
+        "input_tokens": 209194,
+        "output_tokens": 552,
+        "total_tokens": 209746
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 19,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 50940.584250000014,
+      "usage": {
+        "input_tokens": 209194,
+        "output_tokens": 543,
+        "total_tokens": 209737
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 12,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 51074.23216700001,
+      "usage": {
+        "input_tokens": 209194,
+        "output_tokens": 530,
+        "total_tokens": 209724
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 3,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 52186.922332999995,
+      "usage": {
+        "input_tokens": 209194,
+        "output_tokens": 529,
+        "total_tokens": 209723
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 15,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 52277.349833000015,
+      "usage": {
+        "input_tokens": 209194,
+        "output_tokens": 558,
+        "total_tokens": 209752
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 5,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 53035.45075000002,
+      "usage": {
+        "input_tokens": 209194,
+        "output_tokens": 578,
+        "total_tokens": 209772
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 2,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 55449.16391599999,
+      "usage": {
+        "input_tokens": 209194,
+        "output_tokens": 577,
+        "total_tokens": 209771
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 17,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 57114.90945899999,
+      "usage": {
+        "input_tokens": 209194,
+        "output_tokens": 660,
+        "total_tokens": 209854
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 9,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 59302.446000000025,
+      "usage": {
+        "input_tokens": 209194,
+        "output_tokens": 644,
+        "total_tokens": 209838
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 4,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 18358.573208000016,
+      "usage": {
+        "input_tokens": 104992,
+        "output_tokens": 454,
+        "total_tokens": 105446
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 3,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 18362.104208000004,
+      "usage": {
+        "input_tokens": 104992,
+        "output_tokens": 354,
+        "total_tokens": 105346
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 17,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 19286.05895800001,
+      "usage": {
+        "input_tokens": 104992,
+        "output_tokens": 511,
+        "total_tokens": 105503
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 5,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 19371.162208999973,
+      "usage": {
+        "input_tokens": 104992,
+        "output_tokens": 491,
+        "total_tokens": 105483
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 19,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 21027.88154100001,
+      "usage": {
+        "input_tokens": 104992,
+        "output_tokens": 440,
+        "total_tokens": 105432
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 15,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 21796.68866700001,
+      "usage": {
+        "input_tokens": 104992,
+        "output_tokens": 381,
+        "total_tokens": 105373
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 9,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 21977.65175000002,
+      "usage": {
+        "input_tokens": 104992,
+        "output_tokens": 411,
+        "total_tokens": 105403
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 7,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 23357.324957999983,
+      "usage": {
+        "input_tokens": 104992,
+        "output_tokens": 347,
+        "total_tokens": 105339
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 18,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 23735.844207999995,
+      "usage": {
+        "input_tokens": 104992,
+        "output_tokens": 391,
+        "total_tokens": 105383
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 11,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 24987.420999999973,
+      "usage": {
+        "input_tokens": 104992,
+        "output_tokens": 401,
+        "total_tokens": 105393
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 1,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 25494.387457999983,
+      "usage": {
+        "input_tokens": 104992,
+        "output_tokens": 383,
+        "total_tokens": 105375
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 12,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 26602.67383299998,
+      "usage": {
+        "input_tokens": 104992,
+        "output_tokens": 376,
+        "total_tokens": 105368
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 6,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 26808.591958000005,
+      "usage": {
+        "input_tokens": 104992,
+        "output_tokens": 371,
+        "total_tokens": 105363
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 16,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 27025.92883399999,
+      "usage": {
+        "input_tokens": 104992,
+        "output_tokens": 393,
+        "total_tokens": 105385
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 13,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 27685.451499999996,
+      "usage": {
+        "input_tokens": 104992,
+        "output_tokens": 329,
+        "total_tokens": 105321
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 0,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 28061.776458999986,
+      "usage": {
+        "input_tokens": 104992,
+        "output_tokens": 431,
+        "total_tokens": 105423
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 8,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 29292.369582999992,
+      "usage": {
+        "input_tokens": 104992,
+        "output_tokens": 397,
+        "total_tokens": 105389
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 10,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 33404.25774999999,
+      "usage": {
+        "input_tokens": 104992,
+        "output_tokens": 472,
+        "total_tokens": 105464
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 14,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 41448.84258299999,
+      "usage": {
+        "input_tokens": 104992,
+        "output_tokens": 408,
+        "total_tokens": 105400
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 2,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 41475.242750000005,
+      "usage": {
+        "input_tokens": 104992,
+        "output_tokens": 348,
+        "total_tokens": 105340
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 3,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 28887.012915999978,
+      "usage": {
+        "input_tokens": 152358,
+        "output_tokens": 700,
+        "total_tokens": 153058
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 1,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 29983.99095800001,
+      "usage": {
+        "input_tokens": 152358,
+        "output_tokens": 545,
+        "total_tokens": 152903
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 15,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 29942.206874999974,
+      "usage": {
+        "input_tokens": 152358,
+        "output_tokens": 607,
+        "total_tokens": 152965
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 17,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 30918.912208999973,
+      "usage": {
+        "input_tokens": 152358,
+        "output_tokens": 597,
+        "total_tokens": 152955
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 6,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 31611.389792,
+      "usage": {
+        "input_tokens": 152358,
+        "output_tokens": 518,
+        "total_tokens": 152876
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 5,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 34297.01112500002,
+      "usage": {
+        "input_tokens": 152358,
+        "output_tokens": 566,
+        "total_tokens": 152924
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 8,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 36009.798458000005,
+      "usage": {
+        "input_tokens": 152358,
+        "output_tokens": 560,
+        "total_tokens": 152918
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 16,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 36687.25437500002,
+      "usage": {
+        "input_tokens": 152358,
+        "output_tokens": 589,
+        "total_tokens": 152947
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 4,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 38342.98529099999,
+      "usage": {
+        "input_tokens": 152358,
+        "output_tokens": 737,
+        "total_tokens": 153095
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 11,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 39277.106792000006,
+      "usage": {
+        "input_tokens": 152358,
+        "output_tokens": 829,
+        "total_tokens": 153187
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 0,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 40772.443582999986,
+      "usage": {
+        "input_tokens": 152358,
+        "output_tokens": 539,
+        "total_tokens": 152897
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 13,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 42601.42795899999,
+      "usage": {
+        "input_tokens": 152358,
+        "output_tokens": 619,
+        "total_tokens": 152977
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 7,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 42987.355374999985,
+      "usage": {
+        "input_tokens": 152358,
+        "output_tokens": 567,
+        "total_tokens": 152925
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 14,
+      "ok": false,
+      "status": 429,
+      "latency_ms": 45470.42170900002,
+      "usage": {},
+      "error": "litellm.RateLimitError: RateLimitError: OpenAIException - {\"error\":{\"type\":\"usage_limit_reached\",\"message\":\"The usage limit has been reached\",\"plan_type\":\"plus\",\"resets_at\":1779273816,\"eligible_promo\":null,\"resets_in_seconds\":5438}}. Received Model Group=gpt-5.5\nAvailable Model Group Fallbacks=None"
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 19,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 45529.94908399996,
+      "usage": {
+        "input_tokens": 152358,
+        "output_tokens": 549,
+        "total_tokens": 152907
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 2,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 48161.53645800002,
+      "usage": {
+        "input_tokens": 152358,
+        "output_tokens": 866,
+        "total_tokens": 153224
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 10,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 57396.76295800001,
+      "usage": {
+        "input_tokens": 152358,
+        "output_tokens": 469,
+        "total_tokens": 152827
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 12,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 59413.531917000015,
+      "usage": {
+        "input_tokens": 152358,
+        "output_tokens": 628,
+        "total_tokens": 152986
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 18,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 64247.550875000015,
+      "usage": {
+        "input_tokens": 152358,
+        "output_tokens": 687,
+        "total_tokens": 153045
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 9,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 64896.93033299997,
+      "usage": {
+        "input_tokens": 152358,
+        "output_tokens": 626,
+        "total_tokens": 152984
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 0,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 32242.85362499999,
+      "usage": {
+        "input_tokens": 209193,
+        "output_tokens": 672,
+        "total_tokens": 209865
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 17,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 35679.75991700002,
+      "usage": {
+        "input_tokens": 209193,
+        "output_tokens": 602,
+        "total_tokens": 209795
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 18,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 37013.29249999998,
+      "usage": {
+        "input_tokens": 209193,
+        "output_tokens": 492,
+        "total_tokens": 209685
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 5,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 38030.25974999997,
+      "usage": {
+        "input_tokens": 209193,
+        "output_tokens": 600,
+        "total_tokens": 209793
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 7,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 40128.95658299996,
+      "usage": {
+        "input_tokens": 209193,
+        "output_tokens": 517,
+        "total_tokens": 209710
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 6,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 40605.997291999985,
+      "usage": {
+        "input_tokens": 209193,
+        "output_tokens": 536,
+        "total_tokens": 209729
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 12,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 43670.431583,
+      "usage": {
+        "input_tokens": 209193,
+        "output_tokens": 543,
+        "total_tokens": 209736
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 3,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 43956.538583000016,
+      "usage": {
+        "input_tokens": 209193,
+        "output_tokens": 536,
+        "total_tokens": 209729
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 16,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 47498.72187499999,
+      "usage": {
+        "input_tokens": 209193,
+        "output_tokens": 606,
+        "total_tokens": 209799
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 11,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 48481.46800000005,
+      "usage": {
+        "input_tokens": 209193,
+        "output_tokens": 639,
+        "total_tokens": 209832
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 4,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 49021.96175000002,
+      "usage": {
+        "input_tokens": 209193,
+        "output_tokens": 600,
+        "total_tokens": 209793
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 15,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 49700.01920799998,
+      "usage": {
+        "input_tokens": 209193,
+        "output_tokens": 653,
+        "total_tokens": 209846
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 8,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 49844.44750000001,
+      "usage": {
+        "input_tokens": 209193,
+        "output_tokens": 505,
+        "total_tokens": 209698
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 2,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 50163.606875,
+      "usage": {
+        "input_tokens": 209193,
+        "output_tokens": 523,
+        "total_tokens": 209716
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 13,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 50692.26150000002,
+      "usage": {
+        "input_tokens": 209193,
+        "output_tokens": 574,
+        "total_tokens": 209767
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 1,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 53504.241500000004,
+      "usage": {
+        "input_tokens": 209193,
+        "output_tokens": 501,
+        "total_tokens": 209694
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 9,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 53564.51129200001,
+      "usage": {
+        "input_tokens": 209193,
+        "output_tokens": 525,
+        "total_tokens": 209718
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 14,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 55058.82791699999,
+      "usage": {
+        "input_tokens": 209193,
+        "output_tokens": 685,
+        "total_tokens": 209878
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 19,
+      "ok": false,
+      "status": 429,
+      "latency_ms": 57903.50020800001,
+      "usage": {},
+      "error": "litellm.RateLimitError: RateLimitError: OpenAIException - {\"error\":{\"type\":\"usage_limit_reached\",\"message\":\"The usage limit has been reached\",\"plan_type\":\"plus\",\"resets_at\":1779274993,\"eligible_promo\":null,\"resets_in_seconds\":6538}}. Received Model Group=gpt-5.5\nAvailable Model Group Fallbacks=None"
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 10,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 60096.397042000026,
+      "usage": {
+        "input_tokens": 209193,
+        "output_tokens": 625,
+        "total_tokens": 209818
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 2,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 16627.623666999978,
+      "usage": {
+        "input_tokens": 104996,
+        "output_tokens": 356,
+        "total_tokens": 105352
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 16,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 17548.161332999996,
+      "usage": {
+        "input_tokens": 104996,
+        "output_tokens": 455,
+        "total_tokens": 105451
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 0,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 18724.83162499999,
+      "usage": {
+        "input_tokens": 104996,
+        "output_tokens": 333,
+        "total_tokens": 105329
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 9,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 19863.87150000001,
+      "usage": {
+        "input_tokens": 104996,
+        "output_tokens": 409,
+        "total_tokens": 105405
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 1,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 19986.96887500002,
+      "usage": {
+        "input_tokens": 104996,
+        "output_tokens": 376,
+        "total_tokens": 105372
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 18,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 21179.08454100002,
+      "usage": {
+        "input_tokens": 104996,
+        "output_tokens": 354,
+        "total_tokens": 105350
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 7,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 21300.968208999955,
+      "usage": {
+        "input_tokens": 104996,
+        "output_tokens": 429,
+        "total_tokens": 105425
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 6,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 21348.230625000026,
+      "usage": {
+        "input_tokens": 104996,
+        "output_tokens": 414,
+        "total_tokens": 105410
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 14,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 23319.011832999997,
+      "usage": {
+        "input_tokens": 104996,
+        "output_tokens": 437,
+        "total_tokens": 105433
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 15,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 25059.538584000024,
+      "usage": {
+        "input_tokens": 104996,
+        "output_tokens": 403,
+        "total_tokens": 105399
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 12,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 25349.219209000003,
+      "usage": {
+        "input_tokens": 104996,
+        "output_tokens": 398,
+        "total_tokens": 105394
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 3,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 25728.017709000036,
+      "usage": {
+        "input_tokens": 104996,
+        "output_tokens": 418,
+        "total_tokens": 105414
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 17,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 25793.266166999994,
+      "usage": {
+        "input_tokens": 104996,
+        "output_tokens": 412,
+        "total_tokens": 105408
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 10,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 26269.430249999976,
+      "usage": {
+        "input_tokens": 104996,
+        "output_tokens": 388,
+        "total_tokens": 105384
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 8,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 27301.111291999987,
+      "usage": {
+        "input_tokens": 104996,
+        "output_tokens": 410,
+        "total_tokens": 105406
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 11,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 28498.54349999997,
+      "usage": {
+        "input_tokens": 104996,
+        "output_tokens": 382,
+        "total_tokens": 105378
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 13,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 29431.798875000037,
+      "usage": {
+        "input_tokens": 104996,
+        "output_tokens": 360,
+        "total_tokens": 105356
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 5,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 29650.223750000005,
+      "usage": {
+        "input_tokens": 104996,
+        "output_tokens": 356,
+        "total_tokens": 105352
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 19,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 29967.482332999993,
+      "usage": {
+        "input_tokens": 104996,
+        "output_tokens": 415,
+        "total_tokens": 105411
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 4,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 33181.057042,
+      "usage": {
+        "input_tokens": 104996,
+        "output_tokens": 647,
+        "total_tokens": 105643
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 0,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 27789.796374999976,
+      "usage": {
+        "input_tokens": 152362,
+        "output_tokens": 628,
+        "total_tokens": 152990
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 8,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 27757.725083000027,
+      "usage": {
+        "input_tokens": 152362,
+        "output_tokens": 678,
+        "total_tokens": 153040
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 5,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 29798.457083999994,
+      "usage": {
+        "input_tokens": 152362,
+        "output_tokens": 588,
+        "total_tokens": 152950
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 11,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 30066.706750000012,
+      "usage": {
+        "input_tokens": 152362,
+        "output_tokens": 532,
+        "total_tokens": 152894
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 14,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 31024.831000000006,
+      "usage": {
+        "input_tokens": 152362,
+        "output_tokens": 749,
+        "total_tokens": 153111
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 1,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 33189.694791999995,
+      "usage": {
+        "input_tokens": 152362,
+        "output_tokens": 473,
+        "total_tokens": 152835
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 2,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 33955.76908299996,
+      "usage": {
+        "input_tokens": 152362,
+        "output_tokens": 572,
+        "total_tokens": 152934
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 18,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 34207.209416,
+      "usage": {
+        "input_tokens": 152362,
+        "output_tokens": 625,
+        "total_tokens": 152987
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 15,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 35269.450332999986,
+      "usage": {
+        "input_tokens": 152362,
+        "output_tokens": 670,
+        "total_tokens": 153032
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 19,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 37951.972583000024,
+      "usage": {
+        "input_tokens": 152362,
+        "output_tokens": 722,
+        "total_tokens": 153084
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 4,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 38533.323083000025,
+      "usage": {
+        "input_tokens": 152362,
+        "output_tokens": 515,
+        "total_tokens": 152877
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 7,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 40978.053083000006,
+      "usage": {
+        "input_tokens": 152362,
+        "output_tokens": 659,
+        "total_tokens": 153021
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 6,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 41724.60070800001,
+      "usage": {
+        "input_tokens": 152362,
+        "output_tokens": 543,
+        "total_tokens": 152905
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 12,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 41829.14425000001,
+      "usage": {
+        "input_tokens": 152362,
+        "output_tokens": 690,
+        "total_tokens": 153052
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 10,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 43872.19425,
+      "usage": {
+        "input_tokens": 152362,
+        "output_tokens": 535,
+        "total_tokens": 152897
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 17,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 43869.593249999976,
+      "usage": {
+        "input_tokens": 152362,
+        "output_tokens": 643,
+        "total_tokens": 153005
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 16,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 44900.007250000024,
+      "usage": {
+        "input_tokens": 152362,
+        "output_tokens": 555,
+        "total_tokens": 152917
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 3,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 45811.41570900002,
+      "usage": {
+        "input_tokens": 152362,
+        "output_tokens": 883,
+        "total_tokens": 153245
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 9,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 46723.12991700001,
+      "usage": {
+        "input_tokens": 152362,
+        "output_tokens": 569,
+        "total_tokens": 152931
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 13,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 49249.33841699996,
+      "usage": {
+        "input_tokens": 152362,
+        "output_tokens": 705,
+        "total_tokens": 153067
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 2,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 29585.744999999995,
+      "usage": {
+        "input_tokens": 209197,
+        "output_tokens": 558,
+        "total_tokens": 209755
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 9,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 35983.179082999995,
+      "usage": {
+        "input_tokens": 209197,
+        "output_tokens": 496,
+        "total_tokens": 209693
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 12,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 38279.10683299997,
+      "usage": {
+        "input_tokens": 209197,
+        "output_tokens": 546,
+        "total_tokens": 209743
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 18,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 38260.65658300003,
+      "usage": {
+        "input_tokens": 209197,
+        "output_tokens": 566,
+        "total_tokens": 209763
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 8,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 41748.74187500001,
+      "usage": {
+        "input_tokens": 209197,
+        "output_tokens": 578,
+        "total_tokens": 209775
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 14,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 43899.20108299999,
+      "usage": {
+        "input_tokens": 209197,
+        "output_tokens": 511,
+        "total_tokens": 209708
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 6,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 45634.16904099996,
+      "usage": {
+        "input_tokens": 209197,
+        "output_tokens": 640,
+        "total_tokens": 209837
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 19,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 45659.587583000015,
+      "usage": {
+        "input_tokens": 209197,
+        "output_tokens": 660,
+        "total_tokens": 209857
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 3,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 46790.19300000003,
+      "usage": {
+        "input_tokens": 209197,
+        "output_tokens": 518,
+        "total_tokens": 209715
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 15,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 46775.43825000001,
+      "usage": {
+        "input_tokens": 209197,
+        "output_tokens": 689,
+        "total_tokens": 209886
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 0,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 48152.68004200002,
+      "usage": {
+        "input_tokens": 209197,
+        "output_tokens": 577,
+        "total_tokens": 209774
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 5,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 48441.97112499998,
+      "usage": {
+        "input_tokens": 209197,
+        "output_tokens": 606,
+        "total_tokens": 209803
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 10,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 49735.50762499997,
+      "usage": {
+        "input_tokens": 209197,
+        "output_tokens": 532,
+        "total_tokens": 209729
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 13,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 51155.11883299996,
+      "usage": {
+        "input_tokens": 209197,
+        "output_tokens": 494,
+        "total_tokens": 209691
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 7,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 51786.041042000055,
+      "usage": {
+        "input_tokens": 209197,
+        "output_tokens": 563,
+        "total_tokens": 209760
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 17,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 54701.279792000016,
+      "usage": {
+        "input_tokens": 209197,
+        "output_tokens": 557,
+        "total_tokens": 209754
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 4,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 57638.681082999974,
+      "usage": {
+        "input_tokens": 209197,
+        "output_tokens": 543,
+        "total_tokens": 209740
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 16,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 58718.673959000036,
+      "usage": {
+        "input_tokens": 209197,
+        "output_tokens": 590,
+        "total_tokens": 209787
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 1,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 60616.07608299999,
+      "usage": {
+        "input_tokens": 209197,
+        "output_tokens": 659,
+        "total_tokens": 209856
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 11,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 61022.19287500001,
+      "usage": {
+        "input_tokens": 209197,
+        "output_tokens": 549,
+        "total_tokens": 209746
+      },
+      "error": null
+    }
+  ]
+}

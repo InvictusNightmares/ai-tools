@@ -1,0 +1,855 @@
+{
+  "api_base": "http://192.168.64.16:4000",
+  "model": "gpt-5.5",
+  "requests_per_scenario": 5,
+  "concurrency": 3,
+  "timeout_ms": 120000,
+  "max_output_tokens": 96,
+  "benchmark_mode": "mapped",
+  "format_agent_map": {
+    "chat": "opencode",
+    "responses": "codex",
+    "messages": "claude_code"
+  },
+  "summary": [
+    {
+      "format": "chat",
+      "size": "short",
+      "size_label": "短",
+      "agent": "opencode",
+      "agent_label": "opencode",
+      "requests": 5,
+      "success": 5,
+      "errors": 0,
+      "success_rate": 1,
+      "avg_ms": 4272.683458400001,
+      "p50_ms": 3915.059125,
+      "p95_ms": 5729.957084000001,
+      "min_ms": 3803.52,
+      "max_ms": 5729.957084000001,
+      "avg_total_tokens": 444.6,
+      "error_samples": []
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "size_label": "中",
+      "agent": "opencode",
+      "agent_label": "opencode",
+      "requests": 5,
+      "success": 5,
+      "errors": 0,
+      "success_rate": 1,
+      "avg_ms": 10002.55565,
+      "p50_ms": 10185.655292,
+      "p95_ms": 12380.967458,
+      "min_ms": 8412.889542,
+      "max_ms": 12380.967458,
+      "avg_total_tokens": 926.4,
+      "error_samples": []
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "size_label": "长",
+      "agent": "opencode",
+      "agent_label": "opencode",
+      "requests": 5,
+      "success": 5,
+      "errors": 0,
+      "success_rate": 1,
+      "avg_ms": 13082.8774082,
+      "p50_ms": 12137.077125000003,
+      "p95_ms": 15523.893958,
+      "min_ms": 11155.298916,
+      "max_ms": 15523.893958,
+      "avg_total_tokens": 1160,
+      "error_samples": []
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "size_label": "短",
+      "agent": "codex",
+      "agent_label": "codex",
+      "requests": 5,
+      "success": 5,
+      "errors": 0,
+      "success_rate": 1,
+      "avg_ms": 2355.9016336,
+      "p50_ms": 2345.8972920000015,
+      "p95_ms": 2458.253125000003,
+      "min_ms": 2189.479833999998,
+      "max_ms": 2458.253125000003,
+      "avg_total_tokens": 449.8,
+      "error_samples": []
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "size_label": "中",
+      "agent": "codex",
+      "agent_label": "codex",
+      "requests": 5,
+      "success": 5,
+      "errors": 0,
+      "success_rate": 1,
+      "avg_ms": 15523.7533666,
+      "p50_ms": 13999.328874999992,
+      "p95_ms": 21819.423833,
+      "min_ms": 10574.497083000002,
+      "max_ms": 21819.423833,
+      "avg_total_tokens": 1166.4,
+      "error_samples": []
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "size_label": "长",
+      "agent": "codex",
+      "agent_label": "codex",
+      "requests": 5,
+      "success": 5,
+      "errors": 0,
+      "success_rate": 1,
+      "avg_ms": 12560.629050200001,
+      "p50_ms": 11765.240417000008,
+      "p95_ms": 14357.082666000002,
+      "min_ms": 11478.356833999991,
+      "max_ms": 14357.082666000002,
+      "avg_total_tokens": 1162.2,
+      "error_samples": []
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "size_label": "短",
+      "agent": "claude_code",
+      "agent_label": "claude code",
+      "requests": 5,
+      "success": 5,
+      "errors": 0,
+      "success_rate": 1,
+      "avg_ms": 2348.6653665999997,
+      "p50_ms": 2331.206791999997,
+      "p95_ms": 2544.8355830000073,
+      "min_ms": 2163.504541000002,
+      "max_ms": 2544.8355830000073,
+      "avg_total_tokens": 453.8,
+      "error_samples": []
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "size_label": "中",
+      "agent": "claude_code",
+      "agent_label": "claude code",
+      "requests": 5,
+      "success": 5,
+      "errors": 0,
+      "success_rate": 1,
+      "avg_ms": 12563.023983400004,
+      "p50_ms": 12757.989042000016,
+      "p95_ms": 13953.666958000002,
+      "min_ms": 11416.486999999994,
+      "max_ms": 13953.666958000002,
+      "avg_total_tokens": 1061.2,
+      "error_samples": []
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "size_label": "长",
+      "agent": "claude_code",
+      "agent_label": "claude code",
+      "requests": 5,
+      "success": 5,
+      "errors": 0,
+      "success_rate": 1,
+      "avg_ms": 14186.845741800003,
+      "p50_ms": 13944.726416999998,
+      "p95_ms": 14961.579916999995,
+      "min_ms": 13841.777000000002,
+      "max_ms": 14961.579916999995,
+      "avg_total_tokens": 1266.8,
+      "error_samples": []
+    }
+  ],
+  "results": [
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 1,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 3803.52,
+      "usage": {
+        "input_tokens": 402,
+        "output_tokens": 45,
+        "total_tokens": 447
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 0,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 3915.059125,
+      "usage": {
+        "input_tokens": 402,
+        "output_tokens": 39,
+        "total_tokens": 441
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 2,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 5729.957084000001,
+      "usage": {
+        "input_tokens": 402,
+        "output_tokens": 47,
+        "total_tokens": 449
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 3,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 3814.8624159999995,
+      "usage": {
+        "input_tokens": 402,
+        "output_tokens": 40,
+        "total_tokens": 442
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "short",
+      "agent": "opencode",
+      "index": 4,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 4100.018667,
+      "usage": {
+        "input_tokens": 402,
+        "output_tokens": 42,
+        "total_tokens": 444
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 2,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 8412.889542,
+      "usage": {
+        "input_tokens": 464,
+        "output_tokens": 397,
+        "total_tokens": 861
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 1,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 10326.742166,
+      "usage": {
+        "input_tokens": 464,
+        "output_tokens": 499,
+        "total_tokens": 963
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 0,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 12380.967458,
+      "usage": {
+        "input_tokens": 464,
+        "output_tokens": 533,
+        "total_tokens": 997
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 3,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 8706.523792,
+      "usage": {
+        "input_tokens": 464,
+        "output_tokens": 389,
+        "total_tokens": 853
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "medium",
+      "agent": "opencode",
+      "index": 4,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 10185.655292,
+      "usage": {
+        "input_tokens": 464,
+        "output_tokens": 494,
+        "total_tokens": 958
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 0,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 11445.232666999997,
+      "usage": {
+        "input_tokens": 578,
+        "output_tokens": 541,
+        "total_tokens": 1119
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 2,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 12137.077125000003,
+      "usage": {
+        "input_tokens": 578,
+        "output_tokens": 568,
+        "total_tokens": 1146
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 1,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 15523.893958,
+      "usage": {
+        "input_tokens": 578,
+        "output_tokens": 558,
+        "total_tokens": 1136
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 4,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 11155.298916,
+      "usage": {
+        "input_tokens": 578,
+        "output_tokens": 514,
+        "total_tokens": 1092
+      },
+      "error": null
+    },
+    {
+      "format": "chat",
+      "size": "long",
+      "agent": "opencode",
+      "index": 3,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 15152.884375000001,
+      "usage": {
+        "input_tokens": 578,
+        "output_tokens": 729,
+        "total_tokens": 1307
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 0,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 2345.8232500000013,
+      "usage": {
+        "input_tokens": 401,
+        "output_tokens": 47,
+        "total_tokens": 448
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 2,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 2345.8972920000015,
+      "usage": {
+        "input_tokens": 401,
+        "output_tokens": 51,
+        "total_tokens": 452
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 1,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 2440.0546669999967,
+      "usage": {
+        "input_tokens": 401,
+        "output_tokens": 43,
+        "total_tokens": 444
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 4,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 2189.479833999998,
+      "usage": {
+        "input_tokens": 401,
+        "output_tokens": 49,
+        "total_tokens": 450
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "short",
+      "agent": "codex",
+      "index": 3,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 2458.253125000003,
+      "usage": {
+        "input_tokens": 401,
+        "output_tokens": 54,
+        "total_tokens": 455
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 0,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 10574.497083000002,
+      "usage": {
+        "input_tokens": 463,
+        "output_tokens": 464,
+        "total_tokens": 927
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 1,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 19029.5605,
+      "usage": {
+        "input_tokens": 463,
+        "output_tokens": 912,
+        "total_tokens": 1375
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 2,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 21819.423833,
+      "usage": {
+        "input_tokens": 463,
+        "output_tokens": 1071,
+        "total_tokens": 1534
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 3,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 13999.328874999992,
+      "usage": {
+        "input_tokens": 463,
+        "output_tokens": 562,
+        "total_tokens": 1025
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "medium",
+      "agent": "codex",
+      "index": 4,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 12195.956542,
+      "usage": {
+        "input_tokens": 463,
+        "output_tokens": 508,
+        "total_tokens": 971
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 0,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 11478.356833999991,
+      "usage": {
+        "input_tokens": 577,
+        "output_tokens": 559,
+        "total_tokens": 1136
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 1,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 11633.19137500001,
+      "usage": {
+        "input_tokens": 577,
+        "output_tokens": 552,
+        "total_tokens": 1129
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 2,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 13569.273958999998,
+      "usage": {
+        "input_tokens": 577,
+        "output_tokens": 571,
+        "total_tokens": 1148
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 3,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 11765.240417000008,
+      "usage": {
+        "input_tokens": 577,
+        "output_tokens": 576,
+        "total_tokens": 1153
+      },
+      "error": null
+    },
+    {
+      "format": "responses",
+      "size": "long",
+      "agent": "codex",
+      "index": 4,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 14357.082666000002,
+      "usage": {
+        "input_tokens": 577,
+        "output_tokens": 668,
+        "total_tokens": 1245
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 0,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 2331.206791999997,
+      "usage": {
+        "input_tokens": 405,
+        "output_tokens": 47,
+        "total_tokens": 452
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 1,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 2431.6050419999956,
+      "usage": {
+        "input_tokens": 405,
+        "output_tokens": 49,
+        "total_tokens": 454
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 2,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 2544.8355830000073,
+      "usage": {
+        "input_tokens": 405,
+        "output_tokens": 54,
+        "total_tokens": 459
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 4,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 2163.504541000002,
+      "usage": {
+        "input_tokens": 405,
+        "output_tokens": 41,
+        "total_tokens": 446
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "short",
+      "agent": "claude_code",
+      "index": 3,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 2272.174874999997,
+      "usage": {
+        "input_tokens": 405,
+        "output_tokens": 53,
+        "total_tokens": 458
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 1,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 11901.993000000002,
+      "usage": {
+        "input_tokens": 467,
+        "output_tokens": 576,
+        "total_tokens": 1043
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 2,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 12757.989042000016,
+      "usage": {
+        "input_tokens": 467,
+        "output_tokens": 590,
+        "total_tokens": 1057
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 0,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 13953.666958000002,
+      "usage": {
+        "input_tokens": 467,
+        "output_tokens": 672,
+        "total_tokens": 1139
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 4,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 11416.486999999994,
+      "usage": {
+        "input_tokens": 467,
+        "output_tokens": 535,
+        "total_tokens": 1002
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "medium",
+      "agent": "claude_code",
+      "index": 3,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 12784.983917000005,
+      "usage": {
+        "input_tokens": 467,
+        "output_tokens": 598,
+        "total_tokens": 1065
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 0,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 13841.777000000002,
+      "usage": {
+        "input_tokens": 581,
+        "output_tokens": 672,
+        "total_tokens": 1253
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 2,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 13918.446333,
+      "usage": {
+        "input_tokens": 581,
+        "output_tokens": 686,
+        "total_tokens": 1267
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 1,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 13944.726416999998,
+      "usage": {
+        "input_tokens": 581,
+        "output_tokens": 629,
+        "total_tokens": 1210
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 4,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 14267.699042000022,
+      "usage": {
+        "input_tokens": 581,
+        "output_tokens": 702,
+        "total_tokens": 1283
+      },
+      "error": null
+    },
+    {
+      "format": "messages",
+      "size": "long",
+      "agent": "claude_code",
+      "index": 3,
+      "ok": true,
+      "status": 200,
+      "latency_ms": 14961.579916999995,
+      "usage": {
+        "input_tokens": 581,
+        "output_tokens": 740,
+        "total_tokens": 1321
+      },
+      "error": null
+    }
+  ]
+}
