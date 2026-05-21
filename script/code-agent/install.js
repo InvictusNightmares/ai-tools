@@ -440,6 +440,13 @@ function commandOutput(command, args) {
   return String(result.stdout || '').trim();
 }
 
+function commandOutputLines(command, args) {
+  return commandOutput(command, args)
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
 function nodeMajor(version) {
   const match = String(version || '').trim().match(/^v?(\d+)\./);
   return match ? Number(match[1]) : 0;
@@ -447,6 +454,95 @@ function nodeMajor(version) {
 
 function installedNodeVersion() {
   return commandOutput('node', ['--version']) || process.version || '';
+}
+
+function windowsNodeExeCandidates() {
+  if (process.platform !== 'win32') return [];
+
+  const programFiles = [
+    process.env.ProgramFiles,
+    process.env['ProgramFiles(x86)'],
+    process.env.LOCALAPPDATA ? path.join(process.env.LOCALAPPDATA, 'Programs') : '',
+  ].filter(Boolean);
+
+  const candidates = [
+    process.execPath && path.basename(process.execPath).toLowerCase() === 'node.exe' ? process.execPath : '',
+    ...commandOutputLines('where', ['node']),
+    ...programFiles.map((root) => path.join(root, 'nodejs', 'node.exe')),
+  ].filter(Boolean);
+
+  return [...new Set(candidates.map((candidate) => path.resolve(candidate)))];
+}
+
+function windowsNpmCliCandidates() {
+  if (process.platform !== 'win32') return [];
+
+  const candidates = [];
+  for (const nodeExe of windowsNodeExeCandidates()) {
+    candidates.push(path.join(path.dirname(nodeExe), 'node_modules', 'npm', 'bin', 'npm-cli.js'));
+  }
+
+  const npmCmdPaths = [
+    ...commandOutputLines('where', ['npm']),
+    ...commandOutputLines('where', ['npm.cmd']),
+    process.env.APPDATA ? path.join(process.env.APPDATA, 'npm', 'node_modules', 'npm', 'bin', 'npm-cli.js') : '',
+  ].filter(Boolean);
+
+  for (const npmPath of npmCmdPaths) {
+    const dir = path.dirname(npmPath);
+    candidates.push(path.join(dir, 'node_modules', 'npm', 'bin', 'npm-cli.js'));
+    candidates.push(path.join(path.dirname(dir), 'node_modules', 'npm', 'bin', 'npm-cli.js'));
+  }
+
+  return [...new Set(candidates.map((candidate) => path.resolve(candidate)))];
+}
+
+function npmInvocation() {
+  if (process.platform !== 'win32') {
+    return { command: 'npm', argsPrefix: [], display: 'npm' };
+  }
+
+  const nodeExe = windowsNodeExeCandidates().find((candidate) => fs.existsSync(candidate)) || 'node';
+  const npmCli = windowsNpmCliCandidates().find((candidate) => fs.existsSync(candidate));
+  if (npmCli) {
+    return { command: nodeExe, argsPrefix: [npmCli], display: `${nodeExe} ${npmCli}` };
+  }
+
+  return { command: 'npm', argsPrefix: [], display: 'npm' };
+}
+
+function runNpmStatus(args, options, env = process.env) {
+  const invocation = npmInvocation();
+  const fullArgs = [...invocation.argsPrefix, ...args];
+  if (options.dryRun) {
+    console.log(`[dry-run] ${invocation.display} ${args.join(' ')}`);
+    return 0;
+  }
+
+  if (options.verbose) {
+    console.log(`$ ${invocation.display} ${args.join(' ')}`);
+  }
+
+  const result = spawnSync(invocation.command, fullArgs, {
+    stdio: 'inherit',
+    shell: process.platform === 'win32' && invocation.command === 'npm',
+    env,
+  });
+  return result.status === null ? 1 : result.status;
+}
+
+function commandOutputNpm(args) {
+  const invocation = npmInvocation();
+  const result = spawnSync(invocation.command, [...invocation.argsPrefix, ...args], {
+    encoding: 'utf8',
+    shell: process.platform === 'win32' && invocation.command === 'npm',
+  });
+  if (result.status !== 0) return '';
+  return String(result.stdout || '').trim();
+}
+
+function npmIsUsable() {
+  return Boolean(commandOutputNpm(['--version']));
 }
 
 function findMacNodePkgName() {
@@ -537,7 +633,7 @@ function ensureNodeRuntime(options) {
 
   const version = installedNodeVersion();
   const hasNode = commandExists('node');
-  const hasNpm = commandExists('npm');
+  const hasNpm = npmIsUsable();
   const major = nodeMajor(version);
 
   if (hasNode && hasNpm && major >= MIN_NODE_MAJOR) {
@@ -559,7 +655,7 @@ function ensureNodeRuntime(options) {
   refreshNodePath();
 
   const nextVersion = installedNodeVersion();
-  if (!options.dryRun && (!commandExists('node') || nodeMajor(nextVersion) < MIN_NODE_MAJOR || !commandExists('npm'))) {
+  if (!options.dryRun && (!commandExists('node') || nodeMajor(nextVersion) < MIN_NODE_MAJOR || !npmIsUsable())) {
     throw new Error(`Node.js 安装后仍不可用。请重新打开终端，确认 node --version >= ${MIN_NODE_MAJOR} 且 npm 可用后重试。`);
   }
 
@@ -580,7 +676,7 @@ function npmGlobalBinDir() {
     return npmPath ? path.dirname(npmPath) : '';
   }
 
-  const binDir = commandOutput('npm', ['bin', '-g']);
+  const binDir = commandOutputNpm(['bin', '-g']);
   if (binDir && !binDir.includes('Unknown command')) return binDir;
   const npmPath = firstCommandPath('npm');
   return npmPath ? path.dirname(npmPath) : '';
@@ -594,7 +690,7 @@ function installNpmPackage(packageName, binaryName, options) {
 
   ensureNodeRuntime(options);
 
-  const status = runStatus('npm', ['install', '-g', packageName], options);
+  const status = runNpmStatus(['install', '-g', packageName], options);
   if (status !== 0) {
     if (process.platform === 'win32') {
       throw new Error(`Command failed: npm install -g ${packageName}`);
@@ -620,11 +716,11 @@ function installNpmPackage(packageName, binaryName, options) {
 }
 
 function npmPackageVersion(packageName) {
-  return commandOutput('npm', ['view', packageName, 'version']);
+  return commandOutputNpm(['view', packageName, 'version']);
 }
 
 function installedNpmPackageVersion(packageName) {
-  const npmRoot = commandOutput('npm', ['root', '-g']);
+  const npmRoot = commandOutputNpm(['root', '-g']);
   if (!npmRoot) return '';
 
   const packageJsonPath = path.join(npmRoot, packageName, 'package.json');
@@ -640,7 +736,7 @@ function installedNpmPackageVersion(packageName) {
 function preferOpencodeWindowsAvx2Binary(options) {
   if (process.platform !== 'win32' || process.arch !== 'x64') return '';
 
-  const npmRoot = commandOutput('npm', ['root', '-g']);
+  const npmRoot = commandOutputNpm(['root', '-g']);
   if (!npmRoot) {
     warn('未找到 npm 全局 root，无法替换 OpenCode Windows 非 baseline 二进制。');
     return '';
@@ -651,7 +747,7 @@ function preferOpencodeWindowsAvx2Binary(options) {
   if (!fs.existsSync(sourcePath)) {
     const version = installedNpmPackageVersion('opencode-ai') || npmPackageVersion('opencode-ai@latest') || 'latest';
     const packageName = `opencode-windows-x64@${version}`;
-    const status = runStatus('npm', ['install', '-g', '--ignore-scripts', packageName], options);
+    const status = runNpmStatus(['install', '-g', '--ignore-scripts', packageName], options);
     if (status !== 0) {
       if (fs.existsSync(sourcePath)) {
         warn(`安装 ${packageName} 返回失败，但非 baseline 二进制已存在，继续使用: ${sourcePath}`);
@@ -683,7 +779,7 @@ function installOpencodePackage(options) {
 function codexWindowsNativeBinaryPath() {
   if (process.platform !== 'win32') return '';
 
-  const npmRoot = commandOutput('npm', ['root', '-g']);
+  const npmRoot = commandOutputNpm(['root', '-g']);
   if (!npmRoot) return '';
 
   return path.join(
@@ -703,7 +799,7 @@ function codexWindowsNativeBinaryPath() {
 function codexWindowsNodeEntryPath() {
   if (process.platform !== 'win32') return '';
 
-  const npmRoot = commandOutput('npm', ['root', '-g']);
+  const npmRoot = commandOutputNpm(['root', '-g']);
   if (!npmRoot) return '';
 
   return path.join(npmRoot, '@openai', 'codex', 'bin', 'codex.js');
@@ -718,7 +814,7 @@ function ensureCodexWindowsNativePackage(options) {
   const version = installedNpmPackageVersion(path.join('@openai', 'codex')) || npmPackageVersion('@openai/codex@latest') || 'latest';
   const archPackage = process.arch === 'arm64' ? 'codex-win32-arm64' : 'codex-win32-x64';
   const packageName = `@openai/${archPackage}@npm:@openai/codex@${version}-${process.arch === 'arm64' ? 'win32-arm64' : 'win32-x64'}`;
-  const status = runStatus('npm', ['install', '-g', '--no-save', packageName], options);
+  const status = runNpmStatus(['install', '-g', '--no-save', packageName], options);
   if (status !== 0 && (!binaryPath || !fs.existsSync(binaryPath))) {
     warn(`Codex Windows 原生包安装失败，codex 可能无法启动: ${packageName}`);
   }
@@ -852,7 +948,7 @@ async function writeOpencodeConfig(runtime, options, rl) {
 function findOpencodeBinary(binDir = '') {
   const commandPath = firstCommandPath(process.platform === 'win32' ? 'opencode.cmd' : 'opencode') ||
     firstCommandPath('opencode');
-  const npmRoot = commandOutput('npm', ['root', '-g']);
+  const npmRoot = commandOutputNpm(['root', '-g']);
   const npmBin = npmGlobalBinDir();
   if (process.platform === 'win32') {
     const candidates = [
@@ -1334,7 +1430,7 @@ function findCodexNativeBinary() {
   if (!targetTriple) return null;
 
   const packageName = process.arch === 'arm64' ? '@openai/codex-darwin-arm64' : '@openai/codex-darwin-x64';
-  const npmRoot = commandOutput('npm', ['root', '-g']);
+  const npmRoot = commandOutputNpm(['root', '-g']);
   const codexCommand = commandOutput('command', ['-v', 'codex']);
   const roots = [
     npmRoot,
