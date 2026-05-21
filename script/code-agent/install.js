@@ -6,8 +6,8 @@ const path = require('node:path');
 const readline = require('node:readline/promises');
 const { spawnSync } = require('node:child_process');
 
-const DEFAULT_EXTERNAL_BASE_URL = 'http://192.168.64.16:4001/v1';
-const DEFAULT_DACS_BASE_URL = 'http://47.117.95.192:4001/v1';
+const DEFAULT_EXTERNAL_BASE_URL = 'http://192.168.64.16:4000/v1';
+const DEFAULT_DACS_BASE_URL = 'http://47.117.95.192:4000/v1';
 const DEFAULT_MODEL = 'gpt-5.5';
 const DEFAULT_CODEX_MODEL = DEFAULT_MODEL;
 const PROVIDER_KEY = '启源Code Model';
