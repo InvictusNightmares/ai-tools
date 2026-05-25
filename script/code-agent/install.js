@@ -1238,7 +1238,7 @@ SET "CODEX_API_KEY=${runtime.apiKey}"
 
 cd /d "${userProfile}"
 
-call "${realCodex}" -c model_provider=${JSON.stringify(PROVIDER_KEY)} -c model=${JSON.stringify(DEFAULT_CODEX_MODEL)} -c model_reasoning_effort="high" -c network_access="enabled" -c disable_response_storage=true -c model_providers.${JSON.stringify(PROVIDER_KEY)}.name="OpenAI" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.base_url=${JSON.stringify(runtime.dacsBaseURL)} -c model_providers.${JSON.stringify(PROVIDER_KEY)}.wire_api="responses" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.requires_openai_auth=true %1 %2 %3 %4 %5 %6 %7 %8 %9
+call "${realCodex}" -c model_provider=${JSON.stringify(PROVIDER_KEY)} -c model=${JSON.stringify(DEFAULT_CODEX_MODEL)} -c model_reasoning_effort="none" -c network_access="enabled" -c disable_response_storage=true -c model_providers.${JSON.stringify(PROVIDER_KEY)}.name="OpenAI" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.base_url=${JSON.stringify(runtime.dacsBaseURL)} -c model_providers.${JSON.stringify(PROVIDER_KEY)}.wire_api="responses" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.requires_openai_auth=true %1 %2 %3 %4 %5 %6 %7 %8 %9
 EXIT /B %ERRORLEVEL%`;
 }
 
@@ -1252,7 +1252,7 @@ SET "CODEX_API_KEY=${runtime.apiKey}"
 
 cd /d "${homeDir()}"
 
-node "${nodeEntry}" -c model_catalog_json="${modelsPath}" -c model_provider=${JSON.stringify(PROVIDER_KEY)} -c model=${JSON.stringify(DEFAULT_CODEX_MODEL)} -c model_reasoning_effort="high" -c network_access="enabled" -c disable_response_storage=true -c model_providers.${JSON.stringify(PROVIDER_KEY)}.name="OpenAI" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.base_url=${JSON.stringify(runtime.dacsBaseURL)} -c model_providers.${JSON.stringify(PROVIDER_KEY)}.wire_api="responses" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.requires_openai_auth=true %*
+node "${nodeEntry}" -c model_catalog_json="${modelsPath}" -c model_provider=${JSON.stringify(PROVIDER_KEY)} -c model=${JSON.stringify(DEFAULT_CODEX_MODEL)} -c model_reasoning_effort="none" -c network_access="enabled" -c disable_response_storage=true -c model_providers.${JSON.stringify(PROVIDER_KEY)}.name="OpenAI" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.base_url=${JSON.stringify(runtime.dacsBaseURL)} -c model_providers.${JSON.stringify(PROVIDER_KEY)}.wire_api="responses" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.requires_openai_auth=true %*
 EXIT /B %ERRORLEVEL%`;
 }
 
@@ -1323,7 +1323,7 @@ async function writeOpencodeDacsWindowsAdapter(runtime, options, rl) {
 function codexConfig(baseURL) {
   if (process.platform === 'win32') {
     return `model = "${DEFAULT_CODEX_MODEL}"
-model_reasoning_effort = "high"
+model_reasoning_effort = "none"
 network_access = "enabled"
 disable_response_storage = true
 model_catalog_json = "${path.join(homeDir(), '.codex', 'models.json').replace(/\\/g, '\\\\')}"`;
@@ -1331,7 +1331,7 @@ model_catalog_json = "${path.join(homeDir(), '.codex', 'models.json').replace(/\
 
   return `model_provider = "${PROVIDER_KEY}"
 model = "${DEFAULT_CODEX_MODEL}"
-model_reasoning_effort = "high"
+model_reasoning_effort = "none"
 network_access = "enabled"
 disable_response_storage = true
 
@@ -1521,7 +1521,7 @@ function codexDacsWrapper(runtime, nativePaths) {
   const configLines = [
     `model_provider = ${JSON.stringify(PROVIDER_KEY)}`,
     `model = ${JSON.stringify(DEFAULT_CODEX_MODEL)}`,
-    'model_reasoning_effort = "high"',
+    'model_reasoning_effort = "none"',
     'network_access = "enabled"',
     'disable_response_storage = true',
   ];
