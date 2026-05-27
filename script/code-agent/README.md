@@ -111,8 +111,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\script\code-agent\install.
 
 ```text
 --agents <list>       all or comma-separated: claude-code,codex,opencode
---api-key <key>       API key for 启源Code Model
+--api-key <key>       API key for OpenAI-compatible API
 --mode <mode>         install-and-config, install-only, config-only, verify-only
+--codex-websockets    Enable Codex provider WebSocket support
+--no-codex-websockets Disable Codex provider WebSocket support
 --yes                 Do not prompt for confirmation
 --force               Reinstall or overwrite existing files without asking
 --dry-run             Print actions without changing files
@@ -198,7 +200,6 @@ macOS / Linux Codex:
 ~/.codex/config.toml
 ~/.codex/config.external.toml
 ~/.codex/config.dacs.toml
-~/.codex/models.json
 ~/.codex/auth.json
 ```
 
@@ -254,7 +255,6 @@ Windows Codex:
 %USERPROFILE%\.codex\config.toml
 %USERPROFILE%\.codex\config.external.toml
 %USERPROFILE%\.codex\config.dacs.toml
-%USERPROFILE%\.codex\models.json
 %USERPROFILE%\.codex\auth.json
 ```
 
