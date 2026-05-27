@@ -10,7 +10,11 @@ const DEFAULT_EXTERNAL_BASE_URL = 'http://192.168.64.16:4000/v1';
 const DEFAULT_DACS_BASE_URL = 'http://47.117.95.192:4000/v1';
 const DEFAULT_MODEL = 'gpt-5.5';
 const DEFAULT_CODEX_MODEL = DEFAULT_MODEL;
-const PROVIDER_KEY = '启源Code Model';
+const OPENCODE_PROVIDER_KEY = 'openai';
+const CODEX_PROVIDER_KEY = 'OpenAI';
+const CODEX_REASONING_EFFORT = 'xhigh';
+const CODEX_CONTEXT_WINDOW = 1000000;
+const CODEX_AUTO_COMPACT_TOKEN_LIMIT = 900000;
 const OPENCODE_PACKAGE = 'opencode-ai@latest';
 const MIN_NODE_MAJOR = 18;
 const NODE_INSTALL_MAJOR = 22;
@@ -18,36 +22,27 @@ const NODE_INSTALL_MAJOR = 22;
 const AGENTS = ['claude-code', 'codex', 'opencode'];
 const MODES = ['install-and-config', 'install-only', 'config-only', 'verify-only'];
 
-const OPENCODE_MODELS = {
-  'qwen3.6-plus': 'Qwen3.6 Plus',
-  'MiniMax-M2.5': 'MiniMax M2.5',
-  'glm-5': 'GLM-5',
-  'deepseek-v3.2': 'DeepSeek V3.2',
-  'deepseek-v4-pro': 'DeepSeek V4 Pro',
-  'deepseek-v4-flash': 'DeepSeek V4 Flash',
-  'glm-5.1': 'GLM-5.1',
-  'kimi-k2.6': 'Kimi K2.6',
-  'qwen3.6-flash': 'Qwen3.6 Flash',
+const OPENAI_MODELS = {
+  'gpt-5.2': 'GPT-5.2',
   'gpt-5.5': 'GPT-5.5',
   'gpt-5.4': 'GPT-5.4',
   'gpt-5.4-mini': 'GPT-5.4 Mini',
+  'gpt-5.3-codex-spark': 'GPT-5.3 Codex Spark',
   'gpt-5.3-codex': 'GPT-5.3 Codex',
-  'gpt-5.2': 'GPT-5.2'
+  'codex-mini-latest': 'Codex Mini'
 };
-
-function supportsImageInput(modelId) {
-  return /^(gpt|qwen|kimi)-/i.test(modelId);
-}
 
 function usage() {
   console.log(`Usage: node script/code-agent/install.js [options]
 
 Options:
   --agents <list>       all or comma-separated: claude-code,codex,opencode
-  --api-key <key>       API key for 启源Code Model
+  --api-key <key>       API key for OpenAI-compatible API
   --external-url <url>  DACS external API base URL
   --dacs-url <url>      DACS internal API base URL
   --mode <mode>         install-and-config, install-only, config-only, verify-only
+  --codex-websockets    Enable Codex provider WebSocket support
+  --no-codex-websockets Disable Codex provider WebSocket support
   --yes                 Do not prompt for confirmation
   --force               Reinstall or overwrite existing files without asking
   --dry-run             Print actions without changing files
@@ -62,6 +57,7 @@ function parseArgs(argv) {
     externalBaseURL: '',
     dacsBaseURL: '',
     mode: undefined,
+    codexWebsockets: undefined,
     yes: false,
     force: false,
     dryRun: false,
@@ -93,6 +89,16 @@ function parseArgs(argv) {
 
     if (arg === '--verbose') {
       options.verbose = true;
+      continue;
+    }
+
+    if (arg === '--codex-websockets') {
+      options.codexWebsockets = true;
+      continue;
+    }
+
+    if (arg === '--no-codex-websockets') {
+      options.codexWebsockets = false;
       continue;
     }
 
@@ -934,38 +940,56 @@ function removeWindowsExtensionlessCommand(command, options) {
 }
 
 function opencodeConfig(apiKey, baseURL) {
-  const models = Object.fromEntries(
-    Object.entries(OPENCODE_MODELS).map(([id, name]) => [
-      id,
-      {
-        name,
-        modalities: {
-          input: supportsImageInput(id) ? ['text', 'image'] : ['text'],
-          output: ['text'],
-        },
-      },
-    ])
-  );
-
   return JSON.stringify(
     {
-      $schema: 'https://opencode.ai/config.json',
       provider: {
-        [PROVIDER_KEY]: {
-          npm: '@ai-sdk/openai-compatible',
-          name: PROVIDER_KEY,
+        [OPENCODE_PROVIDER_KEY]: {
           options: {
             apiKey,
             baseURL,
           },
-          models,
+          models: {
+            'gpt-5.2': opencodeModel('GPT-5.2', 400000, 128000, ['low', 'medium', 'high', 'xhigh']),
+            'gpt-5.5': opencodeModel('GPT-5.5', 1050000, 128000, ['low', 'medium', 'high', 'xhigh']),
+            'gpt-5.4': opencodeModel('GPT-5.4', 1050000, 128000, ['low', 'medium', 'high', 'xhigh']),
+            'gpt-5.4-mini': opencodeModel('GPT-5.4 Mini', 400000, 128000, ['low', 'medium', 'high', 'xhigh']),
+            'gpt-5.3-codex-spark': opencodeModel('GPT-5.3 Codex Spark', 128000, 32000, ['low', 'medium', 'high', 'xhigh']),
+            'gpt-5.3-codex': opencodeModel('GPT-5.3 Codex', 400000, 128000, ['low', 'medium', 'high', 'xhigh']),
+            'codex-mini-latest': opencodeModel('Codex Mini', 200000, 100000, ['low', 'medium', 'high']),
+          },
         },
       },
-      model: `${PROVIDER_KEY}/${DEFAULT_MODEL}`,
+      agent: {
+        build: {
+          options: {
+            store: false,
+          },
+        },
+        plan: {
+          options: {
+            store: false,
+          },
+        },
+      },
+      $schema: 'https://opencode.ai/config.json',
     },
     null,
     2
   );
+}
+
+function opencodeModel(name, context, output, variants) {
+  return {
+    name,
+    limit: {
+      context,
+      output,
+    },
+    options: {
+      store: false,
+    },
+    variants: Object.fromEntries(variants.map((variant) => [variant, {}])),
+  };
 }
 
 async function writeOpencodeConfig(runtime, options, rl) {
@@ -1238,13 +1262,11 @@ SET "CODEX_API_KEY=${runtime.apiKey}"
 
 cd /d "${userProfile}"
 
-call "${realCodex}" -c model_provider=${JSON.stringify(PROVIDER_KEY)} -c model=${JSON.stringify(DEFAULT_CODEX_MODEL)} -c model_reasoning_effort="none" -c network_access="enabled" -c disable_response_storage=true -c model_providers.${JSON.stringify(PROVIDER_KEY)}.name="OpenAI" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.base_url=${JSON.stringify(runtime.dacsBaseURL)} -c model_providers.${JSON.stringify(PROVIDER_KEY)}.wire_api="responses" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.requires_openai_auth=true %1 %2 %3 %4 %5 %6 %7 %8 %9
+call "${realCodex}" -c model_provider=${JSON.stringify(CODEX_PROVIDER_KEY)} -c model=${JSON.stringify(DEFAULT_CODEX_MODEL)} -c review_model=${JSON.stringify(DEFAULT_CODEX_MODEL)} -c model_reasoning_effort=${JSON.stringify(CODEX_REASONING_EFFORT)} -c disable_response_storage=true -c network_access="enabled" -c windows_wsl_setup_acknowledged=true -c model_context_window=${CODEX_CONTEXT_WINDOW} -c model_auto_compact_token_limit=${CODEX_AUTO_COMPACT_TOKEN_LIMIT} -c model_providers.${CODEX_PROVIDER_KEY}.name="OpenAI" -c model_providers.${CODEX_PROVIDER_KEY}.base_url=${JSON.stringify(runtime.dacsBaseURL)} -c model_providers.${CODEX_PROVIDER_KEY}.wire_api="responses" -c model_providers.${CODEX_PROVIDER_KEY}.requires_openai_auth=true${codexWebsocketCliArgs(runtime)} %1 %2 %3 %4 %5 %6 %7 %8 %9
 EXIT /B %ERRORLEVEL%`;
 }
 
 function codexDacsWindowsNativeShim(runtime, nodeEntry) {
-  const modelsPath = path.join(homeDir(), '.codex', 'models.json').replace(/\\/g, '\\\\');
-
   return `@ECHO off
 SETLOCAL EnableExtensions
 SET "OPENAI_API_KEY=${runtime.apiKey}"
@@ -1252,7 +1274,7 @@ SET "CODEX_API_KEY=${runtime.apiKey}"
 
 cd /d "${homeDir()}"
 
-node "${nodeEntry}" -c model_catalog_json="${modelsPath}" -c model_provider=${JSON.stringify(PROVIDER_KEY)} -c model=${JSON.stringify(DEFAULT_CODEX_MODEL)} -c model_reasoning_effort="none" -c network_access="enabled" -c disable_response_storage=true -c model_providers.${JSON.stringify(PROVIDER_KEY)}.name="OpenAI" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.base_url=${JSON.stringify(runtime.dacsBaseURL)} -c model_providers.${JSON.stringify(PROVIDER_KEY)}.wire_api="responses" -c model_providers.${JSON.stringify(PROVIDER_KEY)}.requires_openai_auth=true %*
+node "${nodeEntry}" -c model_provider=${JSON.stringify(CODEX_PROVIDER_KEY)} -c model=${JSON.stringify(DEFAULT_CODEX_MODEL)} -c review_model=${JSON.stringify(DEFAULT_CODEX_MODEL)} -c model_reasoning_effort=${JSON.stringify(CODEX_REASONING_EFFORT)} -c disable_response_storage=true -c network_access="enabled" -c windows_wsl_setup_acknowledged=true -c model_context_window=${CODEX_CONTEXT_WINDOW} -c model_auto_compact_token_limit=${CODEX_AUTO_COMPACT_TOKEN_LIMIT} -c model_providers.${CODEX_PROVIDER_KEY}.name="OpenAI" -c model_providers.${CODEX_PROVIDER_KEY}.base_url=${JSON.stringify(runtime.dacsBaseURL)} -c model_providers.${CODEX_PROVIDER_KEY}.wire_api="responses" -c model_providers.${CODEX_PROVIDER_KEY}.requires_openai_auth=true${codexWebsocketCliArgs(runtime)} %*
 EXIT /B %ERRORLEVEL%`;
 }
 
@@ -1320,78 +1342,30 @@ async function writeOpencodeDacsWindowsAdapter(runtime, options, rl) {
   }
 }
 
-function codexConfig(baseURL) {
-  if (process.platform === 'win32') {
-    return `model_provider = "${PROVIDER_KEY}"
-model = "${DEFAULT_CODEX_MODEL}"
-model_reasoning_effort = "none"
-network_access = "enabled"
-disable_response_storage = true
-model_catalog_json = "${path.join(homeDir(), '.codex', 'models.json').replace(/\\/g, '\\\\')}"
-
-[model_providers.${JSON.stringify(PROVIDER_KEY)}]
-name = "OpenAI"
-base_url = "${baseURL}"
-wire_api = "responses"
-requires_openai_auth = true`;
-  }
-
-  return `model_provider = "${PROVIDER_KEY}"
-model = "${DEFAULT_CODEX_MODEL}"
-model_reasoning_effort = "none"
-network_access = "enabled"
-disable_response_storage = true
-
-[model_providers.${JSON.stringify(PROVIDER_KEY)}]
-name = "OpenAI"
-base_url = "${baseURL}"
-wire_api = "responses"
-requires_openai_auth = true`;
+function codexProviderWebsocketLine(enabled) {
+  return enabled ? '\nsupports_websockets = true' : '';
 }
 
-function codexModelCatalog() {
-  return JSON.stringify(
-    {
-      models: Object.entries(OPENCODE_MODELS).map(([slug, displayName], index) => ({
-        slug,
-        display_name: displayName,
-        description: `${displayName} via ${PROVIDER_KEY}`,
-        default_reasoning_level: null,
-        supported_reasoning_levels: [],
-        shell_type: 'default',
-        visibility: 'list',
-        supported_in_api: true,
-        priority: index + 1,
-        additional_speed_tiers: [],
-        service_tiers: [],
-        availability_nux: null,
-        upgrade: null,
-        base_instructions: '',
-        model_messages: null,
-        supports_reasoning_summaries: false,
-        default_reasoning_summary: 'auto',
-        support_verbosity: false,
-        default_verbosity: null,
-        apply_patch_tool_type: null,
-        web_search_tool_type: 'text',
-        truncation_policy: {
-          mode: 'bytes',
-          limit: 10000,
-        },
-        supports_parallel_tool_calls: false,
-        supports_image_detail_original: false,
-        context_window: 272000,
-        max_context_window: 272000,
-        auto_compact_token_limit: null,
-        effective_context_window_percent: 95,
-        experimental_supported_tools: [],
-        input_modalities: supportsImageInput(slug) ? ['text', 'image'] : ['text'],
-        supports_search_tool: false,
-      })),
-    },
-    null,
-    2
-  );
+function codexWebsocketCliArgs(runtime) {
+  return runtime.codexWebsockets ? ` -c model_providers.${CODEX_PROVIDER_KEY}.supports_websockets=true` : '';
+}
+
+function codexConfig(baseURL, supportsWebsockets = false) {
+  return `model_provider = "${CODEX_PROVIDER_KEY}"
+model = "${DEFAULT_CODEX_MODEL}"
+review_model = "${DEFAULT_CODEX_MODEL}"
+model_reasoning_effort = "${CODEX_REASONING_EFFORT}"
+disable_response_storage = true
+network_access = "enabled"
+windows_wsl_setup_acknowledged = true
+model_context_window = ${CODEX_CONTEXT_WINDOW}
+model_auto_compact_token_limit = ${CODEX_AUTO_COMPACT_TOKEN_LIMIT}
+
+[model_providers.${CODEX_PROVIDER_KEY}]
+name = "OpenAI"
+base_url = "${baseURL}"
+wire_api = "responses"
+requires_openai_auth = true${codexProviderWebsocketLine(supportsWebsockets)}`;
 }
 
 function codexAuth(apiKey) {
@@ -1526,24 +1500,28 @@ function shellSingleQuote(value) {
 
 function codexDacsWrapper(runtime, nativePaths) {
   const configLines = [
-    `model_provider = ${JSON.stringify(PROVIDER_KEY)}`,
+    `model_provider = ${JSON.stringify(CODEX_PROVIDER_KEY)}`,
     `model = ${JSON.stringify(DEFAULT_CODEX_MODEL)}`,
-    'model_reasoning_effort = "none"',
-    'network_access = "enabled"',
+    `review_model = ${JSON.stringify(DEFAULT_CODEX_MODEL)}`,
+    `model_reasoning_effort = ${JSON.stringify(CODEX_REASONING_EFFORT)}`,
     'disable_response_storage = true',
+    'network_access = "enabled"',
+    'windows_wsl_setup_acknowledged = true',
+    `model_context_window = ${CODEX_CONTEXT_WINDOW}`,
+    `model_auto_compact_token_limit = ${CODEX_AUTO_COMPACT_TOKEN_LIMIT}`,
   ];
   const providerConfigLines = [
     '',
-    `[model_providers.${JSON.stringify(PROVIDER_KEY)}]`,
+    `[model_providers.${CODEX_PROVIDER_KEY}]`,
     'name = "OpenAI"',
     `base_url = ${JSON.stringify(runtime.dacsBaseURL)}`,
     'wire_api = "responses"',
     'requires_openai_auth = true',
   ];
+  if (runtime.codexWebsockets) providerConfigLines.push('supports_websockets = true');
   const configPrintfArgs = configLines.map(shellSingleQuote).join(' ');
   const providerConfigPrintfArgs = providerConfigLines.map(shellSingleQuote).join(' ');
   const authJson = codexAuth(runtime.apiKey);
-  const modelsJson = codexModelCatalog();
 
   return `#!/bin/bash
 # ai-tools generated Codex DACS command
@@ -1571,19 +1549,15 @@ export CODEX_API_KEY=${shellSingleQuote(runtime.apiKey)}
 unset OPENAI_TOKEN OPENAI_AUTH_TOKEN CODEX_AUTH_TOKEN CODEX_REFRESH_TOKEN
 
 /usr/bin/printf '%s\n' ${configPrintfArgs} > "$CODEX_HOME/config.toml"
-/usr/bin/printf 'model_catalog_json = "%s/models.json"\n' "$CODEX_HOME" >> "$CODEX_HOME/config.toml"
 /usr/bin/printf '%s\n' ${providerConfigPrintfArgs} >> "$CODEX_HOME/config.toml"
 /usr/bin/printf '%s\n' ${shellSingleQuote(authJson)} > "$CODEX_HOME/auth.json"
-/usr/bin/printf '%s\n' ${shellSingleQuote(modelsJson)} > "$CODEX_HOME/models.json"
 
 if [ "\${AI_TOOLS_DACS_DEBUG:-}" = "1" ]; then
   echo "Codex DACS config: $CODEX_HOME/config.toml" >&2
   echo "Codex DACS home: $CODEX_HOME" >&2
   /usr/bin/grep '^model =' "$CODEX_HOME/config.toml" >&2 || true
   /usr/bin/grep 'base_url' "$CODEX_HOME/config.toml" >&2 || true
-  /usr/bin/grep 'model_catalog_json' "$CODEX_HOME/config.toml" >&2 || true
   [ -s "$CODEX_HOME/auth.json" ] && echo "Codex DACS auth: $CODEX_HOME/auth.json" >&2
-  [ -s "$CODEX_HOME/models.json" ] && echo "Codex DACS models: $CODEX_HOME/models.json" >&2
   echo "Codex DACS HOME: $HOME" >&2
   echo "Codex DACS CODEX_SQLITE_HOME: $CODEX_SQLITE_HOME" >&2
   if [ -n "\${OPENAI_API_KEY:-}" ]; then
@@ -1704,11 +1678,11 @@ async function writeCodexConfig(runtime, options, rl) {
   const activeConfigPath = path.join(codexDir, 'config.toml');
   const externalConfigPath = path.join(codexDir, 'config.external.toml');
   const dacsConfigPath = path.join(codexDir, 'config.dacs.toml');
-  const externalConfig = codexConfig(runtime.externalBaseURL);
+  const externalConfig = codexConfig(runtime.externalBaseURL, runtime.codexWebsockets);
 
   await writeFileSafely(activeConfigPath, externalConfig, options, rl);
   await writeFileSafely(externalConfigPath, externalConfig, options, rl);
-  await writeFileSafely(dacsConfigPath, codexConfig(runtime.dacsBaseURL), options, rl);
+  await writeFileSafely(dacsConfigPath, codexConfig(runtime.dacsBaseURL, runtime.codexWebsockets), options, rl);
   success(`Codex DACS 外配置: ${externalConfigPath}`);
   success(`Codex DACS 内配置: ${dacsConfigPath}`);
 }
@@ -1732,7 +1706,6 @@ async function codexLogin(apiKey, options) {
 function claudeSettings(apiKey, baseURL) {
   return JSON.stringify(
     {
-      availableModels: Object.keys(OPENCODE_MODELS),
       env: {
         ANTHROPIC_API_KEY: apiKey,
         ANTHROPIC_AUTH_TOKEN: apiKey,
@@ -1797,7 +1770,6 @@ const agentDefinitions = {
       ensureCodexWindowsNativePackage(options);
       removeWindowsExtensionlessCommand('codex', options);
       await writeCodexConfig(runtime, options, rl);
-      await writeFileSafely(path.join(homeDir(), '.codex', 'models.json'), codexModelCatalog(), options, rl);
       await writeCodexWindowsCommandShim(options, rl);
       await writeCodexDacsMacAdapter(runtime, options, rl);
       await writeCodexDacsWindowsAdapter(runtime, options, rl);
@@ -1820,7 +1792,7 @@ const agentDefinitions = {
       verifyCommand('opencode', options);
       verifyDacsCommand('opencode', options);
     },
-    next: () => `OpenCode: run opencode outside DACS; run opencode-dacs inside DACS. Use ${PROVIDER_KEY}/${DEFAULT_MODEL}.`,
+    next: () => `OpenCode: run opencode outside DACS; run opencode-dacs inside DACS. Use ${OPENCODE_PROVIDER_KEY}/${DEFAULT_MODEL}.`,
   },
 };
 
@@ -1883,7 +1855,17 @@ async function collectRuntime(options) {
       throw new Error('API Key 不能为空。');
     }
 
-    return { rl, runtime: { agents, mode, apiKey, externalBaseURL, dacsBaseURL } };
+    let codexWebsockets = options.codexWebsockets === true;
+    if (
+      agents.includes('codex') &&
+      mode !== 'install-only' &&
+      options.codexWebsockets === undefined &&
+      !options.yes
+    ) {
+      codexWebsockets = await askYesNo(rl, '是否开启 Codex WebSocket 支持?', false);
+    }
+
+    return { rl, runtime: { agents, mode, apiKey, externalBaseURL, dacsBaseURL, codexWebsockets } };
   } catch (error) {
     rl.close();
     throw error;
@@ -1897,6 +1879,7 @@ function printPlan(runtime, options) {
   console.log(`Default model: ${DEFAULT_MODEL}`);
   console.log(`Agents: ${runtime.agents.join(', ')}`);
   console.log(`Mode: ${runtime.mode}`);
+  if (runtime.agents.includes('codex')) console.log(`Codex WebSocket support: ${runtime.codexWebsockets ? 'enabled' : 'disabled'}`);
   if (runtime.agents.includes('opencode')) console.log(`OpenCode package: ${OPENCODE_PACKAGE}`);
   console.log(`API Key: ${runtime.apiKey ? maskSecret(runtime.apiKey) : 'not required for this mode'}`);
   console.log(`Dry run: ${options.dryRun ? 'yes' : 'no'}`);
