@@ -4,3 +4,5 @@ protonmail_accounts.csv
 debug_protonmail/
 __pycache__/
 *.pyc
+key.yaml
+pas.yaml

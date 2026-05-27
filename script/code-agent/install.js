@@ -1322,11 +1322,18 @@ async function writeOpencodeDacsWindowsAdapter(runtime, options, rl) {
 
 function codexConfig(baseURL) {
   if (process.platform === 'win32') {
-    return `model = "${DEFAULT_CODEX_MODEL}"
+    return `model_provider = "${PROVIDER_KEY}"
+model = "${DEFAULT_CODEX_MODEL}"
 model_reasoning_effort = "none"
 network_access = "enabled"
 disable_response_storage = true
-model_catalog_json = "${path.join(homeDir(), '.codex', 'models.json').replace(/\\/g, '\\\\')}"`;
+model_catalog_json = "${path.join(homeDir(), '.codex', 'models.json').replace(/\\/g, '\\\\')}"
+
+[model_providers.${JSON.stringify(PROVIDER_KEY)}]
+name = "OpenAI"
+base_url = "${baseURL}"
+wire_api = "responses"
+requires_openai_auth = true`;
   }
 
   return `model_provider = "${PROVIDER_KEY}"
