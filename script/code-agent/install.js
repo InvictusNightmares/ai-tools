@@ -6,11 +6,11 @@ const path = require('node:path');
 const readline = require('node:readline/promises');
 const { spawnSync } = require('node:child_process');
 
-const DEFAULT_EXTERNAL_BASE_URL = 'http://192.168.64.16:4000/v1';
-const DEFAULT_DACS_BASE_URL = 'http://47.117.95.192:4000/v1';
+const DEFAULT_EXTERNAL_BASE_URL = 'http://192.168.64.16:4001/v1';
+const DEFAULT_DACS_BASE_URL = 'http://47.117.95.192:4001/v1';
 const DEFAULT_MODEL = 'gpt-5.5';
 const DEFAULT_CODEX_MODEL = DEFAULT_MODEL;
-const OPENCODE_PROVIDER_KEY = 'openai';
+const OPENCODE_PROVIDER_KEY = '启源';
 const CODEX_PROVIDER_KEY = 'OpenAI';
 const CODEX_REASONING_EFFORT = 'xhigh';
 const CODEX_CONTEXT_WINDOW = 1000000;
@@ -945,12 +945,19 @@ function opencodeConfig(apiKey, baseURL) {
       provider: {
         [OPENCODE_PROVIDER_KEY]: {
           options: {
-            apiKey,
             baseURL,
+            apiKey,
           },
           models: {
             'gpt-5.2': opencodeModel('GPT-5.2', 400000, 128000, ['low', 'medium', 'high', 'xhigh']),
-            'gpt-5.5': opencodeModel('GPT-5.5', 1050000, 128000, ['low', 'medium', 'high', 'xhigh']),
+            'gpt-5.5': opencodeModel('GPT-5.5', 1050000, 128000, ['low', 'medium', 'high', 'xhigh'], {
+              attachment: true,
+              modalities: {
+                input: ['text', 'image', 'audio', 'video', 'pdf'],
+                output: ['text'],
+              },
+              inputLimit: 922000,
+            }),
             'gpt-5.4': opencodeModel('GPT-5.4', 1050000, 128000, ['low', 'medium', 'high', 'xhigh']),
             'gpt-5.4-mini': opencodeModel('GPT-5.4 Mini', 400000, 128000, ['low', 'medium', 'high', 'xhigh']),
             'gpt-5.3-codex-spark': opencodeModel('GPT-5.3 Codex Spark', 128000, 32000, ['low', 'medium', 'high', 'xhigh']),
@@ -978,18 +985,25 @@ function opencodeConfig(apiKey, baseURL) {
   );
 }
 
-function opencodeModel(name, context, output, variants) {
-  return {
+function opencodeModel(name, context, output, variants, options = {}) {
+  const model = {
     name,
-    limit: {
-      context,
-      output,
-    },
-    options: {
-      store: false,
-    },
-    variants: Object.fromEntries(variants.map((variant) => [variant, {}])),
   };
+
+  if (options.attachment !== undefined) model.attachment = options.attachment;
+  if (options.modalities) model.modalities = options.modalities;
+
+  model.limit = {
+    context,
+    ...(options.inputLimit ? { input: options.inputLimit } : {}),
+    output,
+  };
+  model.options = {
+    store: false,
+  };
+  model.variants = Object.fromEntries(variants.map((variant) => [variant, { reasoningEffort: variant }]));
+
+  return model;
 }
 
 async function writeOpencodeConfig(runtime, options, rl) {
