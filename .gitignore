@@ -6,3 +6,5 @@ __pycache__/
 *.pyc
 key.yaml
 pas.yaml
+script/.tabbit-cookie.local
+script/tabbit/.tabbit-cookie.local
