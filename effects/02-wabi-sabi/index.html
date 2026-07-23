@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>陶芸工房 結むすび · 常滑</title>
+<meta name="description" content="愛知県常滑市の小さな陶芸工房。昭和62年から、土と火と、あいだの時間。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700&family=EB+Garamond:ital,wght@0,400;1,400&family=Noto+Serif+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --washi: #f7f3e9;
+    --ink: #2b2620;
+    --ink-soft: rgba(43, 38, 32, 0.62);
+    --shu: #bf3f27;
+    --hairline: #ddd5c3;
+    --placeholder: #eae4d5;
+    --serif-jp: "Shippori Mincho", "Noto Serif SC", "Songti SC", "SimSun", serif;
+    --serif-en: "EB Garamond", "Times New Roman", serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body {
+    background: var(--washi);
+    /* faint laid-paper grain */
+    background-image:
+      repeating-linear-gradient(0deg, rgba(43,38,32,0.012) 0 1px, transparent 1px 5px),
+      repeating-linear-gradient(90deg, rgba(43,38,32,0.008) 0 1px, transparent 1px 7px);
+    color: var(--ink);
+    font-family: var(--serif-jp);
+    font-weight: 400;
+    line-height: 2.1;
+    letter-spacing: 0.04em;
+  }
+  ::selection { background: rgba(191, 63, 39, 0.16); }
+
+  .skip-link {
+    position: absolute; left: -9999px; top: 0;
+    background: var(--ink); color: var(--washi);
+    padding: 10px 18px; z-index: 100; font-size: 13px;
+  }
+  .skip-link:focus { left: 0; }
+  a { touch-action: manipulation; }
+  :focus-visible { outline: 1px solid var(--shu); outline-offset: 4px; }
+
+  /* ---------- layout ---------- */
+  .shell {
+    display: grid;
+    grid-template-columns: 148px minmax(0, 1fr);
+    min-height: 100vh;
+  }
+  @media (max-width: 760px) {
+    .shell { grid-template-columns: 1fr; }
+  }
+
+  /* ---------- side rail ---------- */
+  .rail {
+    border-right: 1px solid var(--hairline);
+    padding: 56px 0 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 64px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+  @media (max-width: 760px) {
+    .rail {
+      position: static; height: auto;
+      flex-direction: row; justify-content: space-between;
+      border-right: 0; border-bottom: 1px solid var(--hairline);
+      padding: 20px 24px; gap: 20px;
+    }
+  }
+  .rail .brand {
+    writing-mode: vertical-rl;
+    font-size: 19px;
+    letter-spacing: 0.42em;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  @media (max-width: 760px) { .rail .brand { writing-mode: horizontal-tb; letter-spacing: 0.2em; font-size: 15px; } }
+  .rail nav {
+    writing-mode: vertical-rl;
+    display: flex;
+    gap: 34px;
+  }
+  @media (max-width: 760px) {
+    .rail nav { writing-mode: horizontal-tb; gap: 20px; }
+  }
+  .rail nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 0.34em;
+    transition-property: color;
+    transition-duration: 400ms;
+  }
+  @media (hover:hover) { .rail nav a:hover { color: var(--shu); } }
+  @media (max-width: 760px) { .rail nav a { letter-spacing: 0.12em; } }
+
+  .hanko {
+    width: 44px; height: 44px;
+    background: var(--shu);
+    color: var(--washi);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 700;
+    letter-spacing: 0;
+    transform: rotate(-3deg);
+    flex-shrink: 0;
+  }
+  @media (max-width: 480px) { .hanko { display: none; } }
+
+  /* ---------- main ---------- */
+  main {
+    max-width: 1060px;
+    padding: 0 clamp(28px, 6vw, 96px);
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition-property: opacity, transform;
+    transition-duration: 900ms;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.is-in { opacity: 1; transform: translateY(0); }
+
+  /* ---------- hero ---------- */
+  .hero {
+    min-height: 92vh;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: clamp(32px, 6vw, 80px);
+    align-items: center;
+    padding: 80px 0 96px;
+  }
+  @media (max-width: 760px) {
+    .hero { grid-template-columns: minmax(0, 1fr); min-height: auto; padding: 64px 0 72px; }
+  }
+  .hero .vertical {
+    writing-mode: vertical-rl;
+    font-size: clamp(40px, 6vw, 68px);
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    line-height: 1.9;
+    text-wrap: balance;
+    max-width: 100%;
+  }
+  @media (max-width: 760px) {
+    .hero .vertical { font-size: clamp(34px, 9vw, 46px); justify-self: end; }
+  }
+  .hero .aside {
+    align-self: end;
+    max-width: 300px;
+  }
+  .hero .aside .en {
+    font-family: var(--serif-en);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--ink-soft);
+    letter-spacing: 0.02em;
+    line-height: 1.8;
+    text-wrap: pretty;
+  }
+  .hero .aside .rule {
+    width: 48px; height: 1px;
+    background: var(--ink);
+    margin: 22px 0;
+  }
+  .hero .aside p.zh {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 2.3;
+    text-wrap: pretty;
+  }
+
+  /* ---------- sections ---------- */
+  section.block {
+    padding: clamp(72px, 12vw, 148px) 0;
+    border-top: 1px solid var(--hairline);
+  }
+  .kicker {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    margin-bottom: clamp(40px, 6vw, 72px);
+  }
+  .kicker .no {
+    font-family: var(--serif-en);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--shu);
+  }
+  .kicker h2 {
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 500;
+    letter-spacing: 0.24em;
+  }
+  .kicker .jp {
+    font-size: 12px;
+    color: var(--ink-soft);
+    letter-spacing: 0.3em;
+  }
+
+  .philosophy {
+    max-width: 560px;
+    font-size: 15.5px;
+    line-height: 2.6;
+    color: rgba(43,38,32,0.86);
+    text-wrap: pretty;
+  }
+  .philosophy p + p { margin-top: 2.2em; }
+  .philosophy em {
+    font-style: normal;
+    border-bottom: 1px solid var(--shu);
+    padding-bottom: 2px;
+  }
+
+  /* ---------- ink stroke that draws on scroll ---------- */
+  .ink {
+    display: block;
+    margin: clamp(48px, 8vw, 96px) auto 0;
+    max-width: 420px;
+  }
+  .ink path {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 5;
+    stroke-linecap: round;
+    opacity: 0.85;
+    stroke-dasharray: 900;
+    stroke-dashoffset: 900;
+    transition-property: stroke-dashoffset;
+    transition-duration: 2600ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .ink.is-in path { stroke-dashoffset: 0; }
+
+  /* ---------- four seasons: scattered ---------- */
+  .seasons {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: clamp(12px, 2vw, 24px);
+    row-gap: clamp(48px, 8vw, 96px);
+  }
+  .season { position: relative; }
+  .season .kanji {
+    font-size: clamp(54px, 7vw, 92px);
+    font-weight: 500;
+    line-height: 1;
+    color: var(--ink);
+  }
+  .season .color-name {
+    display: block;
+    margin-top: 14px;
+    font-size: 11.5px;
+    letter-spacing: 0.3em;
+    color: var(--ink-soft);
+  }
+  .season .color-name i {
+    display: inline-block;
+    width: 10px; height: 10px;
+    margin-right: 10px;
+    vertical-align: 1px;
+  }
+  .season .note {
+    margin-top: 18px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 2.2;
+    max-width: 220px;
+    text-wrap: pretty;
+  }
+  .season .wash {
+    margin-top: 26px;
+    width: 168px; height: 112px;
+    outline: 1px solid rgba(43,38,32,0.07);
+    outline-offset: -1px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10.5px;
+    letter-spacing: 0.24em;
+    color: rgba(43,38,32,0.4);
+  }
+  .season .vline {
+    position: absolute;
+    top: -8px;
+    right: 0;
+    writing-mode: vertical-rl;
+    font-size: 13px;
+    letter-spacing: 0.4em;
+    color: rgba(43,38,32,0.5);
+  }
+  /* scattered placement */
+  .s-haru { grid-column: 1 / 6; }
+  .s-haru .wash { background: linear-gradient(160deg, #eef0e0, var(--placeholder)); }
+  .s-haru .color-name i { background: #b9c47a; }
+  .s-natsu { grid-column: 7 / 13; margin-top: clamp(40px, 9vw, 130px); }
+  .s-natsu .wash { background: linear-gradient(160deg, #dfe4e6, var(--placeholder)); }
+  .s-natsu .color-name i { background: #3a506b; }
+  .s-aki { grid-column: 2 / 7; margin-top: clamp(-30px, -3vw, -10px); }
+  .s-aki .wash { background: linear-gradient(160deg, #ecdfd3, var(--placeholder)); }
+  .s-aki .color-name i { background: #b4543a; }
+  .s-fuyu { grid-column: 8 / 13; margin-top: clamp(30px, 7vw, 110px); }
+  .s-fuyu .wash { background: linear-gradient(160deg, #e9e8e4, var(--placeholder)); }
+  .s-fuyu .color-name i { background: #9a9a94; }
+  @media (max-width: 760px) {
+    .season { grid-column: 1 / 13 !important; margin-top: 0 !important; }
+    .season .vline { position: static; writing-mode: horizontal-tb; letter-spacing: 0.2em; margin-top: 16px; display: block; }
+  }
+
+  /* ---------- works ---------- */
+  .works { list-style: none; }
+  .work {
+    display: grid;
+    grid-template-columns: 64px 148px 1fr auto;
+    gap: clamp(20px, 4vw, 44px);
+    align-items: center;
+    padding: 34px 0;
+    border-top: 1px solid var(--hairline);
+  }
+  .work:last-child { border-bottom: 1px solid var(--hairline); }
+  @media (max-width: 760px) {
+    .work { grid-template-columns: 40px 96px 1fr; gap: 16px; }
+    .work .price { grid-column: 2 / 4; }
+  }
+  .work .num {
+    font-family: var(--serif-en);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--ink-soft);
+  }
+  .work .thumb {
+    width: 148px; height: 104px;
+    background: var(--placeholder);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    color: rgba(43,38,32,0.45);
+    letter-spacing: 0.2em;
+    outline: 1px solid rgba(43,38,32,0.08);
+    outline-offset: -1px;
+  }
+  @media (max-width: 760px) { .work .thumb { width: 96px; height: 72px; } }
+  .work h3 {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+  }
+  .work h3 span {
+    display: block;
+    font-family: var(--serif-en);
+    font-style: italic;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    margin-top: 6px;
+    font-weight: 400;
+  }
+  .work .desc {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-top: 8px;
+    line-height: 2;
+    text-wrap: pretty;
+  }
+  .work .price {
+    font-family: var(--serif-en);
+    font-size: 17px;
+    letter-spacing: 0.03em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  /* ---------- exhibition ---------- */
+  .exhibit {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(32px, 6vw, 72px);
+  }
+  @media (max-width: 760px) { .exhibit { grid-template-columns: 1fr; } }
+  .exhibit dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 14px 28px;
+    font-size: 14px;
+    align-content: start;
+  }
+  .exhibit dt {
+    color: var(--ink-soft);
+    letter-spacing: 0.2em;
+    font-size: 12.5px;
+    padding-top: 4px;
+  }
+  .exhibit dd { line-height: 2; }
+  .exhibit .note {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 2.5;
+    text-wrap: pretty;
+    align-self: end;
+  }
+
+  /* ---------- footer ---------- */
+  footer {
+    border-top: 1px solid var(--hairline);
+    padding: 72px 0 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  footer .v {
+    writing-mode: vertical-rl;
+    font-size: 13px;
+    color: var(--ink-soft);
+    letter-spacing: 0.4em;
+    height: 120px;
+  }
+  footer .meta {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    letter-spacing: 0.12em;
+    line-height: 2.4;
+  }
+  footer .meta a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    border-bottom: 1px solid var(--hairline);
+    transition-property: color, border-color;
+    transition-duration: 400ms;
+  }
+  @media (hover:hover) {
+    footer .meta a:hover { color: var(--shu); border-bottom-color: var(--shu); }
+  }
+
+  .back-hub {
+    position: fixed;
+    left: 18px; bottom: 18px;
+    z-index: 60;
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.24em;
+    border-bottom: 1px solid var(--hairline);
+    padding-bottom: 3px;
+    transition-property: color, border-color;
+    transition-duration: 400ms;
+    background: rgba(247,243,233,0.85);
+  }
+  @media (hover:hover) { .back-hub:hover { color: var(--shu); border-bottom-color: var(--shu); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .ink path { stroke-dashoffset: 0; transition: none; }
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">主要内容へ</a>
+
+<div class="shell">
+  <header class="rail">
+    <a class="brand" href="#">陶芸工房 結</a>
+    <nav aria-label="案内">
+      <a href="#philosophy">理念</a>
+      <a href="#seasons">四季</a>
+      <a href="#works">器</a>
+      <a href="#exhibit">展覧会</a>
+    </nav>
+    <div class="hanko" aria-hidden="true">結</div>
+  </header>
+
+  <main id="main">
+    <div class="hero">
+      <h1 class="vertical">土に、手を。<br>火に、時間を。</h1>
+      <div class="aside reveal">
+        <p class="en">Hands in the clay.<br>Time in the fire.</p>
+        <div class="rule" aria-hidden="true"></div>
+        <p class="zh">爱知县常滑市,一间只有三个人的陶芸工房。自昭和六十二年起,我们只做一件事:把当地的土,烧成日常的器。</p>
+      </div>
+    </div>
+
+    <section class="block" id="philosophy" aria-labelledby="ph-h">
+      <div class="kicker reveal">
+        <span class="no">01</span>
+        <h2 id="ph-h">理念</h2>
+        <span class="jp">りねん</span>
+      </div>
+      <div class="philosophy reveal">
+        <p>常滑的泥土含铁量高,烧成之后是一种温润的朱色。不上釉,不修饰,让窑火在器物表面留下它想留下的痕迹。我们把这叫做<em>窑变</em>,意思是:火说了算。</p>
+        <p>一只汤吞要经过十一天的手工成型,再经过四天三夜的登窑烧制。窑温计是有的,但更多的时候,我们靠听火的声音判断添柴的时机。这种慢,不是故意复古,而是因为快一点,东西就不对了。</p>
+      </div>
+      <svg class="ink reveal-svg" viewBox="0 0 420 60" aria-hidden="true">
+        <path d="M 8 38 C 90 18, 180 52, 268 34 S 380 22, 412 30" />
+      </svg>
+    </section>
+
+    <section class="block" id="seasons" aria-labelledby="ss-h">
+      <div class="kicker reveal">
+        <span class="no">02</span>
+        <h2 id="ss-h">四季の器</h2>
+        <span class="jp">しきのうつわ</span>
+      </div>
+      <div class="seasons">
+        <div class="season s-haru reveal">
+          <span class="vline">土を捏ねる音</span>
+          <h3 class="kanji">春</h3>
+          <span class="color-name"><i></i>萌黄 · もえぎ</span>
+          <p class="note">开春第一窑。泥还凉着,手上的力道要再放软一些。</p>
+          <div class="wash" role="img" aria-label="春之器照片待补">写真準備中</div>
+        </div>
+        <div class="season s-natsu reveal">
+          <span class="vline">窯の前の汗</span>
+          <h3 class="kanji">夏</h3>
+          <span class="color-name"><i></i>藍 · あい</span>
+          <p class="note">窑前五十度。添柴的间隙,去河边喝麦茶。</p>
+          <div class="wash" role="img" aria-label="夏之器照片待补">写真準備中</div>
+        </div>
+        <div class="season s-aki reveal">
+          <span class="vline">火色の茜</span>
+          <h3 class="kanji">秋</h3>
+          <span class="color-name"><i></i>茜 · あかね</span>
+          <p class="note">最好的火色都在秋天出来,像傍晚五点的云。</p>
+          <div class="wash" role="img" aria-label="秋之器照片待补">写真準備中</div>
+        </div>
+        <div class="season s-fuyu reveal">
+          <span class="vline">灰被りの白</span>
+          <h3 class="kanji">冬</h3>
+          <span class="color-name"><i></i>灰 · はい</span>
+          <p class="note">落灰落在肩上,烧成霜。冬天出窑的器物最安静。</p>
+          <div class="wash" role="img" aria-label="冬之器照片待补">写真準備中</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="works" aria-labelledby="wk-h">
+      <div class="kicker reveal">
+        <span class="no">03</span>
+        <h2 id="wk-h">近作</h2>
+        <span class="jp">きんさく</span>
+      </div>
+      <ul class="works">
+        <li class="work reveal">
+          <span class="num">No.041</span>
+          <div class="thumb" role="img" aria-label="作品照片待补:汤吞">写真準備中</div>
+          <div>
+            <h3>湯呑「夕」<span>yunomi / evening</span></h3>
+            <p class="desc">口径 82mm。傍晚开窑时取出的第一只,火色偏暖。</p>
+          </div>
+          <span class="price">¥8,200</span>
+        </li>
+        <li class="work reveal">
+          <span class="num">No.042</span>
+          <div class="thumb" role="img" aria-label="作品照片待补:茶碗">写真準備中</div>
+          <div>
+            <h3>茶碗「苔」<span>chawan / moss</span></h3>
+            <p class="desc">窑位靠角落,落灰成霜,像雨后的石阶。</p>
+          </div>
+          <span class="price">¥14,500</span>
+        </li>
+        <li class="work reveal">
+          <span class="num">No.043</span>
+          <div class="thumb" role="img" aria-label="作品照片待补:花入">写真準備中</div>
+          <div>
+            <h3>花入「峙」<span>hanaire / stand</span></h3>
+            <p class="desc">高 218mm,只插一枝的那种花器。</p>
+          </div>
+          <span class="price">¥19,800</span>
+        </li>
+        <li class="work reveal">
+          <span class="num">No.044</span>
+          <div class="thumb" role="img" aria-label="作品照片待补:盘">写真準備中</div>
+          <div>
+            <h3>皿「冴」<span>sara / clarity</span></h3>
+            <p class="desc">六寸皿,边缘留了指痕,盛渍物正好。</p>
+          </div>
+          <span class="price">¥6,400</span>
+        </li>
+        <li class="work reveal">
+          <span class="num">No.045</span>
+          <div class="thumb" role="img" aria-label="作品照片待补:急须">写真準備中</div>
+          <div>
+            <h3>急須「澄」<span>kyusu / clear</span></h3>
+            <p class="desc">常滑代表性的侧把壶,茶漉一体成型。</p>
+          </div>
+          <span class="price">¥23,000</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="block" id="exhibit" aria-labelledby="ex-h">
+      <div class="kicker reveal">
+        <span class="no">04</span>
+        <h2 id="ex-h">展覧会</h2>
+        <span class="jp">てんらんかい</span>
+      </div>
+      <div class="exhibit reveal">
+        <dl>
+          <dt>会期</dt>
+          <dd>2026年9月4日(金)至 9月14日(月)<br>11:00 至 18:00 · 水曜休廊</dd>
+          <dt>会場</dt>
+          <dd>ギャラリー白雨<br>东京都台东区谷中 3-9-7</dd>
+          <dt>作家在廊</dt>
+          <dd>9月5日、6日、12日</dd>
+          <dt>入場</dt>
+          <dd>無料 · 予約不要</dd>
+        </dl>
+        <p class="note">秋季个展「火のあと」,将展出今年春窑与夏窑的四十七件作品。开展首日,长子会在廊内用新作急须煎茶招待,先到先得,三十杯为止。</p>
+      </div>
+    </section>
+
+    <footer>
+      <p class="meta">
+        陶芸工房 結(むすび)<br>
+        愛知県常滑市栄町 4-88<br>
+        見学は木曜のみ · 要事前連絡<br>
+        <a href="mailto:yakimono@musubi-tokoname.jp">yakimono@musubi-tokoname.jp</a>
+      </p>
+      <div class="v" aria-hidden="true">土と火と、あいだの時間</div>
+      <p class="meta">© 1987–2026 陶芸工房 結</p>
+    </footer>
+  </main>
+</div>
+
+<a class="back-hub" href="../index.html">← 五个世界</a>
+
+<script>
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal, .ink').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

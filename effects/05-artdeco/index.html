@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Gilded Meridian 金色子午线大酒店 · 上海外滩 · EST. 1928</title>
+<meta name="description" content="金色子午线大酒店,上海外滩,1928年开业。装饰艺术风格的客房、爵士之夜与顶楼酒吧。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --midnight: #0e1b24;
+    --midnight-2: #12222d;
+    --gold: #c9a86a;
+    --gold-bright: #e6c98c;
+    --gold-dim: rgba(201, 168, 106, 0.45);
+    --ivory: #ede3cc;
+    --ivory-dim: rgba(237, 227, 204, 0.66);
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body {
+    background: var(--midnight);
+    color: var(--ivory);
+    font-family: "Marcellus", "Songti SC", "SimSun", serif;
+    font-size: 16px;
+    line-height: 1.9;
+  }
+  ::selection { background: var(--gold); color: var(--midnight); }
+
+  .skip-link {
+    position: absolute; left: -9999px; top: 0; z-index: 200;
+    background: var(--gold); color: var(--midnight);
+    padding: 10px 20px; font-size: 14px;
+  }
+  .skip-link:focus { left: 0; }
+  a, button, input, select { touch-action: manipulation; }
+  :focus-visible { outline: 1px solid var(--gold-bright); outline-offset: 4px; }
+
+  /* ---------- page frame with stepped deco corners ---------- */
+  .frame {
+    position: fixed;
+    inset: 14px;
+    border: 1px solid var(--gold-dim);
+    pointer-events: none;
+    z-index: 100;
+  }
+  .frame::after {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    border: 1px solid rgba(201, 168, 106, 0.22);
+  }
+  .frame .corner {
+    position: absolute;
+    width: 34px; height: 34px;
+    border: 1px solid var(--gold);
+  }
+  .frame .corner::after {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    border: 1px solid var(--gold-dim);
+  }
+  .frame .c-tl { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+  .frame .c-tr { top: -1px; right: -1px; border-left: 0; border-bottom: 0; }
+  .frame .c-bl { bottom: -1px; left: -1px; border-right: 0; border-top: 0; }
+  .frame .c-br { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+  @media (max-width: 640px) { .frame { inset: 8px; } }
+
+  .caps {
+    font-family: "Cinzel", "Songti SC", serif;
+    text-transform: uppercase;
+    letter-spacing: 0.32em;
+  }
+
+  /* ---------- gold rule with diamond ---------- */
+  .rule {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin: 26px auto;
+  }
+  .rule::before, .rule::after {
+    content: "";
+    height: 1px;
+    width: min(180px, 26vw);
+    background: linear-gradient(90deg, transparent, var(--gold));
+    transform-origin: center;
+    animation: draw 1.4s var(--ease) both;
+  }
+  .rule::after { background: linear-gradient(90deg, var(--gold), transparent); }
+  .rule i {
+    width: 7px; height: 7px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+    animation: fadein 1s 0.9s both;
+  }
+  @keyframes draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+
+  /* ---------- entrance stagger ---------- */
+  .rise {
+    opacity: 0;
+    transform: translateY(16px);
+    transition-property: opacity, transform;
+    transition-duration: 1s;
+    transition-timing-function: var(--ease);
+  }
+  .rise.is-in { opacity: 1; transform: translateY(0); }
+
+  /* ---------- header with sunburst backdrop ---------- */
+  header {
+    position: relative;
+    text-align: center;
+    padding: clamp(88px, 14vh, 150px) 24px 60px;
+    overflow: hidden;
+  }
+  .sunburst-bg {
+    position: absolute;
+    left: 50%; top: 58%;
+    transform: translate(-50%, -50%);
+    width: min(880px, 130vw);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .sunburst-bg line {
+    stroke: var(--gold);
+    stroke-width: 1;
+    opacity: 0.35;
+  }
+  header .est {
+    font-size: 12px;
+    color: var(--gold);
+    position: relative;
+  }
+  .monogram {
+    width: 84px; height: 84px;
+    border: 1px solid var(--gold);
+    transform: rotate(45deg);
+    margin: 40px auto;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    background: var(--midnight);
+  }
+  .monogram::after {
+    content: "";
+    position: absolute; inset: 5px;
+    border: 1px solid var(--gold-dim);
+  }
+  .monogram span {
+    transform: rotate(-45deg);
+    font-family: "Cinzel", serif;
+    font-size: 30px;
+    color: var(--gold-bright);
+    letter-spacing: 0.06em;
+  }
+  header h1 {
+    font-family: "Cinzel", "Songti SC", serif;
+    font-weight: 600;
+    font-size: clamp(34px, 6vw, 72px);
+    letter-spacing: 0.14em;
+    line-height: 1.25;
+    text-wrap: balance;
+    position: relative;
+  }
+  header h1 .ln { display: block; }
+  header .zh-name {
+    font-size: clamp(16px, 2.2vw, 22px);
+    letter-spacing: 0.9em;
+    text-indent: 0.9em;
+    color: var(--ivory-dim);
+    margin-top: 18px;
+    position: relative;
+  }
+  header .locale {
+    font-size: 12.5px;
+    color: var(--gold);
+    margin-top: 30px;
+    position: relative;
+  }
+  .sunburst { display: block; margin: 8px auto 0; position: relative; }
+
+  /* ---------- sections ---------- */
+  section {
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: clamp(56px, 9vw, 110px) 24px;
+    text-align: center;
+  }
+  .sec-kicker {
+    font-size: 11.5px;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+  h2 {
+    font-family: "Cinzel", "Songti SC", serif;
+    font-weight: 500;
+    font-size: clamp(26px, 3.6vw, 42px);
+    letter-spacing: 0.12em;
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+  .lede {
+    max-width: 620px;
+    margin: 30px auto 0;
+    color: var(--ivory-dim);
+    text-wrap: pretty;
+  }
+
+  /* ---------- chronicle: skyline + timeline ---------- */
+  .chronicle {
+    max-width: none;
+    padding-left: 0; padding-right: 0;
+  }
+  .skyline {
+    display: block;
+    width: min(920px, 92vw);
+    margin: 48px auto 0;
+  }
+  .skyline path, .skyline rect {
+    fill: none;
+    stroke: var(--gold-dim);
+    stroke-width: 1;
+  }
+  .skyline .lit { fill: rgba(201, 168, 106, 0.16); stroke: var(--gold); }
+  .timeline {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 920px;
+    margin: 0 auto;
+    border-top: 1px solid var(--gold-dim);
+  }
+  .timeline .era {
+    padding: 26px 16px 10px;
+    border-left: 1px solid rgba(201,168,106,0.25);
+    position: relative;
+    text-align: left;
+  }
+  .timeline .era:first-child { border-left: 0; }
+  .timeline .era::before {
+    content: "";
+    position: absolute;
+    top: -5px; left: -5px;
+    width: 9px; height: 9px;
+    background: var(--midnight);
+    border: 1px solid var(--gold);
+    transform: rotate(45deg);
+  }
+  .timeline .era:first-child::before { left: 0; }
+  .timeline .yr {
+    font-family: "Cinzel", serif;
+    font-size: clamp(20px, 2.6vw, 30px);
+    color: var(--gold-bright);
+    letter-spacing: 0.1em;
+    font-variant-numeric: tabular-nums;
+  }
+  .timeline .ev {
+    font-size: 13px;
+    color: var(--ivory-dim);
+    margin-top: 10px;
+    line-height: 2;
+    text-wrap: pretty;
+  }
+  @media (max-width: 760px) {
+    .timeline { grid-template-columns: 1fr 1fr; }
+    .timeline .era:nth-child(3) { border-left: 0; }
+  }
+
+  /* ---------- rooms ---------- */
+  .rooms {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 34px;
+    margin-top: 56px;
+    text-align: center;
+  }
+  @media (max-width: 900px) { .rooms { grid-template-columns: 1fr; max-width: 460px; margin-left: auto; margin-right: auto; } }
+  .room {
+    border: 1px solid var(--gold-dim);
+    padding: 10px;
+    transition-property: border-color;
+    transition-duration: 500ms;
+  }
+  @media (hover:hover) { .room:hover { border-color: var(--gold); } }
+  .room .inner {
+    border: 1px solid rgba(201, 168, 106, 0.2);
+    padding: 40px 26px 34px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .room .fan { margin: 0 auto 6px; display: block; }
+  .room .no {
+    font-family: "Cinzel", serif;
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 0.4em;
+    margin-top: 14px;
+  }
+  .room h3 {
+    font-family: "Cinzel", "Songti SC", serif;
+    font-weight: 500;
+    font-size: 21px;
+    letter-spacing: 0.14em;
+    margin: 14px 0 6px;
+  }
+  .room .zh { font-size: 14px; color: var(--ivory-dim); letter-spacing: 0.3em; }
+  .room .desc {
+    font-size: 14px;
+    color: var(--ivory-dim);
+    margin: 20px 0;
+    flex: 1;
+    text-wrap: pretty;
+  }
+  .room .price {
+    font-family: "Cinzel", serif;
+    font-size: 26px;
+    color: var(--gold-bright);
+    letter-spacing: 0.08em;
+    font-variant-numeric: tabular-nums;
+  }
+  .room .price small { font-size: 12px; color: var(--ivory-dim); letter-spacing: 0.2em; }
+  .room .mini-rule {
+    width: 44px; height: 1px;
+    background: var(--gold-dim);
+    margin: 18px auto;
+  }
+
+  /* ---------- jazz ---------- */
+  .jazz-list {
+    margin: 48px auto 0;
+    max-width: 640px;
+    list-style: none;
+  }
+  .jazz-list li {
+    display: grid;
+    grid-template-columns: 110px 1fr auto;
+    gap: 22px;
+    align-items: baseline;
+    padding: 20px 8px;
+    border-bottom: 1px solid rgba(201, 168, 106, 0.18);
+  }
+  .jazz-list li:first-child { border-top: 1px solid rgba(201, 168, 106, 0.18); }
+  .jazz-list .day {
+    font-family: "Cinzel", serif;
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    text-align: left;
+  }
+  .jazz-list .act { text-align: left; font-size: 16.5px; }
+  .jazz-list .act small { display: block; color: var(--ivory-dim); font-size: 13px; margin-top: 3px; }
+  .jazz-list .time { font-size: 13.5px; color: var(--ivory-dim); font-variant-numeric: tabular-nums; }
+  @media (max-width: 640px) {
+    .jazz-list li { grid-template-columns: 1fr; gap: 4px; text-align: center; }
+    .jazz-list .day, .jazz-list .act { text-align: center; }
+  }
+
+  /* ---------- reservation form ---------- */
+  .book {
+    max-width: 680px;
+    margin: 52px auto 0;
+    text-align: left;
+  }
+  .book .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 26px;
+    margin-bottom: 26px;
+  }
+  @media (max-width: 640px) { .book .row { grid-template-columns: 1fr; } }
+  .field label {
+    display: block;
+    font-family: "Cinzel", serif;
+    font-size: 11.5px;
+    letter-spacing: 0.28em;
+    color: var(--gold);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .field input, .field select {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--gold-dim);
+    color: var(--ivory);
+    font-family: "Marcellus", "Songti SC", serif;
+    font-size: 16px;
+    padding: 10px 2px;
+    transition-property: border-color;
+    transition-duration: 300ms;
+    border-radius: 0;
+    appearance: none;
+  }
+  .field select option { background: var(--midnight-2); color: var(--ivory); }
+  .field input:focus, .field select:focus {
+    outline: none;
+    border-bottom-color: var(--gold-bright);
+  }
+  .field .err {
+    display: none;
+    font-size: 12.5px;
+    color: #e0967f;
+    margin-top: 8px;
+    letter-spacing: 0.04em;
+  }
+  .field.invalid input, .field.invalid select { border-bottom-color: #e0967f; }
+  .field.invalid .err { display: block; }
+  .book .submit {
+    display: block;
+    margin: 44px auto 0;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold-bright);
+    font-family: "Cinzel", serif;
+    font-size: 13px;
+    letter-spacing: 0.4em;
+    text-indent: 0.4em;
+    text-transform: uppercase;
+    padding: 18px 54px;
+    cursor: pointer;
+    transition-property: background-color, color;
+    transition-duration: 400ms;
+  }
+  @media (hover:hover) {
+    .book .submit:hover { background: var(--gold); color: var(--midnight); }
+  }
+  .book .submit:active { transform: scale(0.97); }
+  .book .ok {
+    display: none;
+    text-align: center;
+    color: var(--gold-bright);
+    margin-top: 30px;
+    font-size: 15px;
+    letter-spacing: 0.1em;
+  }
+  .book .ok.show { display: block; }
+
+  /* ---------- the end card ---------- */
+  .the-end {
+    text-align: center;
+    padding: clamp(60px, 9vw, 100px) 24px;
+  }
+  .the-end .card {
+    display: inline-block;
+    border: 1px solid var(--gold);
+    padding: 8px;
+  }
+  .the-end .card-in {
+    border: 1px solid var(--gold-dim);
+    padding: clamp(36px, 6vw, 64px) clamp(48px, 8vw, 96px);
+  }
+  .the-end .fin {
+    font-family: "Cinzel", serif;
+    font-size: clamp(30px, 4.6vw, 52px);
+    letter-spacing: 0.5em;
+    text-indent: 0.5em;
+    color: var(--gold-bright);
+  }
+  .the-end .sub {
+    margin-top: 18px;
+    font-size: 12px;
+    letter-spacing: 0.34em;
+    color: var(--ivory-dim);
+  }
+
+  /* ---------- footer ---------- */
+  footer {
+    text-align: center;
+    padding: 40px 24px 90px;
+  }
+  footer .foot-rule {
+    width: min(420px, 70vw);
+    height: 1px;
+    margin: 0 auto 44px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  }
+  footer address {
+    font-style: normal;
+    font-size: 14px;
+    color: var(--ivory-dim);
+    line-height: 2.3;
+    letter-spacing: 0.1em;
+  }
+  footer nav {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 34px;
+    flex-wrap: wrap;
+  }
+  footer nav a, footer .back-inline {
+    color: var(--gold);
+    text-decoration: none;
+    font-family: "Cinzel", serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    transition-property: color;
+    transition-duration: 300ms;
+  }
+  @media (hover:hover) { footer nav a:hover, footer .back-inline:hover { color: var(--gold-bright); } }
+  footer .copy {
+    margin-top: 36px;
+    font-size: 12px;
+    color: rgba(237, 227, 204, 0.4);
+    letter-spacing: 0.14em;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rule::before, .rule::after, .rule i { animation: none; }
+    .rise { opacity: 1; transform: none; transition: none; }
+    *, *::before, *::after { transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+<div class="frame" aria-hidden="true">
+  <span class="corner c-tl"></span><span class="corner c-tr"></span>
+  <span class="corner c-bl"></span><span class="corner c-br"></span>
+</div>
+
+<header>
+  <svg class="sunburst-bg" viewBox="0 0 880 440" aria-hidden="true">
+    <g id="rays"></g>
+    <circle cx="440" cy="440" r="5" fill="#c9a86a"/>
+  </svg>
+  <p class="est caps rise">Est. MCMXXVIII · The Bund · Shanghai</p>
+  <div class="rise"><div class="monogram" aria-hidden="true"><span>GM</span></div></div>
+  <h1 class="rise"><span class="ln">The Gilded</span><span class="ln">Meridian</span></h1>
+  <p class="zh-name rise">金色子午线大酒店</p>
+  <div class="rule" aria-hidden="true"><i></i></div>
+  <p class="locale caps rise">外滩中山东一路 · 自一九二八</p>
+  <svg class="sunburst rise" width="220" height="60" viewBox="0 0 220 60" aria-hidden="true">
+    <g stroke="#c9a86a" stroke-width="1" opacity="0.8">
+      <line x1="110" y1="60" x2="10"  y2="14"/>
+      <line x1="110" y1="60" x2="35"  y2="4"/>
+      <line x1="110" y1="60" x2="68"  y2="0"/>
+      <line x1="110" y1="60" x2="110" y2="-4"/>
+      <line x1="110" y1="60" x2="152" y2="0"/>
+      <line x1="110" y1="60" x2="185" y2="4"/>
+      <line x1="110" y1="60" x2="210" y2="14"/>
+    </g>
+    <circle cx="110" cy="60" r="4" fill="#c9a86a"/>
+  </svg>
+</header>
+
+<main id="main">
+  <section aria-labelledby="about-h">
+    <p class="sec-kicker caps rise">Chapter One</p>
+    <h2 id="about-h" class="rise">江畔九十八载<br>一切如昨</h2>
+    <p class="lede rise">1928 年秋,金色子午线大酒店在外滩落成。电梯仍是当年那台奥的斯,黄铜栅门拉开时,声响与九十八年前并无二致。大堂的七盏水晶吊灯从未更换过位置,爵士乐队每晚九点准时奏响第一支曲子。我们不为怀旧而怀旧,只是尚未找到比当初更好的做法。</p>
+    <div class="rule" aria-hidden="true"><i></i></div>
+  </section>
+
+  <section class="chronicle" aria-labelledby="chr-h">
+    <p class="sec-kicker caps rise">Chapter Two · Chronicle</p>
+    <h2 id="chr-h" class="rise">编年史</h2>
+    <svg class="skyline rise" viewBox="0 0 920 180" aria-hidden="true">
+      <!-- stepped art deco skyline -->
+      <path d="M0 170 H920" />
+      <path d="M40 170 V120 H70 V100 H100 V120 H120 V170" />
+      <path d="M160 170 V90 H180 V70 H200 V50 H220 V70 H240 V90 H260 V170" />
+      <path d="M300 170 V130 H330 V110 H360 V130 H380 V170" />
+      <!-- hotel: central stepped tower, lit -->
+      <path class="lit" d="M430 170 V110 H445 V90 H455 V60 H460 V30 H464 V10 H468 V30 H472 V60 H477 V90 H487 V110 H502 V170" />
+      <path d="M560 170 V100 H585 V80 H610 V100 H630 V170" />
+      <path d="M680 170 V130 H705 V110 H730 V130 H755 V170" />
+      <path d="M800 170 V140 H825 V125 H850 V140 H870 V170" />
+    </svg>
+    <div class="timeline rise">
+      <div class="era">
+        <p class="yr">1928</p>
+        <p class="ev">九月开业。当夜外滩停电十七分钟,大堂点蜡烛迎客,无人离席。</p>
+      </div>
+      <div class="era">
+        <p class="yr">1946</p>
+        <p class="ev">七盏水晶吊灯重新点亮。灯罩逐一擦拭,用了整整三天。</p>
+      </div>
+      <div class="era">
+        <p class="yr">1987</p>
+        <p class="ev">蓝扇厅大修。工人按 1928 年图纸复原了全部扇形线脚。</p>
+      </div>
+      <div class="era">
+        <p class="yr">2026</p>
+        <p class="ev">第九十八年。电梯依旧,爵士依旧,咖啡换成了好豆子。</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="rooms-h">
+    <p class="sec-kicker caps rise">Chapter Three · Chambers</p>
+    <h2 id="rooms-h" class="rise">客房三层,各有一窗江景</h2>
+    <div class="rooms">
+      <article class="room rise">
+        <div class="inner">
+          <svg class="fan" width="52" height="20" viewBox="0 0 52 20" aria-hidden="true">
+            <g stroke="#c9a86a" stroke-width="1"><line x1="26" y1="20" x2="2" y2="5"/><line x1="26" y1="20" x2="15" y2="1"/><line x1="26" y1="20" x2="26" y2="0"/><line x1="26" y1="20" x2="37" y2="1"/><line x1="26" y1="20" x2="50" y2="5"/></g>
+          </svg>
+          <p class="no">No. Ⅰ</p>
+          <h3>DECO ROOM</h3>
+          <p class="zh">装饰艺术客房</p>
+          <p class="desc">四至六层,三十八平方米。黑檀木镶板、人字拼柚木地板,浴室保留 1928 年原配铸铁浴缸。</p>
+          <div class="mini-rule" aria-hidden="true"></div>
+          <p class="price">¥1,960 <small>/ 晚</small></p>
+        </div>
+      </article>
+      <article class="room rise">
+        <div class="inner">
+          <svg class="fan" width="52" height="20" viewBox="0 0 52 20" aria-hidden="true">
+            <g stroke="#c9a86a" stroke-width="1"><line x1="26" y1="20" x2="2" y2="5"/><line x1="26" y1="20" x2="15" y2="1"/><line x1="26" y1="20" x2="26" y2="0"/><line x1="26" y1="20" x2="37" y2="1"/><line x1="26" y1="20" x2="50" y2="5"/></g>
+          </svg>
+          <p class="no">No. Ⅱ</p>
+          <h3>RIVER SUITE</h3>
+          <p class="zh">江景套房</p>
+          <p class="desc">七至九层拐角,双面弧形钢窗正对陆家嘴。起居室与卧房以一道黄铜格栅相隔,含管家服务。</p>
+          <div class="mini-rule" aria-hidden="true"></div>
+          <p class="price">¥2,840 <small>/ 晚</small></p>
+        </div>
+      </article>
+      <article class="room rise">
+        <div class="inner">
+          <svg class="fan" width="52" height="20" viewBox="0 0 52 20" aria-hidden="true">
+            <g stroke="#c9a86a" stroke-width="1"><line x1="26" y1="20" x2="2" y2="5"/><line x1="26" y1="20" x2="15" y2="1"/><line x1="26" y1="20" x2="26" y2="0"/><line x1="26" y1="20" x2="37" y2="1"/><line x1="26" y1="20" x2="50" y2="5"/></g>
+          </svg>
+          <p class="no">No. Ⅲ</p>
+          <h3>WRITER'S LOFT</h3>
+          <p class="zh">作家阁楼</p>
+          <p class="desc">顶层阁楼房,斜顶之下一张 1932 年的胡桃木书桌。据说有三部长篇小说在此完稿,我们不证实,也不否认。</p>
+          <div class="mini-rule" aria-hidden="true"></div>
+          <p class="price">¥3,520 <small>/ 晚</small></p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section aria-labelledby="jazz-h">
+    <p class="sec-kicker caps rise">Chapter Four · The Blue Fan Room</p>
+    <h2 id="jazz-h" class="rise">蓝扇厅 · 爵士之夜</h2>
+    <p class="lede rise">地下一层的蓝扇厅自开业起便是爵士乐的地界。每晚九点,灯光调暗三分之一,小号声起。以下为本月驻场。</p>
+    <ul class="jazz-list">
+      <li class="rise">
+        <span class="day">THU 周四</span>
+        <span class="act">The Metropole Five<small>传统摇摆 · 萨克斯主奏</small></span>
+        <span class="time tabular">21:00 – 23:30</span>
+      </li>
+      <li class="rise">
+        <span class="day">FRI 周五</span>
+        <span class="act">Lulu Shen Quartet<small>冷爵士 · 女主唱</small></span>
+        <span class="time tabular">21:00 – 24:00</span>
+      </li>
+      <li class="rise">
+        <span class="day">SAT 周六</span>
+        <span class="act">Big Band Meridian<small>十四人大乐队 · 需订座</small></span>
+        <span class="time tabular">20:30 – 24:00</span>
+      </li>
+      <li class="rise">
+        <span class="day">SUN 周日</span>
+        <span class="act">琴师 Old Chen<small>钢琴独奏 · 点歌随意</small></span>
+        <span class="time tabular">20:00 – 22:30</span>
+      </li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="book-h">
+    <p class="sec-kicker caps rise">Chapter Five · Reservations</p>
+    <h2 id="book-h" class="rise">预订</h2>
+    <div class="rule" aria-hidden="true"><i></i></div>
+    <form class="book" id="bookForm" novalidate>
+      <div class="row">
+        <div class="field" data-field="name">
+          <label for="f-name">姓名 / Name</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" required>
+          <p class="err">请留下您的姓名,以便前台备妥钥匙牌。</p>
+        </div>
+        <div class="field" data-field="email">
+          <label for="f-email">邮箱 / Email</label>
+          <input id="f-email" name="email" type="email" autocomplete="email" required>
+          <p class="err">这个邮箱看起来不太对,请再检查一遍。</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field" data-field="checkin">
+          <label for="f-in">入住 / Check-in</label>
+          <input id="f-in" name="checkin" type="date" required>
+          <p class="err">请选择入住日期,须不早于今日。</p>
+        </div>
+        <div class="field" data-field="nights">
+          <label for="f-nights">晚数 / Nights</label>
+          <select id="f-nights" name="nights" required>
+            <option value="">请选择</option>
+            <option value="1">一晚</option>
+            <option value="2">两晚</option>
+            <option value="3">三晚</option>
+            <option value="4">四晚及以上</option>
+          </select>
+          <p class="err">请告诉我们您打算住几晚。</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field" data-field="room">
+          <label for="f-room">房型 / Room</label>
+          <select id="f-room" name="room" required>
+            <option value="">请选择</option>
+            <option value="deco">装饰艺术客房 · ¥1,960</option>
+            <option value="river">江景套房 · ¥2,840</option>
+            <option value="loft">作家阁楼 · ¥3,520</option>
+          </select>
+          <p class="err">三种房型,各有所长,请选其一。</p>
+        </div>
+        <div class="field" data-field="guests">
+          <label for="f-guests">宾客 / Guests</label>
+          <select id="f-guests" name="guests" required>
+            <option value="">请选择</option>
+            <option value="1">一位</option>
+            <option value="2">两位</option>
+            <option value="3">三位</option>
+          </select>
+          <p class="err">请告知入住人数。</p>
+        </div>
+      </div>
+      <button class="submit" type="submit">递交预订函</button>
+      <p class="ok" id="bookOk">预订函已收讫。管家将于二十四小时内回信确认,届时请留意邮箱。</p>
+    </form>
+  </section>
+
+  <div class="the-end rise">
+    <div class="card">
+      <div class="card-in">
+        <p class="fin">剧 终</p>
+        <p class="sub caps">The End · A Meridian Picture</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="foot-rule" aria-hidden="true"></div>
+  <address>
+    上海市黄浦区中山东一路 27 号<br>
+    No. 27 The Bund, Zhongshan East 1st Road, Shanghai<br>
+    电话 +86 21 6329 1928 · 电邮 stay@gildedmeridian.cn
+  </address>
+  <nav aria-label="页脚">
+    <a href="#">隐私条款</a>
+    <a href="#">服务条款</a>
+    <a href="#">酒店年鉴</a>
+    <a href="#">招聘信息</a>
+    <a class="back-inline" href="../index.html">← 五个世界</a>
+  </nav>
+  <p class="copy">© MCMXXVIII – MMXXVI THE GILDED MERIDIAN · 金色子午线大酒店</p>
+</footer>
+
+<script>
+  /* sunburst backdrop rays */
+  const rays = document.getElementById('rays');
+  const cx = 440, cy = 440, R = 430;
+  let svg = '';
+  for (let i = 0; i <= 24; i++) {
+    const a = Math.PI + (Math.PI * i / 24);
+    const x = cx + R * Math.cos(a), y = cy + R * Math.sin(a);
+    svg += `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}"/>`;
+  }
+  rays.innerHTML = svg;
+
+  /* entrance stagger */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('is-in'), 90 * (i % 4));
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.rise').forEach(el => io.observe(el));
+
+  /* reservation form: inline validation */
+  const form = document.getElementById('bookForm');
+  const okMsg = document.getElementById('bookOk');
+
+  function validate(fieldEl) {
+    const key = fieldEl.dataset.field;
+    const input = fieldEl.querySelector('input, select');
+    let valid = input.value.trim() !== '';
+    if (valid && key === 'email') {
+      valid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(input.value.trim());
+    }
+    if (valid && key === 'checkin') {
+      const d = new Date(input.value + 'T00:00:00');
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      valid = d >= today;
+    }
+    fieldEl.classList.toggle('invalid', !valid);
+    return valid;
+  }
+
+  form.querySelectorAll('.field').forEach(f => {
+    f.querySelector('input, select').addEventListener('blur', () => validate(f));
+    f.querySelector('input, select').addEventListener('input', () => {
+      if (f.classList.contains('invalid')) validate(f);
+    });
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const fields = [...form.querySelectorAll('.field')];
+    const allValid = fields.map(validate).every(Boolean);
+    if (allValid) {
+      okMsg.classList.add('show');
+      form.querySelector('.submit').disabled = true;
+      form.querySelector('.submit').textContent = '已递交';
+    } else {
+      okMsg.classList.remove('show');
+      const firstBad = form.querySelector('.field.invalid input, .field.invalid select');
+      if (firstBad) firstBad.focus();
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIVE WORLDS · 五个世界</title>
+<meta name="description" content="五种截然不同的前端美学宇宙。点击进入任意世界。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;900&family=Noto+Serif+SC:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void: #0b0b0a;
+    --ink: #eceae4;
+    --dim: rgba(236, 234, 228, 0.42);
+    --line: rgba(236, 234, 228, 0.13);
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body {
+    background: var(--void);
+    color: var(--ink);
+    font-family: "Libre Franklin", "PingFang SC", sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--ink); color: var(--void); }
+  a { touch-action: manipulation; }
+  :focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+
+  /* ---------- custom cursor (desktop only) ---------- */
+  #cursor {
+    position: fixed;
+    top: 0; left: 0;
+    width: 30px; height: 30px;
+    border: 1px solid #fff;
+    border-radius: 50%;
+    mix-blend-mode: difference;
+    pointer-events: none;
+    z-index: 999;
+    transform: translate(-50%, -50%);
+    transition-property: width, height, opacity;
+    transition-duration: 220ms;
+    transition-timing-function: var(--ease);
+    opacity: 0;
+  }
+  #cursor.on { opacity: 1; }
+  #cursor.grow { width: 56px; height: 56px; }
+  @media (pointer: coarse) { #cursor { display: none; } }
+
+  /* ---------- topbar ---------- */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 26px clamp(22px, 5vw, 72px);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  .topbar .clock { font-variant-numeric: tabular-nums; color: rgba(236,234,228,0.75); }
+
+  /* ---------- hero ---------- */
+  .hero { padding: clamp(20px, 6vh, 72px) clamp(22px, 5vw, 72px) clamp(30px, 6vh, 64px); }
+  .hero h1 {
+    font-weight: 900;
+    line-height: 0.88;
+    letter-spacing: -0.035em;
+    user-select: none;
+  }
+  .hero h1 .row { display: block; }
+  .hero h1 .solid { font-size: clamp(72px, 15vw, 220px); }
+  .hero h1 .hollow {
+    font-size: clamp(72px, 15vw, 220px);
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(236, 234, 228, 0.85);
+  }
+  .hero h1 .zh {
+    font-family: "Noto Serif SC", serif;
+    font-weight: 500;
+    font-size: clamp(15px, 1.8vw, 22px);
+    letter-spacing: 0.62em;
+    color: var(--dim);
+    margin-bottom: clamp(18px, 3vh, 34px);
+  }
+  .hero .brief {
+    margin-top: clamp(22px, 4vh, 40px);
+    max-width: 560px;
+    font-size: 14px;
+    line-height: 2;
+    color: var(--dim);
+    text-wrap: pretty;
+  }
+  .hero .brief b { color: rgba(236,234,228,0.8); font-weight: 600; }
+  .hero .keys {
+    margin-top: 14px;
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: rgba(236,234,228,0.35);
+  }
+  .hero .keys kbd {
+    border: 1px solid rgba(236,234,228,0.3);
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-family: inherit;
+  }
+
+  /* ---------- worlds rail ---------- */
+  .rail-wrap { flex: 1; display: flex; align-items: center; padding: 20px 0 44px; }
+  .rail {
+    display: flex;
+    gap: clamp(18px, 2.4vw, 30px);
+    padding: 30px clamp(22px, 5vw, 72px);
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    width: 100%;
+    scrollbar-width: none;
+  }
+  .rail::-webkit-scrollbar { display: none; }
+
+  .world {
+    scroll-snap-align: center;
+    flex: 0 0 auto;
+    width: clamp(210px, 17.5vw, 260px);
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition-property: transform;
+    transition-duration: 500ms;
+    transition-timing-function: var(--ease);
+  }
+  .world:nth-child(1) { transform: rotate(-2.2deg) translateY(10px); }
+  .world:nth-child(2) { transform: rotate(1.4deg) translateY(-8px); }
+  .world:nth-child(3) { transform: rotate(-1.2deg) translateY(14px); }
+  .world:nth-child(4) { transform: rotate(2deg) translateY(-4px); }
+  .world:nth-child(5) { transform: rotate(-1.6deg) translateY(8px); }
+  @media (hover:hover) {
+    .world:hover { transform: rotate(0deg) translateY(-14px); }
+  }
+  .world:focus-visible { transform: rotate(0deg) translateY(-14px); }
+
+  .world .mini {
+    position: relative;
+    height: clamp(280px, 24vw, 360px);
+    overflow: hidden;
+  }
+  .world .cap {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-top: 16px;
+    color: var(--ink);
+  }
+  .world .cap .name { font-weight: 900; font-size: 17px; letter-spacing: -0.01em; }
+  .world .cap .no {
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 11px;
+    color: var(--dim);
+    font-variant-numeric: tabular-nums;
+  }
+  .world .cap .tags {
+    display: block;
+    font-size: 11.5px;
+    color: var(--dim);
+    font-weight: 400;
+    margin-top: 5px;
+    letter-spacing: 0.06em;
+  }
+  .world .arrow {
+    position: absolute;
+    right: 14px; bottom: 12px;
+    font-size: 18px;
+    transition-property: transform;
+    transition-duration: 300ms;
+    transition-timing-function: var(--ease);
+  }
+  @media (hover:hover) { .world:hover .arrow { transform: translateX(8px); } }
+
+  /* ----- mini world 01: neubrutalism ----- */
+  .m1 {
+    background: #ffe500;
+    border: 3px solid #111;
+    box-shadow: 7px 7px 0 #111;
+    color: #111;
+    font-family: "Libre Franklin", "PingFang SC", sans-serif;
+  }
+  .m1 .sticker {
+    position: absolute;
+    top: 16px; right: 14px;
+    width: 64px; height: 64px;
+    background: #ff7a1a;
+    border: 3px solid #111;
+    border-radius: 50%;
+    transform: rotate(10deg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 900;
+    color: #fff; text-align: center;
+    line-height: 1.3;
+  }
+  .m1 .big {
+    position: absolute;
+    left: 16px; top: 58px;
+    font-size: 40px;
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+  .m1 .big .hl { background: #ff90b3; border: 3px solid #111; box-shadow: 4px 4px 0 #111; padding: 0 6px; display: inline-block; transform: rotate(-1.5deg); }
+  .m1 .big .out { color: transparent; -webkit-text-stroke: 2px #111; }
+  .m1 .tape {
+    position: absolute;
+    left: 16px; bottom: 46px;
+    background: #111; color: #ffe500;
+    font-size: 10px; font-weight: 900;
+    letter-spacing: 0.1em;
+    padding: 5px 10px;
+    transform: rotate(-2deg);
+  }
+  .m1 .arrow { color: #111; }
+
+  /* ----- mini world 02: wabi-sabi ----- */
+  .m2 { background: #f7f3e9; color: #2b2620; font-family: "Noto Serif SC", serif; }
+  .m2::after {
+    content: "";
+    position: absolute; inset: 10px;
+    border: 1px solid #ddd5c3;
+    pointer-events: none;
+  }
+  .m2 .v {
+    position: absolute;
+    top: 26px; right: 30px;
+    writing-mode: vertical-rl;
+    font-size: 17px;
+    letter-spacing: 0.34em;
+    line-height: 1.8;
+  }
+  .m2 .hanko {
+    position: absolute;
+    left: 26px; bottom: 30px;
+    width: 40px; height: 40px;
+    background: #bf3f27;
+    color: #f7f3e9;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    transform: rotate(-3deg);
+  }
+  .m2 .fine {
+    position: absolute;
+    left: 26px; top: 30px;
+    font-family: "EB Garamond", "Times New Roman", serif;
+    font-style: italic;
+    font-size: 12px;
+    color: rgba(43,38,32,0.55);
+    max-width: 110px;
+    line-height: 1.7;
+  }
+  .m2 .arrow { color: #2b2620; bottom: 20px; }
+
+  /* ----- mini world 03: terminal ----- */
+  .m3 {
+    background: #100a02;
+    color: #ffb000;
+    font-family: "VT323", ui-monospace, monospace;
+    border: 2px solid rgba(255,176,0,0.25);
+    border-radius: 10px;
+  }
+  .m3::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(0deg, rgba(0,0,0,0.28) 0 1px, transparent 1px 4px);
+    pointer-events: none;
+  }
+  .m3 .crt-text {
+    position: absolute;
+    left: 16px; top: 18px;
+    font-size: 15px;
+    line-height: 1.5;
+    text-shadow: 0 0 6px rgba(255,176,0,0.5);
+  }
+  .m3 .crt-text .dim { color: rgba(255,176,0,0.5); }
+  .m3 .crt-text .warn { color: #ff6a3d; }
+  .m3 .prompt {
+    position: absolute;
+    left: 16px; bottom: 40px;
+    font-size: 15px;
+    text-shadow: 0 0 6px rgba(255,176,0,0.5);
+  }
+  .m3 .prompt i {
+    display: inline-block;
+    width: 8px; height: 15px;
+    background: #ffb000;
+    vertical-align: -2px;
+    animation: mblink 1.06s steps(1) infinite;
+  }
+  @keyframes mblink { 50% { opacity: 0; } }
+  .m3 .arrow { color: #ffb000; }
+
+  /* ----- mini world 04: swiss ----- */
+  .m4 {
+    background: #fafaf7;
+    color: #161616;
+    font-family: "Libre Franklin", sans-serif;
+    border: 1px solid #161616;
+  }
+  .m4 .guides {
+    position: absolute; inset: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    pointer-events: none;
+  }
+  .m4 .guides span { border-left: 1px solid rgba(227,6,19,0.12); }
+  .m4 .guides span:first-child { border-left: 0; }
+  .m4 .n47 {
+    position: absolute;
+    left: 14px; top: 6px;
+    font-size: 120px;
+    font-weight: 900;
+    color: #e30613;
+    letter-spacing: -0.05em;
+    line-height: 1;
+  }
+  .m4 .t {
+    position: absolute;
+    left: 18px; bottom: 44px;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+  .m4 .t small {
+    display: block;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(22,22,22,0.55);
+    margin-bottom: 6px;
+  }
+  .m4 .arrow { color: #161616; }
+
+  /* ----- mini world 05: art deco ----- */
+  .m5 { background: #0e1b24; color: #c9a86a; font-family: "Marcellus", "Songti SC", serif; }
+  .m5::before {
+    content: "";
+    position: absolute; inset: 9px;
+    border: 1px solid rgba(201,168,106,0.5);
+  }
+  .m5::after {
+    content: "";
+    position: absolute; inset: 14px;
+    border: 1px solid rgba(201,168,106,0.25);
+  }
+  .m5 .mono {
+    position: absolute;
+    top: 56px; left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 58px; height: 58px;
+    border: 1px solid #c9a86a;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .m5 .mono span {
+    transform: rotate(-45deg);
+    font-size: 20px;
+    color: #e6c98c;
+    letter-spacing: 0.05em;
+  }
+  .m5 .hotel {
+    position: absolute;
+    top: 140px; left: 0; right: 0;
+    text-align: center;
+    font-size: 17px;
+    letter-spacing: 0.3em;
+    line-height: 2;
+    color: #ede3cc;
+  }
+  .m5 .hotel small {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.5em;
+    color: rgba(201,168,106,0.75);
+  }
+  .m5 .rays {
+    position: absolute;
+    bottom: 34px; left: 50%;
+    transform: translateX(-50%);
+  }
+  .m5 .arrow { color: #c9a86a; bottom: 16px; }
+
+  /* ---------- marquee footer ---------- */
+  .marquee {
+    border-top: 1px solid var(--line);
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 14px 0;
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 11px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  .marquee .track { display: inline-flex; animation: mq 30s linear infinite; will-change: transform; }
+  .marquee span { padding: 0 30px; }
+  .marquee .dot { color: rgba(236,234,228,0.2); }
+  @keyframes mq { to { transform: translateX(-50%); } }
+
+  .colophon {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 0 clamp(22px, 5vw, 72px) 26px;
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(236,234,228,0.3);
+  }
+
+  @media (max-width: 640px) {
+    .rail { scroll-snap-type: x mandatory; }
+    .world { width: 76vw; }
+    .world .mini { height: 66vw; max-height: 420px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee .track { animation: none; }
+    .m3 .prompt i { animation: none; }
+    #cursor { display: none; }
+    *, *::before, *::after { transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor" aria-hidden="true"></div>
+
+<header class="topbar">
+  <span>Style Studies · 5 Experiments</span>
+  <span class="clock" id="clock">00:00:00</span>
+</header>
+
+<div class="hero">
+  <h1>
+    <span class="row zh">五个世界 · 五种世界观</span>
+    <span class="row solid">FIVE</span>
+    <span class="row hollow">WORLDS</span>
+  </h1>
+  <p class="brief">同一个仓库,五个截然不同的美学宇宙:粗野、侘寂、磷光、网格、鎏金。每个世界都是一个<b>零依赖单文件</b>,点击进入,双击即开。</p>
+  <p class="keys">按 <kbd>1</kbd> – <kbd>5</kbd> 直接跃迁 · 悬停卡片扶正</p>
+</div>
+
+<div class="rail-wrap">
+  <div class="rail" id="rail">
+
+    <a class="world" href="./01-neubrutalism/index.html" data-key="1">
+      <div class="mini m1">
+        <div class="sticker">音量<br>自负</div>
+        <div class="big">响得<br><span class="hl">厉害</span><br><span class="out">音乐节</span></div>
+        <div class="tape">LOUD/PROUD · 2026 · 成都</div>
+        <span class="arrow">→</span>
+      </div>
+      <div class="cap">
+        <span class="name">新粗野主义<small class="tags">Neubrutalism · 厚黑边框 / 硬阴影 / 撞色贴纸</small></span>
+        <span class="no">01</span>
+      </div>
+    </a>
+
+    <a class="world" href="./02-wabi-sabi/index.html" data-key="2">
+      <div class="mini m2">
+        <p class="fine">Hands in the clay, time in the fire.</p>
+        <p class="v">土に、手を。<br>火に、時間を。</p>
+        <div class="hanko">結</div>
+        <span class="arrow">→</span>
+      </div>
+      <div class="cap">
+        <span class="name">日式侘寂<small class="tags">Wabi-sabi · 和纸 / 竖排 / 朱印 / 留白</small></span>
+        <span class="no">02</span>
+      </div>
+    </a>
+
+    <a class="world" href="./03-terminal/index.html" data-key="3">
+      <div class="mini m3">
+        <div class="crt-text">
+          MERIDIAN-7 BIOS v4.11.2<br>
+          <span class="dim">MEM CHECK ...... 61440K OK</span><br>
+          HULL SCAN ...... <span class="warn">2 FRACTURES</span><br>
+          WREN.AI ........ AWAKE
+        </div>
+        <div class="prompt">crew@meridian-7:~$ <i></i></div>
+        <span class="arrow">→</span>
+      </div>
+      <div class="cap">
+        <span class="name">磷光终端<small class="tags">CRT Terminal · 琥珀磷光 / 扫描线 / 可交互</small></span>
+        <span class="no">03</span>
+      </div>
+    </a>
+
+    <a class="world" href="./04-swiss/index.html" data-key="4">
+      <div class="mini m4">
+        <div class="guides"><span></span><span></span><span></span><span></span></div>
+        <div class="n47">47</div>
+        <div class="t"><small>Biennale für Typografie</small>字体、网格<br>与秩序的四天</div>
+        <span class="arrow">→</span>
+      </div>
+      <div class="cap">
+        <span class="name">瑞士国际主义<small class="tags">Swiss Style · 严格网格 / 信号红 / 巨号数字</small></span>
+        <span class="no">04</span>
+      </div>
+    </a>
+
+    <a class="world" href="./05-artdeco/index.html" data-key="5">
+      <div class="mini m5">
+        <div class="mono"><span>GM</span></div>
+        <div class="hotel">GILDED<br>MERIDIAN<small>金色子午线 · 1928</small></div>
+        <svg class="rays" width="120" height="34" viewBox="0 0 120 34" aria-hidden="true">
+          <g stroke="#c9a86a" stroke-width="1" opacity="0.85">
+            <line x1="60" y1="34" x2="6" y2="8"/><line x1="60" y1="34" x2="24" y2="2"/>
+            <line x1="60" y1="34" x2="44" y2="0"/><line x1="60" y1="34" x2="60" y2="-2"/>
+            <line x1="60" y1="34" x2="76" y2="0"/><line x1="60" y1="34" x2="96" y2="2"/>
+            <line x1="60" y1="34" x2="114" y2="8"/>
+          </g>
+          <circle cx="60" cy="34" r="2.5" fill="#c9a86a"/>
+        </svg>
+        <span class="arrow">→</span>
+      </div>
+      <div class="cap">
+        <span class="name">装饰艺术<small class="tags">Art Deco · 金线双框 / 对称 / 1928 外滩</small></span>
+        <span class="no">05</span>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+<div class="marquee" aria-hidden="true">
+  <div class="track" id="mq">
+    <span>零依赖</span><span class="dot">◆</span>
+    <span>零构建</span><span class="dot">◆</span>
+    <span>单文件 HTML</span><span class="dot">◆</span>
+    <span>五种美学宇宙</span><span class="dot">◆</span>
+    <span>悬停扶正卡片</span><span class="dot">◆</span>
+    <span>按 1-5 跃迁</span><span class="dot">◆</span>
+  </div>
+</div>
+
+<footer class="colophon">
+  <span>Five Folders · Five Limits</span>
+  <span>Desktop 1440 · Mobile 375 · 均已验证</span>
+</footer>
+
+<script>
+  /* clock */
+  const clockEl = document.getElementById('clock');
+  const pad = n => String(n).padStart(2, '0');
+  function tick() {
+    const d = new Date();
+    clockEl.textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  /* marquee loop */
+  const mq = document.getElementById('mq');
+  mq.innerHTML += mq.innerHTML;
+
+  /* keyboard jump */
+  const worlds = [...document.querySelectorAll('.world')];
+  document.addEventListener('keydown', e => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const w = worlds.find(x => x.dataset.key === e.key);
+    if (w) location.href = w.href;
+  });
+
+  /* custom cursor */
+  const cursor = document.getElementById('cursor');
+  const fine = matchMedia('(pointer: fine)').matches;
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (fine && !calm) {
+    let cx = -100, cy = -100, tx = -100, ty = -100;
+    addEventListener('mousemove', e => {
+      tx = e.clientX; ty = e.clientY;
+      cursor.classList.add('on');
+      const hot = e.target.closest('a, button');
+      cursor.classList.toggle('grow', !!hot);
+    });
+    (function loop() {
+      cx += (tx - cx) * 0.18;
+      cy += (ty - cy) * 0.18;
+      cursor.style.transform = `translate(${cx - 15}px, ${cy - 15}px)`;
+      requestAnimationFrame(loop);
+    })();
+  }
+</script>
+</body>
+</html>
