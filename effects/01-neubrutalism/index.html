@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOUD/PROUD 响得厉害音乐节 2026 · 成都</title>
+<meta name="description" content="第三届 LOUD/PROUD 响得厉害音乐节,2026年10月16日至18日,成都东郊记忆。23 组乐队,3 个舞台,1 个菜市。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #fdf6ec;
+    --ink: #111111;
+    --yellow: #ffe500;
+    --pink: #ff90b3;
+    --blue: #7dd3fc;
+    --green: #9ee86f;
+    --orange: #ff7a1a;
+    --border: 3px solid var(--ink);
+    --shadow-s: 4px 4px 0 var(--ink);
+    --shadow-m: 7px 7px 0 var(--ink);
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Archivo", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--yellow); color: var(--ink); }
+
+  .skip-link {
+    position: absolute; left: -9999px; top: 0;
+    background: var(--ink); color: var(--paper);
+    padding: 12px 20px; z-index: 100; font-weight: 800;
+  }
+  .skip-link:focus { left: 0; }
+  a, button { touch-action: manipulation; }
+  :focus-visible { outline: 4px solid var(--orange); outline-offset: 2px; }
+
+  /* ---------- double ticker ---------- */
+  .ticker {
+    overflow: hidden; white-space: nowrap;
+    font-family: "Archivo Black", "PingFang SC", sans-serif;
+    font-size: 14px; letter-spacing: 0.08em;
+    padding: 10px 0;
+  }
+  .ticker.t1 { background: var(--ink); color: var(--yellow); border-bottom: var(--border); }
+  .ticker.t2 { background: var(--yellow); color: var(--ink); border-bottom: var(--border); font-size: 12px; padding: 7px 0; }
+  .ticker-track { display: inline-flex; animation: ticker 28s linear infinite; will-change: transform; }
+  .ticker.t2 .ticker-track { animation: ticker-r 34s linear infinite; }
+  .ticker span { padding: 0 28px; }
+  .ticker .dot { color: var(--pink); }
+  .ticker.t2 .dot { color: var(--orange); }
+  @keyframes ticker { to { transform: translateX(-50%); } }
+  @keyframes ticker-r { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+  /* ---------- header ---------- */
+  header.site {
+    display: flex; align-items: stretch; justify-content: space-between;
+    border-bottom: var(--border);
+    background: var(--paper);
+    position: sticky; top: 0; z-index: 50;
+  }
+  .wordmark {
+    font-family: "Archivo Black", "PingFang SC", sans-serif;
+    font-size: clamp(18px, 2.4vw, 26px);
+    padding: 16px 22px;
+    border-right: var(--border);
+    background: var(--yellow);
+    text-decoration: none; color: var(--ink);
+    letter-spacing: -0.01em;
+    transition-property: background-color; transition-duration: 150ms;
+  }
+  @media (hover:hover) { .wordmark:hover { background: var(--pink); } }
+  nav.main { display: flex; align-items: stretch; }
+  nav.main a {
+    display: flex; align-items: center;
+    padding: 0 22px;
+    border-left: var(--border);
+    font-weight: 800; font-size: 15px;
+    text-decoration: none; color: var(--ink);
+    transition-property: background-color, color; transition-duration: 150ms;
+  }
+  @media (hover:hover) {
+    nav.main a:hover { background: var(--ink); color: var(--paper); }
+  }
+  nav.main a.cta { background: var(--orange); }
+  @media (hover:hover) { nav.main a.cta:hover { background: var(--ink); color: var(--yellow); } }
+  @media (max-width: 720px) {
+    nav.main a { padding: 14px 12px; font-size: 13px; }
+    nav.main a.hide-m { display: none; }
+  }
+
+  /* ---------- caution tape ---------- */
+  .caution {
+    height: 20px;
+    background: repeating-linear-gradient(-45deg, var(--ink) 0 16px, var(--yellow) 16px 32px);
+    border-bottom: var(--border);
+  }
+
+  /* ---------- hero ---------- */
+  .hero {
+    border-bottom: var(--border);
+    padding: clamp(40px, 7vw, 90px) clamp(20px, 5vw, 64px) clamp(56px, 8vw, 110px);
+    position: relative;
+    background:
+      radial-gradient(circle at 1px 1px, rgba(17,17,17,0.14) 1.5px, transparent 0) 0 0 / 26px 26px;
+  }
+  .hero-kicker {
+    display: inline-block;
+    background: var(--blue);
+    border: var(--border); box-shadow: var(--shadow-s);
+    font-weight: 800; font-size: 14px; letter-spacing: 0.12em;
+    padding: 8px 16px;
+    transform: rotate(-1.5deg);
+  }
+  .live-dot {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--ink); color: #ff4d4d;
+    border: var(--border); box-shadow: var(--shadow-s);
+    font-weight: 800; font-size: 13px; letter-spacing: 0.16em;
+    padding: 8px 14px;
+    margin-left: 14px;
+    transform: rotate(1deg);
+    vertical-align: middle;
+  }
+  .live-dot i {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: #ff4d4d;
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse { 50% { opacity: 0.25; transform: scale(0.7); } }
+  h1.mega {
+    font-family: "Archivo Black", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: clamp(56px, 12.5vw, 176px);
+    line-height: 0.92;
+    letter-spacing: -0.022em;
+    margin: 26px 0 30px;
+    text-wrap: balance;
+  }
+  h1.mega .row { display: block; }
+  h1.mega .outline {
+    color: transparent;
+    -webkit-text-stroke: 3px var(--ink);
+  }
+  h1.mega .hl {
+    display: inline-block;
+    background: var(--pink);
+    border: var(--border); box-shadow: var(--shadow-m);
+    padding: 0 0.12em;
+    transform: rotate(-1deg);
+  }
+  .hero-meta {
+    display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch;
+  }
+  .hero-meta .cell {
+    border: var(--border); box-shadow: var(--shadow-s);
+    padding: 14px 20px;
+    font-weight: 800;
+    background: #fff;
+  }
+  .hero-meta .cell small { display: block; font-size: 12px; letter-spacing: 0.1em; opacity: 0.7; font-weight: 600; }
+  .hero-meta .cell.date { background: var(--yellow); transform: rotate(1deg); }
+  .hero-meta .cell.place { background: var(--green); transform: rotate(-0.8deg); }
+  .sticker {
+    position: absolute;
+    border: var(--border); box-shadow: var(--shadow-s);
+    font-family: "Archivo Black", "PingFang SC", sans-serif;
+    text-align: center;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    width: clamp(104px, 13vw, 168px); height: clamp(104px, 13vw, 168px);
+    font-size: clamp(13px, 1.5vw, 18px);
+    line-height: 1.25;
+    padding: 12px;
+  }
+  .sticker.a { background: var(--orange); color: #fff; top: clamp(28px,5vw,70px); right: clamp(20px,6vw,90px); transform: rotate(9deg); }
+  .sticker.b { background: var(--blue); bottom: clamp(20px,4vw,48px); right: clamp(120px,22vw,320px); transform: rotate(-7deg); }
+  @media (max-width: 720px) { .sticker.b { display: none; } }
+
+  .btn {
+    display: inline-block;
+    font-family: "Archivo Black", "PingFang SC", sans-serif;
+    font-size: 18px;
+    text-decoration: none; color: var(--ink);
+    background: var(--yellow);
+    border: var(--border); box-shadow: var(--shadow-s);
+    padding: 18px 34px;
+    transition-property: transform, box-shadow, background-color;
+    transition-duration: 180ms; transition-timing-function: var(--ease);
+    cursor: pointer;
+  }
+  @media (hover:hover) {
+    .btn:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--ink); background: var(--pink); }
+  }
+  .btn:active { transform: translate(2px, 2px) scale(0.98); box-shadow: 2px 2px 0 var(--ink); }
+
+  /* ---------- back to hub ---------- */
+  .back-hub {
+    position: fixed;
+    left: 14px; bottom: 14px;
+    z-index: 60;
+    background: var(--ink); color: var(--paper);
+    border: var(--border);
+    font-weight: 800; font-size: 12px; letter-spacing: 0.1em;
+    text-decoration: none;
+    padding: 10px 14px;
+    transition-property: transform, background-color;
+    transition-duration: 150ms;
+  }
+  @media (hover:hover) { .back-hub:hover { background: var(--orange); transform: rotate(-2deg); } }
+
+  /* ---------- section shells ---------- */
+  section { border-bottom: var(--border); }
+  .section-head {
+    display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap;
+    padding: clamp(40px, 6vw, 72px) clamp(20px, 5vw, 64px) 26px;
+  }
+  .section-head h2 {
+    font-family: "Archivo Black", "PingFang SC", sans-serif;
+    font-size: clamp(34px, 5.6vw, 72px);
+    letter-spacing: -0.022em; line-height: 1;
+    text-wrap: balance;
+  }
+  .section-head .tag {
+    background: var(--ink); color: var(--paper);
+    font-weight: 800; font-size: 13px; letter-spacing: 0.14em;
+    padding: 6px 12px;
+    transform: rotate(-2deg);
+  }
+
+  /* ---------- lineup ---------- */
+  .day-tabs { display: flex; flex-wrap: wrap; gap: 0; padding: 0 clamp(20px, 5vw, 64px) 30px; }
+  .day-tabs button {
+    font-family: "Archivo Black", "PingFang SC", sans-serif;
+    font-size: 17px;
+    background: #fff;
+    border: var(--border);
+    margin-right: -3px;
+    padding: 12px 26px;
+    cursor: pointer;
+    transition-property: background-color, color, transform;
+    transition-duration: 150ms;
+  }
+  .day-tabs button[aria-selected="true"] { background: var(--ink); color: var(--yellow); transform: translateY(-4px); }
+  .day-tabs button small { display: block; font-family: "Archivo", sans-serif; font-weight: 600; font-size: 11px; letter-spacing: 0.1em; }
+
+  .lineup {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 22px;
+    padding: 0 clamp(20px, 5vw, 64px) clamp(48px, 6vw, 80px);
+  }
+  .band {
+    border: var(--border); box-shadow: var(--shadow-s);
+    background: #fff;
+    padding: 22px;
+    position: relative;
+    transition-property: transform, box-shadow;
+    transition-duration: 180ms; transition-timing-function: var(--ease);
+  }
+  @media (hover:hover) {
+    .band:hover { transform: translate(-3px, -3px) rotate(-0.6deg); box-shadow: 10px 10px 0 var(--ink); }
+  }
+  .band .face {
+    height: 120px;
+    border: var(--border);
+    margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: "Archivo Black", sans-serif;
+    font-size: 44px; letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .band:nth-child(6n+1) .face { background: var(--yellow); }
+  .band:nth-child(6n+2) .face { background: var(--pink); }
+  .band:nth-child(6n+3) .face { background: var(--blue); }
+  .band:nth-child(6n+4) .face { background: var(--green); }
+  .band:nth-child(6n+5) .face { background: var(--orange); color: #fff; }
+  .band:nth-child(6n+6) .face { background: var(--ink); color: var(--yellow); }
+  .band h3 { font-family: "Archivo Black", "PingFang SC", sans-serif; font-size: 22px; letter-spacing: -0.01em; }
+  .band p { font-size: 14px; margin-top: 6px; font-weight: 600; opacity: 0.85; }
+  .band .slot {
+    position: absolute; top: -14px; right: 14px;
+    background: var(--ink); color: var(--paper);
+    font-size: 12px; font-weight: 800; letter-spacing: 0.08em;
+    padding: 4px 10px;
+    transform: rotate(2deg);
+  }
+  .band.headliner { background: var(--yellow); }
+  .band.headliner .slot { background: var(--orange); color: #fff; font-size: 13px; padding: 6px 12px; }
+
+  /* ---------- poster wall ---------- */
+  .posters-wrap { background: var(--pink); background-image: radial-gradient(circle at 1px 1px, rgba(17,17,17,0.16) 1.5px, transparent 0); background-size: 24px 24px; }
+  .posters {
+    display: flex;
+    gap: 30px;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    padding: 10px clamp(20px, 5vw, 64px) clamp(48px, 6vw, 76px);
+    scrollbar-width: none;
+    cursor: grab;
+  }
+  .posters::-webkit-scrollbar { display: none; }
+  .posters:active { cursor: grabbing; }
+  .poster {
+    scroll-snap-align: center;
+    flex: 0 0 auto;
+    width: 240px; height: 330px;
+    border: var(--border);
+    box-shadow: var(--shadow-m);
+    position: relative;
+    overflow: hidden;
+    transition-property: transform, box-shadow;
+    transition-duration: 220ms; transition-timing-function: var(--ease);
+  }
+  .poster:nth-child(odd) { transform: rotate(-2deg); }
+  .poster:nth-child(even) { transform: rotate(1.8deg); }
+  @media (hover:hover) {
+    .poster:hover { transform: rotate(0deg) scale(1.04); box-shadow: 12px 12px 0 var(--ink); z-index: 2; }
+  }
+  .poster .p-cap {
+    position: absolute;
+    left: 12px; bottom: 12px;
+    background: var(--ink); color: var(--paper);
+    font-size: 11px; font-weight: 800; letter-spacing: 0.12em;
+    padding: 5px 10px;
+  }
+  /* P1 split + 响 */
+  .p1 { background: linear-gradient(135deg, var(--yellow) 50%, var(--pink) 50%); }
+  .p1 .glyph {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: "Archivo Black", "PingFang SC", sans-serif;
+    font-size: 150px;
+    transform: rotate(-6deg);
+    text-shadow: 6px 6px 0 var(--ink);
+    color: #fff;
+    -webkit-text-stroke: 3px var(--ink);
+  }
+  /* P2 rings */
+  .p2 { background: var(--blue); }
+  .p2::before {
+    content: ""; position: absolute; inset: -40px;
+    background: repeating-radial-gradient(circle at 50% 42%, var(--ink) 0 3px, transparent 3px 22px);
+  }
+  .p2 .glyph {
+    position: absolute; left: 50%; top: 42%;
+    transform: translate(-50%, -50%);
+    width: 86px; height: 86px;
+    background: var(--yellow);
+    border: var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: "Archivo Black", "PingFang SC", sans-serif;
+    font-size: 44px;
+  }
+  /* P3 stripes + date */
+  .p3 { background: repeating-linear-gradient(-45deg, #fff 0 18px, var(--ink) 18px 36px); }
+  .p3 .date-block {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%) rotate(3deg);
+    background: var(--yellow);
+    border: var(--border);
+    box-shadow: var(--shadow-s);
+    padding: 14px 18px;
+    text-align: center;
+    font-family: "Archivo Black", sans-serif;
+  }
+  .p3 .date-block .d1 { font-size: 34px; line-height: 1; }
+  .p3 .date-block .d2 { font-size: 13px; letter-spacing: 0.2em; margin-top: 6px; }
+  /* P4 X */
+  .p4 { background: var(--orange); }
+  .p4::before, .p4::after {
+    content: ""; position: absolute;
+    left: 50%; top: 50%;
+    width: 260px; height: 34px;
+    background: var(--ink);
+  }
+  .p4::before { transform: translate(-50%, -50%) rotate(45deg); }
+  .p4::after { transform: translate(-50%, -50%) rotate(-45deg); }
+  .p4 .quiet {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%) rotate(-4deg);
+    background: var(--paper);
+    border: var(--border);
+    font-family: "Archivo Black", sans-serif;
+    font-size: 22px;
+    padding: 10px 16px;
+    white-space: nowrap;
+  }
+  /* P5 halftone */
+  .p5 { background: var(--green); background-image: radial-gradient(circle, var(--ink) 2.2px, transparent 2.6px); background-size: 18px 18px; }
+  .p5 .box {
+    position: absolute; left: 50%; top: 44%;
+    transform: translate(-50%, -50%) rotate(2deg);
+    background: var(--paper);
+    border: var(--border); box-shadow: var(--shadow-s);
+    padding: 16px 20px;
+    text-align: center;
+  }
+  .p5 .box .zh { font-family: "Archivo Black", "PingFang SC", sans-serif; font-size: 40px; line-height: 1.1; }
+  .p5 .box .en { font-size: 11px; font-weight: 800; letter-spacing: 0.24em; margin-top: 6px; }
+  /* P6 stack */
+  .p6 { background: var(--ink); }
+  .p6 .stack {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 4px;
+    font-family: "Archivo Black", "PingFang SC", sans-serif;
+    font-size: 64px;
+    line-height: 1;
+  }
+  .p6 .stack span:nth-child(1) { color: var(--yellow); transform: rotate(-3deg); }
+  .p6 .stack span:nth-child(2) { color: var(--pink); transform: rotate(2deg); }
+  .p6 .stack span:nth-child(3) { color: var(--blue); transform: rotate(-2deg); }
+
+  /* ---------- tickets ---------- */
+  .tickets-wrap {
+    background: var(--blue);
+    background-image: radial-gradient(circle at 1px 1px, rgba(17,17,17,0.16) 1.5px, transparent 0);
+    background-size: 24px 24px;
+  }
+  .tickets {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 26px;
+    padding: 0 clamp(20px, 5vw, 64px) clamp(52px, 7vw, 88px);
+  }
+  .ticket {
+    background: #fff;
+    border: var(--border); box-shadow: var(--shadow-m);
+    position: relative;
+    transition-property: transform, box-shadow;
+    transition-duration: 180ms; transition-timing-function: var(--ease);
+  }
+  @media (hover:hover) {
+    .ticket:hover { transform: translate(-4px, -4px); box-shadow: 12px 12px 0 var(--ink); }
+  }
+  .ticket .top { padding: 24px 24px 18px; }
+  .ticket h3 { font-family: "Archivo Black", "PingFang SC", sans-serif; font-size: 24px; letter-spacing: -0.01em; }
+  .ticket .price {
+    font-family: "Archivo Black", sans-serif;
+    font-size: 52px; letter-spacing: -0.022em;
+    margin: 10px 0 4px;
+    font-variant-numeric: tabular-nums;
+  }
+  .ticket .price small { font-size: 20px; }
+  .ticket ul { list-style: none; font-size: 14px; font-weight: 600; }
+  .ticket li { padding: 7px 0; border-top: 2px dashed rgba(17,17,17,0.35); }
+  .ticket li::before { content: "■ "; color: var(--orange); font-size: 11px; vertical-align: 2px; }
+  .ticket .tear {
+    border-top: 3px dashed var(--ink);
+    margin: 6px 14px 0;
+    position: relative;
+  }
+  .ticket .tear::before, .ticket .tear::after {
+    content: ""; position: absolute; top: -13px;
+    width: 22px; height: 22px;
+    background: var(--blue);
+    border: var(--border); border-radius: 50%;
+  }
+  .ticket .tear::before { left: -28px; }
+  .ticket .tear::after { right: -28px; }
+  .ticket .stub {
+    padding: 16px 24px 20px;
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  }
+  .ticket .stub .no { font-size: 12px; font-weight: 800; letter-spacing: 0.1em; opacity: 0.65; }
+  .ticket .buy {
+    font-family: "Archivo Black", "PingFang SC", sans-serif;
+    background: var(--ink); color: var(--yellow);
+    border: var(--border);
+    padding: 10px 20px; font-size: 15px;
+    cursor: pointer;
+    transition-property: transform, background-color, color;
+    transition-duration: 150ms;
+  }
+  @media (hover:hover) { .ticket .buy:hover { background: var(--orange); color: #fff; transform: rotate(-2deg); } }
+  .ticket .buy:active { transform: scale(0.96); }
+  .ticket.soldout { opacity: 0.92; }
+  .ticket.soldout .buy { background: #fff; color: var(--ink); cursor: not-allowed; text-decoration: line-through; }
+  .ticket .flag {
+    position: absolute; top: -16px; left: 20px;
+    background: var(--pink); border: var(--border); box-shadow: var(--shadow-s);
+    font-weight: 800; font-size: 13px; letter-spacing: 0.08em;
+    padding: 6px 14px; transform: rotate(-2.5deg);
+  }
+
+  /* ---------- info ---------- */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0;
+    border-top: var(--border);
+  }
+  .info-grid .cell {
+    padding: 30px clamp(20px, 4vw, 44px) 38px;
+    border-right: var(--border);
+  }
+  .info-grid .cell:last-child { border-right: 0; }
+  @media (max-width: 900px) {
+    .info-grid .cell { border-right: 0; border-bottom: var(--border); }
+    .info-grid .cell:last-child { border-bottom: 0; }
+  }
+  .info-grid h3 {
+    font-family: "Archivo Black", "PingFang SC", sans-serif;
+    font-size: 20px; margin-bottom: 12px;
+    display: inline-block; background: var(--green);
+    border: var(--border); padding: 4px 10px;
+    transform: rotate(-1deg);
+  }
+  .info-grid p { font-size: 15px; font-weight: 600; text-wrap: pretty; }
+  .info-grid p + p { margin-top: 8px; }
+
+  /* ---------- footer ---------- */
+  footer {
+    background: var(--ink); color: var(--paper);
+    padding: clamp(48px, 7vw, 90px) clamp(20px, 5vw, 64px) 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  footer .big {
+    font-family: "Archivo Black", "PingFang SC", sans-serif;
+    font-size: clamp(44px, 9vw, 128px);
+    line-height: 0.95; letter-spacing: -0.022em;
+    color: var(--yellow);
+    text-wrap: balance;
+    position: relative; z-index: 1;
+  }
+  footer .big em { font-style: normal; color: var(--pink); }
+  footer .ghost {
+    position: absolute;
+    right: -20px; bottom: -30px;
+    font-family: "Archivo Black", sans-serif;
+    font-size: clamp(120px, 22vw, 320px);
+    line-height: 0.8;
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(253, 246, 236, 0.14);
+    pointer-events: none;
+    user-select: none;
+  }
+  footer .row {
+    display: flex; flex-wrap: wrap; gap: 20px 36px;
+    margin-top: 36px; padding-top: 24px;
+    border-top: 3px dashed rgba(253,246,236,0.4);
+    font-size: 14px; font-weight: 600;
+    position: relative; z-index: 1;
+  }
+  footer a { color: var(--paper); text-decoration: none; border-bottom: 3px solid var(--orange); }
+  @media (hover:hover) { footer a:hover { color: var(--yellow); border-bottom-color: var(--yellow); } }
+
+  /* ---------- volume test flash ---------- */
+  #boom {
+    position: fixed; inset: 0;
+    z-index: 200;
+    display: none;
+    align-items: center; justify-content: center;
+    background: var(--yellow);
+    pointer-events: none;
+  }
+  #boom.show { display: flex; }
+  #boom span {
+    font-family: "Archivo Black", "PingFang SC", sans-serif;
+    font-size: clamp(80px, 22vw, 320px);
+    letter-spacing: -0.02em;
+    transform: rotate(-4deg);
+    animation: boom 480ms var(--ease) both;
+  }
+  @keyframes boom {
+    from { transform: scale(0.3) rotate(-14deg); opacity: 0; }
+    to { transform: scale(1) rotate(-4deg); opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker-track { animation: none; }
+    .live-dot i { animation: none; }
+    #boom span { animation: none; }
+    *, *::before, *::after { transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<div class="ticker t1" aria-hidden="true">
+  <div class="ticker-track" data-dup>
+    <span>LOUD/PROUD 2026</span><span class="dot">●</span>
+    <span>10.16 / 10.18</span><span class="dot">●</span>
+    <span>成都 · 东郊记忆</span><span class="dot">●</span>
+    <span>23 组乐队 · 3 个舞台 · 1 个菜市</span><span class="dot">●</span>
+    <span>早鸟票 7 月 31 日 23:59 截止</span><span class="dot">●</span>
+    <span>下雨照常 · 除非舞台被吹走</span><span class="dot">●</span>
+  </div>
+</div>
+<div class="ticker t2" aria-hidden="true">
+  <div class="ticker-track" data-dup>
+    <span>场内禁止安静</span><span class="dot">◆</span>
+    <span>允许跑调 · 允许跳水</span><span class="dot">◆</span>
+    <span>菜市 27 个摊位</span><span class="dot">◆</span>
+    <span>接驳车到春熙路</span><span class="dot">◆</span>
+    <span>自带水杯 · 9 个直饮水点</span><span class="dot">◆</span>
+    <span>散场合唱是必须项</span><span class="dot">◆</span>
+  </div>
+</div>
+
+<header class="site">
+  <a class="wordmark" href="#">LOUD/PROUD</a>
+  <nav class="main" aria-label="主导航">
+    <a href="#lineup" class="hide-m">阵容</a>
+    <a href="#posters" class="hide-m">海报</a>
+    <a href="#tickets" class="hide-m">票档</a>
+    <a href="#tickets" class="cta">买票 →</a>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <span class="hero-kicker">第三届 · 独立音乐年度团建</span>
+    <span class="live-dot"><i></i>售票中</span>
+    <div class="sticker a" aria-hidden="true">音量<br>自负</div>
+    <div class="sticker b" aria-hidden="true">谢绝<br>安静</div>
+    <h1 class="mega">
+      <span class="row">响得</span>
+      <span class="row"><span class="hl">厉害</span></span>
+      <span class="row outline">音乐节</span>
+    </h1>
+    <div class="hero-meta">
+      <div class="cell date"><small>DATE</small>2026.10.16 / 10.18</div>
+      <div class="cell place"><small>VENUE</small>成都 · 东郊记忆 东区超级音乐现场</div>
+      <div class="cell"><small>CAPACITY</small>每日限 8,400 人</div>
+      <a class="btn" href="#tickets">抢早鸟 ¥268</a>
+    </div>
+  </section>
+
+  <div class="caution" aria-hidden="true"></div>
+
+  <section id="lineup" aria-labelledby="lineup-h">
+    <div class="section-head">
+      <h2 id="lineup-h">三日阵容</h2>
+      <span class="tag">23 ACTS / 3 STAGES</span>
+    </div>
+    <div class="day-tabs" role="tablist" aria-label="选择日期">
+      <button role="tab" aria-selected="true" data-day="fri">DAY 1<small>10.16 FRI</small></button>
+      <button role="tab" aria-selected="false" data-day="sat">DAY 2<small>10.17 SAT</small></button>
+      <button role="tab" aria-selected="false" data-day="sun">DAY 3<small>10.18 SUN</small></button>
+    </div>
+    <div class="lineup" id="lineupGrid" role="tabpanel" aria-live="polite"></div>
+  </section>
+
+  <div class="caution" aria-hidden="true"></div>
+
+  <section id="posters" class="posters-wrap" aria-labelledby="posters-h">
+    <div class="section-head">
+      <h2 id="posters-h">海报墙</h2>
+      <span class="tag">纯 CSS 绘制 · 往右拖</span>
+    </div>
+    <div class="posters" id="posters" aria-label="六张生成式海报,横向滚动">
+      <div class="poster p1"><span class="glyph">响</span><span class="p-cap">NO.01 · 响</span></div>
+      <div class="poster p2"><span class="glyph">音</span><span class="p-cap">NO.02 · 回声</span></div>
+      <div class="poster p3">
+        <div class="date-block"><div class="d1">10.16</div><div class="d2">CHENGDU</div></div>
+        <span class="p-cap">NO.03 · 日期</span>
+      </div>
+      <div class="poster p4"><span class="quiet">禁止安静</span><span class="p-cap">NO.04 · 规矩</span></div>
+      <div class="poster p5">
+        <div class="box"><div class="zh">菜市</div><div class="en">FOOD MKT</div></div>
+        <span class="p-cap">NO.05 · 菜市</span>
+      </div>
+      <div class="poster p6">
+        <div class="stack"><span>响</span><span>得</span><span>厉</span></div>
+        <span class="p-cap">NO.06 · 三连</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="tickets" class="tickets-wrap" aria-labelledby="tickets-h">
+    <div class="section-head">
+      <h2 id="tickets-h">票档,不绕弯</h2>
+      <span class="tag">明码标价</span>
+    </div>
+    <div class="tickets">
+      <article class="ticket soldout">
+        <div class="flag">已售罄</div>
+        <div class="top">
+          <h3>盲鸟票</h3>
+          <p class="price"><small>¥</small>199</p>
+          <ul>
+            <li>阵容公布前开售,赌我们的品味</li>
+            <li>三日通票 · 限量 600 张</li>
+            <li>47 秒售罄,明年请早</li>
+          </ul>
+        </div>
+        <div class="tear" aria-hidden="true"></div>
+        <div class="stub"><span class="no">NO.0001/0600</span><button class="buy" disabled>卖光了</button></div>
+      </article>
+
+      <article class="ticket">
+        <div class="flag">进行中</div>
+        <div class="top">
+          <h3>早鸟单日</h3>
+          <p class="price"><small>¥</small>268</p>
+          <ul>
+            <li>任选单日入场</li>
+            <li>含官方托特包 1 个</li>
+            <li>7 月 31 日 23:59 截止</li>
+          </ul>
+        </div>
+        <div class="tear" aria-hidden="true"></div>
+        <div class="stub"><span class="no">剩余 1,872 张</span><button class="buy" data-buy="早鸟单日">买这张</button></div>
+      </article>
+
+      <article class="ticket">
+        <div class="top">
+          <h3>三日通票</h3>
+          <p class="price"><small>¥</small>649</p>
+          <ul>
+            <li>三天随便进出,含手环</li>
+            <li>菜市区域消费券 ¥40</li>
+            <li>加 ¥59 换购限量雨衣</li>
+          </ul>
+        </div>
+        <div class="tear" aria-hidden="true"></div>
+        <div class="stub"><span class="no">剩余 3,415 张</span><button class="buy" data-buy="三日通票">买这张</button></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="info" aria-labelledby="info-h">
+    <div class="section-head">
+      <h2 id="info-h">怎么来,怎么活</h2>
+      <span class="tag">实用信息</span>
+      <button class="btn" id="boomBtn" type="button" style="margin-left:auto;font-size:14px;padding:12px 22px;background:var(--orange)">音量测试 →</button>
+    </div>
+    <div class="info-grid">
+      <div class="cell">
+        <h3>到场</h3>
+        <p>地铁 8 号线东郊记忆站 B1 口出,跟着鼓声走 400 米。</p>
+        <p>散场接驳车 22:30 / 23:10 两班,到春熙路。</p>
+      </div>
+      <div class="cell">
+        <h3>吃喝</h3>
+        <p>场内「菜市」27 个摊位:钵钵鸡、精酿、冰粉、手冲。</p>
+        <p>自带水杯,全场 9 个免费直饮水点。</p>
+      </div>
+      <div class="cell">
+        <h3>规矩</h3>
+        <p>可以跳水,禁止自拍杆。可以带毯子,禁止搭帐篷。</p>
+        <p>下雨照常演出,除非舞台真的被吹走。</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p class="big">把音量<br>拧到<em>最右</em>。</p>
+  <span class="ghost" aria-hidden="true">响</span>
+  <div class="row">
+    <span>© 2026 LOUD/PROUD 响得厉害音乐节</span>
+    <a href="#">票务协议</a>
+    <a href="#">隐私政策</a>
+    <a href="#">志愿者报名</a>
+    <a href="#">media@loudproud.cn</a>
+  </div>
+</footer>
+
+<a class="back-hub" href="../index.html" aria-label="返回五个世界门户">← 五个世界</a>
+
+<div id="boom" aria-hidden="true"><span>BOOM</span></div>
+
+<script>
+  // duplicate tickers for seamless loop
+  document.querySelectorAll('[data-dup]').forEach(t => { t.innerHTML += t.innerHTML; });
+
+  const LINEUP = {
+    fri: [
+      { name: "雾中列车", tag: "HEADLINER", head: true, desc: "后摇 / 成都", slot: "21:00 · 主舞台" },
+      { name: "电气白兰", tag: "LIVE", desc: "合成器流行 / 上海", slot: "19:20 · 主舞台" },
+      { name: "倒悬的橘子", tag: "LIVE", desc: "车库摇滚 / 武汉", slot: "18:00 · 回声舞台" },
+      { name: "苔藓蛋糕", tag: "DJ SET", desc: "酸房子 / 北京", slot: "22:40 · 菜市帐篷" },
+      { name: "夜班飞行", tag: "LIVE", desc: "盯鞋 / 广州", slot: "16:40 · 回声舞台" },
+      { name: "铁皮午睡", tag: "LIVE", desc: "民谣朋克 / 西安", slot: "15:20 · 菜市帐篷" },
+      { name: "低空广播", tag: "LIVE", desc: "数摇 / 重庆", slot: "14:00 · 主舞台" },
+      { name: "Sugar Canoe", tag: "LIVE", desc: "冲浪摇滚 / 厦门", slot: "13:00 · 回声舞台" }
+    ],
+    sat: [
+      { name: "港口与大象", tag: "HEADLINER", head: true, desc: "独立摇滚 / 南京", slot: "21:10 · 主舞台" },
+      { name: "碎纸机合唱团", tag: "LIVE", desc: "艺术朋克 / 北京", slot: "19:30 · 主舞台" },
+      { name: "夜光苔藓", tag: "LIVE", desc: "梦泡 / 杭州", slot: "18:10 · 回声舞台" },
+      { name: "水泥花园", tag: "LIVE", desc: "垃圾摇滚 / 长沙", slot: "16:50 · 回声舞台" },
+      { name: "Karaoke Tyrant", tag: "LIVE", desc: "硬核 / 香港", slot: "15:30 · 菜市帐篷" },
+      { name: "周二便利店", tag: "LIVE", desc: "卧室流行 / 成都", slot: "14:10 · 主舞台" },
+      { name: "白噪音修理铺", tag: "DJ SET", desc: "科技舞曲 / 柏林", slot: "23:00 · 菜市帐篷" },
+      { name: "橡皮筋星球", tag: "LIVE", desc: "数学流行 / 深圳", slot: "13:00 · 回声舞台" }
+    ],
+    sun: [
+      { name: "山雀电台", tag: "HEADLINER", head: true, desc: "英伦摇滚 / 北京", slot: "20:40 · 主舞台" },
+      { name: "过期汽水", tag: "LIVE", desc: "流行朋克 / 广州", slot: "19:00 · 主舞台" },
+      { name: "第十一把椅子", tag: "LIVE", desc: "后朋克 / 上海", slot: "17:40 · 回声舞台" },
+      { name: "慢速降落", tag: "LIVE", desc: "氛围民谣 / 大理", slot: "16:20 · 回声舞台" },
+      { name: "纸飞机部队", tag: "LIVE", desc: "独立流行 / 成都", slot: "15:00 · 主舞台" },
+      { name: "锈与光", tag: "LIVE", desc: "工业摇滚 / 沈阳", slot: "13:40 · 菜市帐篷" },
+      { name: "Mango Static", tag: "LIVE", desc: "电子盯鞋 / 曼谷", slot: "12:40 · 回声舞台" },
+      { name: "全体大合唱", tag: "FINALE", desc: "23 组音乐人同台", slot: "22:00 · 主舞台" }
+    ]
+  };
+
+  const grid = document.getElementById('lineupGrid');
+  const tabs = document.querySelectorAll('.day-tabs button');
+
+  function render(day) {
+    grid.innerHTML = LINEUP[day].map(b => `
+      <article class="band${b.head ? ' headliner' : ''}">
+        <span class="slot">${b.slot}</span>
+        <div class="face" aria-hidden="true">${b.name.slice(0, 2)}</div>
+        <h3>${b.name}</h3>
+        <p>${b.desc} · ${b.tag}</p>
+      </article>
+    `).join('');
+  }
+
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabs.forEach(b => b.setAttribute('aria-selected', 'false'));
+      btn.setAttribute('aria-selected', 'true');
+      render(btn.dataset.day);
+    });
+  });
+  render('fri');
+
+  document.querySelectorAll('[data-buy]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.textContent = '已加入 →';
+      setTimeout(() => { btn.textContent = '买这张'; }, 1600);
+    });
+  });
+
+  // poster wall drag-to-scroll
+  const rail = document.getElementById('posters');
+  let dragging = false, startX = 0, startScroll = 0;
+  rail.addEventListener('pointerdown', e => {
+    dragging = true; startX = e.clientX; startScroll = rail.scrollLeft;
+    rail.setPointerCapture(e.pointerId);
+  });
+  rail.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    rail.scrollLeft = startScroll - (e.clientX - startX);
+  });
+  ['pointerup', 'pointercancel'].forEach(ev => rail.addEventListener(ev, () => { dragging = false; }));
+
+  // volume test
+  const boom = document.getElementById('boom');
+  document.getElementById('boomBtn').addEventListener('click', () => {
+    boom.classList.add('show');
+    setTimeout(() => boom.classList.remove('show'), 620);
+  });
+</script>
+</body>
+</html>
