@@ -1,0 +1,29 @@
+[Unit]
+Description=Figma Claude 4.8 Anthropic Adapter for sub2api
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=figma-adapter
+Group=figma-adapter
+WorkingDirectory=/opt/figma-claude
+EnvironmentFile=/opt/figma-claude/figma-adapter.env
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/usr/bin/python3 /opt/figma-claude/anthropic-adapter.py
+Restart=on-failure
+RestartSec=3
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=full
+ProtectHome=true
+CapabilityBoundingSet=
+ReadOnlyDirectories=/opt/figma-claude
+LimitNOFILE=1024
+LimitNPROC=64
+MemoryLimit=512M
+
+[Install]
+WantedBy=multi-user.target

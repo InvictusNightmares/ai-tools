@@ -8,3 +8,7 @@ key.yaml
 pas.yaml
 script/.tabbit-cookie.local
 script/tabbit/.tabbit-cookie.local
+script/figma/.figma-cookie.local
+script/figma/figma-adapter.env
+script/figma/figma-adapter.key
+script/figma/local/
