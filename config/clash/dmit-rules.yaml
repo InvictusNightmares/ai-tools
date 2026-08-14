@@ -3,7 +3,6 @@ rules:
   - DOMAIN,chybenzun.top,DIRECT
   - DOMAIN,muyuan.do,DIRECT
   - DOMAIN,invite.linuxdo.org,DIRECT
-  - DOMAIN-SUFFIX,linux.do,DIRECT
   - IP-CIDR,47.251.166.27/32,DIRECT,no-resolve
   - IP-CIDR,8.216.44.189/32,DIRECT,no-resolve
   - DOMAIN-SUFFIX,anthropic.com,PROXY
