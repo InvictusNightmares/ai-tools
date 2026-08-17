@@ -4450,6 +4450,36 @@ rules:
   - DOMAIN-SUFFIX,springsunday.net,DIRECT
   - DOMAIN-SUFFIX,tjupt.org,DIRECT
   - DOMAIN-SUFFIX,totheglory.im,DIRECT
+  - DOMAIN-SUFFIX,youku.com,DIRECT
+  - DOMAIN-SUFFIX,ykimg.com,DIRECT
+  - DOMAIN-SUFFIX,soku.com,DIRECT
+  - DOMAIN-SUFFIX,tudou.com,DIRECT
+  - DOMAIN-SUFFIX,cibntv.net,DIRECT
+  - DOMAIN-SUFFIX,huya.com,DIRECT
+  - DOMAIN-SUFFIX,msstatic.com,DIRECT
+  - DOMAIN-SUFFIX,dwstatic.com,DIRECT
+  - DOMAIN-SUFFIX,duowan.com,DIRECT
+  - DOMAIN-SUFFIX,xiaohongshu.com,DIRECT
+  - DOMAIN-SUFFIX,xhscdn.com,DIRECT
+  - DOMAIN-SUFFIX,xhslink.com,DIRECT
+  - DOMAIN-SUFFIX,qq.com,DIRECT
+  - DOMAIN-SUFFIX,gtimg.com,DIRECT
+  - DOMAIN-SUFFIX,qpic.cn,DIRECT
+  - DOMAIN-SUFFIX,qlogo.cn,DIRECT
+  - DOMAIN-SUFFIX,qcloud.com,DIRECT
+  - DOMAIN-SUFFIX,qcloudcdn.com,DIRECT
+  - DOMAIN-SUFFIX,myqcloud.com,DIRECT
+  - DOMAIN-SUFFIX,v.qq.com,DIRECT
+  - DOMAIN-SUFFIX,video.qq.com,DIRECT
+  - DOMAIN-SUFFIX,qqlive.qq.com,DIRECT
+  - DOMAIN-SUFFIX,qqlivecdn.com,DIRECT
+  - DOMAIN-SUFFIX,iqiyi.com,DIRECT
+  - DOMAIN-SUFFIX,iqiyipic.com,DIRECT
+  - DOMAIN-SUFFIX,qiyi.com,DIRECT
+  - DOMAIN-SUFFIX,qiyipic.com,DIRECT
+  - DOMAIN-SUFFIX,qy.net,DIRECT
+  - DOMAIN-SUFFIX,iq.com,DIRECT
+  - DOMAIN-SUFFIX,pps.tv,DIRECT
   - DOMAIN-SUFFIX,cn,DIRECT
   - GEOIP,CN,DIRECT,no-resolve
   - DOMAIN-SUFFIX,local,DIRECT
