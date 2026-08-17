@@ -64,6 +64,7 @@ const formatTableRange = (sheet, range) => {
 const summaryHeaders = [
   "服务器 / Server",
   "日期 / Date",
+  "使用的模型 / Models",
   "用户数 / Users",
   "Key数 / Keys",
   "请求数 / Requests",
@@ -78,19 +79,20 @@ const summaryHeaders = [
   "Actual Cost",
 ];
 
-formatTitle(summarySheet, "A1:N1", "Sub2API Token 用量汇总 / Token Usage Summary");
+formatTitle(summarySheet, "A1:O1", "Sub2API Token 用量汇总 / Token Usage Summary");
 formatNote(
   summarySheet,
-  "A2:N2",
-  `统计范围 / Period: ${metadata.from} 至 ${metadata.to}；时区 / Timezone: ${metadata.timezone}；来源: 美西 qiyuan-us、东京 qiyuan-tokyo`,
+  "A2:O2",
+  `统计范围 / Period: ${metadata.from} 至 ${metadata.to}；时区 / Timezone: ${metadata.timezone}；来源: 美西 qiyuan-us、东京 qiyuan-tokyo；模型取 requested_model（缺失时回退 model）`,
 );
-summarySheet.getRange("A4:N4").values = [summaryHeaders];
-formatHeader(summarySheet, "A4:N4");
+summarySheet.getRange("A4:O4").values = [summaryHeaders];
+formatHeader(summarySheet, "A4:O4");
 
 const summaryStart = 5;
 const summaryRows = daily.map((row) => [
   row.server,
   dateValue(row.usage_date),
+  row.models ?? "",
   number(row.user_count),
   number(row.key_count),
   number(row.request_count),
@@ -106,15 +108,15 @@ const summaryRows = daily.map((row) => [
 ]);
 if (summaryRows.length > 0) {
   const summaryEnd = summaryStart + summaryRows.length - 1;
-  summarySheet.getRange(`A${summaryStart}:N${summaryEnd}`).values = summaryRows;
-  summarySheet.getRange(`L${summaryStart}`).formulas = [[`=SUM(F${summaryStart}:I${summaryStart})`]];
-  summarySheet.getRange(`L${summaryStart}:L${summaryEnd}`).fillDown();
-  summarySheet.getRange(`M${summaryStart}`).formulas = [[`=L${summaryStart}+J${summaryStart}+K${summaryStart}`]];
+  summarySheet.getRange(`A${summaryStart}:O${summaryEnd}`).values = summaryRows;
+  summarySheet.getRange(`M${summaryStart}`).formulas = [[`=SUM(G${summaryStart}:J${summaryStart})`]];
   summarySheet.getRange(`M${summaryStart}:M${summaryEnd}`).fillDown();
-  formatTableRange(summarySheet, `A4:N${summaryEnd}`);
+  summarySheet.getRange(`N${summaryStart}`).formulas = [[`=M${summaryStart}+K${summaryStart}+L${summaryStart}`]];
+  summarySheet.getRange(`N${summaryStart}:N${summaryEnd}`).fillDown();
+  formatTableRange(summarySheet, `A4:O${summaryEnd}`);
 
   const totalRow = summaryEnd + 1;
-  summarySheet.getRange(`A${totalRow}:N${totalRow}`).values = [[
+  summarySheet.getRange(`A${totalRow}:O${totalRow}`).values = [[
     "合计 / Total",
     null,
     null,
@@ -130,23 +132,24 @@ if (summaryRows.length > 0) {
     null,
     null,
   ]];
-  for (const column of ["C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"]) {
+  for (const column of ["D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O"]) {
     summarySheet.getRange(`${column}${totalRow}`).formulas = [[`=SUM(${column}${summaryStart}:${column}${summaryEnd})`]];
   }
-  summarySheet.getRange(`A${totalRow}:N${totalRow}`).format.fill = totalFill;
-  summarySheet.getRange(`A${totalRow}:N${totalRow}`).format.font = { bold: true, color: totalText };
-  summarySheet.getRange(`A${totalRow}:N${totalRow}`).format.borders = {
+  summarySheet.getRange(`A${totalRow}:O${totalRow}`).format.fill = totalFill;
+  summarySheet.getRange(`A${totalRow}:O${totalRow}`).format.font = { bold: true, color: totalText };
+  summarySheet.getRange(`A${totalRow}:O${totalRow}`).format.borders = {
     preset: "all",
     style: "thin",
     color: borderColor,
   };
-  summarySheet.tables.add(`A4:N${summaryEnd}`, true, "DailyTokenSummaryTable");
+  summarySheet.tables.add(`A4:O${summaryEnd}`, true, "DailyTokenSummaryTable");
 }
 
 const keyHeaders = [
   "服务器 / Server",
   "Key名称 / Key Name",
   "用户 / User",
+  "使用的模型 / Models",
   "请求数 / Requests",
   "Input Token",
   "Output Token",
@@ -159,20 +162,21 @@ const keyHeaders = [
   "Actual Cost",
 ];
 
-formatTitle(keySheet, "A1:M1", "Sub2API 每个 API Key 用量 / Per-Key Usage");
+formatTitle(keySheet, "A1:N1", "Sub2API 每个 API Key 用量 / Per-Key Usage");
 formatNote(
   keySheet,
-  "A2:M2",
-  `统计范围 / Period: ${metadata.from} 至 ${metadata.to}；按请求次数从多到少排序；API Key 密文未读取或输出`,
+  "A2:N2",
+  `统计范围 / Period: ${metadata.from} 至 ${metadata.to}；按请求次数从多到少排序；API Key 密文未读取或输出；模型取 requested_model（缺失时回退 model）`,
 );
-keySheet.getRange("A4:M4").values = [keyHeaders];
-formatHeader(keySheet, "A4:M4");
+keySheet.getRange("A4:N4").values = [keyHeaders];
+formatHeader(keySheet, "A4:N4");
 
 const keyStart = 5;
 const keyRows = perKey.map((row) => [
   row.server,
   row.api_key_name,
   row.user_label,
+  row.models ?? "",
   number(row.request_count),
   number(row.input_tokens),
   number(row.output_tokens),
@@ -186,13 +190,13 @@ const keyRows = perKey.map((row) => [
 ]);
 if (keyRows.length > 0) {
   const keyEnd = keyStart + keyRows.length - 1;
-  keySheet.getRange(`A${keyStart}:M${keyEnd}`).values = keyRows;
-  keySheet.getRange(`K${keyStart}`).formulas = [[`=SUM(E${keyStart}:H${keyStart})`]];
-  keySheet.getRange(`K${keyStart}:K${keyEnd}`).fillDown();
-  keySheet.getRange(`L${keyStart}`).formulas = [[`=K${keyStart}+I${keyStart}+J${keyStart}`]];
+  keySheet.getRange(`A${keyStart}:N${keyEnd}`).values = keyRows;
+  keySheet.getRange(`L${keyStart}`).formulas = [[`=SUM(F${keyStart}:I${keyStart})`]];
   keySheet.getRange(`L${keyStart}:L${keyEnd}`).fillDown();
-  formatTableRange(keySheet, `A4:M${keyEnd}`);
-  keySheet.tables.add(`A4:M${keyEnd}`, true, "PerKeyUsageTable");
+  keySheet.getRange(`M${keyStart}`).formulas = [[`=L${keyStart}+J${keyStart}+K${keyStart}`]];
+  keySheet.getRange(`M${keyStart}:M${keyEnd}`).fillDown();
+  formatTableRange(keySheet, `A4:N${keyEnd}`);
+  keySheet.tables.add(`A4:N${keyEnd}`, true, "PerKeyUsageTable");
 }
 
 for (const sheet of [summarySheet, keySheet]) {
@@ -205,45 +209,49 @@ for (const sheet of [summarySheet, keySheet]) {
 if (summaryRows.length > 0) {
   const summaryEnd = summaryStart + summaryRows.length - 1;
   summarySheet.getRange(`B${summaryStart}:B${summaryEnd}`).format.numberFormat = "yyyy-mm-dd";
-  summarySheet.getRange(`C${summaryStart}:M${summaryEnd + 1}`).format.numberFormat = "#,##0";
-  summarySheet.getRange(`N${summaryStart}:N${summaryEnd + 1}`).format.numberFormat = '"$"#,##0.0000';
+  summarySheet.getRange(`D${summaryStart}:N${summaryEnd + 1}`).format.numberFormat = "#,##0";
+  summarySheet.getRange(`O${summaryStart}:O${summaryEnd + 1}`).format.numberFormat = '"$"#,##0.0000';
 }
 if (keyRows.length > 0) {
   const keyEnd = keyStart + keyRows.length - 1;
-  keySheet.getRange(`D${keyStart}:L${keyEnd}`).format.numberFormat = "#,##0";
-  keySheet.getRange(`M${keyStart}:M${keyEnd}`).format.numberFormat = '"$"#,##0.0000';
+  keySheet.getRange(`E${keyStart}:M${keyEnd}`).format.numberFormat = "#,##0";
+  keySheet.getRange(`N${keyStart}:N${keyEnd}`).format.numberFormat = '"$"#,##0.0000';
 }
 
 summarySheet.getRange("A1:A200").format.columnWidth = 14;
 summarySheet.getRange("B1:B200").format.columnWidth = 14;
-summarySheet.getRange("C1:E200").format.columnWidth = 13;
-summarySheet.getRange("F1:M200").format.columnWidth = 16;
-summarySheet.getRange("N1:N200").format.columnWidth = 14;
+summarySheet.getRange("C1:C200").format.columnWidth = 40;
+summarySheet.getRange("C1:C200").format.wrapText = true;
+summarySheet.getRange("D1:F200").format.columnWidth = 13;
+summarySheet.getRange("G1:N200").format.columnWidth = 16;
+summarySheet.getRange("O1:O200").format.columnWidth = 14;
 keySheet.getRange("A1:A300").format.columnWidth = 14;
 keySheet.getRange("B1:B300").format.columnWidth = 24;
 keySheet.getRange("C1:C300").format.columnWidth = 16;
-keySheet.getRange("D1:L300").format.columnWidth = 16;
-keySheet.getRange("M1:M300").format.columnWidth = 14;
+keySheet.getRange("D1:D300").format.columnWidth = 40;
+keySheet.getRange("D1:D300").format.wrapText = true;
+keySheet.getRange("E1:M300").format.columnWidth = 16;
+keySheet.getRange("N1:N300").format.columnWidth = 14;
 
 const output = await SpreadsheetFile.exportXlsx(workbook);
 await output.save(outputPath);
 
 const summaryInspect = await workbook.inspect({
   kind: "table",
-  range: `汇总!A1:N${Math.min(summaryStart + summaryRows.length, 12)}`,
+  range: `汇总!A1:O${Math.min(summaryStart + summaryRows.length, 12)}`,
   include: "values,formulas",
   tableMaxRows: 12,
-  tableMaxCols: 14,
+  tableMaxCols: 15,
   tableMaxCellChars: 80,
 });
 console.log(summaryInspect.ndjson);
 
 const keyInspect = await workbook.inspect({
   kind: "table",
-  range: `每个Key!A1:M${Math.min(keyStart + perKey.length, 12)}`,
+  range: `每个Key!A1:N${Math.min(keyStart + perKey.length, 12)}`,
   include: "values,formulas",
   tableMaxRows: 12,
-  tableMaxCols: 13,
+  tableMaxCols: 14,
   tableMaxCellChars: 80,
 });
 console.log(keyInspect.ndjson);
@@ -260,7 +268,7 @@ const previewDir = "/private/tmp/sub2api-token-usage-preview";
 await fs.mkdir(previewDir, { recursive: true });
 const summaryPreview = await workbook.render({
   sheetName: "汇总",
-  range: `A1:N${Math.min(summaryStart + summaryRows.length + 1, 30)}`,
+  range: `A1:O${Math.min(summaryStart + summaryRows.length + 1, 30)}`,
   scale: 1.4,
   format: "png",
 });
@@ -270,7 +278,7 @@ await fs.writeFile(
 );
 const keyPreview = await workbook.render({
   sheetName: "每个Key",
-  range: `A1:M${Math.min(keyStart + perKey.length, 30)}`,
+  range: `A1:N${Math.min(keyStart + perKey.length, 30)}`,
   scale: 1.2,
   format: "png",
 });

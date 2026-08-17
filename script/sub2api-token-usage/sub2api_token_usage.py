@@ -176,6 +176,27 @@ WITH grouped AS (
             NULLIF(BTRIM(k.name), ''),
             'user-' || ul.user_id::text
         )) AS user_label,
+        COALESCE(
+            string_agg(
+                DISTINCT COALESCE(
+                    NULLIF(BTRIM(ul.requested_model), ''),
+                    NULLIF(BTRIM(ul.model), ''),
+                    NULLIF(BTRIM(ul.upstream_model), '')
+                ),
+                ', ' ORDER BY COALESCE(
+                    NULLIF(BTRIM(ul.requested_model), ''),
+                    NULLIF(BTRIM(ul.model), ''),
+                    NULLIF(BTRIM(ul.upstream_model), '')
+                )
+            ) FILTER (
+                WHERE COALESCE(
+                    NULLIF(BTRIM(ul.requested_model), ''),
+                    NULLIF(BTRIM(ul.model), ''),
+                    NULLIF(BTRIM(ul.upstream_model), '')
+                ) IS NOT NULL
+            ),
+            ''
+        ) AS models,
         COUNT(*)::bigint AS request_count,
         COALESCE(SUM(ul.input_tokens::bigint), 0)::bigint AS input_tokens,
         COALESCE(SUM(ul.output_tokens::bigint), 0)::bigint AS output_tokens,
@@ -204,6 +225,7 @@ SELECT
     api_key_name,
     user_id,
     user_label,
+    models,
     request_count,
     input_tokens,
     output_tokens,
@@ -326,6 +348,7 @@ def build_reports(
                 "key_count": 0,
                 "_user_ids": set(),
                 "_api_key_ids": set(),
+                "_models": set(),
                 **new_metric_bucket(),
             }
             current_date += timedelta(days=1)
@@ -339,6 +362,7 @@ def build_reports(
                 "api_key_name": source["api_key_name"],
                 "user_id": source["user_id"],
                 "user_label": source["user_label"],
+                "models": source.get("models", ""),
             }
             for field in ("request_count", *TOKEN_COLUMNS):
                 row[field] = integer(source, field)
@@ -359,11 +383,15 @@ def build_reports(
                 "key_count": 0,
                 "_user_ids": set(),
                 "_api_key_ids": set(),
+                "_models": set(),
                 **new_metric_bucket(),
             },
         )
         daily["_user_ids"].add(str(row["user_id"]))
         daily["_api_key_ids"].add(str(row["api_key_id"]))
+        daily["_models"].update(
+            model.strip() for model in row["models"].split(",") if model.strip()
+        )
         add_metrics(daily, row)
 
         key_key = (row["server_key"], str(row["api_key_id"]))
@@ -376,6 +404,7 @@ def build_reports(
                 "api_key_name": row["api_key_name"],
                 "user_id": row["user_id"],
                 "user_label": row["user_label"],
+                "_models": set(),
                 "active_days": 0,
                 **new_metric_bucket(),
             },
@@ -384,11 +413,18 @@ def build_reports(
         key["api_key_name"] = row["api_key_name"]
         key["user_id"] = row["user_id"]
         key["user_label"] = row["user_label"]
+        key["_models"].update(
+            model.strip() for model in row["models"].split(",") if model.strip()
+        )
         add_metrics(key, row)
 
     for row in daily_groups.values():
         row["user_count"] = len(row.pop("_user_ids"))
         row["key_count"] = len(row.pop("_api_key_ids"))
+        row["models"] = ", ".join(sorted(row.pop("_models")))
+
+    for row in key_groups.values():
+        row["models"] = ", ".join(sorted(row.pop("_models")))
 
     daily = sorted(daily_groups.values(), key=sort_key)
     per_key = sorted(
