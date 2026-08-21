@@ -1,11 +1,12 @@
 rules:
-  - DOMAIN,analytics.strava.com,DIRECT
-  - DOMAIN,app.adjust.com,DIRECT
-  - DOMAIN,app.appsflyer.com,DIRECT
+  - GEOSITE,category-ads-all,REJECT
+  - DOMAIN,analytics.strava.com,REJECT
+  - DOMAIN,app.adjust.com,REJECT
+  - DOMAIN,app.appsflyer.com,REJECT
   - DOMAIN,chybenzun.top,DIRECT
   - DOMAIN,invite.linuxdo.org,DIRECT
   - DOMAIN,ip.istatmenus.app,DIRECT
-  - DOMAIN,log.mmstat.com,DIRECT
+  - DOMAIN,log.mmstat.com,REJECT
   - DOMAIN,muyuan.do,DIRECT
   - DOMAIN,origin-a.akamaihd.net,DIRECT
   - DOMAIN,sms.imagetasks.com,DIRECT
