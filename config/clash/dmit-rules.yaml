@@ -1,5 +1,4 @@
 rules:
-  - DOMAIN-SUFFIX,morethan.tv,PROXY
   - DOMAIN,analytics.strava.com,DIRECT
   - DOMAIN,app.adjust.com,DIRECT
   - DOMAIN,app.appsflyer.com,DIRECT
@@ -19,6 +18,17 @@ rules:
   - DOMAIN-SUFFIX,netspeedtestmaster.com,DIRECT
   - DOMAIN-SUFFIX,qqlivecdn.com,DIRECT
   - DOMAIN-SUFFIX,snssdk.com,DIRECT
+  - DOMAIN-SUFFIX,download.jetbrains.com,DIRECT
+  - DOMAIN-SUFFIX,download-cdn.jetbrains.com,DIRECT
+  - DOMAIN-SUFFIX,update.microsoft.com,DIRECT
+  - DOMAIN-SUFFIX,windowsupdate.com,DIRECT
+  - DOMAIN-SUFFIX,windowsupdate.microsoft.com,DIRECT
+  - DOMAIN-SUFFIX,delivery.mp.microsoft.com,DIRECT
+  - DOMAIN-SUFFIX,download.microsoft.com,DIRECT
+  - GEOSITE,apple@cn,DIRECT
+  - GEOSITE,steam@cn,DIRECT
+  - DOMAIN,update.code.visualstudio.com,DIRECT
+  - DOMAIN-SUFFIX,vscode-cdn.net,DIRECT
   - GEOSITE,microsoft,PROXY
   - GEOSITE,jetbrains,PROXY
   - GEOSITE,category-pt,PROXY
