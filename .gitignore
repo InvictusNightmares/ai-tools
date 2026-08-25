@@ -12,3 +12,4 @@ script/figma/.figma-cookie.local
 script/figma/figma-adapter.env
 script/figma/figma-adapter.key
 script/figma/local/
+script/sub2api-token-usage/daily/.env.tencent-docs
