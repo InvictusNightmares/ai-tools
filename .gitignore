@@ -13,3 +13,5 @@ script/figma/figma-adapter.env
 script/figma/figma-adapter.key
 script/figma/local/
 script/sub2api-token-usage/daily/.env.tencent-docs
+script/sub2api-token-usage/daily/.env.email
+script/sub2api-token-usage/daily/email-runs/

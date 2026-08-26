@@ -1,0 +1,7 @@
+# Install as /etc/cron.d/ai-gateway-token-usage on qiyuan-gpu after
+# /data/ai-gateway-token-usage/.env.email and both SSH aliases are ready.
+SHELL=/bin/bash
+PATH=/data/miniforge/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+CRON_TZ=Asia/Shanghai
+
+0 9 * * * root /usr/bin/flock -n /run/lock/ai-gateway-token-usage.lock /data/miniforge/bin/python3 /data/ai-gateway-token-usage/email_daily_report.py >> /data/ai-gateway-token-usage/email-daily.log 2>&1

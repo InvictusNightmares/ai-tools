@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Generate the Sub2API daily business-group and person token workbook.
+"""Generate the daily AI gateway business-group and person token workbook.
 
-Current Sub2API resource groups no longer represent the reporting organization,
+Current resource groups no longer represent the reporting organization,
 so API Key IDs are joined to a separately maintained business-group mapping.
 API Key secrets are never selected, stored, or exported.
 
@@ -84,7 +84,7 @@ TENCENT_DOCS_PUBLIC_READ_POLICY = "publicRead"
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "统计美西和东京 Sub2API 的业务组、每人 Token 用量，"
+            "统计美西和东京的业务组、每人 Token 用量，"
             "默认剔除张成和研发Claude，生成 Excel 后上传腾讯文档。"
         ),
         epilog=(
@@ -1112,7 +1112,8 @@ def main() -> int:
         "mapping_file": str(args.mapping_file.expanduser().resolve()),
         "mapping_key_count": len(mapping),
         "mapping_source": (
-            "qiyuan-us / qiyuan-tokyo Sub2API backup snapshot 2026-08-20"
+            "qiyuan-us / qiyuan-tokyo business-group mapping backup snapshot "
+            "2026-08-20"
         ),
         "template_url": "https://docs.qq.com/sheet/DVndmU1dRZmNJdm1w?tab=000001",
         "person_definition": "按 API Key 显示名称识别人；同名 Key 合并",

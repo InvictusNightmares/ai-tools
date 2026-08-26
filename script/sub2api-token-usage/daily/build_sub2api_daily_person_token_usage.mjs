@@ -15,6 +15,8 @@ const summary = payload.summary ?? [];
 const perGroup = payload.per_group ?? [];
 const perPerson = payload.per_person ?? [];
 const number = (value) => Number(value ?? 0);
+const tokenNumberFormat =
+  '[>=1000000000]0.00,,,"B（十亿）";[>=1000000]0.00,,"M（百万）";#,##0';
 
 const serverStatus = (metadata.servers ?? [])
   .map(
@@ -138,23 +140,24 @@ const baseNote =
   "；时区: " +
   metadata.timezone +
   "；节点: " +
-  serverStatus;
+  serverStatus +
+  "；Token 单位: ≥1,000,000 显示 M（百万），≥1,000,000,000 显示 B（十亿）";
 
 const summaryHeaders = [
   "服务器 / Server",
   "分组数 / Groups",
   "请求数 / Requests",
-  "Input Token",
-  "Output Token",
-  "Cache Creation",
-  "Cache Read",
-  "Image Input",
-  "Image Output",
-  "Total Token",
-  "Total含图片 / Total+Image",
+  "输入 Token / Input",
+  "输出 Token / Output",
+  "缓存创建 Token / Cache Creation",
+  "缓存读取 Token / Cache Read",
+  "图片输入 Token / Image Input",
+  "图片输出 Token / Image Output",
+  "总 Token / Total",
+  "含图片总 Token / Total+Image",
   "Actual Cost",
 ];
-formatTitle(summarySheet, "A1:L1", "Sub2API Token 使用汇总");
+formatTitle(summarySheet, "A1:L1", "AI网关 Token 使用汇总");
 formatNote(summarySheet, "A2:L2", baseNote);
 summarySheet.getRange("A4:L4").values = [summaryHeaders];
 formatHeader(summarySheet, "A4:L4");
@@ -245,18 +248,18 @@ const groupHeaders = [
   "Key数 / Keys",
   "请求数 / Requests",
   "平均请求数 / Avg Requests",
-  "Input Token",
-  "Output Token",
-  "Cache Creation",
-  "Cache Read",
-  "Image Input",
-  "Image Output",
-  "Total Token",
-  "平均Token / Avg Token",
-  "Total含图片 / Total+Image",
+  "输入 Token / Input",
+  "输出 Token / Output",
+  "缓存创建 Token / Cache Creation",
+  "缓存读取 Token / Cache Read",
+  "图片输入 Token / Image Input",
+  "图片输出 Token / Image Output",
+  "总 Token / Total",
+  "平均 Token / Avg Token",
+  "含图片总 Token / Total+Image",
   "Actual Cost",
 ];
-formatTitle(groupSheet, "A1:O1", "Sub2API 每个业务组 Token 使用量");
+formatTitle(groupSheet, "A1:O1", "AI网关 每个业务组 Token 使用量");
 formatNote(
   groupSheet,
   "A2:O2",
@@ -373,18 +376,18 @@ const personHeaders = [
   "Key数 / Keys",
   "请求数 / Requests",
   "平均请求数 / Avg Requests",
-  "Input Token",
-  "Output Token",
-  "Cache Creation",
-  "Cache Read",
-  "Image Input",
-  "Image Output",
-  "Total Token",
-  "平均Token / Avg Token",
-  "Total含图片 / Total+Image",
+  "输入 Token / Input",
+  "输出 Token / Output",
+  "缓存创建 Token / Cache Creation",
+  "缓存读取 Token / Cache Read",
+  "图片输入 Token / Image Input",
+  "图片输出 Token / Image Output",
+  "总 Token / Total",
+  "平均 Token / Avg Token",
+  "含图片总 Token / Total+Image",
   "Actual Cost",
 ];
-formatTitle(personSheet, "A1:Q1", "Sub2API 人员 Token 使用排行榜");
+formatTitle(personSheet, "A1:Q1", "AI网关 人员 Token 使用排行榜");
 formatNote(
   personSheet,
   "A2:Q2",
@@ -512,6 +515,9 @@ summarySheet
   .getRange("B" + summaryStart + ":K" + summaryLastRow)
   .format.numberFormat = "#,##0";
 summarySheet
+  .getRange("D" + summaryStart + ":K" + summaryLastRow)
+  .format.numberFormat = tokenNumberFormat;
+summarySheet
   .getRange("L" + summaryStart + ":L" + summaryLastRow)
   .format.numberFormat = '"$"#,##0.0000';
 summarySheet.getRange("A1:A" + summaryLastRow).format.columnWidth = 13;
@@ -523,6 +529,9 @@ const groupLastRow = Math.max(groupTotalRow, 5);
 groupSheet
   .getRange("C" + groupStart + ":N" + groupLastRow)
   .format.numberFormat = "#,##0";
+groupSheet
+  .getRange("F" + groupStart + ":N" + groupLastRow)
+  .format.numberFormat = tokenNumberFormat;
 groupSheet
   .getRange("O" + groupStart + ":O" + groupLastRow)
   .format.numberFormat = '"$"#,##0.0000';
@@ -536,6 +545,9 @@ const personLastRow = Math.max(personTotalRow, 5);
 personSheet
   .getRange("A" + personStart + ":P" + personLastRow)
   .format.numberFormat = "#,##0";
+personSheet
+  .getRange("H" + personStart + ":P" + personLastRow)
+  .format.numberFormat = tokenNumberFormat;
 personSheet
   .getRange("Q" + personStart + ":Q" + personLastRow)
   .format.numberFormat = '"$"#,##0.0000';
