@@ -1,0 +1,91 @@
+# 3x-ui v3.7 Clash/Mihomo subscription routing overlay.
+# 3x-ui supplies the proxies and the uppercase PROXY group dynamically.
+# This overlay restores the existing Auto/Proxy policy groups and preserves generated nodes.
+
+proxy-groups:
+  - name: Auto
+    hidden: true
+    type: fallback
+    proxies:
+      - Hysteria2
+      - Vless
+    url: https://www.gstatic.com/generate_204
+    interval: 30
+    lazy: false
+    expected-status: 204
+  - name: Proxy
+    type: select
+    proxies:
+      - Auto
+    include-all-proxies: true
+    filter: '^(Vless|Hysteria2)$'
+    default-selected: Auto
+
+rule-providers:
+  johnshall-shadowrocket-ad:
+    type: http
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/InvictusNightmares/ai-tools/main/config/clash/rule-providers/johnshall-shadowrocket-ad.txt
+    path: ./ruleset/johnshall-shadowrocket-ad.txt
+    interval: 86400
+    proxy: Proxy
+    size-limit: 4194304
+
+rules:
+  # 手工确认的直连入口。必须置于广告规则前，避免上游宽泛规则误杀。
+  - DOMAIN,chybenzun.top,DIRECT
+  - DOMAIN,invite.linuxdo.org,DIRECT
+  - DOMAIN,muyuan.do,DIRECT
+  - DOMAIN-SUFFIX,cpirhzl.com,DIRECT
+  - DOMAIN-SUFFIX,rhecube.com,DIRECT
+  - DOMAIN-SUFFIX,spicrhdk.com,DIRECT
+
+  # 国内规则库漏项
+  - DOMAIN,sms.imagetasks.com,DIRECT
+  - DOMAIN,sycm.mmstat.com,DIRECT
+  - DOMAIN-SUFFIX,comicat.org,DIRECT
+  - DOMAIN-SUFFIX,feishu.com,DIRECT
+  - DOMAIN-SUFFIX,jdimg.com,DIRECT
+  - DOMAIN-SUFFIX,netspeedtestmaster.com,DIRECT
+  - DOMAIN-SUFFIX,qqlivecdn.com,DIRECT
+  - DOMAIN-SUFFIX,snssdk.com,DIRECT
+
+  # 手工确认的直连服务器
+  - IP-CIDR,8.216.44.189/32,DIRECT,no-resolve
+  - IP-CIDR,47.99.126.120/32,DIRECT,no-resolve
+  - IP-CIDR,47.251.166.27/32,DIRECT,no-resolve
+  - IP-CIDR,106.14.254.110/32,DIRECT,no-resolve
+  - IP-CIDR,192.168.64.16/32,DIRECT,no-resolve
+  # 腾讯微信 CDN 网段，当前 GeoIP 未归类为 CN
+  - IP-CIDR,203.205.238.0/23,DIRECT,no-resolve
+  - IP-CIDR,203.205.254.0/23,DIRECT,no-resolve
+  - IP-CIDR,179.253.245.229/32,DIRECT,no-resolve
+
+  # 局域网与私有地址始终直连
+  - GEOSITE,private,DIRECT
+  - GEOIP,private,DIRECT
+
+  # 广告与统计：保留现有规则，并叠加完整 Shadowrocket 广告 provider。
+  - GEOSITE,category-ads-all,REJECT
+  - DOMAIN,analytics.strava.com,REJECT
+  - DOMAIN,app.adjust.com,REJECT
+  - DOMAIN,app.appsflyer.com,REJECT
+  - DOMAIN,log.mmstat.com,REJECT
+  - RULE-SET,johnshall-shadowrocket-ad,REJECT
+
+  # 国内域名
+  - GEOSITE,apple@cn,DIRECT
+  - GEOSITE,apple-cn,DIRECT
+  - GEOSITE,google@cn,DIRECT
+  - GEOSITE,google-cn,DIRECT
+  - GEOSITE,steam@cn,DIRECT
+  - GEOSITE,category-companies@cn,DIRECT
+  - GEOSITE,geolocation-cn,DIRECT
+  - GEOSITE,CN,DIRECT
+
+  # 未命中国内域名规则的请求按目标 IP 判断，国内 IP 仍然直连。
+  - GEOIP,CN,DIRECT
+
+  # 其余流量全部走 DMIT 的自动切换/选择组。
+  - MATCH,Proxy
