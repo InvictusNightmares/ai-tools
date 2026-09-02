@@ -1,6 +1,6 @@
 # DMIT：在线规则与客户端配置
 
-目标：保留已确认的直连例外和广告拦截，国内 DIRECT，其余 Proxy。
+目标：保留已确认的直连例外和广告拦截，国内 DIRECT，其余 PROXY。
 
 ## 配置分工
 
@@ -27,7 +27,11 @@ https://raw.githubusercontent.com/InvictusNightmares/ai-tools/main/config/clash/
 
 客户端仍导入 3x-ui 为用户生成的 **Clash/Mihomo 订阅链接**，不是上面的规则链接。规则链接本身不包含代理节点，不能当独立订阅使用。
 
-首次拉取是异步的，缓存尚未准备好或下载失败时，订阅可能暂时只有默认规则；稍后更新订阅，并检查是否出现 `Auto`、`Proxy`、广告 provider 和末尾的 `MATCH,Proxy`。不能仅凭“保存成功”认定规则已下发。[远程加载源码](https://github.com/MHSanaei/3x-ui/blob/v3.7.0/internal/sub/remote_routing.go)
+首次拉取是异步的，缓存尚未准备好或下载失败时，订阅可能暂时只有默认规则；稍后更新订阅，并检查生成配置是否包含 `Auto`（隐藏组）、`PROXY`、广告 provider 和末尾的 `MATCH,PROXY`。不能仅凭“保存成功”认定规则已下发。[远程加载源码](https://github.com/MHSanaei/3x-ui/blob/v3.7.0/internal/sub/remote_routing.go)
+
+主选择组必须使用全大写 `PROXY`，广告 provider 的 `proxy` 和最终 `MATCH` 也要引用同名组。远程模式按区分大小写的名称合并，使用 `PROXY` 才能覆盖面板默认组；写成 `Proxy` 会让两组同时保留。正常情况下，代理页只显示一个主选择组 `PROXY`，内含 `Auto` 及实际匹配到的 `Hysteria2` / `Vless` 节点。[分组合并源码](https://github.com/MHSanaei/3x-ui/blob/v3.7.0/internal/sub/clash_service.go#L1021-L1062)
+
+从旧配置更新后，在 `PROXY` 中手动选择一次 `Auto`。`store-selected: true` 会恢复以前同名组的选择，因此旧的 `Vless` 选择可能覆盖 `default-selected: Auto`；不需要清空缓存。[选择恢复源码](https://github.com/MetaCubeX/mihomo/blob/v1.19.29/hub/executor/executor.go#L439-L467)
 
 ## 每台电脑只做一次的配置
 
@@ -53,5 +57,11 @@ DNS 沿用现有选择：国外 DoH、直连目标使用国内 DNS、代理节�
 - 节点选择：`Auto` 按名称引入 `Hysteria2`、`Vless`。Mihomo v1.19.29 会按名称排序，因此 Hysteria2 优先，Vless 备用。两者都没有匹配时使用 `REJECT`，不会自动变成直连。若 3x-ui 节点改名，需要同步修改两个组的 `filter`。[Mihomo 排序源码](https://github.com/MetaCubeX/mihomo/blob/v1.19.29/config/config.go)、[过滤与空组处理](https://github.com/MetaCubeX/mihomo/blob/v1.19.29/adapter/outboundgroup/parser.go)
 
 ## 使用前检查
+
+修改规则后，先从仓库根目录运行离线合并回归检查（Ruby 标准库，按 3x-ui v3.7 源码建模）：
+
+```bash
+ruby script/clash/test-dmit-routing.rb
+```
 
 更新订阅后查看客户端最终运行配置，而不只是仓库文件：确认 `mode: rule`、`ipv6: false`、`dns.ipv6: false`，同时确认动态节点、策略组、广告 provider 和国内直连/其余代理规则仍在。已有全局脚本、订阅脚本或可视化规则编辑也可能影响最终结果。
