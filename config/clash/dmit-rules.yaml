@@ -1,14 +1,14 @@
-# 3x-ui v3.7 Clash/Mihomo subscription routing overlay.
+# 3x-ui v3.7 Clash/Mihomo remote HTTPS routing overlay.
 # 3x-ui supplies the proxies and the uppercase PROXY group dynamically.
-# This overlay restores the existing Auto/Proxy policy groups and preserves generated nodes.
+# Client-only DNS/IPv6 defaults are in dmit-client.yaml; see dmit-setup.md.
 
 proxy-groups:
   - name: Auto
     hidden: true
     type: fallback
-    proxies:
-      - Hysteria2
-      - Vless
+    include-all-proxies: true
+    filter: '^(Hysteria2|Vless)$'
+    empty-fallback: REJECT
     url: https://www.gstatic.com/generate_204
     interval: 30
     lazy: false
@@ -69,9 +69,6 @@ rules:
   # 广告与统计：保留现有规则，并叠加完整 Shadowrocket 广告 provider。
   - GEOSITE,category-ads-all,REJECT
   - DOMAIN,analytics.strava.com,REJECT
-  - DOMAIN,app.adjust.com,REJECT
-  - DOMAIN,app.appsflyer.com,REJECT
-  - DOMAIN,log.mmstat.com,REJECT
   - RULE-SET,johnshall-shadowrocket-ad,REJECT
 
   # 国内域名
