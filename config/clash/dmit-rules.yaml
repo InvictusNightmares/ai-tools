@@ -1,5 +1,5 @@
 # 3x-ui v3.7 Clash/Mihomo remote HTTPS routing overlay.
-# 3x-ui supplies the proxies and the uppercase PROXY group dynamically.
+# 3x-ui supplies proxies dynamically; use PROXY to replace its default group.
 # Client-only DNS/IPv6 defaults are in dmit-client.yaml; see dmit-setup.md.
 
 proxy-groups:
@@ -13,7 +13,7 @@ proxy-groups:
     interval: 30
     lazy: false
     expected-status: 204
-  - name: Proxy
+  - name: PROXY
     type: select
     proxies:
       - Auto
@@ -29,7 +29,7 @@ rule-providers:
     url: https://raw.githubusercontent.com/InvictusNightmares/ai-tools/main/config/clash/rule-providers/johnshall-shadowrocket-ad.txt
     path: ./ruleset/johnshall-shadowrocket-ad.txt
     interval: 86400
-    proxy: Proxy
+    proxy: PROXY
     size-limit: 4194304
 
 rules:
@@ -85,4 +85,4 @@ rules:
   - GEOIP,CN,DIRECT
 
   # 其余流量全部走 DMIT 的自动切换/选择组。
-  - MATCH,Proxy
+  - MATCH,PROXY
