@@ -1,0 +1,15 @@
+[Unit]
+Description=Build verified Sub2API releases preserving Exception Records
+After=network-online.target docker.service
+Wants=network-online.target
+Requires=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/data/sub2api-policy-build
+ExecStart=/data/miniforge/bin/python3 /data/sub2api-policy-build/policy-log/upgrade/build.py
+TimeoutStartSec=3h
+Nice=10
+UMask=0022
+StandardOutput=journal
+StandardError=journal

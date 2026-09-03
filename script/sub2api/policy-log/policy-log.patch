@@ -1,0 +1,4298 @@
+diff --git a/backend/cmd/server/main.go b/backend/cmd/server/main.go
+index 8494713ba1196cf5440e23f3fb49c41c6780172c..23aeeb1e5b66b43cc3921cf2b259421ea6c2b84a 100644
+--- a/backend/cmd/server/main.go
++++ b/backend/cmd/server/main.go
+@@ -19,6 +19,7 @@
+ 	"github.com/Wei-Shaw/sub2api/internal/config"
+ 	"github.com/Wei-Shaw/sub2api/internal/handler"
+ 	"github.com/Wei-Shaw/sub2api/internal/pkg/logger"
++	"github.com/Wei-Shaw/sub2api/internal/requestcontent"
+ 	"github.com/Wei-Shaw/sub2api/internal/server/middleware"
+ 	"github.com/Wei-Shaw/sub2api/internal/setup"
+ 	"github.com/Wei-Shaw/sub2api/internal/web"
+@@ -153,6 +154,8 @@
+ 		log.Fatalf("Failed to initialize application: %v", err)
+ 	}
+ 	defer app.Cleanup()
++	requestcontent.InitDefault()
++	defer requestcontent.CloseDefault()
+ 	if app.PluginManager != nil {
+ 		if err := app.PluginManager.Start(context.Background()); err != nil {
+ 			log.Printf("Plugin manager started in degraded state: %v", err)
+diff --git a/backend/internal/handler/admin/policy_requests_handler.go b/backend/internal/handler/admin/policy_requests_handler.go
+new file mode 100644
+index 0000000000000000000000000000000000000000..7e45e73f75189738effee5592d3c328221384910
+--- /dev/null
++++ b/backend/internal/handler/admin/policy_requests_handler.go
+@@ -0,0 +1,145 @@
++package admin
++
++import (
++	"context"
++	"errors"
++	"io"
++	"net/http"
++	"os"
++	"strconv"
++	"strings"
++	"time"
++
++	"github.com/Wei-Shaw/sub2api/internal/pkg/response"
++	"github.com/Wei-Shaw/sub2api/internal/requestcontent"
++	"github.com/Wei-Shaw/sub2api/internal/server/middleware"
++	"github.com/gin-gonic/gin"
++)
++
++// PolicyRequestsHandler exposes the local recorder through the existing admin
++// boundary. It has no configuration mutations and does not invoke moderation.
++type PolicyRequestsHandler struct{ reader *requestcontent.Reader }
++
++func NewPolicyRequestsHandler(reader *requestcontent.Reader) *PolicyRequestsHandler {
++	return &PolicyRequestsHandler{reader: reader}
++}
++func policyAdmin(c *gin.Context) bool {
++	c.Header("Cache-Control", "no-store")
++	c.Header("X-Content-Type-Options", "nosniff")
++	role, ok := middleware.GetUserRoleFromContext(c)
++	if !ok {
++		response.Unauthorized(c, "Authorization required")
++		return false
++	}
++	if role != "admin" {
++		response.Forbidden(c, "Administrator access required")
++		return false
++	}
++	return true
++}
++func policyReadError(c *gin.Context, err error) {
++	if os.IsNotExist(err) {
++		response.NotFound(c, "Record expired or no longer available; refresh the list")
++		return
++	}
++	if errors.Is(err, requestcontent.ErrReadBusy) || errors.Is(err, context.DeadlineExceeded) {
++		response.Error(c, http.StatusServiceUnavailable, "Reader is busy; retry shortly")
++		return
++	}
++	response.InternalError(c, "Unable to read retained requests")
++}
++func (h *PolicyRequestsHandler) List(c *gin.Context) {
++	if !policyAdmin(c) {
++		return
++	}
++	q := requestcontent.Query{Page: 1, PageSize: 20, Key: strings.TrimSpace(c.Query("key")), Model: strings.TrimSpace(c.Query("model")), ErrorCode: c.Query("error_code")}
++	for name, dst := range map[string]*int{"page": &q.Page, "page_size": &q.PageSize} {
++		if s := c.Query(name); s != "" {
++			n, e := strconv.Atoi(s)
++			if e != nil || n < 1 || n > 50000 || name == "page_size" && n > 100 {
++				response.BadRequest(c, "Invalid pagination")
++				return
++			}
++			*dst = n
++		}
++	}
++	if len(q.Key) > 200 || len(q.Model) > 200 || len(q.ErrorCode) > 100 {
++		response.BadRequest(c, "Filter is too long")
++		return
++	}
++	for name, dst := range map[string]*time.Time{"start_time": &q.Start, "end_time": &q.End} {
++		if s := c.Query(name); s != "" {
++			v, e := time.Parse(time.RFC3339, s)
++			if e != nil {
++				response.BadRequest(c, "Invalid time; expected RFC3339")
++				return
++			}
++			*dst = v
++		}
++	}
++	if !q.Start.IsZero() && !q.End.IsZero() && !q.End.After(q.Start) {
++		response.BadRequest(c, "End time must be after start time")
++		return
++	}
++	ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
++	defer cancel()
++	result, err := h.reader.List(ctx, q)
++	if err != nil {
++		policyReadError(c, err)
++		return
++	}
++	response.Success(c, gin.H{"records": result, "status": requestcontent.ReadAdminStatus()})
++}
++func (h *PolicyRequestsHandler) Get(c *gin.Context) {
++	if !policyAdmin(c) {
++		return
++	}
++	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
++	defer cancel()
++	var meta requestcontent.Metadata
++	var preview []byte
++	var truncated bool
++	err := h.reader.WithBody(ctx, c.Param("id"), func(m requestcontent.Metadata, body io.Reader) error {
++		meta = m
++		var e error
++		preview, e = io.ReadAll(io.LimitReader(body, (256<<10)+1))
++		if e != nil {
++			return e
++		}
++		truncated = len(preview) > 256<<10
++		if truncated {
++			preview = preview[:256<<10]
++		}
++		return nil
++	})
++	if err != nil {
++		policyReadError(c, err)
++		return
++	}
++	response.Success(c, gin.H{"record": meta, "body_preview": string(preview), "preview_truncated": truncated})
++}
++func (h *PolicyRequestsHandler) Download(c *gin.Context) {
++	if !policyAdmin(c) {
++		return
++	}
++	ctx, cancel := context.WithTimeout(c.Request.Context(), 30*time.Second)
++	defer cancel()
++	err := h.reader.WithBody(ctx, c.Param("id"), func(meta requestcontent.Metadata, body io.Reader) error {
++		// Keep slow clients bounded without changing the server's global timeouts.
++		control := http.NewResponseController(c.Writer)
++		if e := control.SetWriteDeadline(time.Now().Add(30 * time.Second)); e != nil {
++			return e
++		}
++		defer control.SetWriteDeadline(time.Time{})
++		c.Header("Content-Disposition", `attachment; filename="policy-request-`+meta.ID[:12]+`.txt"`)
++		c.Header("Content-Type", "application/octet-stream")
++		// Exact length was validated while indexing; clients reject interrupted streams.
++		c.Header("Content-Length", strconv.FormatInt(meta.StoredBodyBytes, 10))
++		c.Status(http.StatusOK)
++		_, e := io.Copy(c.Writer, body)
++		return e
++	})
++	if err != nil && !c.Writer.Written() {
++		policyReadError(c, err)
++	}
++}
+diff --git a/backend/internal/handler/admin/policy_requests_handler_test.go b/backend/internal/handler/admin/policy_requests_handler_test.go
+new file mode 100644
+index 0000000000000000000000000000000000000000..e57b9030fa7d26353621062abd4b1105151cf8be
+--- /dev/null
++++ b/backend/internal/handler/admin/policy_requests_handler_test.go
+@@ -0,0 +1,109 @@
++package admin
++
++import (
++	"bytes"
++	"compress/gzip"
++	"encoding/json"
++	"github.com/Wei-Shaw/sub2api/internal/requestcontent"
++	"github.com/Wei-Shaw/sub2api/internal/server/middleware"
++	"github.com/gin-gonic/gin"
++	"io"
++	"net/http"
++	"net/http/httptest"
++	"os"
++	"path/filepath"
++	"strconv"
++	"strings"
++	"testing"
++	"time"
++)
++
++func TestPolicyRequestsAdminBoundaryAndPreview(t *testing.T) {
++	gin.SetMode(gin.TestMode)
++	dir := t.TempDir()
++	r := requestcontent.NewReader(dir)
++	h := NewPolicyRequestsHandler(r)
++	var data bytes.Buffer
++	z := gzip.NewWriter(&data)
++	body := []byte(`{"input":"` + strings.Repeat("a", 300000) + `"}`)
++	json.NewEncoder(z).Encode(requestcontent.Entry{RecordedAt: time.Now(), APIKeyID: 65, ErrorCode: "cyber_policy", Body: body})
++	z.Close()
++	os.WriteFile(filepath.Join(dir, "requests-20260903T03-1-1-000001.jsonl.gz"), data.Bytes(), 0600)
++	route := gin.New()
++	route.Use(func(c *gin.Context) {
++		if role := c.GetHeader("Test-Role"); role != "" {
++			c.Set(string(middleware.ContextKeyUserRole), role)
++		}
++	})
++	route.GET("/records", h.List)
++	route.GET("/records/:id", h.Get)
++	route.GET("/records/:id/body", h.Download)
++	call := func(path, role string) *httptest.ResponseRecorder {
++		w := httptest.NewRecorder()
++		req := httptest.NewRequest("GET", path, nil)
++		req.Header.Set("Test-Role", role)
++		route.ServeHTTP(deadlineRecorder{w}, req)
++		return w
++	}
++	for _, path := range []string{"/records", "/records/id", "/records/id/body"} {
++		for role, want := range map[string]int{"": 401, "user": 403} {
++			if w := call(path, role); w.Code != want {
++				t.Fatalf("%s %s: %d", path, role, w.Code)
++			}
++		}
++	}
++	for _, query := range []string{"?page=0", "?page_size=101", "?start_time=oops", "?page=999999999999999999999", "?start_time=2026-09-03T00:00:00Z&end_time=2026-09-02T00:00:00Z"} {
++		if w := call("/records"+query, "admin"); w.Code != 400 {
++			t.Fatalf("invalid query %s: %d", query, w.Code)
++		}
++	}
++	w := call("/records", "admin")
++	if w.Code != 200 || w.Header().Get("Cache-Control") != "no-store" {
++		t.Fatalf("list %d", w.Code)
++	}
++	var list struct {
++		Data struct {
++			Records requestcontent.Listing `json:"records"`
++		} `json:"data"`
++	}
++	if err := json.Unmarshal(w.Body.Bytes(), &list); err != nil || len(list.Data.Records.Items) != 1 {
++		t.Fatalf("list decode %s", w.Body.String())
++	}
++	id := list.Data.Records.Items[0].ID
++	w = call("/records/"+id, "admin")
++	var detail struct {
++		Data struct {
++			Preview   string `json:"body_preview"`
++			Truncated bool   `json:"preview_truncated"`
++		} `json:"data"`
++	}
++	json.Unmarshal(w.Body.Bytes(), &detail)
++	if w.Code != 200 || !detail.Data.Truncated || len(detail.Data.Preview) > 256<<10 {
++		t.Fatal("unbounded preview")
++	}
++	w = call("/records/"+id+"/body", "admin")
++	if w.Code != 200 || !bytes.Equal(w.Body.Bytes(), body) || w.Header().Get("Content-Length") != strconv.Itoa(len(body)) || !strings.Contains(w.Header().Get("Content-Disposition"), "attachment") {
++		t.Fatal("download changed original")
++	}
++	// Real HTTP proves Content-Length makes an interrupted stream fail at the client.
++	server := httptest.NewServer(route)
++	defer server.Close()
++	if err := os.Truncate(filepath.Join(dir, "requests-20260903T03-1-1-000001.jsonl.gz"), int64(data.Len()*3/4)); err != nil {
++		t.Fatal(err)
++	}
++	req, _ := http.NewRequest("GET", server.URL+"/records/"+id+"/body", nil)
++	req.Header.Set("Test-Role", "admin")
++	resp, err := server.Client().Do(req)
++	if err != nil {
++		t.Fatal(err)
++	}
++	defer resp.Body.Close()
++	_, err = io.ReadAll(resp.Body)
++	if resp.StatusCode != 200 || err == nil {
++		t.Fatalf("interrupted response appeared complete: status=%d err=%v", resp.StatusCode, err)
++	}
++}
++
++type deadlineRecorder struct{ *httptest.ResponseRecorder }
++
++func (deadlineRecorder) SetWriteDeadline(time.Time) error { return nil }
+diff --git a/backend/internal/handler/openai_chat_completions.go b/backend/internal/handler/openai_chat_completions.go
+index e74b11b9b629e7e92ff4218d1681192445df1f95..684bd2b130a496ad60da06c9af3d66945bb41d8f 100644
+--- a/backend/internal/handler/openai_chat_completions.go
++++ b/backend/internal/handler/openai_chat_completions.go
+@@ -249,7 +249,7 @@
+ 			return h.gatewayService.ForwardAsChatCompletions(c.Request.Context(), c, account, forwardBody, promptCacheKey, "")
+ 		}()
+ 		var cyberBlockBodyChat []byte
+-		if service.GetOpsCyberPolicy(c) != nil {
++		if service.GetOpsCyberPolicy(c) != nil || service.GetOpenAIPolicyObservation(c) != nil {
+ 			cyberBlockBodyChat = body
+ 		}
+ 		h.recordCyberPolicyIfMarked(c, apiKey, account, subscription, reqModel, err != nil, cyberBlockBodyChat, clientRequestedUsageFields(c, channelMapping, reqModel, ""), service.HashUsageRequestPayload(body))
+diff --git a/backend/internal/handler/openai_gateway_cyber_test.go b/backend/internal/handler/openai_gateway_cyber_test.go
+index 1b9fc53a9d07ca2e543fb5a1ddf5ce8b992391cf..f92b98cb95a371adb9169fc16de93e39342f17af 100644
+--- a/backend/internal/handler/openai_gateway_cyber_test.go
++++ b/backend/internal/handler/openai_gateway_cyber_test.go
+@@ -5,6 +5,7 @@
+ 	"strings"
+ 	"testing"
+ 
++	"github.com/Wei-Shaw/sub2api/internal/requestcontent"
+ 	"github.com/Wei-Shaw/sub2api/internal/service"
+ 	"github.com/gin-gonic/gin"
+ 	"github.com/stretchr/testify/require"
+@@ -195,3 +196,41 @@
+ 		})
+ 	}
+ }
++
++// Uses harmless fixture bodies and synthetic upstream marks; no live model call.
++func TestPolicyRequestRecorderIsConditionalAndTurnScoped(t *testing.T) {
++	c := newTestGinContext()
++	c.Request = httptest.NewRequest("POST", "/openai/v1/responses", nil)
++	c.Writer.Header().Set("X-Request-Id", "synthetic-request-id")
++	var entries []requestcontent.Entry
++	h := &OpenAIGatewayHandler{policyRequestRecorder: func(e requestcontent.Entry) {
++		e.Body = append([]byte(nil), e.Body...)
++		entries = append(entries, e)
++	}}
++	gid := int64(198)
++	key := &service.APIKey{ID: 65, Name: "synthetic-owner", GroupID: &gid, User: &service.User{ID: 9}, Group: &service.Group{Name: "codex-D"}}
++	account := &service.Account{ID: 51}
++	body := []byte(`{"input":"harmless text mentioning cyber_policy"}`)
++	h.recordCyberPolicyIfMarked(c, key, account, nil, "gpt-5", false, body, service.ChannelUsageFields{}, "")
++	require.Empty(t, entries, "normal responses must never capture the request")
++	service.MarkOpsCyberPolicy(c, service.CyberPolicyMark{UpstreamStatus: 200})
++	h.recordCyberPolicyIfMarked(c, key, account, nil, "gpt-5", false, body, service.ChannelUsageFields{}, "")
++	h.recordCyberPolicyIfMarked(c, key, account, nil, "gpt-5", false, body, service.ChannelUsageFields{}, "")
++	require.Len(t, entries, 1, "duplicate callback for the same turn must not duplicate content")
++	require.Equal(t, "cyber_policy", entries[0].ErrorCode)
++	require.Equal(t, 200, entries[0].UpstreamStatus, "HTTP 200 SSE policy errors must be captured")
++	require.Equal(t, int64(65), entries[0].APIKeyID)
++	require.Equal(t, int64(51), entries[0].AccountID)
++	require.Equal(t, "synthetic-owner", entries[0].APIKeyName)
++	require.Equal(t, "synthetic-request-id", entries[0].RequestID)
++	require.Equal(t, string(body), string(entries[0].Body))
++	clearCyberPolicyTurnState(c)
++	c.Request.Header.Set("Upgrade", "websocket")
++	h.recordCyberPolicyIfMarked(c, key, account, nil, "gpt-5", false, []byte(`{"input":"normal next turn"}`), service.ChannelUsageFields{}, "")
++	require.Len(t, entries, 1, "a normal next turn must not inherit the previous rejection")
++	service.MarkOpsCyberPolicy(c, service.CyberPolicyMark{UpstreamStatus: 400})
++	h.recordCyberPolicyIfMarked(c, key, account, nil, "gpt-5", true, []byte(`{"input":"second rejected turn"}`), service.ChannelUsageFields{}, "")
++	require.Len(t, entries, 2)
++	require.Equal(t, `{"input":"second rejected turn"}`, string(entries[1].Body))
++	require.Equal(t, "websocket", entries[1].Protocol)
++}
+diff --git a/backend/internal/handler/openai_gateway_handler.go b/backend/internal/handler/openai_gateway_handler.go
+index ce67e07e85d86b36374452fe92109f18fc089d0a..5293c31808220d3934d921fd5a5ab746880c23d9 100644
+--- a/backend/internal/handler/openai_gateway_handler.go
++++ b/backend/internal/handler/openai_gateway_handler.go
+@@ -20,6 +20,7 @@
+ 	"github.com/Wei-Shaw/sub2api/internal/pkg/ctxkey"
+ 	"github.com/Wei-Shaw/sub2api/internal/pkg/ip"
+ 	"github.com/Wei-Shaw/sub2api/internal/pkg/logger"
++	"github.com/Wei-Shaw/sub2api/internal/requestcontent"
+ 	"github.com/Wei-Shaw/sub2api/internal/securityaudit"
+ 	middleware2 "github.com/Wei-Shaw/sub2api/internal/server/middleware"
+ 	"github.com/Wei-Shaw/sub2api/internal/service"
+@@ -33,6 +34,7 @@
+ 
+ // OpenAIGatewayHandler handles OpenAI API gateway requests
+ type OpenAIGatewayHandler struct {
++	policyRequestRecorder      func(requestcontent.Entry)
+ 	gatewayService             *service.OpenAIGatewayService
+ 	billingCacheService        *service.BillingCacheService
+ 	apiKeyService              *service.APIKeyService
+@@ -749,7 +751,7 @@
+ 			return h.gatewayService.Forward(c.Request.Context(), c, account, attemptBody)
+ 		}()
+ 		var cyberBlockBodyHTTP []byte
+-		if service.GetOpsCyberPolicy(c) != nil {
++		if service.GetOpsCyberPolicy(c) != nil || service.GetOpenAIPolicyObservation(c) != nil {
+ 			cyberBlockBodyHTTP = sessionHashBody
+ 		}
+ 		h.recordCyberPolicyIfMarked(c, apiKey, account, subscription, reqModel, err != nil, cyberBlockBodyHTTP, clientRequestedUsageFields(c, channelMapping, reqModel, ""), service.HashUsageRequestPayload(body))
+@@ -1314,7 +1316,7 @@
+ 			return h.gatewayService.ForwardAsAnthropic(c.Request.Context(), c, account, forwardBody, promptCacheKey, defaultMappedModel)
+ 		}()
+ 		var cyberBlockBodyMsg []byte
+-		if service.GetOpsCyberPolicy(c) != nil {
++		if service.GetOpsCyberPolicy(c) != nil || service.GetOpenAIPolicyObservation(c) != nil {
+ 			cyberBlockBodyMsg = body
+ 		}
+ 		h.recordCyberPolicyIfMarked(c, apiKey, account, subscription, reqModel, err != nil, cyberBlockBodyMsg, clientRequestedUsageFields(c, channelMappingMsg, reqModel, ""), service.HashUsageRequestPayload(body))
+@@ -2873,6 +2875,9 @@
+ 
+ 		for {
+ 			err := h.gatewayService.ProxyResponsesWebSocketFromClient(ctx, c, wsConn, account, token, wsFirstMessage, hooks)
++			cyberTurnBodiesMu.Lock()
++			h.recordUnfinishedPolicyRequest(c, apiKey, account, reqModel, cyberTurnBodies)
++			cyberTurnBodiesMu.Unlock()
+ 			if err == nil {
+ 				reqLog.Info("openai.websocket_ingress_closed", zap.Int64("account_id", account.ID))
+ 				return
+@@ -3950,6 +3955,7 @@
+ // 当前请求已发给用户，本方法只做事后记录，不影响响应。forwardErrored 为 true 时才写用量行，
+ // 避免与正常 RecordUsage(forward 成功路径)重复。每请求至多记录一次。
+ func (h *OpenAIGatewayHandler) recordCyberPolicyIfMarked(c *gin.Context, apiKey *service.APIKey, account *service.Account, subscription *service.UserSubscription, model string, forwardErrored bool, cyberBlockBody []byte, channelFields service.ChannelUsageFields, requestPayloadHash string) {
++	h.recordPolicyRequestIfMarked(c, apiKey, account, model, cyberBlockBody)
+ 	mark := service.GetOpsCyberPolicy(c)
+ 	if mark == nil {
+ 		return
+@@ -4032,6 +4038,7 @@
+ 		ClientIP:        clientIPStr,
+ 		CreatedAt:       time.Now(),
+ 	}
++
+ 	if gwSvc != nil && apiKey != nil {
+ 		plan := buildCyberSessionBlockWritePlan(apiKey.ID, c, cyberBlockBody)
+ 		if len(plan.keys) > 0 {
+@@ -4096,6 +4103,7 @@
+ 		return
+ 	}
+ 	service.ClearOpsCyberPolicy(c)
++	service.ClearOpenAIPolicyObservation(c)
+ 	c.Set(cyberPolicyRecordedKey, false)
+ }
+ 
+diff --git a/backend/internal/handler/openai_images.go b/backend/internal/handler/openai_images.go
+index 18e1d59195e54adb689821f9f157b557e93b647f..f3fbe70b4c8f57f7c54d1d8a44f87e1267ddd529 100644
+--- a/backend/internal/handler/openai_images.go
++++ b/backend/internal/handler/openai_images.go
+@@ -250,6 +250,7 @@
+ 			}()
+ 			return h.gatewayService.ForwardImages(requestCtx, c, account, body, parsed, channelMapping.MappedModel)
+ 		}()
++		h.recordPolicyRequestIfMarked(c, apiKey, account, parsed.Model, body)
+ 		forwardDurationMs := time.Since(forwardStart).Milliseconds()
+ 		upstreamLatencyMs, _ := getContextInt64(c, service.OpsUpstreamLatencyMsKey)
+ 		responseLatencyMs := forwardDurationMs
+diff --git a/backend/internal/handler/openai_policy_request_log.go b/backend/internal/handler/openai_policy_request_log.go
+new file mode 100644
+index 0000000000000000000000000000000000000000..d7638a403aa8629d3e84951f5042667b16023ef0
+--- /dev/null
++++ b/backend/internal/handler/openai_policy_request_log.go
+@@ -0,0 +1,82 @@
++package handler
++
++import (
++	"strings"
++
++	"github.com/Wei-Shaw/sub2api/internal/pkg/ctxkey"
++	"github.com/Wei-Shaw/sub2api/internal/requestcontent"
++	"github.com/Wei-Shaw/sub2api/internal/service"
++	"github.com/gin-gonic/gin"
++	"github.com/tidwall/gjson"
++)
++
++// This hook only writes evidence, independently of native risk control. It is
++// called after each HTTP attempt or WS turn, before its request buffers expire.
++func (h *OpenAIGatewayHandler) recordPolicyRequestIfMarked(c *gin.Context, key *service.APIKey, account *service.Account, model string, body []byte) {
++	if c == nil || key == nil || len(body) == 0 {
++		return
++	}
++	m := service.GetOpenAIPolicyObservation(c)
++	if m != nil {
++		service.ClearOpenAIPolicyObservation(c)
++	} else if cyber := service.GetOpsCyberPolicy(c); cyber != nil && !c.GetBool(cyberPolicyRecordedKey) {
++		m = &service.OpenAIPolicyObservation{Code: "cyber_policy", UpstreamStatus: cyber.UpstreamStatus, SignalPath: "native_cyber_policy_mark", Reason: "explicit_upstream_policy_error"}
++		if account != nil {
++			m.AccountID = account.ID
++		}
++	}
++	if m == nil {
++		return
++	}
++	e := requestcontent.Entry{
++		RequestID: c.Writer.Header().Get("X-Request-Id"),
++		UserID:    key.UserID, APIKeyID: key.ID, APIKeyName: key.Name,
++		GroupID: key.GroupID, AccountID: m.AccountID,
++		Provider: service.PlatformOpenAI, Protocol: "http", Model: clientRequestedModel(c, model),
++		Stage: "upstream_policy_signal", ErrorCode: m.Code, ErrorType: m.ErrorType,
++		SignalPath: m.SignalPath, Reason: m.Reason, UpstreamStatus: m.UpstreamStatus,
++		UpstreamRequestID: m.UpstreamRequestID, UpstreamResponseID: m.UpstreamResponseID, Body: body,
++	}
++	if key.User != nil {
++		e.UserID = key.User.ID
++	}
++	if key.Group != nil {
++		e.GroupName = key.Group.Name
++	}
++	if c.GetBool(opsStreamKey) {
++		e.Protocol = "sse"
++	}
++	if c.Request != nil {
++		e.ClientRequestID, _ = c.Request.Context().Value(ctxkey.ClientRequestID).(string)
++		if c.Request.URL != nil {
++			e.Endpoint = c.Request.URL.Path
++		}
++		if strings.EqualFold(c.GetHeader("Upgrade"), "websocket") {
++			e.Protocol = "websocket"
++		}
++	}
++	record := h.policyRequestRecorder
++	if record == nil {
++		record = requestcontent.Capture
++	}
++	record(e)
++}
++
++// A refusal may precede a disconnect with no terminal event. Only the one
++// unconsumed request can be safely attributed; ambiguous leftovers are skipped.
++func (h *OpenAIGatewayHandler) recordUnfinishedPolicyRequest(c *gin.Context, key *service.APIKey, account *service.Account, model string, bodies map[int][]byte) {
++	if service.GetOpenAIPolicyObservation(c) == nil {
++		return
++	}
++	if len(bodies) != 1 {
++		service.ClearOpenAIPolicyObservation(c)
++		return
++	}
++	for turn, body := range bodies {
++		if requested := gjson.GetBytes(body, "model").String(); requested != "" {
++			model = requested
++		}
++		h.recordPolicyRequestIfMarked(c, key, account, model, body)
++		delete(bodies, turn)
++	}
++}
+diff --git a/backend/internal/handler/openai_policy_request_log_test.go b/backend/internal/handler/openai_policy_request_log_test.go
+new file mode 100644
+index 0000000000000000000000000000000000000000..cfd86861bf9a725576251aa76ed4c5f12e8a0b51
+--- /dev/null
++++ b/backend/internal/handler/openai_policy_request_log_test.go
+@@ -0,0 +1,71 @@
++package handler
++
++import (
++	"net/http/httptest"
++	"testing"
++
++	"github.com/Wei-Shaw/sub2api/internal/requestcontent"
++	"github.com/Wei-Shaw/sub2api/internal/service"
++	"github.com/stretchr/testify/require"
++)
++
++func TestPolicyRequestRecorderBroaderSignalsRemainIndependentOfCyberControl(t *testing.T) {
++	c := newTestGinContext()
++	c.Request = httptest.NewRequest("POST", "/v1/responses", nil)
++	var entries []requestcontent.Entry
++	h := &OpenAIGatewayHandler{policyRequestRecorder: func(e requestcontent.Entry) { entries = append(entries, e) }}
++	key := &service.APIKey{ID: 65, UserID: 9, Name: "fixture-owner"}
++	account := &service.Account{ID: 51, Platform: service.PlatformOpenAI}
++	body := []byte(`{"input":"harmless fixture"}`)
++	for _, code := range []string{"content_policy", "content_policy_violation", "content_filter", "invalid_prompt", "structured_refusal"} {
++		payload := `{"error":{"code":"` + code + `","message":"Your prompt was flagged as potentially violating our usage policy."}}`
++		if code == "structured_refusal" {
++			payload = `{"type":"response.refusal.delta","delta":"Harmless fixture"}`
++		}
++		service.ObserveOpenAIPolicyPayload(c, account, []byte(payload), 200, "upstream-"+code)
++		h.recordCyberPolicyIfMarked(c, key, account, nil, "gpt-5", false, body, service.ChannelUsageFields{}, "")
++		require.Nil(t, service.GetOpsCyberPolicy(c), "logging must not enable cyber enforcement")
++		require.False(t, c.GetBool(cyberPolicyRecordedKey))
++	}
++	require.Len(t, entries, 5)
++	for _, entry := range entries {
++		require.Equal(t, int64(65), entry.APIKeyID)
++		require.Equal(t, int64(9), entry.UserID)
++		require.Equal(t, int64(51), entry.AccountID)
++		require.Equal(t, string(body), string(entry.Body))
++		require.NotEmpty(t, entry.UpstreamRequestID)
++	}
++	h.recordPolicyRequestIfMarked(c, key, account, "gpt-5", body)
++	require.Len(t, entries, 5, "consumed signals must not duplicate")
++	c.Request.Header.Set("Upgrade", "websocket")
++	clearCyberPolicyTurnState(c)
++	h.recordPolicyRequestIfMarked(c, key, account, "gpt-5", []byte(`{"input":"normal next turn"}`))
++	require.Len(t, entries, 5)
++	service.ObserveOpenAIPolicyPayload(c, account, []byte(`{"error":{"code":"content_policy"}}`), 200, "next-turn")
++	h.recordPolicyRequestIfMarked(c, key, account, "gpt-5", []byte(`{"input":"next rejected turn"}`))
++	require.Len(t, entries, 6)
++	require.Equal(t, "websocket", entries[5].Protocol)
++	require.Equal(t, `{"input":"next rejected turn"}`, string(entries[5].Body))
++}
++
++func TestPolicyRequestRecorderRetainsOnlyUnambiguousUnfinishedTurn(t *testing.T) {
++	c := newTestGinContext()
++	c.Request = httptest.NewRequest("GET", "/v1/responses", nil)
++	c.Request.Header.Set("Upgrade", "websocket")
++	var entries []requestcontent.Entry
++	h := &OpenAIGatewayHandler{policyRequestRecorder: func(e requestcontent.Entry) { entries = append(entries, e) }}
++	key := &service.APIKey{ID: 65}
++	account := &service.Account{ID: 51, Platform: service.PlatformOpenAI}
++	bodies := map[int][]byte{2: []byte(`{"model":"gpt-5.5","input":"harmless interrupted second turn"}`)}
++	service.ObserveOpenAIPolicyPayload(c, account, []byte(`{"type":"response.refusal.delta","delta":"Harmless fixture"}`), 200, "")
++	h.recordUnfinishedPolicyRequest(c, key, account, "gpt-5", bodies)
++	require.Len(t, entries, 1)
++	require.Equal(t, "gpt-5.5", entries[0].Model)
++	require.Contains(t, string(entries[0].Body), "second turn")
++	require.Empty(t, bodies)
++	h.recordUnfinishedPolicyRequest(c, key, account, "gpt-5", bodies)
++	require.Len(t, entries, 1)
++	service.ObserveOpenAIPolicyPayload(c, account, []byte(`{"type":"response.refusal.delta","delta":"Harmless fixture"}`), 200, "")
++	h.recordUnfinishedPolicyRequest(c, key, account, "gpt-5", map[int][]byte{3: []byte(`{}`), 4: []byte(`{}`)})
++	require.Len(t, entries, 1, "ambiguous turn bodies must not be retained")
++}
+diff --git a/backend/internal/pkg/sysutil/restart.go b/backend/internal/pkg/sysutil/restart.go
+index 2146596fc4104d025befb50f08164d1bee331e62..dc572c81a1b09f204ed8d68bc0c1ec8c657a2b61 100644
+--- a/backend/internal/pkg/sysutil/restart.go
++++ b/backend/internal/pkg/sysutil/restart.go
+@@ -5,6 +5,7 @@
+ 	"log"
+ 	"os"
+ 	"runtime"
++	"syscall"
+ 	"time"
+ )
+ 
+@@ -32,7 +33,12 @@
+ 	// Give a moment for logs to flush and response to be sent
+ 	go func() {
+ 		time.Sleep(100 * time.Millisecond)
+-		os.Exit(0)
++		// Main handles SIGTERM by stopping HTTP and flushing queued records.
++		if process, err := os.FindProcess(os.Getpid()); err == nil {
++			if err := process.Signal(syscall.SIGTERM); err != nil {
++				log.Printf("Graceful restart signal failed: %v", err)
++			}
++		}
+ 	}()
+ 
+ 	return nil
+diff --git a/backend/internal/requestcontent/default.go b/backend/internal/requestcontent/default.go
+new file mode 100644
+index 0000000000000000000000000000000000000000..e7767c5f26a5c64ad91e0a2bd44b3a59bdde7560
+--- /dev/null
++++ b/backend/internal/requestcontent/default.go
+@@ -0,0 +1,103 @@
++package requestcontent
++
++import (
++	"context"
++	"encoding/json"
++	"log"
++	"os"
++	"path/filepath"
++	"sync"
++	"sync/atomic"
++	"time"
++)
++
++var defaultOnce sync.Once
++var defaultRecorder atomic.Pointer[Recorder]
++var closing atomic.Bool
++
++// InitDefault reads an administrator-owned file in the persistent data volume.
++// Missing, disabled or invalid configuration leaves content storage disabled.
++// No moderation service or external endpoint is involved.
++func InitDefault() {
++	defaultOnce.Do(func() {
++		base := os.Getenv("DATA_DIR")
++		if base == "" {
++			base = "/app/data"
++		}
++		body, err := os.ReadFile(filepath.Join(base, "policy-request-log.json"))
++		if os.IsNotExist(err) {
++			return
++		}
++		if err != nil {
++			log.Print("policy_request_log.disabled config_read_failed")
++			return
++		}
++		cfg := struct {
++			Enabled       bool  `json:"enabled"`
++			RetentionDays int   `json:"retention_days"`
++			MaxDiskMB     int64 `json:"max_disk_mb"`
++		}{RetentionDays: 30, MaxDiskMB: 1024}
++		if err := json.Unmarshal(body, &cfg); err != nil {
++			log.Print("policy_request_log.disabled invalid_config")
++			return
++		}
++		if !cfg.Enabled {
++			return
++		}
++		if cfg.RetentionDays < 1 || cfg.RetentionDays > 365 || cfg.MaxDiskMB < 128 || cfg.MaxDiskMB > 1<<20 {
++			log.Print("policy_request_log.disabled invalid_limits")
++			return
++		}
++		opts := Options{
++			Directory:    filepath.Join(base, "policy-requests"),
++			Retention:    time.Duration(cfg.RetentionDays) * 24 * time.Hour,
++			MaxDiskBytes: cfg.MaxDiskMB << 20, MaxQueuedBytes: 64 << 20,
++			SegmentBytes: 128 << 20, MinFreeBytes: 2 << 30,
++		}
++		r, err := New(opts)
++		if err != nil {
++			log.Print("policy_request_log.disabled storage_initialization_failed")
++			return
++		}
++		defaultRecorder.Store(r)
++		if closing.Load() {
++			closeRecorder(r)
++			return
++		}
++		log.Printf("policy_request_log.enabled signals=cyber_policy,content_policy,content_policy_violation,invalid_prompt_policy,content_filter,structured_refusal retention_days=%d max_disk_mb=%d", cfg.RetentionDays, cfg.MaxDiskMB)
++	})
++}
++
++func Capture(e Entry) {
++	if closing.Load() || !isPolicySignal(e.ErrorCode) {
++		return
++	}
++	InitDefault()
++	if r := defaultRecorder.Load(); r != nil {
++		r.Capture(e)
++	}
++}
++
++func CloseDefault() {
++	closing.Store(true)
++	if r := defaultRecorder.Load(); r != nil {
++		closeRecorder(r)
++	}
++}
++
++func closeRecorder(r *Recorder) {
++	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
++	defer cancel()
++	if err := r.Close(ctx); err != nil {
++		log.Print("policy_request_log.shutdown flush_timeout")
++	}
++}
++
++// Enabled reports recorder availability without retaining request data.
++func Enabled() bool {
++	if closing.Load() {
++		return false
++	}
++	InitDefault()
++	return defaultRecorder.Load() != nil
++}
+diff --git a/backend/internal/requestcontent/disk_other.go b/backend/internal/requestcontent/disk_other.go
+new file mode 100644
+index 0000000000000000000000000000000000000000..7b69ae4dafbcba7b173c597e017fa2de2c5c7369
+--- /dev/null
++++ b/backend/internal/requestcontent/disk_other.go
+@@ -0,0 +1,7 @@
++//go:build !linux && !darwin
++
++package requestcontent
++
++import "errors"
++
++func availableBytes(string) (uint64, error) { return 0, errors.New("free space check unsupported") }
+diff --git a/backend/internal/requestcontent/disk_unix.go b/backend/internal/requestcontent/disk_unix.go
+new file mode 100644
+index 0000000000000000000000000000000000000000..4f09104619065c4783915a4a154563cdab9825c4
+--- /dev/null
++++ b/backend/internal/requestcontent/disk_unix.go
+@@ -0,0 +1,13 @@
++//go:build linux || darwin
++
++package requestcontent
++
++import "syscall"
++
++func availableBytes(path string) (uint64, error) {
++	var stat syscall.Statfs_t
++	if err := syscall.Statfs(path, &stat); err != nil {
++		return 0, err
++	}
++	return uint64(stat.Bavail) * uint64(stat.Bsize), nil
++}
+diff --git a/backend/internal/requestcontent/reader.go b/backend/internal/requestcontent/reader.go
+new file mode 100644
+index 0000000000000000000000000000000000000000..5a6b3cfea7cdb09b1577c32f0ddf2af599b001ee
+--- /dev/null
++++ b/backend/internal/requestcontent/reader.go
+@@ -0,0 +1,600 @@
++package requestcontent
++
++import (
++	"bufio"
++	"bytes"
++	"compress/gzip"
++	"container/heap"
++	"context"
++	"crypto/sha256"
++	"encoding/base64"
++	"encoding/hex"
++	"encoding/json"
++	"errors"
++	"io"
++	"os"
++	"regexp"
++	"sort"
++	"strconv"
++	"strings"
++	"sync"
++	"time"
++)
++
++type Metadata struct {
++	StoredBodyBytes    int64     `json:"stored_body_bytes"`
++	RecordedAt         time.Time `json:"recorded_at"`
++	RequestID          string    `json:"request_id"`
++	ClientRequestID    string    `json:"client_request_id,omitempty"`
++	AccountID          int64     `json:"account_id"`
++	ErrorCode          string    `json:"error_code"`
++	ErrorType          string    `json:"error_type,omitempty"`
++	SignalPath         string    `json:"signal_path,omitempty"`
++	Reason             string    `json:"reason,omitempty"`
++	UpstreamRequestID  string    `json:"upstream_request_id,omitempty"`
++	UpstreamResponseID string    `json:"upstream_response_id,omitempty"`
++	BodyEncoding       string    `json:"body_encoding,omitempty"`
++	UpstreamStatus     int       `json:"upstream_status"`
++	UserID             int64     `json:"user_id"`
++	APIKeyID           int64     `json:"api_key_id"`
++	APIKeyName         string    `json:"api_key_name"`
++	GroupID            *int64    `json:"group_id,omitempty"`
++	GroupName          string    `json:"group_name,omitempty"`
++	Provider           string    `json:"provider"`
++	Endpoint           string    `json:"endpoint"`
++	Protocol           string    `json:"protocol"`
++	Model              string    `json:"model"`
++	Stage              string    `json:"stage"`
++	BodyBytes          int       `json:"body_bytes"`
++	BodySHA256         string    `json:"body_sha256"`
++	ID                 string    `json:"id"`
++}
++
++type Query struct {
++	Page, PageSize        int
++	Key, Model, ErrorCode string
++	Start, End            time.Time
++}
++type Listing struct {
++	Items           []Metadata `json:"items"`
++	Total           int        `json:"total"`
++	Page            int        `json:"page"`
++	PageSize        int        `json:"page_size"`
++	IndexPending    bool       `json:"index_pending"`
++	IndexLimited    bool       `json:"index_limited"`
++	UnreadableFiles int        `json:"unreadable_files"`
++	DiskBytes       int64      `json:"disk_bytes"`
++}
++type indexedRecord struct {
++	meta   Metadata
++	name   string
++	offset int64
++}
++type segmentIndex struct {
++	info   os.FileInfo
++	offset int64
++	broken bool
++}
++type recordHeap []*indexedRecord
++
++func (h recordHeap) Len() int { return len(h) }
++func newer(a, b Metadata) bool {
++	if a.RecordedAt.Equal(b.RecordedAt) {
++		return a.ID > b.ID
++	}
++	return a.RecordedAt.After(b.RecordedAt)
++}
++func (h recordHeap) Less(i, j int) bool { return newer(h[j].meta, h[i].meta) }
++func (h recordHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
++func (h *recordHeap) Push(v any)        { *h = append(*h, v.(*indexedRecord)) }
++func (h *recordHeap) Pop() any {
++	a := *h
++	v := a[len(a)-1]
++	a[len(a)-1] = nil
++	*h = a[:len(a)-1]
++	return v
++}
++
++// Reader keeps a rolling metadata-only index. Gzip members and downloads are
++// streamed behind one shared read gate; body size never determines heap usage.
++type Reader struct {
++	directory string
++	gate      chan struct{}
++	segments  map[string]*segmentIndex
++	entries   map[string]*indexedRecord
++	oldest    recordHeap
++	limited   bool
++}
++
++var segmentName = regexp.MustCompile(`^requests-[0-9]{8}T[0-9]{2}-[0-9]+-[0-9]+-[0-9]+\.jsonl\.gz$`)
++var ErrReadBusy = errors.New("request content reader busy")
++
++const maxIndexedRecords = 50000
++
++// v2 permits 64 MiB before JSON HTML escaping, whose worst-case expansion is 6x.
++const maxMemberBytes = 512 << 20
++
++func NewReader(directory string) *Reader {
++	return &Reader{directory: directory, gate: make(chan struct{}, 1), segments: map[string]*segmentIndex{}, entries: map[string]*indexedRecord{}}
++}
++func (r *Reader) lock(ctx context.Context) error {
++	if err := ctx.Err(); err != nil {
++		return err
++	}
++	select {
++	case r.gate <- struct{}{}:
++		return nil
++	default:
++		return ErrReadBusy
++	}
++}
++func (r *Reader) openRoot() (*os.Root, error) {
++	st, err := os.Lstat(r.directory)
++	if err != nil {
++		return nil, err
++	}
++	if !st.IsDir() || st.Mode()&os.ModeSymlink != 0 {
++		return nil, os.ErrPermission
++	}
++	return os.OpenRoot(r.directory)
++}
++func openSegment(root *os.Root, name string) (*os.File, error) {
++	if !segmentName.MatchString(name) {
++		return nil, os.ErrNotExist
++	}
++	before, err := root.Lstat(name)
++	if err != nil {
++		return nil, err
++	}
++	if !before.Mode().IsRegular() {
++		return nil, os.ErrPermission
++	}
++	f, err := root.Open(name)
++	if err != nil {
++		return nil, err
++	}
++	after, err := f.Stat()
++	if err != nil || !after.Mode().IsRegular() || !os.SameFile(before, after) {
++		f.Close()
++		return nil, os.ErrPermission
++	}
++	return f, nil
++}
++
++type contextReader struct {
++	ctx context.Context
++	r   io.Reader
++}
++
++func (r contextReader) Read(p []byte) (int, error) {
++	if err := r.ctx.Err(); err != nil {
++		return 0, err
++	}
++	return r.r.Read(p)
++}
++
++// openMember reads only the bounded metadata prefix. Entry's body is the final
++// field in all recorder versions. Decode never materializes the body token.
++func openMember(ctx context.Context, f *os.File, offset, size int64) (Metadata, io.Reader, func() (int64, error), error) {
++	var meta Metadata
++	section := io.NewSectionReader(f, offset, size-offset)
++	buffer := bufio.NewReader(contextReader{ctx, section})
++	z, err := gzip.NewReader(buffer)
++	if err != nil {
++		return meta, nil, nil, err
++	}
++	z.Multistream(false)
++	bounded := &io.LimitedReader{R: contextReader{ctx, z}, N: maxMemberBytes + 1}
++	prefix := &io.LimitedReader{R: bounded, N: 1 << 20}
++	dec := json.NewDecoder(prefix)
++	fail := func(err error) (Metadata, io.Reader, func() (int64, error), error) {
++		z.Close()
++		return meta, nil, nil, err
++	}
++	token, err := dec.Token()
++	if err != nil {
++		return fail(err)
++	}
++	if token != json.Delim('{') {
++		return fail(errors.New("invalid record header"))
++	}
++	fields := map[string]json.RawMessage{}
++	for {
++		key, e := dec.Token()
++		if e != nil {
++			return fail(e)
++		}
++		name, ok := key.(string)
++		if !ok {
++			return fail(errors.New("invalid field"))
++		}
++		if name == "body" {
++			header, _ := json.Marshal(fields)
++			if e := json.Unmarshal(header, &meta); e != nil {
++				return fail(e)
++			}
++			// Buffered bytes start after the body key. Strip its colon, and the enclosing
++			// record's final }\n with a tiny rolling tail, preserving the stored body.
++			bodyStart := bufio.NewReader(io.MultiReader(dec.Buffered(), bounded))
++			for {
++				b, e := bodyStart.ReadByte()
++				if e != nil {
++					return fail(e)
++				}
++				if b == ':' {
++					break
++				}
++				if b != ' ' && b != '\n' && b != '\r' && b != '\t' {
++					return fail(errors.New("missing body colon"))
++				}
++			}
++			body := &suffixReader{r: bodyStart}
++			finish := func() (int64, error) {
++				_, e := io.Copy(io.Discard, body)
++				z.Close()
++				if e != nil {
++					return offset, e
++				}
++				if bounded.N == 0 {
++					return offset, errors.New("member limit exceeded")
++				}
++				pos, _ := section.Seek(0, io.SeekCurrent)
++				return offset + pos - int64(buffer.Buffered()), nil
++			}
++			return meta, body, finish, nil
++		}
++		var value json.RawMessage
++		if e := dec.Decode(&value); e != nil {
++			return fail(e)
++		}
++		fields[name] = value
++	}
++}
++
++// suffixReader removes the encoder's enclosing record suffix without retaining
++// its body; checksum/truncation errors propagate from the gzip stream.
++type suffixReader struct {
++	r       io.Reader
++	tail    []byte
++	pending []byte
++	done    bool
++	err     error
++}
++
++func (s *suffixReader) Read(p []byte) (int, error) {
++	if len(p) == 0 {
++		return 0, nil
++	}
++	for len(s.pending) == 0 && !s.done {
++		var b [32768]byte
++		n, e := s.r.Read(b[:])
++		data := append(s.tail, b[:n]...)
++		if len(data) > 2 {
++			s.pending = append(s.pending, data[:len(data)-2]...)
++			s.tail = append([]byte(nil), data[len(data)-2:]...)
++		} else {
++			s.tail = append([]byte(nil), data...)
++		}
++		if e != nil {
++			s.done = true
++			s.err = e
++			if e == io.EOF && !bytes.Equal(s.tail, []byte("}\n")) {
++				s.err = io.ErrUnexpectedEOF
++			}
++		}
++	}
++	if len(s.pending) > 0 {
++		n := copy(p, s.pending)
++		s.pending = s.pending[n:]
++		return n, nil
++	}
++	return 0, s.err
++}
++func recordID(name string, offset int64) string {
++	h := sha256.New()
++	h.Write([]byte(name))
++	var b [8]byte
++	for i := range b {
++		b[i] = byte(uint64(offset) >> (8 * i))
++	}
++	h.Write(b[:])
++	return hex.EncodeToString(h.Sum(nil))
++}
++func (r *Reader) index(row *indexedRecord) {
++	if len(r.entries) >= maxIndexedRecords {
++		r.limited = true
++		if !newer(row.meta, r.oldest[0].meta) {
++			return
++		}
++		old := heap.Pop(&r.oldest).(*indexedRecord)
++		delete(r.entries, old.meta.ID)
++	}
++	r.entries[row.meta.ID] = row
++	heap.Push(&r.oldest, row)
++}
++func (r *Reader) List(ctx context.Context, q Query) (Listing, error) {
++	out := Listing{Items: []Metadata{}, Page: q.Page, PageSize: q.PageSize}
++	if q.Page < 1 || q.PageSize < 1 || q.PageSize > 100 || q.Page > 50000 {
++		return out, errors.New("invalid pagination")
++	}
++	if err := r.lock(ctx); err != nil {
++		return out, err
++	}
++	defer func() { <-r.gate }()
++	root, err := r.openRoot()
++	if os.IsNotExist(err) {
++		clear(r.segments)
++		clear(r.entries)
++		r.oldest = nil
++		r.limited = false
++		return out, nil
++	}
++	if err != nil {
++		return out, err
++	}
++	defer root.Close()
++	d, err := root.Open(".")
++	if err != nil {
++		return out, err
++	}
++	files, err := d.ReadDir(-1)
++	d.Close()
++	if err != nil {
++		return out, err
++	}
++	live := map[string]os.FileInfo{}
++	names := []string{}
++	for _, f := range files {
++		if !segmentName.MatchString(f.Name()) || !f.Type().IsRegular() {
++			continue
++		}
++		info, e := f.Info()
++		if e != nil {
++			continue
++		}
++		live[f.Name()] = info
++		names = append(names, f.Name())
++		out.DiskBytes += info.Size()
++	}
++	removed := false
++	for name, seg := range r.segments {
++		info, ok := live[name]
++		if !ok || !os.SameFile(info, seg.info) || info.Size() < seg.offset {
++			delete(r.segments, name)
++			removed = true
++		}
++	}
++	if removed {
++		r.oldest = nil
++		for id, row := range r.entries {
++			if _, ok := r.segments[row.name]; !ok {
++				delete(r.entries, id)
++			} else {
++				r.oldest = append(r.oldest, row)
++			}
++		}
++		heap.Init(&r.oldest)
++	}
++	sort.Sort(sort.Reverse(sort.StringSlice(names)))
++	deadline := time.Now().Add(2 * time.Second)
++	budget := int64(256 << 20)
++	for _, name := range names {
++		info := live[name]
++		seg := r.segments[name]
++		if seg == nil {
++			seg = &segmentIndex{info: info}
++			r.segments[name] = seg
++		}
++		if seg.broken {
++			out.UnreadableFiles++
++			continue
++		}
++		if seg.offset >= info.Size() {
++			continue
++		}
++		if time.Now().After(deadline) || budget <= 0 {
++			out.IndexPending = true
++			continue
++		}
++		f, e := openSegment(root, name)
++		if e != nil {
++			out.UnreadableFiles++
++			continue
++		}
++		for seg.offset < info.Size() {
++			if time.Now().After(deadline) || budget <= 0 {
++				out.IndexPending = true
++				break
++			}
++			if ctx.Err() != nil {
++				f.Close()
++				return out, ctx.Err()
++			}
++			meta, body, finish, e := openMember(ctx, f, seg.offset, info.Size())
++			var next int64
++			var bodySize int64
++			if e == nil {
++				var n int64
++				n, e = io.Copy(io.Discard, body)
++				bodySize = n
++				budget -= n
++				var endErr error
++				next, endErr = finish()
++				if e == nil {
++					e = endErr
++				}
++			}
++			if e != nil {
++				if ctx.Err() != nil {
++					f.Close()
++					return out, ctx.Err()
++				}
++				if errors.Is(e, io.ErrUnexpectedEOF) || errors.Is(e, io.EOF) {
++					out.IndexPending = true
++				} else {
++					seg.broken = true
++					out.UnreadableFiles++
++				}
++				break
++			}
++			if next <= seg.offset {
++				seg.broken = true
++				out.UnreadableFiles++
++				break
++			}
++			meta.ID = recordID(name, seg.offset)
++			meta.StoredBodyBytes = bodySize
++			if meta.BodyEncoding == "base64" {
++				meta.StoredBodyBytes = int64(meta.BodyBytes)
++			}
++			r.index(&indexedRecord{meta: meta, name: name, offset: seg.offset})
++			seg.offset = next
++		}
++		f.Close()
++	}
++	out.IndexLimited = r.limited
++	rows := []Metadata{}
++	key := strings.ToLower(strings.TrimSpace(q.Key))
++	model := strings.ToLower(strings.TrimSpace(q.Model))
++	for _, row := range r.entries {
++		m := row.meta
++		if !q.Start.IsZero() && m.RecordedAt.Before(q.Start) || !q.End.IsZero() && !m.RecordedAt.Before(q.End) {
++			continue
++		}
++		if q.ErrorCode != "" && q.ErrorCode != m.ErrorCode {
++			continue
++		}
++		if model != "" && !strings.Contains(strings.ToLower(m.Model), model) {
++			continue
++		}
++		if key != "" && !strings.Contains(strings.ToLower(m.APIKeyName), key) && key != strconv.FormatInt(m.APIKeyID, 10) {
++			continue
++		}
++		rows = append(rows, m)
++	}
++	sort.Slice(rows, func(i, j int) bool { return newer(rows[i], rows[j]) })
++	out.Total = len(rows)
++	start := (q.Page - 1) * q.PageSize
++	if start < len(rows) {
++		out.Items = rows[start:min(start+q.PageSize, len(rows))]
++	}
++	return out, nil
++}
++
++// WithBody holds the shared gate until the consumer finishes, including slow
++// downloads. Consumers must not retain the reader. Base64 multipart bodies are
++// decoded as a stream; JSON bodies preserve the bytes in the retained file.
++func (r *Reader) WithBody(ctx context.Context, id string, consume func(Metadata, io.Reader) error) error {
++	if len(id) != 64 {
++		return os.ErrNotExist
++	}
++	if _, err := hex.DecodeString(id); err != nil {
++		return os.ErrNotExist
++	}
++	if err := r.lock(ctx); err != nil {
++		return err
++	}
++	defer func() { <-r.gate }()
++	row, ok := r.entries[id]
++	if !ok {
++		return os.ErrNotExist
++	}
++	seg := r.segments[row.name]
++	root, err := r.openRoot()
++	if err != nil {
++		return err
++	}
++	defer root.Close()
++	f, err := openSegment(root, row.name)
++	if err != nil {
++		return err
++	}
++	defer f.Close()
++	info, err := f.Stat()
++	if err != nil {
++		return err
++	}
++	if seg == nil || !os.SameFile(info, seg.info) {
++		return os.ErrNotExist
++	}
++	meta, body, finish, err := openMember(ctx, f, row.offset, info.Size())
++	if err != nil {
++		return err
++	}
++	defer finish()
++	if meta.BodySHA256 != row.meta.BodySHA256 {
++		return os.ErrNotExist
++	}
++	meta.ID = id
++	meta.StoredBodyBytes = row.meta.StoredBodyBytes
++	if meta.BodyEncoding == "base64" {
++		b := bufio.NewReader(body)
++		quote, e := b.ReadByte()
++		if e != nil || quote != '"' {
++			return errors.New("invalid encoded body")
++		}
++		body = base64.NewDecoder(base64.StdEncoding, &quoteReader{r: b})
++	}
++	if err = consume(meta, body); err != nil {
++		return err
++	}
++	_, err = finish()
++	return err
++}
++
++// Base64 strings produced by the recorder do not contain JSON escapes.
++type quoteReader struct {
++	r    *bufio.Reader
++	done bool
++}
++
++func (r *quoteReader) Read(p []byte) (int, error) {
++	if r.done {
++		return 0, io.EOF
++	}
++	n := 0
++	for n < len(p) {
++		b, e := r.r.ReadByte()
++		if e != nil {
++			return n, e
++		}
++		if b == '"' {
++			r.done = true
++			return n, io.EOF
++		}
++		p[n] = b
++		n++
++	}
++	return n, nil
++}
++
++var readerOnce sync.Once
++var defaultReader *Reader
++
++func DefaultReader() *Reader {
++	readerOnce.Do(func() {
++		base := os.Getenv("DATA_DIR")
++		if base == "" {
++			base = "/app/data"
++		}
++		defaultReader = NewReader(base + "/policy-requests")
++	})
++	return defaultReader
++}
++
++type AdminStatus struct {
++	Enabled       bool   `json:"enabled"`
++	RetentionDays int    `json:"retention_days"`
++	MaxDiskMB     int64  `json:"max_disk_mb"`
++	Runtime       Status `json:"runtime"`
++}
++
++func ReadAdminStatus() AdminStatus {
++	s := AdminStatus{Enabled: Enabled()}
++	if r := defaultRecorder.Load(); r != nil {
++		s.RetentionDays = int(r.opts.Retention / (24 * time.Hour))
++		s.MaxDiskMB = r.opts.MaxDiskBytes >> 20
++		s.Runtime = r.Snapshot()
++	}
++	return s
++}
+diff --git a/backend/internal/requestcontent/reader_test.go b/backend/internal/requestcontent/reader_test.go
+new file mode 100644
+index 0000000000000000000000000000000000000000..12817608d0f556ba4e5f2e37dd6ca56f03b207ed
+--- /dev/null
++++ b/backend/internal/requestcontent/reader_test.go
+@@ -0,0 +1,209 @@
++package requestcontent
++
++import (
++	"bytes"
++	"compress/gzip"
++	"context"
++	"encoding/base64"
++	"encoding/json"
++	"io"
++	"os"
++	"path/filepath"
++	"strconv"
++	"strings"
++	"testing"
++	"time"
++)
++
++func fixtureMember(t *testing.T, e Entry) []byte {
++	t.Helper()
++	var b bytes.Buffer
++	z := gzip.NewWriter(&b)
++	if err := json.NewEncoder(z).Encode(e); err != nil {
++		t.Fatal(err)
++	}
++	z.Close()
++	return b.Bytes()
++}
++func TestPolicyRequestsReaderAppendFilterPrune(t *testing.T) {
++	dir := t.TempDir()
++	name := "requests-20260903T03-1-1-000001.jsonl.gz"
++	path := filepath.Join(dir, name)
++	one := fixtureMember(t, Entry{RecordedAt: time.Date(2026, 9, 3, 3, 0, 0, 0, time.UTC), APIKeyID: 65, APIKeyName: "测试人员", UserID: 9, ErrorCode: "cyber_policy", Model: "gpt-5.4", Body: []byte(`{"input":"SECRET_BODY <script>alert(1)</script>"}`), BodySHA256: "one"})
++	two := fixtureMember(t, Entry{RecordedAt: time.Date(2026, 9, 3, 4, 0, 0, 0, time.UTC), APIKeyID: 66, APIKeyName: "other", UserID: 9, ErrorCode: "structured_refusal", Model: "gpt-5.5", Body: []byte(`{"input":"second"}`), BodySHA256: "two"})
++	os.WriteFile(path, one, 0600)
++	r := NewReader(dir)
++	q := Query{Page: 1, PageSize: 20}
++	ctx := context.Background()
++	list, err := r.List(ctx, q)
++	if err != nil || list.Total != 1 {
++		t.Fatalf("list %+v %v", list, err)
++	}
++	raw, _ := json.Marshal(list)
++	if strings.Contains(string(raw), "SECRET_BODY") || strings.Contains(string(raw), `"body":`) {
++		t.Fatal("body leaked in metadata")
++	}
++	var gotBody []byte
++	err = r.WithBody(ctx, list.Items[0].ID, func(_ Metadata, b io.Reader) error { var e error; gotBody, e = io.ReadAll(b); return e })
++	if err != nil || !bytes.Contains(gotBody, []byte("SECRET_BODY")) {
++		t.Fatalf("detail %v", err)
++	}
++	f, _ := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, 0600)
++	f.Write(two[:len(two)/2])
++	f.Close()
++	list, err = r.List(ctx, q)
++	if err != nil || list.Total != 1 || !list.IndexPending || list.UnreadableFiles != 0 {
++		t.Fatalf("partial append %+v %v", list, err)
++	}
++	f, _ = os.OpenFile(path, os.O_APPEND|os.O_WRONLY, 0600)
++	f.Write(two[len(two)/2:])
++	f.Close()
++	list, err = r.List(ctx, q)
++	if err != nil || list.Total != 2 || list.IndexPending || list.Items[0].APIKeyID != 66 {
++		t.Fatalf("completed append %+v %v", list, err)
++	}
++	q.Key = "65"
++	list, _ = r.List(ctx, q)
++	if list.Total != 1 || list.Items[0].APIKeyName != "测试人员" {
++		t.Fatal("key filter")
++	}
++	q.Key = "测试"
++	q.Model = "5.4"
++	q.ErrorCode = "cyber_policy"
++	q.Start = time.Date(2026, 9, 3, 3, 0, 0, 0, time.UTC)
++	q.End = q.Start.Add(time.Hour)
++	list, _ = r.List(ctx, q)
++	if list.Total != 1 {
++		t.Fatal("combined filters")
++	}
++	q.End = q.Start
++	list, _ = r.List(ctx, q)
++	if list.Total != 0 {
++		t.Fatal("end must be exclusive")
++	}
++	q = Query{Page: 2, PageSize: 1}
++	list, _ = r.List(ctx, q)
++	if list.Total != 2 || len(list.Items) != 1 || list.Items[0].APIKeyID != 65 {
++		t.Fatal("pagination")
++	}
++	id := list.Items[0].ID
++	os.Remove(path)
++	if err := r.WithBody(ctx, id, func(Metadata, io.Reader) error { return nil }); !os.IsNotExist(err) {
++		t.Fatal("deleted detail")
++	}
++	list, _ = r.List(ctx, q)
++	if list.Total != 0 {
++		t.Fatal("deleted cache survived")
++	}
++}
++func TestPolicyRequestsReaderPathAndConcurrency(t *testing.T) {
++	dir := t.TempDir()
++	outside := filepath.Join(t.TempDir(), "private.txt")
++	os.WriteFile(outside, []byte("private"), 0600)
++	name := "requests-20260903T03-1-1-000001.jsonl.gz"
++	os.Symlink(outside, filepath.Join(dir, name))
++	r := NewReader(dir)
++	list, err := r.List(context.Background(), Query{Page: 1, PageSize: 20})
++	if err != nil || list.Total != 0 {
++		t.Fatal("symlink indexed")
++	}
++	for _, id := range []string{"../private.txt", strings.Repeat("x", 64), strings.Repeat("0", 64)} {
++		if err := r.WithBody(context.Background(), id, func(Metadata, io.Reader) error { return nil }); !os.IsNotExist(err) {
++			t.Fatal("unsafe id accepted")
++		}
++	}
++	r.gate <- struct{}{}
++	if _, err := r.List(context.Background(), Query{Page: 1, PageSize: 20}); err != ErrReadBusy {
++		t.Fatal("parallel scans not bounded")
++	}
++	<-r.gate
++	ctx, cancel := context.WithCancel(context.Background())
++	cancel()
++	r.gate <- struct{}{}
++	if _, err := r.List(ctx, Query{Page: 1, PageSize: 20}); err == nil {
++		t.Fatal("cancel ignored")
++	}
++	<-r.gate
++}
++
++func TestPolicyRequestsLargeV2EscapingAndRollingIndex(t *testing.T) {
++	t.Run("escaped body remains readable", func(t *testing.T) {
++		dir := t.TempDir()
++		name := "requests-20260903T03-1-1-000001.jsonl.gz"
++		body, _ := json.Marshal(map[string]string{"input": strings.Repeat("<", 17<<20)})
++		// Use an unescaped original body, matching RawMessage from a real request.
++		body = bytes.ReplaceAll(body, []byte(`\u003c`), []byte("<"))
++		member := fixtureMember(t, Entry{APIKeyID: 65, RecordedAt: time.Now(), Body: body, ErrorCode: "cyber_policy"})
++		second := fixtureMember(t, Entry{APIKeyID: 66, RecordedAt: time.Now(), Body: []byte(`{}`), ErrorCode: "content_filter"})
++		os.WriteFile(filepath.Join(dir, name), append(member, second...), 0600)
++		r := NewReader(dir)
++		list, err := r.List(context.Background(), Query{Page: 1, PageSize: 20})
++		if err != nil || list.UnreadableFiles != 0 {
++			t.Fatalf("large legacy record unreadable: %+v %v", list, err)
++		}
++		for list.IndexPending {
++			list, err = r.List(context.Background(), Query{Page: 1, PageSize: 20})
++			if err != nil {
++				t.Fatal(err)
++			}
++		}
++		if list.Total != 2 {
++			t.Fatalf("later member inaccessible: %d", list.Total)
++		}
++		for _, row := range list.Items {
++			if row.APIKeyID == 65 {
++				var count int64
++				err = r.WithBody(context.Background(), row.ID, func(_ Metadata, b io.Reader) error { var e error; count, e = io.Copy(io.Discard, b); return e })
++				if err != nil || count < 96<<20 {
++					t.Fatalf("large download %d %v", count, err)
++				}
++			}
++		}
++	})
++	t.Run("newest admitted after capacity", func(t *testing.T) {
++		r := NewReader(t.TempDir())
++		base := time.Now()
++		for i := 0; i < maxIndexedRecords+2; i++ {
++			m := Metadata{ID: strconv.Itoa(i), RecordedAt: base.Add(time.Duration(i) * time.Second)}
++			r.index(&indexedRecord{meta: m})
++		}
++		if len(r.entries) != maxIndexedRecords || !r.limited {
++			t.Fatal("unbounded index")
++		}
++		if _, ok := r.entries[strconv.Itoa(maxIndexedRecords+1)]; !ok {
++			t.Fatal("new event blocked")
++		}
++		if _, ok := r.entries["0"]; ok {
++			t.Fatal("oldest retained")
++		}
++		r.index(&indexedRecord{meta: Metadata{ID: "old", RecordedAt: base.Add(-time.Hour)}})
++		if _, ok := r.entries["old"]; ok {
++			t.Fatal("old history displaced latest")
++		}
++	})
++}
++func TestPolicyRequestsMultipartStreamAndGate(t *testing.T) {
++	dir := t.TempDir()
++	raw := []byte("multipart bytes \x00 \xff")
++	encoded, _ := json.Marshal(base64.StdEncoding.EncodeToString(raw))
++	name := "requests-20260903T03-1-1-000001.jsonl.gz"
++	os.WriteFile(filepath.Join(dir, name), fixtureMember(t, Entry{APIKeyID: 65, BodyEncoding: "base64", Body: encoded, RecordedAt: time.Now()}), 0600)
++	r := NewReader(dir)
++	list, err := r.List(context.Background(), Query{Page: 1, PageSize: 20})
++	if err != nil {
++		t.Fatal(err)
++	}
++	err = r.WithBody(context.Background(), list.Items[0].ID, func(_ Metadata, b io.Reader) error {
++		if _, e := r.List(context.Background(), Query{Page: 1, PageSize: 20}); e != ErrReadBusy {
++			t.Fatal("gate released during consumption")
++		}
++		got, e := io.ReadAll(b)
++		if !bytes.Equal(got, raw) {
++			t.Fatal("multipart bytes changed")
++		}
++		return e
++	})
++	if err != nil {
++		t.Fatal(err)
++	}
++}
+diff --git a/backend/internal/requestcontent/recorder.go b/backend/internal/requestcontent/recorder.go
+new file mode 100644
+index 0000000000000000000000000000000000000000..f31b2ec5c70166b81a80a2814996211db52641f9
+--- /dev/null
++++ b/backend/internal/requestcontent/recorder.go
+@@ -0,0 +1,347 @@
++// Package requestcontent saves only requests explicitly rejected by upstream
++// with explicit policy/refusal signals. It does not classify requests or receive auth headers.
++package requestcontent
++
++import (
++	"bytes"
++	"compress/gzip"
++	"context"
++	"crypto/sha256"
++	"encoding/base64"
++	"encoding/hex"
++	"encoding/json"
++	"errors"
++	"fmt"
++	"log"
++	"os"
++	"path/filepath"
++	"sort"
++	"strings"
++	"sync"
++	"sync/atomic"
++	"time"
++)
++
++type Entry struct {
++	RecordedAt         time.Time       `json:"recorded_at"`
++	RequestID          string          `json:"request_id"`
++	ClientRequestID    string          `json:"client_request_id,omitempty"`
++	AccountID          int64           `json:"account_id"`
++	ErrorCode          string          `json:"error_code"`
++	ErrorType          string          `json:"error_type,omitempty"`
++	SignalPath         string          `json:"signal_path,omitempty"`
++	Reason             string          `json:"reason,omitempty"`
++	UpstreamRequestID  string          `json:"upstream_request_id,omitempty"`
++	UpstreamResponseID string          `json:"upstream_response_id,omitempty"`
++	BodyEncoding       string          `json:"body_encoding,omitempty"`
++	UpstreamStatus     int             `json:"upstream_status"`
++	UserID             int64           `json:"user_id"`
++	APIKeyID           int64           `json:"api_key_id"`
++	APIKeyName         string          `json:"api_key_name"`
++	GroupID            *int64          `json:"group_id,omitempty"`
++	GroupName          string          `json:"group_name,omitempty"`
++	Provider           string          `json:"provider"`
++	Endpoint           string          `json:"endpoint"`
++	Protocol           string          `json:"protocol"`
++	Model              string          `json:"model"`
++	Stage              string          `json:"stage"`
++	BodyBytes          int             `json:"body_bytes"`
++	BodySHA256         string          `json:"body_sha256"`
++	Body               json.RawMessage `json:"body"`
++}
++
++type Options struct {
++	Directory      string
++	Retention      time.Duration
++	MaxDiskBytes   int64
++	MaxQueuedBytes int64
++	SegmentBytes   int64
++	MinFreeBytes   uint64
++}
++
++type Status struct {
++	UpdatedAt   time.Time `json:"updated_at"`
++	Written     uint64    `json:"written"`
++	Dropped     uint64    `json:"dropped"`
++	WriteErrors uint64    `json:"write_errors"`
++	QueuedBytes int64     `json:"queued_bytes"`
++	PrunedFiles uint64    `json:"pruned_files"`
++	PrunedBytes uint64    `json:"pruned_bytes"`
++}
++
++type Recorder struct {
++	opts      Options
++	mu        sync.RWMutex
++	closed    bool
++	queue     chan Entry
++	done      chan struct{}
++	pending   atomic.Int64
++	written   atomic.Uint64
++	dropped   atomic.Uint64
++	errors    atomic.Uint64
++	pruned    atomic.Uint64
++	prunedB   atomic.Uint64
++	lastWarn  atomic.Int64
++	file      *os.File // worker-owned
++	fileName  string
++	fileBytes int64
++	fileHour  string
++	sequence  uint64
++	lastPrune time.Time
++}
++
++func New(opts Options) (*Recorder, error) {
++	if opts.Directory == "" || opts.Retention <= 0 || opts.MaxDiskBytes <= 0 || opts.MaxQueuedBytes <= 0 || opts.SegmentBytes <= 0 || opts.SegmentBytes > opts.MaxDiskBytes {
++		return nil, errors.New("invalid request content storage limits")
++	}
++	if err := os.MkdirAll(opts.Directory, 0700); err != nil {
++		return nil, err
++	}
++	info, err := os.Lstat(opts.Directory)
++	if err != nil || !info.IsDir() || info.Mode()&os.ModeSymlink != 0 {
++		return nil, errors.New("request content directory must be a real directory")
++	}
++	if err := os.Chmod(opts.Directory, 0700); err != nil {
++		return nil, err
++	}
++	r := &Recorder{opts: opts, queue: make(chan Entry, 256), done: make(chan struct{})}
++	if err := r.prune(0); err != nil {
++		return nil, err
++	}
++	go r.run()
++	return r, nil
++}
++
++// Capture makes a bounded copy before the caller can reuse the request body.
++// Full queues and storage failures never block or reject an API request.
++func (r *Recorder) Capture(e Entry) bool {
++	if r == nil || !isPolicySignal(e.ErrorCode) || e.APIKeyID <= 0 || len(e.Body) == 0 {
++		return false
++	}
++	r.mu.RLock()
++	defer r.mu.RUnlock()
++	if r.closed {
++		return false
++	}
++	size := queuedEntryBytes(e)
++	for {
++		used := r.pending.Load()
++		if size > r.opts.MaxQueuedBytes-used {
++			r.drop("queue_bytes_limit")
++			return false
++		}
++		if r.pending.CompareAndSwap(used, used+size) {
++			break
++		}
++	}
++	e.RecordedAt = time.Now().UTC()
++	e.BodyBytes = len(e.Body)
++	digest := sha256.Sum256(e.Body)
++	e.BodySHA256 = hex.EncodeToString(digest[:])
++	e.Body = bytes.Clone(e.Body)
++	if e.GroupID != nil {
++		id := *e.GroupID
++		e.GroupID = &id
++	}
++	select {
++	case r.queue <- e:
++		return true
++	default:
++		r.pending.Add(-size)
++		r.drop("queue_count_limit")
++		return false
++	}
++}
++
++func (r *Recorder) drop(reason string) {
++	r.dropped.Add(1)
++	now := time.Now().Unix()
++	previous := r.lastWarn.Load()
++	if now-previous >= 30 && r.lastWarn.CompareAndSwap(previous, now) {
++		log.Printf("policy_request_log.record_dropped reason=%s dropped=%d", reason, r.dropped.Load())
++	}
++}
++
++func (r *Recorder) Snapshot() Status {
++	return Status{UpdatedAt: time.Now().UTC(), Written: r.written.Load(), Dropped: r.dropped.Load(), WriteErrors: r.errors.Load(), QueuedBytes: r.pending.Load(), PrunedFiles: r.pruned.Load(), PrunedBytes: r.prunedB.Load()}
++}
++
++func (r *Recorder) Close(ctx context.Context) error {
++	if r == nil {
++		return nil
++	}
++	r.mu.Lock()
++	if !r.closed {
++		r.closed = true
++		close(r.queue)
++	}
++	r.mu.Unlock()
++	select {
++	case <-r.done:
++		return nil
++	case <-ctx.Done():
++		return ctx.Err()
++	}
++}
++
++func (r *Recorder) run() {
++	defer close(r.done)
++	ticker := time.NewTicker(time.Second)
++	defer ticker.Stop()
++	defer func() {
++		r.closeFile()
++		r.writeStatus()
++	}()
++	for {
++		select {
++		case e, ok := <-r.queue:
++			if !ok {
++				return
++			}
++			if err := r.write(e); err != nil {
++				r.errors.Add(1)
++				r.drop("storage_write_failed")
++			} else {
++				r.written.Add(1)
++			}
++			r.pending.Add(-queuedEntryBytes(e))
++		case <-ticker.C:
++			if r.file != nil && r.fileHour != time.Now().UTC().Format("20060102T15") {
++				r.closeFile()
++			}
++			if r.file != nil {
++				if err := r.file.Sync(); err != nil {
++					r.errors.Add(1)
++				}
++			}
++			if time.Since(r.lastPrune) >= time.Minute {
++				if err := r.prune(0); err != nil {
++					r.errors.Add(1)
++				}
++			}
++			r.writeStatus()
++		}
++	}
++}
++
++func (r *Recorder) write(e Entry) error {
++	if !json.Valid(e.Body) {
++		e.BodyEncoding = "base64"
++		e.Body, _ = json.Marshal(base64.StdEncoding.EncodeToString(e.Body))
++	}
++	var compressed bytes.Buffer
++	zw, err := gzip.NewWriterLevel(&compressed, gzip.BestSpeed)
++	if err != nil {
++		return err
++	}
++	if err := json.NewEncoder(zw).Encode(e); err != nil {
++		_ = zw.Close()
++		return err
++	}
++	if err := zw.Close(); err != nil {
++		return err
++	}
++	if int64(compressed.Len()) > r.opts.MaxDiskBytes {
++		return errors.New("record exceeds disk budget")
++	}
++	if r.opts.MinFreeBytes > 0 {
++		available, err := availableBytes(r.opts.Directory)
++		if err != nil || available < r.opts.MinFreeBytes+uint64(compressed.Len()) {
++			return errors.New("insufficient free disk space")
++		}
++	}
++	hour := time.Now().UTC().Format("20060102T15")
++	if r.file != nil && (r.fileHour != hour || r.fileBytes+int64(compressed.Len()) > r.opts.SegmentBytes) {
++		r.closeFile()
++	}
++	if err := r.prune(int64(compressed.Len())); err != nil {
++		return err
++	}
++	if r.file == nil {
++		r.sequence++
++		r.fileName = fmt.Sprintf("requests-%s-%d-%d-%06d.jsonl.gz", hour, time.Now().UnixNano(), os.Getpid(), r.sequence)
++		f, err := os.OpenFile(filepath.Join(r.opts.Directory, r.fileName), os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
++		if err != nil {
++			return err
++		}
++		r.file, r.fileHour, r.fileBytes = f, hour, 0
++	}
++	previous := r.fileBytes
++	n, err := r.file.Write(compressed.Bytes())
++	if err != nil || n != compressed.Len() {
++		_ = r.file.Truncate(previous)
++		r.closeFile()
++		return errors.New("request content append failed")
++	}
++	r.fileBytes += int64(n)
++	return nil
++}
++
++func (r *Recorder) closeFile() {
++	if r.file != nil {
++		if err := r.file.Sync(); err != nil {
++			r.errors.Add(1)
++		}
++		_ = r.file.Close()
++	}
++	r.file, r.fileName, r.fileBytes = nil, "", 0
++}
++
++// Prune only this module's segment files, never other application data.
++func (r *Recorder) prune(incoming int64) error {
++	entries, err := os.ReadDir(r.opts.Directory)
++	if err != nil {
++		return err
++	}
++	type segment struct {
++		name     string
++		size     int64
++		modified time.Time
++	}
++	var files []segment
++	var total int64
++	for _, e := range entries {
++		if !strings.HasPrefix(e.Name(), "requests-") || !strings.HasSuffix(e.Name(), ".jsonl.gz") || !e.Type().IsRegular() {
++			continue
++		}
++		info, err := e.Info()
++		if err != nil {
++			return err
++		}
++		files = append(files, segment{e.Name(), info.Size(), info.ModTime()})
++		total += info.Size()
++	}
++	sort.Slice(files, func(i, j int) bool { return files[i].modified.Before(files[j].modified) })
++	cutoff := time.Now().Add(-r.opts.Retention)
++	for _, f := range files {
++		if f.name == r.fileName || (!f.modified.Before(cutoff) && total+incoming <= r.opts.MaxDiskBytes) {
++			continue
++		}
++		if err := os.Remove(filepath.Join(r.opts.Directory, f.name)); err != nil {
++			return err
++		}
++		total -= f.size
++		r.pruned.Add(1)
++		r.prunedB.Add(uint64(f.size))
++	}
++	r.lastPrune = time.Now()
++	if total+incoming > r.opts.MaxDiskBytes {
++		return errors.New("request content disk budget exhausted")
++	}
++	return nil
++}
++
++func (r *Recorder) writeStatus() {
++	body, err := json.Marshal(r.Snapshot())
++	if err != nil {
++		return
++	}
++	path := filepath.Join(r.opts.Directory, ".status.tmp")
++	if err := os.WriteFile(path, body, 0600); err == nil {
++		_ = os.Rename(path, filepath.Join(r.opts.Directory, "status.json"))
++	}
++}
++
++func queuedEntryBytes(e Entry) int64 {
++	return int64(len(e.Body) + len(e.RequestID) + len(e.ClientRequestID) + len(e.ErrorCode) + len(e.ErrorType) + len(e.SignalPath) + len(e.Reason) + len(e.UpstreamRequestID) + len(e.UpstreamResponseID) + len(e.APIKeyName) + len(e.GroupName) + len(e.Provider) + len(e.Endpoint) + len(e.Protocol) + len(e.Model) + len(e.Stage) + len(e.BodyEncoding) + 256)
++}
+diff --git a/backend/internal/requestcontent/recorder_test.go b/backend/internal/requestcontent/recorder_test.go
+new file mode 100644
+index 0000000000000000000000000000000000000000..fbc643eafe728a7173cc1961ca0596cb4a06565a
+--- /dev/null
++++ b/backend/internal/requestcontent/recorder_test.go
+@@ -0,0 +1,247 @@
++package requestcontent
++
++import (
++	"bytes"
++	"compress/gzip"
++	"context"
++	"encoding/json"
++	"io"
++	"os"
++	"os/exec"
++	"path/filepath"
++	"strings"
++	"sync"
++	"testing"
++	"time"
++)
++
++func testOptions(t *testing.T) Options {
++	t.Helper()
++	return Options{Directory: t.TempDir(), Retention: 24 * time.Hour, MaxDiskBytes: 1 << 20, MaxQueuedBytes: 1 << 20, SegmentBytes: 1 << 16}
++}
++
++func closeForTest(t *testing.T, r *Recorder) {
++	t.Helper()
++	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
++	defer cancel()
++	if err := r.Close(ctx); err != nil {
++		t.Fatal(err)
++	}
++}
++
++func readEntries(t *testing.T, dir string) []Entry {
++	t.Helper()
++	paths, err := filepath.Glob(filepath.Join(dir, "requests-*.jsonl.gz"))
++	if err != nil {
++		t.Fatal(err)
++	}
++	var entries []Entry
++	for _, p := range paths {
++		st, err := os.Stat(p)
++		if err != nil {
++			t.Fatal(err)
++		}
++		if st.Mode().Perm() != 0600 {
++			t.Fatalf("insecure mode %v", st.Mode())
++		}
++		b, err := os.ReadFile(p)
++		if err != nil {
++			t.Fatal(err)
++		}
++		zr, err := gzip.NewReader(bytes.NewReader(b))
++		if err != nil {
++			t.Fatal(err)
++		}
++		dec := json.NewDecoder(zr)
++		for {
++			var e Entry
++			err = dec.Decode(&e)
++			if err == io.EOF {
++				break
++			}
++			if err != nil {
++				t.Fatal(err)
++			}
++			entries = append(entries, e)
++		}
++		if err := zr.Close(); err != nil {
++			t.Fatal(err)
++		}
++	}
++	return entries
++}
++
++func TestOnlyConfirmedPolicyBodiesPersistAndAreCopied(t *testing.T) {
++	opts := testOptions(t)
++	r, err := New(opts)
++	if err != nil {
++		t.Fatal(err)
++	}
++	body := []byte(`{"input":"normal text mentioning cyber_policy"}`)
++	for _, code := range []string{"", "rate_limit_exceeded", "server_error", "cyber_policy_session_blocked", "policy_violation", "openai_silent_refusal"} {
++		if r.Capture(Entry{APIKeyID: 1, ErrorCode: code, Body: body}) {
++			t.Fatalf("unexpected capture: %s", code)
++		}
++	}
++	groupID := int64(198)
++	entry := Entry{APIKeyID: 65, APIKeyName: "synthetic-owner", UserID: 9, AccountID: 51, GroupID: &groupID, RequestID: "synthetic-policy-1", ErrorCode: "cyber_policy", UpstreamStatus: 200, Body: body}
++	if !r.Capture(entry) {
++		t.Fatal("policy request was not queued")
++	}
++	body[10] = 'X'
++	groupID = 777
++	closeForTest(t, r)
++	entries := readEntries(t, opts.Directory)
++	if len(entries) != 1 {
++		t.Fatalf("want one entry, got %d", len(entries))
++	}
++	e := entries[0]
++	if string(e.Body) != `{"input":"normal text mentioning cyber_policy"}` || *e.GroupID != 198 {
++		t.Fatal("request buffer was reused")
++	}
++	if e.APIKeyID != 65 || e.AccountID != 51 || e.APIKeyName != "synthetic-owner" || e.UpstreamStatus != 200 || e.RequestID != "synthetic-policy-1" {
++		t.Fatal("identity or upstream metadata lost")
++	}
++	if len(e.BodySHA256) != 64 || e.BodyBytes != len(body) {
++		t.Fatal("content fingerprint missing")
++	}
++	if st, err := os.Stat(opts.Directory); err != nil || st.Mode().Perm() != 0700 {
++		t.Fatal("insecure directory")
++	}
++	if s := r.Snapshot(); s.Written != 1 || s.Dropped != 0 || s.QueuedBytes != 0 {
++		t.Fatalf("unexpected status %+v", s)
++	}
++}
++
++func TestCaptureLimitsAndStorageFailureFailOpen(t *testing.T) {
++	t.Run("queue bytes", func(t *testing.T) {
++		opts := testOptions(t)
++		opts.MaxQueuedBytes = 5
++		r, err := New(opts)
++		if err != nil {
++			t.Fatal(err)
++		}
++		if r.Capture(Entry{APIKeyID: 1, ErrorCode: "cyber_policy", Body: []byte(`{"input":"too big"}`)}) {
++			t.Fatal("over-limit body queued")
++		}
++		closeForTest(t, r)
++		if r.Snapshot().Dropped != 1 || len(readEntries(t, opts.Directory)) != 0 {
++			t.Fatal("over-limit body persisted")
++		}
++	})
++	t.Run("free space", func(t *testing.T) {
++		opts := testOptions(t)
++		opts.MinFreeBytes = 1 << 62
++		r, err := New(opts)
++		if err != nil {
++			t.Fatal(err)
++		}
++		if !r.Capture(Entry{APIKeyID: 1, ErrorCode: "cyber_policy", Body: []byte(`{}`)}) {
++			t.Fatal("queue unexpectedly failed")
++		}
++		closeForTest(t, r)
++		if s := r.Snapshot(); s.WriteErrors != 1 || s.Dropped != 1 || s.Written != 0 {
++			t.Fatalf("unexpected status %+v", s)
++		}
++	})
++}
++
++func TestRetentionQuotaAndUnrelatedFiles(t *testing.T) {
++	opts := testOptions(t)
++	opts.MaxDiskBytes = 128
++	opts.SegmentBytes = 64
++	old := filepath.Join(opts.Directory, "requests-old.jsonl.gz")
++	recent := filepath.Join(opts.Directory, "requests-recent.jsonl.gz")
++	unrelated := filepath.Join(opts.Directory, "keep.txt")
++	for _, p := range []string{old, recent, unrelated} {
++		if err := os.WriteFile(p, []byte(strings.Repeat("x", 100)), 0600); err != nil {
++			t.Fatal(err)
++		}
++	}
++	then := time.Now().Add(-48 * time.Hour)
++	if err := os.Chtimes(old, then, then); err != nil {
++		t.Fatal(err)
++	}
++	r, err := New(opts)
++	if err != nil {
++		t.Fatal(err)
++	}
++	closeForTest(t, r)
++	if _, err := os.Stat(old); !os.IsNotExist(err) {
++		t.Fatal("expired file retained")
++	}
++	if _, err := os.Stat(recent); err != nil {
++		t.Fatal("recent file removed")
++	}
++	if _, err := os.Stat(unrelated); err != nil {
++		t.Fatal("unrelated file removed")
++	}
++	// Force a quota prune without starting another worker.
++	raw := &Recorder{opts: opts}
++	if err := raw.prune(80); err != nil {
++		t.Fatal(err)
++	}
++	if _, err := os.Stat(recent); !os.IsNotExist(err) {
++		t.Fatal("quota not enforced")
++	}
++	if _, err := os.Stat(unrelated); err != nil {
++		t.Fatal("unrelated file removed by quota")
++	}
++}
++
++func TestConcurrentCaptureAndClose(t *testing.T) {
++	r, err := New(testOptions(t))
++	if err != nil {
++		t.Fatal(err)
++	}
++	var wg sync.WaitGroup
++	for i := 0; i < 8; i++ {
++		wg.Add(1)
++		go func() {
++			defer wg.Done()
++			for j := 0; j < 20; j++ {
++				r.Capture(Entry{APIKeyID: 1, ErrorCode: "cyber_policy", Body: []byte(`{}`)})
++			}
++		}()
++	}
++	closeForTest(t, r)
++	wg.Wait()
++	if r.Capture(Entry{APIKeyID: 1, ErrorCode: "cyber_policy", Body: []byte(`{}`)}) {
++		t.Fatal("captured after shutdown")
++	}
++}
++
++func TestDefaultConfigProcess(t *testing.T) {
++	if os.Getenv("POLICY_LOG_TEST_CHILD") == "1" {
++		InitDefault()
++		Capture(Entry{APIKeyID: 1, ErrorCode: "", Body: []byte(`{"input":"normal"}`)})
++		Capture(Entry{APIKeyID: 1, ErrorCode: "cyber_policy", Body: []byte(`{"input":"synthetic rejected fixture"}`)})
++		CloseDefault()
++		return
++	}
++	for _, tc := range []struct {
++		name, config string
++		count        int
++	}{
++		{"missing", "", 0}, {"disabled", `{"enabled":false}`, 0},
++		{"invalid", `{"enabled":true,"retention_days":-1}`, 0},
++		{"enabled", `{"enabled":true,"retention_days":30,"max_disk_mb":1024}`, 1},
++	} {
++		t.Run(tc.name, func(t *testing.T) {
++			dir := t.TempDir()
++			if tc.config != "" {
++				if err := os.WriteFile(filepath.Join(dir, "policy-request-log.json"), []byte(tc.config), 0600); err != nil {
++					t.Fatal(err)
++				}
++			}
++			cmd := exec.Command(os.Args[0], "-test.run=^TestDefaultConfigProcess$")
++			cmd.Env = append(os.Environ(), "POLICY_LOG_TEST_CHILD=1", "DATA_DIR="+dir)
++			if output, err := cmd.CombinedOutput(); err != nil {
++				t.Fatalf("child: %v %s", err, output)
++			}
++			if got := len(readEntries(t, filepath.Join(dir, "policy-requests"))); got != tc.count {
++				t.Fatalf("got %d entries, want %d", got, tc.count)
++			}
++		})
++	}
++}
+diff --git a/backend/internal/requestcontent/signals.go b/backend/internal/requestcontent/signals.go
+new file mode 100644
+index 0000000000000000000000000000000000000000..da9b9cba43ba1a67cb07acf06482ad305e7573e3
+--- /dev/null
++++ b/backend/internal/requestcontent/signals.go
+@@ -0,0 +1,11 @@
++package requestcontent
++
++// invalid_prompt is admitted here only after the upstream observer confirms
++// the explicit usage-policy flag; a generic parameter error never reaches us.
++func isPolicySignal(code string) bool {
++	switch code {
++	case "cyber_policy", "content_policy", "content_policy_violation", "invalid_prompt", "content_filter", "structured_refusal":
++		return true
++	}
++	return false
++}
+diff --git a/backend/internal/requestcontent/signals_test.go b/backend/internal/requestcontent/signals_test.go
+new file mode 100644
+index 0000000000000000000000000000000000000000..6f8381811ff54335f59706f68564c707595fa49f
+--- /dev/null
++++ b/backend/internal/requestcontent/signals_test.go
+@@ -0,0 +1,55 @@
++package requestcontent
++
++import (
++	"encoding/base64"
++	"encoding/json"
++	"strings"
++	"testing"
++)
++
++func TestAllPolicySignalsPersistIncludingMultipartBody(t *testing.T) {
++	opts := testOptions(t)
++	r, err := New(opts)
++	if err != nil {
++		t.Fatal(err)
++	}
++	for _, code := range []string{"cyber_policy", "content_policy", "content_policy_violation", "invalid_prompt", "content_filter", "structured_refusal"} {
++		if !r.Capture(Entry{APIKeyID: 65, ErrorCode: code, Body: []byte(`{"input":"harmless test fixture"}`)}) {
++			t.Fatal(code)
++		}
++	}
++	raw := []byte("--fixture\r\nContent-Disposition: form-data; name=\"prompt\"\r\n\r\nharmless fixture\r\n--fixture--")
++	if !r.Capture(Entry{APIKeyID: 65, ErrorCode: "content_policy", Body: raw}) {
++		t.Fatal("multipart capture failed")
++	}
++	closeForTest(t, r)
++	entries := readEntries(t, opts.Directory)
++	if len(entries) != 7 {
++		t.Fatalf("got %d entries", len(entries))
++	}
++	e := entries[6]
++	var encoded string
++	if err := json.Unmarshal(e.Body, &encoded); err != nil {
++		t.Fatal(err)
++	}
++	decoded, err := base64.StdEncoding.DecodeString(encoded)
++	if err != nil || string(decoded) != string(raw) || e.BodyEncoding != "base64" || e.BodyBytes != len(raw) {
++		t.Fatal("raw multipart did not round trip")
++	}
++}
++
++func TestPolicyQueueBudgetIncludesMetadata(t *testing.T) {
++	opts := testOptions(t)
++	opts.MaxQueuedBytes = 1024
++	r, err := New(opts)
++	if err != nil {
++		t.Fatal(err)
++	}
++	if r.Capture(Entry{APIKeyID: 1, ErrorCode: "content_policy", ErrorType: strings.Repeat("x", 1024), Body: []byte(`{}`)}) {
++		t.Fatal("large metadata bypassed queue limit")
++	}
++	closeForTest(t, r)
++	if len(readEntries(t, opts.Directory)) != 0 {
++		t.Fatal("oversize record was persisted")
++	}
++}
+diff --git a/backend/internal/server/middleware/audit_log.go b/backend/internal/server/middleware/audit_log.go
+index 30f399eea39b6eede29fbcfcf5f1645e52e48073..388b50f5505164523d479da7fa65cf891972423b 100644
+--- a/backend/internal/server/middleware/audit_log.go
++++ b/backend/internal/server/middleware/audit_log.go
+@@ -109,6 +109,8 @@
+ 
+ // auditSensitiveReads 需要审计的敏感 GET 读取（method+FullPath → 动作名）。
+ var auditSensitiveReads = map[string]string{
++	"GET /api/v1/admin/policy-requests/:id":       "admin.policy_requests.read",
++	"GET /api/v1/admin/policy-requests/:id/body":  "admin.policy_requests.download",
+ 	"GET /api/v1/admin/accounts/data":             "admin.accounts.export",
+ 	"GET /api/v1/admin/proxies/data":              "admin.proxies.export",
+ 	"GET /api/v1/admin/redeem-codes/export":       "admin.redeem_codes.export",
+diff --git a/backend/internal/server/routes/admin.go b/backend/internal/server/routes/admin.go
+index d23a21c62cf6e40c9c2307aa2714b80f7bb926df..5925bbfa875f09a0236c26a017e99222ab31470d 100644
+--- a/backend/internal/server/routes/admin.go
++++ b/backend/internal/server/routes/admin.go
+@@ -3,7 +3,9 @@
+ 
+ import (
+ 	"github.com/Wei-Shaw/sub2api/internal/handler"
++	adminhandler "github.com/Wei-Shaw/sub2api/internal/handler/admin"
+ 	"github.com/Wei-Shaw/sub2api/internal/pkg/response"
++	"github.com/Wei-Shaw/sub2api/internal/requestcontent"
+ 	"github.com/Wei-Shaw/sub2api/internal/server/middleware"
+ 	"github.com/Wei-Shaw/sub2api/internal/service"
+ 
+@@ -90,6 +92,9 @@
+ 
+ 		// 订阅管理
+ 		registerSubscriptionRoutes(admin, h)
++
++		// Only retained upstream policy signals; independent of risk-control settings.
++		registerPolicyRequestRoutes(admin, adminhandler.NewPolicyRequestsHandler(requestcontent.DefaultReader()))
+ 
+ 		// 使用记录管理
+ 		registerUsageRoutes(admin, h)
+@@ -883,3 +888,10 @@
+ 		c.Next()
+ 	}
+ }
++
++func registerPolicyRequestRoutes(admin *gin.RouterGroup, h *adminhandler.PolicyRequestsHandler) {
++	records := admin.Group("/policy-requests")
++	records.GET("", h.List)
++	records.GET("/:id", h.Get)
++	records.GET("/:id/body", h.Download)
++}
+diff --git a/backend/internal/service/openai_gateway_cc_pipeline.go b/backend/internal/service/openai_gateway_cc_pipeline.go
+index a22288b70ae285d1cbbb000082635be2dee20b9b..6b0e4a20aed56c70d79479be543e2525149a4c7c 100644
+--- a/backend/internal/service/openai_gateway_cc_pipeline.go
++++ b/backend/internal/service/openai_gateway_cc_pipeline.go
+@@ -226,7 +226,7 @@
+ 	if account.Proxy != nil {
+ 		proxyURL = account.Proxy.URL()
+ 	}
+-	resp, err := s.doOpenAIUpstream(upstreamReq, proxyURL, account)
++	resp, err := s.doOpenAIUpstream(upstreamReq, proxyURL, account, c)
+ 	if err != nil {
+ 		return nil, s.handleOpenAIUpstreamTransportError(ctx, c, account, err, false)
+ 	}
+diff --git a/backend/internal/service/openai_gateway_chat_completions.go b/backend/internal/service/openai_gateway_chat_completions.go
+index c9a7e34b6a7bc1326fc929e018137a5d15030e06..980f31c506a79bbc9a0aa69de88ffda4c5e4b670 100644
+--- a/backend/internal/service/openai_gateway_chat_completions.go
++++ b/backend/internal/service/openai_gateway_chat_completions.go
+@@ -351,7 +351,7 @@
+ 	if account.Proxy != nil {
+ 		proxyURL = account.Proxy.URL()
+ 	}
+-	resp, err := s.doOpenAIUpstream(upstreamReq, proxyURL, account)
++	resp, err := s.doOpenAIUpstream(upstreamReq, proxyURL, account, c)
+ 	if err != nil {
+ 		return nil, s.handleOpenAIUpstreamTransportError(ctx, c, account, err, false)
+ 	}
+diff --git a/backend/internal/service/openai_gateway_forward.go b/backend/internal/service/openai_gateway_forward.go
+index 18b5aff28e3d8ec5b006629d7a6ee1a08f5cc5b0..57455619142e7db07c93d69d98867dcf6fc52959 100644
+--- a/backend/internal/service/openai_gateway_forward.go
++++ b/backend/internal/service/openai_gateway_forward.go
+@@ -1007,7 +1007,7 @@
+ 
+ 		// Send request
+ 		upstreamStart := time.Now()
+-		resp, err := s.doOpenAIUpstream(upstreamReq, proxyURL, account)
++		resp, err := s.doOpenAIUpstream(upstreamReq, proxyURL, account, c)
+ 		SetOpsLatencyMs(c, OpsUpstreamLatencyMsKey, time.Since(upstreamStart).Milliseconds())
+ 		if headerGuard != nil && headerGuard.stopHeaderWait() {
+ 			if resp != nil && resp.Body != nil {
+diff --git a/backend/internal/service/openai_gateway_messages.go b/backend/internal/service/openai_gateway_messages.go
+index b12ab68044f2016f6239981a1fd2c705fa35dd05..c077df0f4fcfd2b2990127bddd1672547bddf343 100644
+--- a/backend/internal/service/openai_gateway_messages.go
++++ b/backend/internal/service/openai_gateway_messages.go
+@@ -393,7 +393,7 @@
+ 				return nil, fmt.Errorf("build grok retry request: %w", err)
+ 			}
+ 		}
+-		resp, err = s.doOpenAIUpstream(upstreamReq, proxyURL, account)
++		resp, err = s.doOpenAIUpstream(upstreamReq, proxyURL, account, c)
+ 		if err != nil {
+ 			return nil, s.handleOpenAIUpstreamTransportError(ctx, c, account, err, false)
+ 		}
+diff --git a/backend/internal/service/openai_gateway_passthrough.go b/backend/internal/service/openai_gateway_passthrough.go
+index ecca154781149efb97876dd765d09a0d75298980..d0619a3885fa07434fb6d304b7114b10e27e1b24 100644
+--- a/backend/internal/service/openai_gateway_passthrough.go
++++ b/backend/internal/service/openai_gateway_passthrough.go
+@@ -374,7 +374,7 @@
+ 		}
+ 
+ 		upstreamStart := time.Now()
+-		resp, err = s.doOpenAIUpstream(upstreamReq, proxyURL, account)
++		resp, err = s.doOpenAIUpstream(upstreamReq, proxyURL, account, c)
+ 		SetOpsLatencyMs(c, OpsUpstreamLatencyMsKey, time.Since(upstreamStart).Milliseconds())
+ 		if err != nil {
+ 			// Transport-level failure (proxy/DNS/TCP/TLS — no HTTP response). Convert to
+diff --git a/backend/internal/service/openai_gateway_service.go b/backend/internal/service/openai_gateway_service.go
+index aaa2e30af7a0b97e4f07e7648c047e633b744f3d..b36129630bb46ea25d55eda671e98cecfdf9b46b 100644
+--- a/backend/internal/service/openai_gateway_service.go
++++ b/backend/internal/service/openai_gateway_service.go
+@@ -423,34 +423,35 @@
+ 
+ // OpenAIGatewayService handles OpenAI API gateway operations
+ type OpenAIGatewayService struct {
+-	accountRepo           AccountRepository
+-	usageLogRepo          UsageLogRepository
+-	usageBillingRepo      UsageBillingRepository
+-	userRepo              UserRepository
+-	userSubRepo           UserSubscriptionRepository
+-	cache                 GatewayCache
+-	cfg                   *config.Config
+-	codexDetector         CodexClientRestrictionDetector
+-	schedulerSnapshot     *SchedulerSnapshotService
+-	concurrencyService    *ConcurrencyService
+-	billingService        *BillingService
+-	rateLimitService      *RateLimitService
+-	billingCacheService   *BillingCacheService
+-	userGroupRateResolver *userGroupRateResolver
+-	httpUpstream          HTTPUpstream
+-	pluginManager         *PluginManager
+-	deferredService       *DeferredService
+-	openAITokenProvider   *OpenAITokenProvider
+-	grokTokenProvider     *GrokTokenProvider
+-	toolCorrector         *CodexToolCorrector
+-	openaiWSResolver      OpenAIWSProtocolResolver
+-	resolver              *ModelPricingResolver
+-	channelService        *ChannelService
+-	balanceNotifyService  *BalanceNotifyService
+-	settingService        *SettingService
+-	userPlatformQuotaRepo UserPlatformQuotaRepository
+-	liveAttestation       liveattestation.Provider
+-	liveAttestationCipher SecretEncryptor
++	policyObservationEnabled func() bool // optional availability provider; defaults to the configured recorder
++	accountRepo              AccountRepository
++	usageLogRepo             UsageLogRepository
++	usageBillingRepo         UsageBillingRepository
++	userRepo                 UserRepository
++	userSubRepo              UserSubscriptionRepository
++	cache                    GatewayCache
++	cfg                      *config.Config
++	codexDetector            CodexClientRestrictionDetector
++	schedulerSnapshot        *SchedulerSnapshotService
++	concurrencyService       *ConcurrencyService
++	billingService           *BillingService
++	rateLimitService         *RateLimitService
++	billingCacheService      *BillingCacheService
++	userGroupRateResolver    *userGroupRateResolver
++	httpUpstream             HTTPUpstream
++	pluginManager            *PluginManager
++	deferredService          *DeferredService
++	openAITokenProvider      *OpenAITokenProvider
++	grokTokenProvider        *GrokTokenProvider
++	toolCorrector            *CodexToolCorrector
++	openaiWSResolver         OpenAIWSProtocolResolver
++	resolver                 *ModelPricingResolver
++	channelService           *ChannelService
++	balanceNotifyService     *BalanceNotifyService
++	settingService           *SettingService
++	userPlatformQuotaRepo    UserPlatformQuotaRepository
++	liveAttestation          liveattestation.Provider
++	liveAttestationCipher    SecretEncryptor
+ 
+ 	openaiWSPoolOnce               sync.Once
+ 	openaiWSStateStoreOnce         sync.Once
+diff --git a/backend/internal/service/openai_images.go b/backend/internal/service/openai_images.go
+index c661aade367cdbe08b12093521a4c10e182d15f5..81f6a722de52a460a47419300c61cbf00d3f8b7d 100644
+--- a/backend/internal/service/openai_images.go
++++ b/backend/internal/service/openai_images.go
+@@ -625,7 +625,7 @@
+ 		proxyURL = account.Proxy.URL()
+ 	}
+ 	upstreamStart := time.Now()
+-	resp, err := s.doOpenAIUpstream(upstreamReq, proxyURL, account)
++	resp, err := s.doOpenAIUpstream(upstreamReq, proxyURL, account, c)
+ 	SetOpsLatencyMs(c, OpsUpstreamLatencyMsKey, time.Since(upstreamStart).Milliseconds())
+ 	if err != nil {
+ 		safeErr := sanitizeUpstreamErrorMessage(err.Error())
+diff --git a/backend/internal/service/openai_images_responses.go b/backend/internal/service/openai_images_responses.go
+index 434c352da279cb619da567cc826ba2cb8d05d4ac..96bad3a1827e3b565b300158fbe1045ba431ce11 100644
+--- a/backend/internal/service/openai_images_responses.go
++++ b/backend/internal/service/openai_images_responses.go
+@@ -1820,7 +1820,7 @@
+ 		proxyURL = account.Proxy.URL()
+ 	}
+ 	upstreamStart := time.Now()
+-	resp, err := s.doOpenAIUpstream(upstreamReq, proxyURL, account)
++	resp, err := s.doOpenAIUpstream(upstreamReq, proxyURL, account, c)
+ 	SetOpsLatencyMs(c, OpsUpstreamLatencyMsKey, time.Since(upstreamStart).Milliseconds())
+ 	if err != nil {
+ 		safeErr := sanitizeUpstreamErrorMessage(err.Error())
+diff --git a/backend/internal/service/openai_plugin_transport.go b/backend/internal/service/openai_plugin_transport.go
+index 82b8d359ee4fe2a995003273c7bed572a2a282ee..0c178d5c7f4757e6c031b6fd04e2b872b8f9c57c 100644
+--- a/backend/internal/service/openai_plugin_transport.go
++++ b/backend/internal/service/openai_plugin_transport.go
+@@ -1,6 +1,9 @@
+ package service
+ 
+-import "net/http"
++import (
++	"github.com/gin-gonic/gin"
++	"net/http"
++)
+ 
+ func (s *OpenAIGatewayService) SetPluginManager(manager *PluginManager) {
+ 	s.pluginManager = manager
+@@ -8,7 +11,12 @@
+ 
+ // doOpenAIUpstream 只在 OpenAI OAuth 能力绑定已启用时把真实请求交给插件。
+ // 插件返回标准 http.Response，响应解析、错误映射、SSE 和计费仍由现有核心链处理。
+-func (s *OpenAIGatewayService) doOpenAIUpstream(request *http.Request, proxyURL string, account *Account) (*http.Response, error) {
++func (s *OpenAIGatewayService) doOpenAIUpstream(request *http.Request, proxyURL string, account *Account, contexts ...*gin.Context) (response *http.Response, err error) {
++	defer func() {
++		if len(contexts) > 0 && s.policyObservationAvailable() {
++			observeOpenAIPolicyResponse(contexts[0], account, response)
++		}
++	}()
+ 	if s.pluginManager != nil {
+ 		response, handled, err := s.pluginManager.RoundTripOpenAIOAuth(request.Context(), request, proxyURL, account)
+ 		if handled {
+diff --git a/backend/internal/service/openai_policy_observer.go b/backend/internal/service/openai_policy_observer.go
+new file mode 100644
+index 0000000000000000000000000000000000000000..0d47010ff9e678e9cd9a25c360d8076bb91f8090
+--- /dev/null
++++ b/backend/internal/service/openai_policy_observer.go
+@@ -0,0 +1,327 @@
++package service
++
++import (
++	"bytes"
++	"io"
++	"net/http"
++	"strings"
++	"sync"
++
++	"github.com/Wei-Shaw/sub2api/internal/requestcontent"
++	"github.com/gin-gonic/gin"
++	"github.com/tidwall/gjson"
++)
++
++// These observations only retain evidence. They never change forwarding,
++// billing, routing, or the existing cyber-policy enforcement path.
++const openAIPolicyObservationKey = "openai_policy_request_observation"
++const maxPolicyObservationBytes = 8 << 20
++
++type OpenAIPolicyObservation struct {
++	Code               string
++	ErrorType          string
++	SignalPath         string
++	Reason             string // fixed description; never a raw upstream message
++	AccountID          int64
++	UpstreamStatus     int
++	UpstreamRequestID  string
++	UpstreamResponseID string
++}
++
++func GetOpenAIPolicyObservation(c *gin.Context) *OpenAIPolicyObservation {
++	if c == nil {
++		return nil
++	}
++	v, _ := c.Get(openAIPolicyObservationKey)
++	m, _ := v.(*OpenAIPolicyObservation)
++	return m
++}
++
++func ClearOpenAIPolicyObservation(c *gin.Context) {
++	if c != nil {
++		c.Set(openAIPolicyObservationKey, (*OpenAIPolicyObservation)(nil))
++	}
++}
++
++// ObserveOpenAIPolicyPayload accepts only upstream payloads, never request data.
++// First evidence wins within one upstream attempt/WS turn.
++func ObserveOpenAIPolicyPayload(c *gin.Context, account *Account, payload []byte, status int, upstreamRequestID string) {
++	if c == nil || account == nil || account.Platform != PlatformOpenAI || GetOpenAIPolicyObservation(c) != nil {
++		return
++	}
++	m := detectOpenAIPolicyObservation(payload)
++	if m == nil {
++		return
++	}
++	m.Code = clonePolicyMetadata(m.Code, 64)
++	m.ErrorType = clonePolicyMetadata(m.ErrorType, 128)
++	m.UpstreamResponseID = clonePolicyMetadata(m.UpstreamResponseID, 256)
++	m.AccountID, m.UpstreamStatus, m.UpstreamRequestID = account.ID, status, clonePolicyMetadata(upstreamRequestID, 256)
++	c.Set(openAIPolicyObservationKey, m)
++}
++
++func detectOpenAIPolicyObservation(payload []byte) *OpenAIPolicyObservation {
++	if !gjson.ValidBytes(payload) {
++		return nil
++	}
++	root := gjson.ParseBytes(payload)
++	m := &OpenAIPolicyObservation{}
++	m.UpstreamResponseID = root.Get("response.id").String()
++	if m.UpstreamResponseID == "" {
++		m.UpstreamResponseID = root.Get("response_id").String()
++	}
++	if m.UpstreamResponseID == "" && root.Get("object").String() == "response" {
++		m.UpstreamResponseID = root.Get("id").String()
++	}
++	for _, path := range []string{"error", "response.error"} {
++		e := root.Get(path)
++		if !e.IsObject() {
++			continue
++		}
++		m.ErrorType = e.Get("type").String()
++		for _, field := range []string{"code", "type"} {
++			code := strings.ToLower(strings.TrimSpace(e.Get(field).String()))
++			switch code {
++			case "cyber_policy", "content_policy", "content_policy_violation", "content_filter":
++				m.Code, m.SignalPath, m.Reason = code, path+"."+field, "explicit_upstream_policy_error"
++				return m
++			case "invalid_prompt":
++				message := strings.ToLower(e.Get("message").String())
++				if strings.Contains(message, "flagged") && strings.Contains(message, "violating our usage policy") {
++					m.Code, m.SignalPath, m.Reason = code, path+"."+field+"+message", "prompt_flagged_for_usage_policy"
++					return m
++				}
++			}
++		}
++	}
++	for _, path := range []string{"incomplete_details.reason", "response.incomplete_details.reason"} {
++		if root.Get(path).String() == "content_filter" {
++			m.Code, m.SignalPath, m.Reason = "content_filter", path, "upstream_content_filter"
++			return m
++		}
++	}
++	refusal := func(path string) *OpenAIPolicyObservation {
++		m.Code, m.SignalPath, m.Reason = "structured_refusal", path, "explicit_upstream_refusal"
++		return m
++	}
++	for _, choice := range root.Get("choices").Array() {
++		if choice.Get("finish_reason").String() == "content_filter" {
++			m.Code, m.SignalPath, m.Reason = "content_filter", "choices.finish_reason", "upstream_content_filter"
++			return m
++		}
++		for _, path := range []string{"message.refusal", "delta.refusal"} {
++			v := choice.Get(path)
++			if v.Type == gjson.String && strings.TrimSpace(v.String()) != "" {
++				return refusal("choices." + path)
++			}
++		}
++	}
++	partRefuses := func(part gjson.Result) bool {
++		v := part.Get("refusal")
++		return part.Get("type").String() == "refusal" && v.Type == gjson.String && strings.TrimSpace(v.String()) != ""
++	}
++	itemRefuses := func(item gjson.Result) bool {
++		if item.Get("type").String() != "message" || item.Get("role").String() != "assistant" {
++			return false
++		}
++		for _, part := range item.Get("content").Array() {
++			if partRefuses(part) {
++				return true
++			}
++		}
++		return false
++	}
++	for _, path := range []string{"output", "response.output"} {
++		for _, item := range root.Get(path).Array() {
++			if itemRefuses(item) {
++				return refusal(path + ".content.refusal")
++			}
++		}
++	}
++	switch root.Get("type").String() {
++	case "response.refusal.delta":
++		v := root.Get("delta")
++		if v.Type == gjson.String && strings.TrimSpace(v.String()) != "" {
++			return refusal("response.refusal.delta")
++		}
++	case "response.refusal.done":
++		v := root.Get("refusal")
++		if v.Type == gjson.String && strings.TrimSpace(v.String()) != "" {
++			return refusal("response.refusal.done")
++		}
++	case "response.content_part.added", "response.content_part.done":
++		if partRefuses(root.Get("part")) {
++			return refusal("part.refusal")
++		}
++	case "response.output_item.added", "response.output_item.done":
++		if itemRefuses(root.Get("item")) {
++			return refusal("item.content.refusal")
++		}
++	}
++	return nil
++}
++
++// Observe bytes as consumers read them, preserving read sizes, errors, timing,
++// and the exact response. Only an in-memory bounded response fragment is kept.
++func observeOpenAIPolicyResponse(c *gin.Context, account *Account, resp *http.Response) {
++	if c == nil || account == nil || account.Platform != PlatformOpenAI || resp == nil || resp.Body == nil {
++		return
++	}
++	resp.Body = &openAIPolicyResponseBody{
++		ReadCloser: resp.Body, c: c, account: account, status: resp.StatusCode,
++		requestID: resp.Header.Get("X-Request-Id"),
++		sse:       strings.Contains(strings.ToLower(resp.Header.Get("Content-Type")), "text/event-stream"),
++	}
++}
++
++type openAIPolicyResponseBody struct {
++	io.ReadCloser
++	mu                                    sync.Mutex
++	c                                     *gin.Context
++	account                               *Account
++	status                                int
++	requestID                             string
++	sse, decided, stopped, discardingLine bool
++	buffer, event                         []byte
++}
++
++func (b *openAIPolicyResponseBody) observe(payload []byte) {
++	ObserveOpenAIPolicyPayload(b.c, b.account, payload, b.status, b.requestID)
++	if GetOpenAIPolicyObservation(b.c) != nil {
++		b.stopped = true
++		b.buffer = nil
++		b.event = nil
++	}
++}
++
++func (b *openAIPolicyResponseBody) Read(p []byte) (int, error) {
++	n, err := b.ReadCloser.Read(p)
++	b.mu.Lock()
++	defer b.mu.Unlock()
++	if n > 0 {
++		b.feed(p[:n])
++	}
++	if err != nil {
++		b.finish()
++	}
++	return n, err
++}
++
++func (b *openAIPolicyResponseBody) Close() error {
++	b.mu.Lock()
++	b.finish()
++	b.mu.Unlock()
++	return b.ReadCloser.Close()
++}
++
++func (b *openAIPolicyResponseBody) feed(p []byte) {
++	if b.stopped {
++		return
++	}
++	if !b.decided {
++		trimmed := bytes.TrimSpace(p)
++		if len(trimmed) == 0 {
++			return
++		}
++		// OpenAI-compatible endpoints occasionally omit the event-stream header.
++		b.sse = b.sse || (trimmed[0] != '{' && trimmed[0] != '[')
++		b.decided = true
++	}
++	if !b.sse {
++		if len(b.buffer)+len(p) > maxPolicyObservationBytes {
++			b.stopped = true
++			b.buffer = nil
++			return
++		}
++		b.buffer = append(b.buffer, p...)
++		return
++	}
++	for len(p) > 0 && !b.stopped {
++		i := bytes.IndexByte(p, '\n')
++		part := p
++		if i >= 0 {
++			part = p[:i]
++		}
++		if !b.discardingLine {
++			if len(b.buffer)+len(part) > maxPolicyObservationBytes {
++				b.discardingLine = true
++				b.buffer = nil
++				b.event = nil
++			} else {
++				b.buffer = append(b.buffer, part...)
++			}
++		}
++		if i < 0 {
++			break
++		}
++		if !b.discardingLine {
++			b.line(b.buffer)
++		}
++		b.buffer = nil
++		b.discardingLine = false
++		p = p[i+1:]
++	}
++}
++
++func (b *openAIPolicyResponseBody) line(line []byte) {
++	line = bytes.TrimSuffix(line, []byte{'\r'})
++	if len(line) == 0 {
++		if len(b.event) > 0 {
++			b.observe(b.event)
++			b.event = nil
++		}
++		return
++	}
++	if !bytes.HasPrefix(line, []byte("data:")) {
++		return
++	}
++	data := bytes.TrimPrefix(line[5:], []byte{' '})
++	if len(b.event)+len(data)+1 > maxPolicyObservationBytes {
++		b.event = nil
++		return
++	}
++	if len(b.event) > 0 {
++		b.event = append(b.event, '\n')
++	}
++	b.event = append(b.event, data...)
++	// A complete JSON data line can be classified immediately, before a client
++	// disconnect or a forwarder returning at a terminal event without EOF.
++	if gjson.ValidBytes(b.event) {
++		b.observe(b.event)
++		b.event = nil
++	}
++}
++
++func (b *openAIPolicyResponseBody) finish() {
++	if b.stopped {
++		return
++	}
++	if b.sse {
++		if len(b.buffer) > 0 && !b.discardingLine {
++			b.line(b.buffer)
++		}
++		if !b.stopped && len(b.event) > 0 {
++			b.observe(b.event)
++		}
++	} else if len(b.buffer) > 0 {
++		b.observe(b.buffer)
++	}
++	b.stopped = true
++	b.buffer = nil
++	b.event = nil
++}
++
++// Detach metadata from GJSON payload backing strings before it enters the queue.
++func clonePolicyMetadata(value string, limit int) string {
++	if len(value) > limit {
++		value = value[:limit]
++	}
++	return strings.Clone(value)
++}
++
++func (s *OpenAIGatewayService) policyObservationAvailable() bool {
++	if s.policyObservationEnabled != nil {
++		return s.policyObservationEnabled()
++	}
++	return requestcontent.Enabled()
++}
+diff --git a/backend/internal/service/openai_policy_observer_test.go b/backend/internal/service/openai_policy_observer_test.go
+new file mode 100644
+index 0000000000000000000000000000000000000000..15c770c6be2626bff38dc44e8007276130f9d1ed
+--- /dev/null
++++ b/backend/internal/service/openai_policy_observer_test.go
+@@ -0,0 +1,114 @@
++package service
++
++import (
++	"bytes"
++	"io"
++	"net/http"
++	"net/http/httptest"
++	"strings"
++	"testing"
++
++	"github.com/gin-gonic/gin"
++	"github.com/stretchr/testify/require"
++)
++
++func TestPolicyObservationExactSignals(t *testing.T) {
++	cases := []struct{ name, payload, code string }{
++		{"cyber", `{"error":{"code":"cyber_policy"}}`, "cyber_policy"},
++		{"content type", `{"error":{"type":"content_policy"}}`, "content_policy"},
++		{"violation", `{"error":{"code":"content_policy_violation"}}`, "content_policy_violation"},
++		{"policy invalid prompt", `{"type":"response.failed","response":{"error":{"code":"invalid_prompt","message":"Your prompt was flagged as potentially violating our usage policy. Please try again with a different prompt."}}}`, "invalid_prompt"},
++		{"generic invalid prompt", `{"error":{"code":"invalid_prompt","message":"Missing input"}}`, ""},
++		{"unrelated flagged", `{"error":{"code":"invalid_prompt","message":"flagged as invalid JSON"}}`, ""},
++		{"local tier", `{"error":{"code":"policy_violation","message":"Fast tier not allowed"}}`, ""},
++		{"empty output", `{"error":{"code":"openai_silent_refusal"}}`, ""},
++		{"quota", `{"error":{"code":"insufficient_quota"}}`, ""},
++		{"blocked identifier", `{"error":{"code":"safety_identifier_blocked"}}`, ""},
++		{"response filter", `{"type":"response.incomplete","response":{"id":"resp-test","incomplete_details":{"reason":"content_filter"}}}`, "content_filter"},
++		{"token limit", `{"response":{"incomplete_details":{"reason":"max_output_tokens"}}}`, ""},
++		{"chat filter", `{"choices":[{"finish_reason":"content_filter"}]}`, "content_filter"},
++		{"chat refusal", `{"choices":[{"message":{"role":"assistant","refusal":"Harmless test refusal"}}]}`, "structured_refusal"},
++		{"chat refusal delta", `{"choices":[{"delta":{"refusal":"Harmless test"}}]}`, "structured_refusal"},
++		{"empty refusal", `{"choices":[{"message":{"refusal":null}}]}`, ""},
++		{"delta", `{"type":"response.refusal.delta","delta":"Harmless test"}`, "structured_refusal"},
++		{"done", `{"type":"response.refusal.done","refusal":"Harmless test"}`, "structured_refusal"},
++		{"response output", `{"object":"response","id":"resp-test","output":[{"type":"message","role":"assistant","content":[{"type":"refusal","refusal":"Harmless test"}]}]}`, "structured_refusal"},
++		{"event part", `{"type":"response.content_part.done","part":{"type":"refusal","refusal":"Harmless test"}}`, "structured_refusal"},
++		{"event item", `{"type":"response.output_item.done","item":{"type":"message","role":"assistant","content":[{"type":"refusal","refusal":"Harmless test"}]}}`, "structured_refusal"},
++		{"keywords in output", `{"output":[{"type":"message","role":"assistant","content":[{"type":"output_text","text":"cyber_policy content_policy invalid_prompt refusal content_filter"}]}]}`, ""},
++		{"quoted JSON output", `{"choices":[{"message":{"content":"{\"error\":{\"code\":\"content_policy\"}}"},"finish_reason":"stop"}]}`, ""},
++		{"user input ignored", `{"input":[{"role":"user","content":"cyber_policy"}],"tools":[{"error":{"code":"content_policy"}}]}`, ""},
++		{"malformed", `{"error":{"code":"cyber_policy"}`, ""},
++	}
++	for _, tc := range cases {
++		t.Run(tc.name, func(t *testing.T) {
++			got := detectOpenAIPolicyObservation([]byte(tc.payload))
++			if tc.code == "" {
++				require.Nil(t, got)
++				return
++			}
++			require.NotNil(t, got)
++			require.Equal(t, tc.code, got.Code)
++			require.NotEmpty(t, got.SignalPath)
++		})
++	}
++}
++
++func TestPolicyObservationReaderPreservesBytesAndHandlesFragments(t *testing.T) {
++	cases := []struct{ name, contentType, body, code string }{
++		{"HTTP400", "application/json", `{"error":{"code":"content_policy_violation"}}`, "content_policy_violation"},
++		{"SSE200", "text/event-stream", "event: response.failed\r\ndata: {\"type\":\"response.failed\",\"response\":{\"error\":{\"code\":\"content_policy\"}}}\r\n\r\n", "content_policy"},
++		{"SSE missing header", "", "data: {\"type\":\"response.refusal.delta\",\"delta\":\"Harmless fixture\"}\n\n", "structured_refusal"},
++		{"SSE multiline", "text/event-stream", "data: {\"error\":\ndata: {\"code\":\"cyber_policy\"}}\n\n", "cyber_policy"},
++		{"SSE no trailing newline", "text/event-stream", "data: {\"error\":{\"code\":\"content_filter\"}}", "content_filter"},
++		{"normal", "text/event-stream", "data: {\"type\":\"response.output_text.delta\",\"delta\":\"refusal content_policy\"}\n\ndata: [DONE]\n\n", ""},
++	}
++	for _, tc := range cases {
++		for _, size := range []int{1, 7, 4096} {
++			t.Run(tc.name+"/"+string(rune(size)), func(t *testing.T) {
++				c, _ := gin.CreateTestContext(httptest.NewRecorder())
++				resp := &http.Response{StatusCode: 200, Header: http.Header{"Content-Type": []string{tc.contentType}, "X-Request-Id": []string{"upstream-fixture"}}, Body: io.NopCloser(strings.NewReader(tc.body))}
++				observeOpenAIPolicyResponse(c, &Account{ID: 51, Platform: PlatformOpenAI}, resp)
++				var got bytes.Buffer
++				_, err := io.CopyBuffer(&got, struct{ io.Reader }{resp.Body}, make([]byte, size))
++				require.NoError(t, err)
++				require.NoError(t, resp.Body.Close())
++				require.Equal(t, tc.body, got.String())
++				mark := GetOpenAIPolicyObservation(c)
++				if tc.code == "" {
++					require.Nil(t, mark)
++				} else {
++					require.NotNil(t, mark)
++					require.Equal(t, tc.code, mark.Code)
++					require.Equal(t, int64(51), mark.AccountID)
++					require.Equal(t, "upstream-fixture", mark.UpstreamRequestID)
++				}
++			})
++		}
++	}
++}
++
++func TestPolicyObservationDeduplicatesAndClearsBetweenAttempts(t *testing.T) {
++	c, _ := gin.CreateTestContext(httptest.NewRecorder())
++	a := &Account{ID: 51, Platform: PlatformOpenAI}
++	ObserveOpenAIPolicyPayload(c, a, []byte(`{"error":{"code":"content_policy"}}`), 200, "request-a")
++	ObserveOpenAIPolicyPayload(c, a, []byte(`{"error":{"code":"cyber_policy"}}`), 200, "request-b")
++	require.Equal(t, "request-a", GetOpenAIPolicyObservation(c).UpstreamRequestID)
++	ClearOpenAIPolicyObservation(c)
++	ObserveOpenAIPolicyPayload(c, a, []byte(`{"type":"response.completed","response":{"status":"completed"}}`), 200, "request-c")
++	require.Nil(t, GetOpenAIPolicyObservation(c))
++	ObserveOpenAIPolicyPayload(c, &Account{ID: 99, Platform: PlatformAnthropic}, []byte(`{"error":{"code":"content_policy"}}`), 400, "request-d")
++	require.Nil(t, GetOpenAIPolicyObservation(c))
++}
++
++func TestPolicyObservationOversizedLineDoesNotBreakFollowingEvents(t *testing.T) {
++	c, _ := gin.CreateTestContext(httptest.NewRecorder())
++	body := "data: " + strings.Repeat("x", maxPolicyObservationBytes+1) + "\n\ndata: {\"error\":{\"code\":\"content_filter\"}}\n\n"
++	resp := &http.Response{StatusCode: 200, Header: http.Header{"Content-Type": []string{"text/event-stream"}}, Body: io.NopCloser(strings.NewReader(body))}
++	observeOpenAIPolicyResponse(c, &Account{ID: 51, Platform: PlatformOpenAI}, resp)
++	n, err := io.Copy(io.Discard, resp.Body)
++	require.NoError(t, err)
++	require.Equal(t, int64(len(body)), n)
++	require.NoError(t, resp.Body.Close())
++	require.Equal(t, "content_filter", GetOpenAIPolicyObservation(c).Code)
++}
+diff --git a/backend/internal/service/openai_policy_transport_test.go b/backend/internal/service/openai_policy_transport_test.go
+new file mode 100644
+index 0000000000000000000000000000000000000000..641b0a6d13fc6503b4b4b855899ccd04624882ac
+--- /dev/null
++++ b/backend/internal/service/openai_policy_transport_test.go
+@@ -0,0 +1,164 @@
++package service
++
++import (
++	"bytes"
++	"context"
++	"io"
++	"net/http"
++	"net/http/httptest"
++	"strings"
++	"testing"
++	"time"
++
++	coderws "github.com/coder/websocket"
++	"github.com/gin-gonic/gin"
++	"github.com/stretchr/testify/require"
++)
++
++func TestPolicyObservationChatForwardIntegration(t *testing.T) {
++	for _, stream := range []bool{false, true} {
++		t.Run(map[bool]string{false: "buffered", true: "stream"}[stream], func(t *testing.T) {
++			c, _ := gin.CreateTestContext(httptest.NewRecorder())
++			body := []byte(`{"model":"gpt-5.5","messages":[{"role":"user","content":"harmless fixture"}],"stream":` + map[bool]string{false: "false", true: "true"}[stream] + `}`)
++			c.Request = httptest.NewRequest("POST", "/v1/chat/completions", bytes.NewReader(body))
++			upstreamBody := "data: {\"type\":\"response.failed\",\"response\":{\"id\":\"fixture-response\",\"status\":\"failed\",\"error\":{\"code\":\"invalid_prompt\",\"message\":\"Your prompt was flagged as potentially violating our usage policy.\"}}}\n\n"
++			svc := &OpenAIGatewayService{policyObservationEnabled: func() bool { return true }, httpUpstream: &httpUpstreamRecorder{resp: &http.Response{StatusCode: 200, Header: http.Header{"Content-Type": []string{"text/event-stream"}, "X-Request-Id": []string{"fixture-upstream"}}, Body: io.NopCloser(strings.NewReader(upstreamBody))}}}
++			account := &Account{ID: 51, Platform: PlatformOpenAI, Type: AccountTypeOAuth, Concurrency: 1, Credentials: map[string]any{"access_token": "fixture-token", "chatgpt_account_id": "fixture-account"}}
++			_, _ = svc.ForwardAsChatCompletions(context.Background(), c, account, body, "", "gpt-5.5")
++			mark := GetOpenAIPolicyObservation(c)
++			require.NotNil(t, mark)
++			require.Equal(t, "invalid_prompt", mark.Code)
++			require.Equal(t, "fixture-response", mark.UpstreamResponseID)
++			require.Equal(t, "fixture-upstream", mark.UpstreamRequestID)
++			require.Nil(t, GetOpsCyberPolicy(c), "the new observation must not mark a non-cyber request as cyber")
++		})
++	}
++}
++
++func TestPolicyObservationWebSocketTransportBeforeAfterTurn(t *testing.T) {
++	for _, tc := range []struct {
++		name   string
++		events []string
++		code   string
++	}{
++		{"policy", []string{`{"type":"response.failed","response":{"id":"fixture-response","status":"failed","error":{"code":"content_policy","message":"fixture"}}}`}, "content_policy"},
++		{"refusal", []string{`{"type":"response.refusal.delta","delta":"Harmless fixture refusal"}`, `{"type":"response.completed","response":{"id":"fixture-response","status":"completed","output":[],"usage":{"input_tokens":2,"output_tokens":1}}}`}, "structured_refusal"},
++	} {
++		t.Run(tc.name, func(t *testing.T) {
++			ctx, cancel := context.WithCancelCause(context.Background())
++			defer cancel(context.Canceled)
++			upstream := newStagedPassthroughConn()
++			for _, event := range tc.events {
++				upstream.Send(event)
++			}
++			seen := make(chan OpenAIPolicyObservation, 1)
++			server, serverErr := startPassthroughLifecycleServerWithHooks(t, ctx, policyObservationTestService(upstream), passthroughLifecycleAccount(), func(c *gin.Context) *OpenAIWSIngressHooks {
++				return &OpenAIWSIngressHooks{AfterTurn: func(_ int, _ *OpenAIForwardResult, _ error) {
++					if mark := GetOpenAIPolicyObservation(c); mark != nil {
++						select {
++						case seen <- *mark:
++						default:
++						}
++					}
++					ClearOpenAIPolicyObservation(c)
++				}}
++			})
++			defer server.Close()
++			client := dialPassthroughLifecycleClient(t, server)
++			defer client.CloseNow()
++			for range tc.events {
++				_, err := readPassthroughLifecycleFrame(t, client, 3*time.Second)
++				require.NoError(t, err)
++			}
++			select {
++			case mark := <-seen:
++				require.Equal(t, tc.code, mark.Code)
++				require.Equal(t, 200, mark.UpstreamStatus)
++			case <-time.After(3 * time.Second):
++				t.Fatal("policy evidence not visible to AfterTurn")
++			}
++			require.NoError(t, client.Close(coderws.StatusNormalClosure, "done"))
++			select {
++			case <-serverErr:
++			case <-time.After(3 * time.Second):
++				t.Fatal("fixture server did not exit")
++			}
++		})
++	}
++}
++
++func policyObservationTestService(upstream *stagedPassthroughConn) *OpenAIGatewayService {
++	s := newPassthroughLifecycleService(passthroughLifecycleConfig(), upstream)
++	s.policyObservationEnabled = func() bool { return true }
++	return s
++}
++
++func TestPolicyObservationWebSocketTurnsRemainSeparated(t *testing.T) {
++	ctx, cancel := context.WithCancelCause(context.Background())
++	defer cancel(context.Canceled)
++	upstream := newStagedPassthroughConn()
++	upstream.Send(`{"type":"response.completed","response":{"id":"fixture-A","status":"completed","output":[],"usage":{"input_tokens":2,"output_tokens":1}}}`)
++	type turnEvidence struct {
++		turn int
++		code string
++	}
++	seen := make(chan turnEvidence, 3)
++	server, serverErr := startPassthroughLifecycleServerWithHooks(t, ctx, policyObservationTestService(upstream), passthroughLifecycleAccount(), func(c *gin.Context) *OpenAIWSIngressHooks {
++		return &OpenAIWSIngressHooks{AfterTurn: func(turn int, _ *OpenAIForwardResult, _ error) {
++			e := turnEvidence{turn: turn}
++			if m := GetOpenAIPolicyObservation(c); m != nil {
++				e.code = m.Code
++			}
++			seen <- e
++			ClearOpenAIPolicyObservation(c)
++			ClearOpsCyberPolicy(c)
++		}}
++	})
++	defer server.Close()
++	client := dialPassthroughLifecycleClient(t, server)
++	defer client.CloseNow()
++	_, err := readPassthroughLifecycleFrame(t, client, 3*time.Second)
++	require.NoError(t, err)
++	// A completes before the client submits B; the existing overlap guard rejects earlier admission.
++	<-upstream.writes
++	require.NoError(t, client.Write(ctx, coderws.MessageText, []byte(`{"type":"response.create","model":"gpt-5.5","input":"harmless second fixture"}`)))
++	select {
++	case <-upstream.writes:
++	case <-time.After(3 * time.Second):
++		t.Fatal("second request not forwarded")
++	}
++	upstream.Send(`{"type":"response.refusal.delta","delta":"Harmless second-turn fixture delta"}`)
++	_, err = readPassthroughLifecycleFrame(t, client, 3*time.Second)
++	require.NoError(t, err)
++	upstream.Send(`{"type":"response.completed","response":{"id":"fixture-B","status":"completed","output":[{"type":"message","role":"assistant","content":[{"type":"refusal","refusal":"Harmless test refusal"}]}],"usage":{"input_tokens":2,"output_tokens":1}}}`)
++	_, err = readPassthroughLifecycleFrame(t, client, 3*time.Second)
++	require.NoError(t, err)
++	for _, expected := range []turnEvidence{{1, ""}, {2, "structured_refusal"}} {
++		select {
++		case got := <-seen:
++			require.Equal(t, expected, got)
++		case <-time.After(3 * time.Second):
++			t.Fatal("turn evidence missing")
++		}
++	}
++	require.NoError(t, client.Close(coderws.StatusNormalClosure, "done"))
++	select {
++	case <-serverErr:
++	case <-time.After(3 * time.Second):
++		t.Fatal("fixture server did not exit")
++	}
++}
++
++func TestPolicyObservationDisabledLeavesResponseUnwrapped(t *testing.T) {
++	c, _ := gin.CreateTestContext(httptest.NewRecorder())
++	body := io.NopCloser(strings.NewReader(`{"error":{"code":"content_policy"}}`))
++	s := &OpenAIGatewayService{policyObservationEnabled: func() bool { return false }, httpUpstream: &httpUpstreamRecorder{resp: &http.Response{StatusCode: 400, Header: http.Header{}, Body: body}}}
++	req := httptest.NewRequest("POST", "http://fixture.invalid/v1/responses", nil)
++	resp, err := s.doOpenAIUpstream(req, "", &Account{ID: 51, Platform: PlatformOpenAI}, c)
++	require.NoError(t, err)
++	require.Equal(t, body, resp.Body)
++	_, err = io.Copy(io.Discard, resp.Body)
++	require.NoError(t, err)
++	require.NoError(t, resp.Body.Close())
++	require.Nil(t, GetOpenAIPolicyObservation(c))
++}
+diff --git a/backend/internal/service/openai_ws_forwarder_ingress.go b/backend/internal/service/openai_ws_forwarder_ingress.go
+index e57c2dd89938efd80551cff14d5a76dde7d06ddf..416b4c9feceafc337f7bd249c0d95b389ede52b5 100644
+--- a/backend/internal/service/openai_ws_forwarder_ingress.go
++++ b/backend/internal/service/openai_ws_forwarder_ingress.go
+@@ -1100,6 +1100,9 @@
+ 			}
+ 			if openAIWSMessageShouldParseUsage(eventType, upstreamMessage) {
+ 				parseOpenAIWSResponseUsageFromCompletedEvent(upstreamMessage, &usage)
++			}
++			if s.policyObservationAvailable() {
++				ObserveOpenAIPolicyPayload(c, account, upstreamMessage, http.StatusOK, "")
+ 			}
+ 			imageCounter.AddSSEData(upstreamMessage)
+ 
+diff --git a/backend/internal/service/openai_ws_forwarder_v2.go b/backend/internal/service/openai_ws_forwarder_v2.go
+index 81f8631e96ce316e21b2eda6d39170b43dff89e7..661c7330bf3e0332069733a9c8dd8c579781511e 100644
+--- a/backend/internal/service/openai_ws_forwarder_v2.go
++++ b/backend/internal/service/openai_ws_forwarder_v2.go
+@@ -582,6 +582,9 @@
+ 		}
+ 		if openAIWSMessageShouldParseUsage(eventType, message) {
+ 			parseOpenAIWSResponseUsageFromCompletedEvent(message, usage)
++		}
++		if s.policyObservationAvailable() {
++			ObserveOpenAIPolicyPayload(c, account, message, http.StatusOK, lease.HandshakeHeaders().Get("X-Request-Id"))
+ 		}
+ 		imageCounter.AddSSEData(message)
+ 
+diff --git a/backend/internal/service/openai_ws_http_bridge.go b/backend/internal/service/openai_ws_http_bridge.go
+index 8e5cbf6159861a1f2c74962b85ebba6097a9c90d..e3eec8880102ed8d0765a40490d1cb7fbfc73e95 100644
+--- a/backend/internal/service/openai_ws_http_bridge.go
++++ b/backend/internal/service/openai_ws_http_bridge.go
+@@ -542,7 +542,7 @@
+ 		if buildErr != nil {
+ 			return nil, buildErr
+ 		}
+-		resp, err = s.doOpenAIUpstream(upstreamReq, proxyURL, account)
++		resp, err = s.doOpenAIUpstream(upstreamReq, proxyURL, account, c)
+ 		if err != nil {
+ 			if turn == 1 {
+ 				return nil, s.handleOpenAIUpstreamTransportError(ctx, c, account, err, true)
+diff --git a/backend/internal/service/openai_ws_v2_passthrough_adapter.go b/backend/internal/service/openai_ws_v2_passthrough_adapter.go
+index 715a747918153562701c486480d007fe52edd5ae..62a8569de44e876bb42b217e10700df20545d6e7 100644
+--- a/backend/internal/service/openai_ws_v2_passthrough_adapter.go
++++ b/backend/internal/service/openai_ws_v2_passthrough_adapter.go
+@@ -1272,6 +1272,9 @@
+ 			BeforeWriteClient: func(msgType coderws.MessageType, payload []byte, wroteDownstream bool) error {
+ 				if msgType != coderws.MessageText {
+ 					return nil
++				}
++				if s.policyObservationAvailable() {
++					ObserveOpenAIPolicyPayload(c, account, payload, http.StatusOK, handshakeHeaders.Get("X-Request-Id"))
+ 				}
+ 				eventType, _, _ := parseOpenAIWSEventEnvelope(payload)
+ 				if eventType == "response.created" {
+diff --git a/backend/internal/service/policy_update.go b/backend/internal/service/policy_update.go
+new file mode 100644
+index 0000000000000000000000000000000000000000..d2b1fbb5df9080c89365ccb6a500e50458827add
+--- /dev/null
++++ b/backend/internal/service/policy_update.go
+@@ -0,0 +1,292 @@
++package service
++
++// Custom releases are prepared outside the serving process. Never fall back to
++// official binaries: those would remove both collection and this update guard.
++import (
++	"context"
++	"crypto/sha256"
++	"encoding/hex"
++	"encoding/json"
++	"fmt"
++	"io"
++	"os"
++	"path/filepath"
++	"regexp"
++	"sort"
++	"strconv"
++	"strings"
++	"time"
++)
++
++const policyUpdateRoot = "/app/data/policy-updates"
++const policyReleaseRoot = "/app/policy-releases"
++
++var policyVersionRE = regexp.MustCompile(`^(\d+)\.(\d+)\.(\d+)\+policy-log\.(\d+)$`)
++var policyHashRE = regexp.MustCompile(`^[a-f0-9]{64}$`)
++var policyCommitRE = regexp.MustCompile(`^[a-f0-9]{40}$`)
++
++type policyRelease struct {
++	Version        string   `json:"version"`
++	SHA256         string   `json:"sha256"`
++	Size           int64    `json:"size"`
++	PublishedAt    string   `json:"published_at"`
++	UpstreamCommit string   `json:"upstream_commit"`
++	PatchSHA256    string   `json:"patch_sha256"`
++	Features       []string `json:"features"`
++}
++
++type policyCatalog struct {
++	Schema    int             `json:"schema"`
++	CheckedAt string          `json:"checked_at"`
++	Status    string          `json:"status"`
++	Message   string          `json:"message"`
++	Releases  []policyRelease `json:"releases"`
++}
++
++func (s *UpdateService) isPolicyBuild() bool {
++	return strings.Contains(s.currentVersion, "+policy-log.")
++}
++
++func policyVersion(v string) [4]int {
++	var result [4]int
++	match := policyVersionRE.FindStringSubmatch(v)
++	if match != nil {
++		for i := range result {
++			result[i], _ = strconv.Atoi(match[i+1])
++		}
++	}
++	return result
++}
++
++func comparePolicyVersions(a, b string) int {
++	x, y := policyVersion(a), policyVersion(b)
++	for i := range x {
++		if x[i] < y[i] {
++			return -1
++		}
++		if x[i] > y[i] {
++			return 1
++		}
++	}
++	return 0
++}
++
++func readPolicyCatalog(root string) (*policyCatalog, error) {
++	f, err := os.Open(filepath.Join(root, "catalog.json"))
++	if err != nil {
++		return nil, err
++	}
++	defer f.Close()
++	var c policyCatalog
++	if err := json.NewDecoder(io.LimitReader(f, 1024*1024)).Decode(&c); err != nil {
++		return nil, err
++	}
++	if c.Schema != 1 || len(c.Releases) > 20 {
++		return nil, fmt.Errorf("无效的定制发布目录")
++	}
++	seen := map[string]bool{}
++	for _, r := range c.Releases {
++		features := map[string]bool{}
++		for _, feature := range r.Features {
++			features[feature] = true
++		}
++		if !policyVersionRE.MatchString(r.Version) || !policyHashRE.MatchString(r.SHA256) ||
++			!policyHashRE.MatchString(r.PatchSHA256) || !policyCommitRE.MatchString(r.UpstreamCommit) ||
++			r.Size <= 0 || r.Size > maxDownloadSize || seen[r.Version] ||
++			!features["policy-requests-v1"] || !features["policy-update-v1"] {
++			return nil, fmt.Errorf("定制发布未通过完整性检查")
++		}
++		seen[r.Version] = true
++	}
++	sort.Slice(c.Releases, func(i, j int) bool { return comparePolicyVersions(c.Releases[i].Version, c.Releases[j].Version) > 0 })
++	return &c, nil
++}
++
++func (s *UpdateService) checkPolicyUpdate() (*UpdateInfo, error) {
++	info := &UpdateInfo{CurrentVersion: s.currentVersion, LatestVersion: s.currentVersion, BuildType: s.buildType}
++	if policyRestartPending() {
++		info.NeedRestart = true
++		info.Warning = "定制程序已安装，请重启服务完成更新。"
++		return info, nil
++	}
++	c, err := readPolicyCatalog(policyReleaseRoot)
++	if err != nil {
++		info.Warning = "定制升级目录暂不可用；已禁止下载会覆盖异常记录功能的官方程序。"
++		return info, nil
++	}
++	info.Warning = c.Message
++	checked, err := time.Parse(time.RFC3339, c.CheckedAt)
++	if err != nil || time.Since(checked) > 3*time.Hour {
++		info.Warning = "定制构建检查已超过 3 小时未更新，请检查构建任务。" + c.Message
++	}
++	if len(c.Releases) > 0 {
++		r := c.Releases[0]
++		info.LatestVersion = r.Version
++		info.HasUpdate = comparePolicyVersions(s.currentVersion, r.Version) < 0
++		info.ReleaseInfo = &ReleaseInfo{Name: r.Version, Body: "已保留异常记录采集、管理页面及定制升级通道，并通过自动验证。", PublishedAt: r.PublishedAt, HTMLURL: "https://github.com/Wei-Shaw/sub2api/commit/" + r.UpstreamCommit}
++	}
++	return info, nil
++}
++
++func (s *UpdateService) policyRollbackVersions() ([]RollbackVersion, error) {
++	c, err := readPolicyCatalog(policyReleaseRoot)
++	if err != nil {
++		return nil, fmt.Errorf("定制历史版本目录不可用: %w", err)
++	}
++	result := make([]RollbackVersion, 0)
++	for _, r := range c.Releases {
++		if comparePolicyVersions(r.Version, s.currentVersion) < 0 {
++			result = append(result, RollbackVersion{Version: r.Version, PublishedAt: r.PublishedAt})
++			if len(result) == maxRollbackVersions {
++				break
++			}
++		}
++	}
++	return result, nil
++}
++
++func (s *UpdateService) installPolicyUpdate(ctx context.Context, rollback string) error {
++	if policyRestartPending() {
++		if rollback != "" {
++			return fmt.Errorf("已有待重启的定制更新，请先重启服务后再回退")
++		}
++		return nil
++	}
++	c, err := readPolicyCatalog(policyReleaseRoot)
++	if err != nil {
++		return fmt.Errorf("定制发布目录不可用，未替换程序: %w", err)
++	}
++	var selected *policyRelease
++	olderCount := 0
++	for i := range c.Releases {
++		r := &c.Releases[i]
++		if comparePolicyVersions(r.Version, s.currentVersion) < 0 {
++			olderCount++
++		}
++		if rollback == "" && comparePolicyVersions(r.Version, s.currentVersion) > 0 ||
++			rollback == r.Version && comparePolicyVersions(r.Version, s.currentVersion) < 0 && olderCount <= maxRollbackVersions {
++			selected = r
++			break
++		}
++	}
++	if selected == nil {
++		if rollback != "" {
++			return ErrRollbackVersionNotAllowed
++		}
++		return ErrNoUpdateAvailable
++	}
++	exe, err := os.Executable()
++	if err != nil {
++		return err
++	}
++	// The compose command starts this persistent file, so replacement survives
++	// container recreation. Refuse an incorrectly installed bootstrap binary.
++	if exe != filepath.Join(policyUpdateRoot, "runtime", "sub2api") {
++		return fmt.Errorf("运行程序不在定制持久目录，升级已停止")
++	}
++	running, err := os.Stat("/proc/self/exe")
++	if err != nil {
++		return err
++	}
++	installed, err := os.Stat(exe)
++	if err != nil {
++		return err
++	}
++	if !os.SameFile(running, installed) {
++		return fmt.Errorf("程序已替换，请先重启服务后再执行更新或回退")
++	}
++	return replacePolicyBinary(ctx, policyReleaseRoot, exe, *selected)
++}
++
++func policyRestartPending() bool {
++	exe, err := os.Executable()
++	if err != nil || exe != filepath.Join(policyUpdateRoot, "runtime", "sub2api") {
++		return false
++	}
++	running, err := os.Stat("/proc/self/exe")
++	if err != nil {
++		return false
++	}
++	installed, err := os.Stat(exe)
++	return err == nil && !os.SameFile(running, installed)
++}
++
++func replacePolicyBinary(ctx context.Context, root, exe string, release policyRelease) error {
++	source, err := os.Open(filepath.Join(root, "releases", release.SHA256, "sub2api"))
++	if err != nil {
++		return err
++	}
++	defer source.Close()
++	st, err := source.Stat()
++	if err != nil {
++		return err
++	}
++	if !st.Mode().IsRegular() || st.Size() != release.Size {
++		return fmt.Errorf("定制程序大小不匹配")
++	}
++	next, err := os.CreateTemp(filepath.Dir(exe), ".policy-update-")
++	if err != nil {
++		return err
++	}
++	defer os.Remove(next.Name())
++	defer next.Close()
++	hash := sha256.New()
++	if _, err = io.Copy(io.MultiWriter(next, hash), io.LimitReader(source, maxDownloadSize+1)); err != nil {
++		return err
++	}
++	if hex.EncodeToString(hash.Sum(nil)) != release.SHA256 {
++		return fmt.Errorf("定制程序 SHA256 不匹配，当前程序未改动")
++	}
++	if err = ctx.Err(); err != nil {
++		return err
++	}
++	if err = next.Chmod(0755); err != nil {
++		return err
++	}
++	if err = next.Sync(); err != nil {
++		return err
++	}
++	if err = next.Close(); err != nil {
++		return err
++	}
++	// Keep the recorder configuration with this activation's immutable metadata.
++	runtimeRoot := filepath.Dir(filepath.Dir(exe))
++	backupDir := filepath.Join(runtimeRoot, "backups", time.Now().UTC().Format("20060102T150405.000000000"))
++	if err = os.MkdirAll(backupDir, 0700); err != nil {
++		return err
++	}
++	config, configErr := os.ReadFile(filepath.Join(filepath.Dir(runtimeRoot), "policy-request-log.json"))
++	if configErr != nil && !os.IsNotExist(configErr) {
++		return configErr
++	}
++	if configErr == nil {
++		if err = os.WriteFile(filepath.Join(backupDir, "policy-request-log.json"), config, 0600); err != nil {
++			return err
++		}
++	}
++	metadata, err := json.Marshal(release)
++	if err != nil {
++		return err
++	}
++	if err = os.WriteFile(filepath.Join(backupDir, "target.json"), metadata, 0600); err != nil {
++		return err
++	}
++	// Hard-link the current inode first; there is never a gap at the executable
++	// path, even if the process or host dies before the final atomic rename.
++	backup := exe + ".backup"
++	if err = os.Remove(backup); err != nil && !os.IsNotExist(err) {
++		return err
++	}
++	if err = os.Link(exe, backup); err != nil {
++		return err
++	}
++	if err = os.Rename(next.Name(), exe); err != nil {
++		return err
++	}
++	dir, err := os.Open(filepath.Dir(exe))
++	if err != nil {
++		return err
++	}
++	defer dir.Close()
++	return dir.Sync()
++}
+diff --git a/backend/internal/service/policy_update_test.go b/backend/internal/service/policy_update_test.go
+new file mode 100644
+index 0000000000000000000000000000000000000000..7f86cbdf2768521e377098123b975300a5202eea
+--- /dev/null
++++ b/backend/internal/service/policy_update_test.go
+@@ -0,0 +1,105 @@
++package service
++
++import (
++	"context"
++	"crypto/sha256"
++	"encoding/hex"
++	"encoding/json"
++	"os"
++	"path/filepath"
++	"strings"
++	"testing"
++
++	"github.com/stretchr/testify/require"
++)
++
++func policyFixture(t *testing.T) (string, string, policyRelease) {
++	t.Helper()
++	root := t.TempDir()
++	body := []byte("new-custom-binary")
++	digest := sha256.Sum256(body)
++	r := policyRelease{Version: "0.2.1+policy-log.6", SHA256: hex.EncodeToString(digest[:]), Size: int64(len(body)), UpstreamCommit: strings.Repeat("a", 40), PatchSHA256: strings.Repeat("b", 64), Features: []string{"policy-requests-v1", "policy-update-v1"}}
++	require.NoError(t, os.MkdirAll(filepath.Join(root, "releases", r.SHA256), 0755))
++	require.NoError(t, os.MkdirAll(filepath.Join(root, "runtime"), 0755))
++	require.NoError(t, os.WriteFile(filepath.Join(root, "releases", r.SHA256, "sub2api"), body, 0644))
++	exe := filepath.Join(root, "runtime", "sub2api")
++	require.NoError(t, os.WriteFile(exe, []byte("old-custom-binary"), 0755))
++	return root, exe, r
++}
++
++func TestPolicyUpdateAtomicInstallAndBackup(t *testing.T) {
++	root, exe, r := policyFixture(t)
++	require.NoError(t, replacePolicyBinary(context.Background(), root, exe, r))
++	b, err := os.ReadFile(exe)
++	require.NoError(t, err)
++	require.Equal(t, "new-custom-binary", string(b))
++	b, err = os.ReadFile(exe + ".backup")
++	require.NoError(t, err)
++	require.Equal(t, "old-custom-binary", string(b))
++}
++
++func TestPolicyUpdateCorruptionAndCancellationLeaveCurrentIntact(t *testing.T) {
++	for _, mode := range []string{"checksum", "cancelled", "missing", "size"} {
++		t.Run(mode, func(t *testing.T) {
++			root, exe, r := policyFixture(t)
++			ctx, cancel := context.WithCancel(context.Background())
++			defer cancel()
++			switch mode {
++			case "checksum":
++				require.NoError(t, os.WriteFile(filepath.Join(root, "releases", r.SHA256, "sub2api"), []byte("bad-custom-binary"), 0644))
++			case "cancelled":
++				cancel()
++			case "missing":
++				require.NoError(t, os.Remove(filepath.Join(root, "releases", r.SHA256, "sub2api")))
++			case "size":
++				r.Size++
++			}
++			require.Error(t, replacePolicyBinary(ctx, root, exe, r))
++			b, err := os.ReadFile(exe)
++			require.NoError(t, err)
++			require.Equal(t, "old-custom-binary", string(b))
++		})
++	}
++}
++
++func TestPolicyUpdateCatalogRejectsOfficialAndIncompleteReleases(t *testing.T) {
++	for _, mode := range []string{"official", "feature", "hash", "path", "duplicate"} {
++		t.Run(mode, func(t *testing.T) {
++			root, _, r := policyFixture(t)
++			switch mode {
++			case "official":
++				r.Version = "0.2.1"
++			case "feature":
++				r.Features = []string{"policy-requests-v1"}
++			case "hash":
++				r.SHA256 = "bad"
++			case "path":
++				r.SHA256 = "../../etc/passwd"
++			}
++			c := policyCatalog{Schema: 1, Releases: []policyRelease{r}}
++			if mode == "duplicate" {
++				c.Releases = append(c.Releases, r)
++			}
++			b, err := json.Marshal(c)
++			require.NoError(t, err)
++			require.NoError(t, os.WriteFile(filepath.Join(root, "catalog.json"), b, 0644))
++			_, err = readPolicyCatalog(root)
++			require.Error(t, err)
++		})
++	}
++}
++
++func TestPolicyUpdateNeverFallsBackToOfficial(t *testing.T) {
++	s := NewUpdateService(nil, nil, "0.2.0+policy-log.6", "release")
++	// A nil GitHub client would panic if any native official path were called.
++	_, err := s.CheckUpdate(context.Background(), true)
++	require.NoError(t, err)
++	require.Error(t, s.PerformUpdate(context.Background()))
++	require.Error(t, s.Rollback())
++	require.Error(t, s.RollbackToVersion(context.Background(), "0.1.999"))
++}
++
++func TestPolicyUpdateVersionOrdersRevisionAndOfficialVersion(t *testing.T) {
++	require.Positive(t, comparePolicyVersions("0.2.0+policy-log.10", "0.2.0+policy-log.6"))
++	require.Positive(t, comparePolicyVersions("0.2.1+policy-log.6", "0.2.0+policy-log.99"))
++}
+diff --git a/backend/internal/service/update_service.go b/backend/internal/service/update_service.go
+index 18b6282e50a207d53caf24de3cd619e4f2de7506..5c85e67bdfd1f682028f59f9591ccd33aee69b84 100644
+--- a/backend/internal/service/update_service.go
++++ b/backend/internal/service/update_service.go
+@@ -85,6 +85,7 @@
+ 	ReleaseInfo    *ReleaseInfo `json:"release_info,omitempty"`
+ 	Cached         bool         `json:"cached"`
+ 	Warning        string       `json:"warning,omitempty"`
++	NeedRestart    bool         `json:"need_restart,omitempty"`
+ 	BuildType      string       `json:"build_type"` // "source" or "release"
+ }
+ 
+@@ -131,6 +132,9 @@
+ 
+ // CheckUpdate checks for available updates
+ func (s *UpdateService) CheckUpdate(ctx context.Context, force bool) (*UpdateInfo, error) {
++	if s.isPolicyBuild() {
++		return s.checkPolicyUpdate()
++	}
+ 	// Try cache first
+ 	if !force {
+ 		if cached, err := s.getFromCache(ctx); err == nil && cached != nil {
+@@ -163,6 +167,9 @@
+ // PerformUpdate downloads and applies the update
+ // Uses atomic file replacement pattern for safe in-place updates
+ func (s *UpdateService) PerformUpdate(ctx context.Context) error {
++	if s.isPolicyBuild() {
++		return s.installPolicyUpdate(ctx, "")
++	}
+ 	info, err := s.CheckUpdate(ctx, true)
+ 	if err != nil {
+ 		return err
+@@ -281,6 +288,9 @@
+ 
+ // Rollback restores the previous version
+ func (s *UpdateService) Rollback() error {
++	if s.isPolicyBuild() {
++		return fmt.Errorf("请选择经过验证的定制历史版本；禁止恢复来源不明的旧备份")
++	}
+ 	exePath, err := os.Executable()
+ 	if err != nil {
+ 		return fmt.Errorf("failed to get executable path: %w", err)
+@@ -307,6 +317,9 @@
+ // strictly older than the current version (the current version itself is excluded),
+ // newest first. Draft and prerelease entries are skipped.
+ func (s *UpdateService) ListRollbackVersions(ctx context.Context) ([]RollbackVersion, error) {
++	if s.isPolicyBuild() {
++		return s.policyRollbackVersions()
++	}
+ 	releases, err := s.fetchRollbackCandidates(ctx)
+ 	if err != nil {
+ 		return nil, err
+@@ -327,6 +340,9 @@
+ // The target must be one of the versions returned by ListRollbackVersions;
+ // anything else (including the current version) is rejected.
+ func (s *UpdateService) RollbackToVersion(ctx context.Context, version string) error {
++	if s.isPolicyBuild() {
++		return s.installPolicyUpdate(ctx, strings.TrimPrefix(version, "v"))
++	}
+ 	target := strings.TrimPrefix(strings.TrimSpace(version), "v")
+ 	if target == "" {
+ 		return ErrRollbackVersionNotAllowed
+diff --git a/frontend/src/api/admin/policyRequests.ts b/frontend/src/api/admin/policyRequests.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..a362442ccb7f64153357e2fc8deadde4d381167c
+--- /dev/null
++++ b/frontend/src/api/admin/policyRequests.ts
+@@ -0,0 +1,43 @@
++import { apiClient } from '../client'
++
++export interface PolicyRecord {
++  id: string
++  recorded_at: string
++  request_id: string
++  api_key_id: number
++  api_key_name: string
++  user_id: number
++  group_name?: string
++  account_id: number
++  model: string
++  error_code: string
++  protocol: string
++  body_bytes: number
++  body_encoding?: string
++  [key: string]: unknown
++}
++export interface PolicyQuery {
++  page: number
++  page_size: number
++  key?: string
++  model?: string
++  error_code?: string
++  start_time?: string
++  end_time?: string
++}
++export interface PolicyList {
++  records: { items: PolicyRecord[]; total: number; page: number; page_size: number; index_pending: boolean; index_limited: boolean; unreadable_files: number; disk_bytes: number }
++  status: { enabled: boolean; retention_days: number; max_disk_mb: number; runtime: { written: number; dropped: number; write_errors: number } }
++}
++export interface PolicyDetail { record: Omit<PolicyRecord, 'id'>; body_preview: string; preview_truncated: boolean }
++export const policyRequestsAPI = {
++  async list(params: PolicyQuery, signal?: AbortSignal): Promise<PolicyList> {
++    return (await apiClient.get('/admin/policy-requests', { params, signal })).data
++  },
++  async get(id: string, signal?: AbortSignal): Promise<PolicyDetail> {
++    return (await apiClient.get(`/admin/policy-requests/${encodeURIComponent(id)}`, { signal })).data
++  },
++  async download(id: string): Promise<Blob> {
++    return (await apiClient.get(`/admin/policy-requests/${encodeURIComponent(id)}/body`, { responseType: 'blob' })).data
++  }
++}
+diff --git a/frontend/src/api/admin/system.ts b/frontend/src/api/admin/system.ts
+index 1c057c84944e62f83467283abb91dde40690a63d..b8780a1f67a8ca6f37bbaa0ab723057a1b55acd5 100644
+--- a/frontend/src/api/admin/system.ts
++++ b/frontend/src/api/admin/system.ts
+@@ -18,6 +18,7 @@
+   release_info?: ReleaseInfo
+   cached: boolean
+   warning?: string
++  need_restart?: boolean
+   build_type: string // "source" for manual builds, "release" for CI builds
+ }
+ 
+diff --git a/frontend/src/assets/icons/exception-records.svg b/frontend/src/assets/icons/exception-records.svg
+new file mode 100644
+index 0000000000000000000000000000000000000000..22ed980c7cfbf59e626067c285a8b5b6adb72f7e
+--- /dev/null
++++ b/frontend/src/assets/icons/exception-records.svg
+@@ -0,0 +1,7 @@
++<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
++  <path d="M10.5 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v2.5" />
++  <path d="M13 3v5h5M7.5 11h4M7.5 15h1.5" />
++  <circle cx="17.25" cy="17.25" r="4.25" />
++  <path d="M17.25 15.15v2.35" />
++  <circle cx="17.25" cy="19.15" r=".65" fill="currentColor" stroke="none" />
++</svg>
+diff --git a/frontend/src/components/common/VersionBadge.vue b/frontend/src/components/common/VersionBadge.vue
+index 7fd62947f7ea83afa1c68a2e070b1d7733374be6..c8ea9c326efc97ab72ae52a156b86961cd8aa012 100644
+--- a/frontend/src/components/common/VersionBadge.vue
++++ b/frontend/src/components/common/VersionBadge.vue
+@@ -10,7 +10,7 @@
+             ? 'bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-900/50'
+             : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-dark-800 dark:text-dark-400 dark:hover:bg-dark-700'
+         ]"
+-        :title="hasUpdate ? t('version.updateAvailable') : t('version.upToDate')"
++        :title="hasUpdate ? t('version.updateAvailable') : appStore.versionWarning || t('version.upToDate')"
+       >
+         <span v-if="currentVersion" class="font-medium">v{{ currentVersion }}</span>
+         <span
+@@ -89,7 +89,7 @@
+                   <span v-else class="text-2xl font-bold text-gray-400 dark:text-dark-500">--</span>
+                   <!-- Show check mark when up to date -->
+                   <span
+-                    v-if="!hasUpdate"
++                    v-if="!hasUpdate && !appStore.versionWarning"
+                     class="flex h-5 w-5 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30"
+                   >
+                     <svg
+@@ -109,10 +109,15 @@
+                   {{
+                     hasUpdate
+                       ? t('version.latestVersion') + ': v' + latestVersion
+-                      : t('version.upToDate')
++                      : appStore.versionWarning || t('version.upToDate')
+                   }}
+                 </p>
+               </div>
++
++              <p v-if="isPolicyBuild" class="mb-3 rounded-lg bg-primary-50 p-2 text-xs text-primary-700 dark:bg-primary-900/20 dark:text-primary-300">
++                {{ t('admin.policyRequests.updateProtected') }}
++              </p>
++              <p v-if="hasUpdate && appStore.versionWarning" class="mb-3 text-xs text-amber-600 dark:text-amber-400" role="status">{{ appStore.versionWarning }}</p>
+ 
+               <!-- Priority 1: Update error (must check before hasUpdate) -->
+               <div v-if="updateError" class="space-y-2">
+@@ -469,7 +474,7 @@
+ 
+                       <!-- Version list -->
+                       <template v-else>
+-                        <p class="px-0.5 text-[11px] text-gray-400 dark:text-dark-500">
++                        <p v-if="!isPolicyBuild" class="px-0.5 text-[11px] text-gray-400 dark:text-dark-500">
+                           {{ t('version.rollbackSelectVersion') }}
+                         </p>
+ 
+@@ -517,12 +522,13 @@
+                         <!-- Selected version: manual command (per deploy method) + confirm -->
+                         <transition name="rollback">
+                           <div v-if="selectedRollbackVersion" class="space-y-2">
+-                            <p class="px-0.5 text-[11px] text-gray-400 dark:text-dark-500">
++                            <p v-if="!isPolicyBuild" class="px-0.5 text-[11px] text-gray-400 dark:text-dark-500">
+                               {{ t('version.manualRollbackCommand') }}
+                             </p>
+ 
+                             <!-- Terminal-style block with deploy-method tabs -->
+                             <div
++                              v-if="!isPolicyBuild"
+                               class="overflow-hidden rounded-lg border border-gray-200 dark:border-dark-600"
+                             >
+                               <div
+@@ -638,7 +644,7 @@
+ </template>
+ 
+ <script setup lang="ts">
+-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
++import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+ import { useI18n } from 'vue-i18n'
+ import { useAuthStore, useAppStore } from '@/stores'
+ import {
+@@ -676,6 +682,7 @@
+ const hasUpdate = computed(() => appStore.hasUpdate)
+ const releaseInfo = computed(() => appStore.releaseInfo)
+ const buildType = computed(() => appStore.buildType)
++const isPolicyBuild = computed(() => currentVersion.value.includes('+policy-log.'))
+ 
+ // Update process states (local to this component)
+ const updating = ref(false)
+@@ -686,6 +693,9 @@
+ const restartCountdown = ref(0)
+ // Distinguishes the success + restart panel between update and rollback flows
+ const successKind = ref<'update' | 'rollback'>('update')
++watch(() => appStore.versionNeedRestart, pending => {
++  if (pending) { needRestart.value = true; updateSuccess.value = true }
++}, { immediate: true })
+ 
+ // Rollback states
+ const rollbackPanelOpen = ref(false)
+@@ -748,7 +758,8 @@
+   needRestart.value = false
+   resetRollbackState()
+ 
+-  await appStore.fetchVersion(force)
++  const info = await appStore.fetchVersion(force)
++  if (info?.need_restart) { needRestart.value = true; updateSuccess.value = true }
+ }
+ 
+ async function handleUpdate() {
+diff --git a/frontend/src/components/common/__tests__/VersionBadge.policy.spec.ts b/frontend/src/components/common/__tests__/VersionBadge.policy.spec.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..5edbf088bf5ce2c5e48c3948831e74d7b8f06ed3
+--- /dev/null
++++ b/frontend/src/components/common/__tests__/VersionBadge.policy.spec.ts
+@@ -0,0 +1,55 @@
++import { beforeEach, describe, expect, it, vi } from 'vitest'
++import { flushPromises, mount } from '@vue/test-utils'
++import { reactive } from 'vue'
++import VersionBadge from '../VersionBadge.vue'
++
++const store = reactive({
++  versionLoading: false,
++  currentVersion: '0.2.0+policy-log.6',
++  latestVersion: '0.2.0+policy-log.7',
++  hasUpdate: false,
++  buildType: 'release',
++  releaseInfo: null,
++  versionWarning: '',
++  versionNeedRestart: true,
++  fetchVersion: vi.fn(async (): Promise<{need_restart: boolean}> => ({need_restart: store.versionNeedRestart})),
++  clearVersionCache: vi.fn()
++})
++vi.mock('@/stores', () => ({ useAuthStore: () => ({isAdmin: true}), useAppStore: () => store }))
++vi.mock('vue-i18n', () => ({ useI18n: () => ({t: (key: string) => key}) }))
++vi.mock('@/api/admin/system', () => ({performUpdate: vi.fn(), restartService: vi.fn(), getRollbackVersions: vi.fn(), rollback: vi.fn()}))
++vi.mock('@/composables/useClipboard', () => ({useClipboard: () => ({copied: false, copyToClipboard: vi.fn()})}))
++
++describe('Custom update restart recovery', () => {
++  beforeEach(() => {store.versionNeedRestart = true; store.versionWarning = ''; vi.clearAllMocks()})
++
++  it('restores the restart action after reopening the page', async () => {
++    const wrapper = mount(VersionBadge, {global: {stubs: {Icon: true}}})
++    await wrapper.find('button').trigger('click')
++    await flushPromises()
++    expect(wrapper.text()).toContain('version.restartRequired')
++    expect(wrapper.text()).toContain('version.restartNow')
++    expect(wrapper.text()).not.toContain('version.retry')
++    wrapper.unmount()
++  })
++
++  it('keeps restart available after refreshing an already pending update', async () => {
++    const wrapper = mount(VersionBadge, {global: {stubs: {Icon: true}}})
++    await wrapper.find('button').trigger('click')
++    await wrapper.find('button[title="version.refresh"]').trigger('click')
++    await flushPromises()
++    expect(wrapper.text()).toContain('version.restartRequired')
++    expect(wrapper.text()).toContain('version.restartNow')
++    wrapper.unmount()
++  })
++
++  it('shows a failed build warning rather than an up-to-date success', async () => {
++    store.versionNeedRestart = false
++    store.versionWarning = 'build failed; current service remains available'
++    const wrapper = mount(VersionBadge, {global: {stubs: {Icon: true}}})
++    await wrapper.find('button').trigger('click')
++    expect(wrapper.text()).toContain(store.versionWarning)
++    expect(wrapper.text()).not.toContain('version.upToDate')
++    wrapper.unmount()
++  })
++})
+diff --git a/frontend/src/components/layout/AppSidebar.vue b/frontend/src/components/layout/AppSidebar.vue
+index f39c8ed1b956a02ee455dd0daa997520dd503b33..67bbd2ab5b0d8e457520a006f22d91dae0011b65 100644
+--- a/frontend/src/components/layout/AppSidebar.vue
++++ b/frontend/src/components/layout/AppSidebar.vue
+@@ -194,6 +194,7 @@
+ import { useAdminSettingsStore, useAppStore, useAuthStore, useOnboardingStore } from '@/stores'
+ import VersionBadge from '@/components/common/VersionBadge.vue'
+ import Icon from '@/components/icons/Icon.vue'
++import exceptionRecordsIcon from '@/assets/icons/exception-records.svg?raw'
+ import { sanitizeSvg } from '@/utils/sanitize'
+ import { sanitizeUrl } from '@/utils/url'
+ import { FeatureFlags, makeSidebarFlag } from '@/utils/featureFlags'
+@@ -818,6 +819,7 @@
+       ],
+     },
+     { path: '/admin/usage', label: t('nav.usage'), icon: ChartIcon },
++    { path: '/admin/policy-requests', label: t('admin.policyRequests.title'), icon: null, iconSvg: exceptionRecordsIcon },
+     { path: '/admin/audit-logs', label: t('nav.auditLogs'), icon: ShieldIcon, hideInSimpleMode: true }
+   ]
+ 
+diff --git a/frontend/src/i18n/locales/en/admin/index.ts b/frontend/src/i18n/locales/en/admin/index.ts
+index b86114e058b56e4c26d2c278d4decc607f2129c5..a53d5fbfa78e5d330b2564cfed81af96a7549143 100644
+--- a/frontend/src/i18n/locales/en/admin/index.ts
++++ b/frontend/src/i18n/locales/en/admin/index.ts
+@@ -7,6 +7,7 @@
+ import audit from './audit'
+ import promptAudit from './promptAudit'
+ import plugins from './plugins'
++import policyRequests from './policyRequests'
+ 
+ export default {
+   ...overview,
+@@ -18,4 +19,5 @@
+   ...audit,
+   ...promptAudit,
+   ...plugins,
++  ...policyRequests,
+ }
+diff --git a/frontend/src/i18n/locales/en/admin/policyRequests.ts b/frontend/src/i18n/locales/en/admin/policyRequests.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..24e0e1dab0e2d2b7c0920d77c40d37f41bd888b7
+--- /dev/null
++++ b/frontend/src/i18n/locales/en/admin/policyRequests.ts
+@@ -0,0 +1,47 @@
++export default {
++  "policyRequests": {
++    "updateProtected": "Updates preserve Exception Records and only install verified custom releases.",
++    "title": "Exception Records",
++    "description": "Inspect requests with upstream safety signals and trace their API keys",
++    "enabled": "Recording enabled",
++    "disabled": "Recording disabled",
++    "policy": "Only explicit upstream safety errors or structured refusals are retained. No moderation model is called.",
++    "retention": "{days} days retention · {mb} MiB capacity",
++    "disk": "Disk used",
++    "written": "Written since restart",
++    "dropped": "Dropped since restart",
++    "writeErrors": "Write errors",
++    "key": "Key name / ID",
++    "model": "Model",
++    "signal": "Signal",
++    "all": "All signals",
++    "start": "Start time",
++    "end": "End time (exclusive)",
++    "timezone": "Times use browser timezone: {zone}",
++    "time": "Recorded at",
++    "owner": "Key / user",
++    "user": "User ID",
++    "group": "Group",
++    "account": "Upstream account ID",
++    "protocol": "Protocol",
++    "detail": "View details",
++    "empty": "No matching retained requests",
++    "emptyHint": "Only signals captured after recording was enabled appear here. Previously unrecorded bodies cannot be recovered.",
++    "partial": "Historical indexing is incomplete. Refresh to continue loading.",
++    "limited": "The index has reached 50,000 records; results are incomplete.",
++    "unreadable": "{n} files could not be read. Check server logs.",
++    "error": "Unable to load records. Please retry.",
++    "invalidTime": "End time must be after start time.",
++    "refresh": "Refresh",
++    "search": "Search",
++    "reset": "Reset",
++    "body": "Request body",
++    "download": "Download original",
++    "preview": "Showing the first 256 KiB. Download the original for the complete body.",
++    "raw": "Original multipart / binary request. The preview is text; download preserves the original bytes.",
++    "metadata": "Request metadata",
++    "loading": "Loading…",
++    "downloadError": "Download failed. Please retry.",
++    "keyHint": "Key names are captured at request time; user ID identifies the key owner. Shared keys cannot identify the actual operator."
++  }
++}
+diff --git a/frontend/src/i18n/locales/zh/admin/index.ts b/frontend/src/i18n/locales/zh/admin/index.ts
+index b86114e058b56e4c26d2c278d4decc607f2129c5..a53d5fbfa78e5d330b2564cfed81af96a7549143 100644
+--- a/frontend/src/i18n/locales/zh/admin/index.ts
++++ b/frontend/src/i18n/locales/zh/admin/index.ts
+@@ -7,6 +7,7 @@
+ import audit from './audit'
+ import promptAudit from './promptAudit'
+ import plugins from './plugins'
++import policyRequests from './policyRequests'
+ 
+ export default {
+   ...overview,
+@@ -18,4 +19,5 @@
+   ...audit,
+   ...promptAudit,
+   ...plugins,
++  ...policyRequests,
+ }
+diff --git a/frontend/src/i18n/locales/zh/admin/policyRequests.ts b/frontend/src/i18n/locales/zh/admin/policyRequests.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..a6a449124e8a38ff5c49755e41ec8aeff24ead5e
+--- /dev/null
++++ b/frontend/src/i18n/locales/zh/admin/policyRequests.ts
+@@ -0,0 +1,47 @@
++export default {
++  "policyRequests": {
++    "updateProtected": "更新已保留异常记录功能；仅安装验证通过的定制版本。",
++    "title": "异常记录",
++    "description": "查看触发上游安全信号的请求，按 Key 追溯来源",
++    "enabled": "记录已开启",
++    "disabled": "记录未开启",
++    "policy": "仅保留上游明确返回安全错误或结构化拒绝的请求。不调用审计模型。",
++    "retention": "保留 {days} 天 · 容量上限 {mb} MiB",
++    "disk": "当前占用",
++    "written": "本次启动已写入",
++    "dropped": "本次启动已丢弃",
++    "writeErrors": "写入失败",
++    "key": "Key 名称 / ID",
++    "model": "模型",
++    "signal": "触发类型",
++    "all": "全部类型",
++    "start": "开始时间",
++    "end": "结束时间（不含）",
++    "timezone": "时间按浏览器时区显示：{zone}",
++    "time": "记录时间",
++    "owner": "Key / 用户",
++    "user": "用户 ID",
++    "group": "分组",
++    "account": "上游账号 ID",
++    "protocol": "协议",
++    "detail": "查看详情",
++    "empty": "暂无符合条件的留存记录",
++    "emptyHint": "仅展示启用记录后捕获的安全信号请求。此前未保存的正文无法补回。",
++    "partial": "正在建立历史索引，当前结果尚不完整。点击刷新继续加载。",
++    "limited": "记录索引已达 50,000 条上限；当前结果不完整。",
++    "unreadable": "有 {n} 个记录文件无法读取，请检查服务器日志。",
++    "error": "读取失败，请稍后重试。",
++    "invalidTime": "结束时间必须晚于开始时间。",
++    "refresh": "刷新",
++    "search": "查询",
++    "reset": "重置",
++    "body": "请求正文",
++    "download": "下载完整原文",
++    "preview": "正文较长，当前展示前 256 KiB，可下载完整原文。",
++    "raw": "原始 multipart / 二进制请求，预览以文本显示；下载保留原始字节。",
++    "metadata": "请求信息",
++    "loading": "正在读取…",
++    "downloadError": "下载失败，请重试。",
++    "keyHint": "Key 名称为记录时的名称；用户 ID 是 Key 所属的后台用户。共用 Key 无法进一步区分实际操作者。"
++  }
++}
+diff --git a/frontend/src/router/index.ts b/frontend/src/router/index.ts
+index 1191944f525ceb3a87cbabd106e746e9e33c7756..2849fa9a59cfff2566580726d8dc36f4f2988f11 100644
+--- a/frontend/src/router/index.ts
++++ b/frontend/src/router/index.ts
+@@ -608,6 +608,12 @@
+       descriptionKey: 'admin.riskControl.description',
+       requiresRiskControl: true
+     }
++  },
++  {
++    path: '/admin/policy-requests',
++    name: 'AdminPolicyRequests',
++    component: () => import('@/views/admin/PolicyRequestsView.vue'),
++    meta: { requiresAuth: true, requiresAdmin: true, title: 'Retained Safety Requests', titleKey: 'admin.policyRequests.title', descriptionKey: 'admin.policyRequests.description' }
+   },
+   {
+     path: '/admin/prompt-audit',
+diff --git a/frontend/src/stores/app.ts b/frontend/src/stores/app.ts
+index 496e17d27011b49654154e185dd2632e2d1b502e..f70c099f79bafed017ea62311183493ac5f61a21 100644
+--- a/frontend/src/stores/app.ts
++++ b/frontend/src/stores/app.ts
+@@ -43,6 +43,8 @@
+   const hasUpdate = ref<boolean>(false)
+   const buildType = ref<string>('source')
+   const releaseInfo = ref<ReleaseInfo | null>(null)
++  const versionWarning = ref('')
++  const versionNeedRestart = ref(false)
+ 
+   // Auto-incrementing ID for toasts
+   let toastIdCounter = 0
+@@ -249,7 +251,9 @@
+         has_update: hasUpdate.value,
+         build_type: buildType.value,
+         release_info: releaseInfo.value || undefined,
+-        cached: true
++        cached: true,
++        warning: versionWarning.value,
++        need_restart: versionNeedRestart.value
+       }
+     }
+ 
+@@ -266,6 +270,8 @@
+       hasUpdate.value = data.has_update
+       buildType.value = data.build_type || 'source'
+       releaseInfo.value = data.release_info || null
++      versionWarning.value = data.warning || ''
++      versionNeedRestart.value = !!data.need_restart
+       versionLoaded.value = true
+       return data
+     } catch (error) {
+@@ -460,6 +466,8 @@
+     hasUpdate,
+     buildType,
+     releaseInfo,
++    versionWarning,
++    versionNeedRestart,
+ 
+     // Computed
+     hasActiveToasts,
+diff --git a/frontend/src/views/admin/PolicyRequestsView.vue b/frontend/src/views/admin/PolicyRequestsView.vue
+new file mode 100644
+index 0000000000000000000000000000000000000000..e1f420e0eacca3eaca4a60bd2f2388bcabc6a4c0
+--- /dev/null
++++ b/frontend/src/views/admin/PolicyRequestsView.vue
+@@ -0,0 +1,149 @@
++<template>
++  <AppLayout>
++    <TablePageLayout>
++      <template #filters>
++        <div class="card space-y-4 p-4 sm:p-5">
++          <div class="flex flex-wrap items-center justify-between gap-3 text-sm">
++            <div class="flex flex-wrap items-center gap-3">
++              <span v-if="result" :class="result.status.enabled ? 'badge badge-success' : 'badge badge-gray'">{{ t(p + (result.status.enabled ? 'enabled' : 'disabled')) }}</span>
++              <span v-if="result?.status.enabled" class="text-gray-500 dark:text-gray-400">{{ t(p + 'retention', { days: result.status.retention_days, mb: result.status.max_disk_mb }) }}</span>
++            </div>
++            <button class="btn btn-secondary btn-sm" :disabled="loading" @click="load">{{ t(p + 'refresh') }}</button>
++          </div>
++          <p class="text-sm text-gray-500 dark:text-gray-400">{{ t(p + 'policy') }}</p>
++          <div v-if="result" class="flex flex-wrap gap-x-6 gap-y-2 text-xs text-gray-500 dark:text-gray-400">
++            <span>{{ t(p + 'disk') }}: {{ (result.records.disk_bytes / 1048576).toFixed(2) }} MiB</span>
++            <span>{{ t(p + 'written') }}: {{ result.status.runtime.written }}</span>
++            <span :class="result.status.runtime.dropped ? 'text-amber-600' : ''">{{ t(p + 'dropped') }}: {{ result.status.runtime.dropped }}</span>
++            <span :class="result.status.runtime.write_errors ? 'text-red-600' : ''">{{ t(p + 'writeErrors') }}: {{ result.status.runtime.write_errors }}</span>
++          </div>
++          <form class="grid grid-cols-1 items-end gap-3 sm:grid-cols-2 xl:grid-cols-4" @submit.prevent="search">
++            <label class="block"><span class="input-label">{{ t(p + 'key') }}</span><input v-model.trim="filters.key" class="input" maxlength="200" /></label>
++            <label class="block"><span class="input-label">{{ t(p + 'model') }}</span><input v-model.trim="filters.model" class="input" maxlength="200" /></label>
++            <div class="block">
++              <label for="policy-signal" class="input-label">{{ t(p + 'signal') }}</label>
++              <Select id="policy-signal" v-model="filters.error_code" :options="signalOptions" :aria-label="t(p + 'signal')" :searchable="false" />
++            </div>
++            <div class="hidden xl:block" />
++            <label class="block"><span class="input-label">{{ t(p + 'start') }}</span><input v-model="filters.start" type="datetime-local" class="input" /></label>
++            <label class="block"><span class="input-label">{{ t(p + 'end') }}</span><input v-model="filters.end" type="datetime-local" class="input" /></label>
++            <div class="flex gap-3"><button type="submit" class="btn btn-primary" :disabled="loading">{{ t(p + 'search') }}</button><button type="button" class="btn btn-secondary" :disabled="loading" @click="reset">{{ t(p + 'reset') }}</button></div>
++          </form>
++          <p class="text-xs text-gray-400">{{ t(p + 'timezone', { zone }) }}</p>
++        </div>
++        <p v-if="error" role="alert" class="mt-3 text-sm text-red-600">{{ error }}</p>
++        <p v-if="result?.records.index_pending" role="status" class="mt-3 text-sm text-amber-600">{{ t(p + 'partial') }}</p>
++        <p v-if="result?.records.index_limited" role="alert" class="mt-3 text-sm text-amber-600">{{ t(p + 'limited') }}</p>
++        <p v-if="result?.records.unreadable_files" role="alert" class="mt-3 text-sm text-amber-600">{{ t(p + 'unreadable', { n: result.records.unreadable_files }) }}</p>
++      </template>
++      <template #table>
++        <DataTable :columns="columns" :data="result?.records.items || []" :loading="loading" row-key="id">
++          <template #cell-recorded_at="{ value }"><span class="whitespace-nowrap">{{ formatTime(value) }}</span></template>
++          <template #cell-owner="{ row }"><div class="max-w-[220px] truncate font-medium" :title="row.api_key_name">{{ row.api_key_name || '—' }}</div><div class="mt-1 text-xs text-gray-400">Key #{{ row.api_key_id }} · {{ t(p + 'user') }} #{{ row.user_id }}</div><div class="mt-1 text-xs text-gray-400">{{ row.group_name || '—' }}</div></template>
++          <template #cell-error_code="{ value }"><span class="rounded bg-amber-50 px-2 py-1 font-mono text-xs text-amber-800 dark:bg-amber-900/20 dark:text-amber-300">{{ value }}</span></template>
++          <template #cell-actions="{ row }"><button class="font-medium text-primary-600 dark:text-primary-400" @click="openDetail(row.id)">{{ t(p + 'detail') }}</button></template>
++          <template #empty><div class="px-5 py-12 text-center"><Icon name="shield" size="xl" class="mx-auto mb-3 text-gray-300" /><p class="text-sm font-medium text-gray-600 dark:text-gray-300">{{ t(p + 'empty') }}</p><p class="mx-auto mt-2 max-w-xl text-xs leading-6 text-gray-400">{{ t(p + 'emptyHint') }}</p></div></template>
++        </DataTable>
++      </template>
++      <template #pagination>
++        <p class="mb-2 text-xs text-gray-400">{{ t(p + 'keyHint') }}</p>
++        <Pagination v-if="result && result.records.total > 0" :total="result.records.total" :page="page" :page-size="20" :show-page-size-selector="false" @update:page="changePage" />
++      </template>
++    </TablePageLayout>
++    <BaseDialog :show="!!selected" :title="t(p + 'detail')" width="extra-wide" @close="closeDetail">
++      <p v-if="detailLoading" role="status">{{ t(p + 'loading') }}</p>
++      <p v-if="detailError" role="alert" class="text-red-600">{{ detailError }}</p>
++      <template v-if="detail">
++        <details class="mb-5 rounded-lg border border-gray-200 p-3 dark:border-dark-600"><summary class="cursor-pointer text-sm font-medium">{{ t(p + 'metadata') }}</summary><pre class="mt-3 max-h-60 overflow-auto whitespace-pre-wrap break-all text-xs">{{ metadata }}</pre></details>
++        <h4 class="mb-3 font-medium">{{ t(p + 'body') }}</h4>
++        <p v-if="detail.preview_truncated" class="mb-3 text-sm text-amber-600">{{ t(p + 'preview') }}</p>
++        <p v-if="detail.record.body_encoding === 'base64'" class="mb-3 text-sm text-gray-500">{{ t(p + 'raw') }}</p>
++        <pre data-testid="policy-body" class="max-h-[50vh] overflow-auto whitespace-pre-wrap break-all rounded-lg bg-gray-50 p-4 font-mono text-xs leading-6 dark:bg-dark-900">{{ bodyText }}</pre>
++      </template>
++      <template #footer><button v-if="detail" class="btn btn-primary" :disabled="downloading" @click="download">{{ t(p + 'download') }}</button></template>
++    </BaseDialog>
++  </AppLayout>
++</template>
++
++<script setup lang="ts">
++import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
++import { useI18n } from 'vue-i18n'
++import { policyRequestsAPI, type PolicyDetail, type PolicyList, type PolicyQuery } from '@/api/admin/policyRequests'
++import AppLayout from '@/components/layout/AppLayout.vue'
++import TablePageLayout from '@/components/layout/TablePageLayout.vue'
++import DataTable from '@/components/common/DataTable.vue'
++import Pagination from '@/components/common/Pagination.vue'
++import BaseDialog from '@/components/common/BaseDialog.vue'
++import Select from '@/components/common/Select.vue'
++import Icon from '@/components/icons/Icon.vue'
++
++const { t } = useI18n()
++const p = 'admin.policyRequests.'
++const zone = Intl.DateTimeFormat().resolvedOptions().timeZone
++const signals = ['cyber_policy', 'content_policy', 'content_policy_violation', 'invalid_prompt', 'content_filter', 'structured_refusal']
++const signalOptions = computed(() => [{ value: '', label: t(p + 'all') }, ...signals.map(code => ({ value: code, label: code }))])
++const filters = reactive({ key: '', model: '', error_code: '', start: '', end: '' })
++const page = ref(1)
++const result = ref<PolicyList | null>(null)
++const loading = ref(false)
++const error = ref('')
++const selected = ref('')
++const detail = ref<PolicyDetail | null>(null)
++const detailLoading = ref(false)
++const detailError = ref('')
++const downloading = ref(false)
++let applied: Omit<PolicyQuery, 'page'> = { page_size: 20 }
++let listController: AbortController | undefined
++let detailController: AbortController | undefined
++const columns = computed(() => [
++  { key: 'recorded_at', label: t(p + 'time') }, { key: 'owner', label: t(p + 'owner') },
++  { key: 'model', label: t(p + 'model') }, { key: 'error_code', label: t(p + 'signal') },
++  { key: 'account_id', label: t(p + 'account') }, { key: 'protocol', label: t(p + 'protocol') },
++  { key: 'actions', label: '' }
++])
++const formatTime = (value: string) => new Date(value).toLocaleString(undefined, { hour12: false })
++const metadata = computed(() => { const data = { ...detail.value?.record }; delete data.body; return JSON.stringify(data, null, 2) })
++const bodyText = computed(() => {
++  const text = detail.value?.body_preview || ''
++  if (!detail.value?.preview_truncated && detail.value?.record.body_encoding !== 'base64') {
++    try { return JSON.stringify(JSON.parse(text), null, 2) } catch { /* Raw body remains visible. */ }
++  }
++  return text
++})
++async function load() {
++  listController?.abort()
++  const controller = new AbortController(); listController = controller
++  loading.value = true; error.value = ''
++  try { const data = await policyRequestsAPI.list({ ...applied, page: page.value }, controller.signal); if (!controller.signal.aborted) result.value = data }
++  catch { if (!controller.signal.aborted) { result.value = null; error.value = t(p + 'error') } }
++  finally { if (!controller.signal.aborted) loading.value = false }
++}
++function search() {
++  if (filters.start && filters.end && new Date(filters.start) >= new Date(filters.end)) { error.value = t(p + 'invalidTime'); return }
++  applied = { page_size: 20, key: filters.key, model: filters.model, error_code: filters.error_code,
++    start_time: filters.start ? new Date(filters.start).toISOString() : undefined,
++    end_time: filters.end ? new Date(filters.end).toISOString() : undefined }
++  page.value = 1; void load()
++}
++function reset() { Object.assign(filters, { key: '', model: '', error_code: '', start: '', end: '' }); search() }
++function changePage(value: number) { page.value = value; void load() }
++async function openDetail(id: string) {
++  detailController?.abort()
++  const controller = new AbortController(); detailController = controller
++  selected.value = id; detail.value = null; detailError.value = ''; detailLoading.value = true
++  try { const data = await policyRequestsAPI.get(id, controller.signal); if (!controller.signal.aborted) detail.value = data }
++  catch { if (!controller.signal.aborted) detailError.value = t(p + 'error') }
++  finally { if (!controller.signal.aborted) detailLoading.value = false }
++}
++function closeDetail() { detailController?.abort(); selected.value = ''; detail.value = null; detailError.value = '' }
++async function download() {
++  const id = selected.value; downloading.value = true
++  try {
++    const blob = await policyRequestsAPI.download(id)
++    const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `policy-request-${id.slice(0, 12)}.txt`; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000)
++  } catch { if (selected.value === id) detailError.value = t(p + 'downloadError') }
++  finally { downloading.value = false }
++}
++onMounted(load)
++onUnmounted(() => { listController?.abort(); detailController?.abort() })
++</script>
+diff --git a/frontend/src/views/admin/__tests__/PolicyRequestsView.spec.ts b/frontend/src/views/admin/__tests__/PolicyRequestsView.spec.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..257293b932ee2b5320ffb0d0c2ec30beebf540a0
+--- /dev/null
++++ b/frontend/src/views/admin/__tests__/PolicyRequestsView.spec.ts
+@@ -0,0 +1,21 @@
++import { beforeEach, describe, expect, it, vi } from 'vitest'
++import { flushPromises, mount } from '@vue/test-utils'
++import View from '../PolicyRequestsView.vue'
++import Select from '@/components/common/Select.vue'
++const api = vi.hoisted(() => ({ list: vi.fn(), get: vi.fn(), download: vi.fn() }))
++vi.mock('@/api/admin/policyRequests', () => ({ policyRequestsAPI: api }))
++vi.mock('vue-i18n', async () => ({ ...await vi.importActual<typeof import('vue-i18n')>('vue-i18n'), useI18n: () => ({ t: (key: string) => key }) }))
++const row = { id: 'a'.repeat(64), api_key_id: 65, api_key_name: 'Test owner', user_id: 9, recorded_at: '2026-09-03T03:00:00Z', error_code: 'cyber_policy', model: 'test-model', protocol: 'http', account_id: 51 }
++const listing = { records: { items: [row], total: 1, index_pending: false, disk_bytes: 1024 }, status: { enabled: true, retention_days: 30, max_disk_mb: 1024, runtime: { written: 1, dropped: 0, write_errors: 0 } } }
++function view() { return mount(View, { global: { stubs: { AppLayout: { template: '<div><slot /></div>' }, BaseDialog: { props: ['show'], template: '<div v-if="show"><slot /><slot name="footer" /></div>' }, Icon: true, Pagination: true } } }) }
++describe('Policy requests admin view', () => {
++ beforeEach(() => { vi.clearAllMocks(); api.list.mockResolvedValue(listing); api.get.mockResolvedValue({ record: row, body_preview: '{"input":"<img src=x onerror=alert(1)>"}', preview_truncated: false }) })
++ it('loads metadata only and fetches escaped body on explicit detail', async () => {
++  const w=view(); await flushPromises(); expect(api.get).not.toHaveBeenCalled()
++  const button=w.findAll('button').find(x=>x.text()==='admin.policyRequests.detail')!; await button.trigger('click');await flushPromises()
++  expect(api.get).toHaveBeenCalledWith(row.id,expect.any(AbortSignal));expect(w.get('[data-testid="policy-body"]').text()).toContain('<img src=x onerror=alert(1)>');expect(w.find('[data-testid="policy-body"] img').exists()).toBe(false);w.unmount()
++ })
++ it('submits combined filters and resets the page',async()=>{const w=view();await flushPromises();await w.findAll('input')[0].setValue('65');await w.findAll('input')[1].setValue('test');w.getComponent(Select).vm.$emit('update:modelValue','cyber_policy');await w.get('form').trigger('submit');await flushPromises();expect(api.list).toHaveBeenLastCalledWith(expect.objectContaining({page:1,key:'65',model:'test',error_code:'cyber_policy'}),expect.any(AbortSignal));w.unmount()})
++ it('clears old rows on failed refresh',async()=>{const w=view();await flushPromises();api.list.mockRejectedValueOnce(new Error('offline'));await w.findAll('button')[0].trigger('click');await flushPromises();expect(w.find('[role="alert"]').text()).toContain('error');expect(w.text()).not.toContain('Test owner');w.unmount()})
++ it('discards an outstanding body when unmounted',async()=>{let resolve!: (x:unknown)=>void;api.get.mockReturnValue(new Promise(r=>{resolve=r}));const w=view();await flushPromises();await w.findAll('button').find(x=>x.text()==='admin.policyRequests.detail')!.trigger('click');const signal=api.get.mock.calls[0][1];w.unmount();expect(signal.aborted).toBe(true);resolve({record:row,body_preview:'late',preview_truncated:false});await flushPromises()})
++})
