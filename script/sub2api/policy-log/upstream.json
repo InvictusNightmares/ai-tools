@@ -1,0 +1,12 @@
+{
+  "upstream_repository": "https://github.com/Wei-Shaw/sub2api",
+  "upstream_commit": "aa236488351eb71e120fc2b6fb32e36b0374c918",
+  "upstream_version": "0.2.0",
+  "upstream_archive_sha256": "0535674a97117289b871efccbb012835f2135631622b70133f187cecccc4825d",
+  "custom_version": "0.2.0+policy-log.6",
+  "patch": "policy-log.patch",
+  "patch_sha256": "5e1bdfd0731db3253a42be292ceca25bbd06b18ed931e81c41a46f684e4b6c76",
+  "source_file_count": 54,
+  "modified_files": 29,
+  "added_files": 25
+}

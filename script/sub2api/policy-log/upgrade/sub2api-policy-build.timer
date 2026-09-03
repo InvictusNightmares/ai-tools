@@ -1,0 +1,11 @@
+[Unit]
+Description=Prepare verified Sub2API custom releases hourly
+
+[Timer]
+OnBootSec=5min
+OnUnitInactiveSec=1h
+RandomizedDelaySec=60
+Persistent=true
+
+[Install]
+WantedBy=timers.target
