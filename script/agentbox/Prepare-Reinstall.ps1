@@ -15,7 +15,7 @@ $Expected = @{
     UpstreamSh               = 'FE8CF9D8FB800AA74480BBD2223F268259E2A6EADFEAB68C50A39B57F027139F'
     UpstreamDebianCfg        = '53DA483158C7D526987BAFE6BF450FFC93A32E5B7B0D16DAA6126F21731A4161'
     PatchedBat               = '85D1783C9EE86A224D4E942E64052EE4CAC0613F455F1829D16CB78B058EF0A4'
-    PatchedSh                = '46C2750B44CAEED5500AE758F880A2B0DD39E474991C99179229BD3A8E37D3EF'
+    PatchedSh                = 'DF8385EA660B4B3B3720542CDD8D7DBAFF9B00586EF5C05C83D2C1D65949D5834'
     PatchedDebianCfg         = 'C72584170B2A3630D02AAFF0F3E6DBFF4C827C60259E05DAA9628E1660578BE7'
     CygwinSetup              = '2C9F2FB56E1FB687B5D9680AFA8F8B06E6214F0E483096AF0EAE1946431226C5'
     CygwinSignerThumbprint   = '7C470FD5026C30AA594D5D3782A060DDFFA0D1FD'
@@ -129,7 +129,8 @@ function Add-ProxyHooksToReinstallSh {
         '        for file in mihomo config.yaml production.yaml start-proxy.sh install-target.sh; do',
         '            [ -f "$bootstrap_proxy_dir/$file" ] || error_and_exit "Missing proxy bootstrap file: $file"',
         '        done',
-        '        cp -a "$bootstrap_proxy_dir" "$initrd_dir/proxy-bootstrap"',
+        '        cp -R --no-preserve=mode,ownership,timestamps "$bootstrap_proxy_dir" "$initrd_dir/proxy-bootstrap"',
+        '        chmod -R go-rwx "$initrd_dir/proxy-bootstrap"',
         '        chmod 700 "$initrd_dir/proxy-bootstrap/mihomo" "$initrd_dir/proxy-bootstrap/start-proxy.sh" "$initrd_dir/proxy-bootstrap/install-target.sh"',
         '        chmod 600 "$initrd_dir/proxy-bootstrap/config.yaml" "$initrd_dir/proxy-bootstrap/production.yaml"',
         '        if is_distro_like_debian $nextos_distro; then',
