@@ -10,6 +10,7 @@
 | 主机 / 用户 | `agentbox` / `agent` |
 | 时区 | `America/Los_Angeles`（自动切换 PST/PDT） |
 | 系统语言 / 键盘 | 仅 `en_US.UTF-8` / US |
+| 容器运行时 | Docker CE + containerd + Buildx + Compose（Docker 官方 Debian 仓库） |
 | `reinstall` commit | `6b3a341b4bb5c0b93f25cc0a0518e9bd5088504b` |
 | 上游 `reinstall.bat` SHA-256 | `A7BD252241ADEE998FCF9F7C8FCE0EA61C34AAE32A347B278125B543C431984E` |
 | 上游 `reinstall.sh` SHA-256 | `FE8CF9D8FB800AA74480BBD2223F268259E2A6EADFEAB68C50A39B57F027139F` |
@@ -214,6 +215,32 @@ chmod 700 /root/bootstrap-debian.sh
 
 脚本同时把主机时区固定为 `America/Los_Angeles`（由系统时区数据库自动处理 PST/PDT），只生成并启用 `en_US.UTF-8`，清除已知中文 locale 全量包、中文桌面任务包、字体和输入法。Debian 软件包自带但未启用的翻译目录不做破坏性删改；系统选择、会话环境和控制台输出保持英文。
 
+脚本还会从 Docker 官方 Debian 13 仓库安装 Docker CE、containerd、Buildx 和 Compose。Docker daemon 拉镜像固定经 7897；未来业务容器通过专用 `agentbox-egress` 网络和 `/srv/agentbox/proxy.env` 使用 7898。默认端口发布只绑定 loopback，`DOCKER-USER` 额外拒绝非 Tailscale 入站。`agent` 不加入 `docker` 组，管理容器统一使用 `sudo docker ...`。
+
+宿主机与容器的边界固定为：OpenSSH、Tailscale、UFW/iptables、双 Mihomo、Docker/containerd、时间/磁盘/安全更新留在 systemd；Agent worker、数据库、队列、浏览器自动化、Dashboard 和项目服务放进 Compose。接管层依赖项不得容器化，否则 Docker 故障会同时切断修复入口。
+
+业务栈放在 `/srv/agentbox/<stack>/compose.yaml`。需要外网的服务使用以下最小结构；内部服务名如 `db`、`redis` 还应追加到该栈的 `NO_PROXY`：
+
+```yaml
+services:
+  app:
+    image: example/image:fixed-version
+    restart: unless-stopped
+    env_file:
+      - /srv/agentbox/proxy.env
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - default
+      - agentbox-egress
+
+networks:
+  agentbox-egress:
+    external: true
+```
+
+不要使用 `network_mode: host`，不要挂载 `/var/run/docker.sock`，不要使用 `privileged: true`，不要把密钥写进镜像或 Compose。默认只允许本机访问发布端口；需要从实体电脑访问的新端口，必须同时显式绑定 Tailscale 地址并在 Tailnet grant 中逐端口授权。
+
 ## 7. 检查点 D：SSH 验证后加固
 
 实体电脑第一个终端：
@@ -250,10 +277,16 @@ timedatectl
 locale
 locale -a
 swapon --show
-systemctl is-enabled mihomo-bootstrap mihomo agentbox-proxy-update.timer ssh tailscaled fstrim.timer
-systemctl is-active mihomo-bootstrap mihomo ssh tailscaled
+systemctl is-enabled mihomo-bootstrap mihomo agentbox-proxy-update.timer ssh tailscaled docker containerd agentbox-container-proxy fstrim.timer
+systemctl is-active mihomo-bootstrap mihomo ssh tailscaled docker containerd agentbox-container-proxy
 curl --proxy http://127.0.0.1:7897 -I https://github.com/
 curl --proxy http://127.0.0.1:7898 -I https://github.com/
+sudo docker version
+sudo docker compose version
+sudo docker info --format '{{.LoggingDriver}}'
+sudo docker network inspect agentbox-egress
+sudo iptables -S DOCKER-USER
+id -nG agent
 systemctl list-timers agentbox-proxy-update.timer --no-pager
 tailscale status
 tailscale netcheck
@@ -263,7 +296,7 @@ ss -lntp
 journalctl -b -p warning --no-pager
 ```
 
-验收要求：`timedatectl` 显示 `America/Los_Angeles`，`locale` 的 `LANG`/`LANGUAGE`/`LC_ALL` 分别为 `en_US.UTF-8`、`en_US:en`、`en_US.UTF-8`，`locale -a` 含 `en_US.utf8` 且不含 `zh_*`；两个 Mihomo/Tailscale/SSH 无人登录即自启，7897/7898 只监听 loopback，公网 TCP 22 不可访问，SSH 只接受 `agent` 公钥，4 GB swap 有效，root 已锁定，自动安全更新不触发自动重启。
+验收要求：`timedatectl` 显示 `America/Los_Angeles`，`locale` 的 `LANG`/`LANGUAGE`/`LC_ALL` 分别为 `en_US.UTF-8`、`en_US:en`、`en_US.UTF-8`，`locale -a` 含 `en_US.utf8` 且不含 `zh_*`；两个 Mihomo/Tailscale/SSH/Docker/容器代理无人登录即自启；Docker 日志驱动为 `local`，Compose 与 `agentbox-egress` 可用，`agent` 不属于 `docker` 组；7897/7898 的宿主机实例只监听 loopback，容器代理只监听专用 bridge，公网 TCP 22 和容器发布端口不可访问；SSH 只接受 `agent` 公钥，4 GB swap 有效，root 已锁定，自动安全更新不触发自动重启。
 
 如果 `tailscale status` 显示 `relay` 或 `tailscale netcheck` 显示 UDP 不可用，但实体电脑的 SSH 可持续连接，这符合“控制面和 DERP 经 Mihomo、UDP 直连不可用”的预期降级。不要为追求 `direct` 而开放公网 SSH；只有在天翼网络本身允许时，才考虑单独放行 Tailscale 的 UDP 41641。
 
@@ -287,8 +320,8 @@ curl --proxy http://127.0.0.1:7898 -I https://github.com/
 
 1. 断开天翼图形客户端 2 小时，通过 SSH 验证。
 2. 再断开 26 小时，检查平台休眠、停机或重启。
-3. 观察 24–48 小时的 `journalctl`、磁盘、两个 Mihomo、profile 更新 timer、Tailscale 和 SSH。
-4. 稳定后才安装 Codex、GitHub 认证和开发工具链。
+3. 观察 24–48 小时的 `journalctl`、磁盘、两个 Mihomo、profile 更新 timer、Tailscale、SSH、Docker 和 `agentbox-container-proxy`。
+4. 稳定后才以 Compose 栈安装 Codex/Agent、GitHub 认证代理和项目工具链；不把这些业务服务直接安装到宿主机。
 
 ## 10. 恢复矩阵
 

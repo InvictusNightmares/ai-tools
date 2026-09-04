@@ -12,7 +12,7 @@
 
 将当前 Windows 云电脑改造成无桌面 Linux Agent 主机，用于代码修改、测试、构建、调研和文档等任务。日常从实体电脑通过 `ssh agent@agentbox` 接管，不再依赖 Windows 桌面。
 
-第一阶段只建设基础系统、外网代理、Tailscale 和 SSH，不安装 Docker、OpenClaw、Hermes、CtYun 保活程序或 Codex。稳定 24–48 小时后再建设 Agent 工具链。
+第一阶段建设基础系统、外网代理、Tailscale、SSH 和 Docker 运行底座，但不安装 OpenClaw、Hermes、CtYun 保活程序或 Codex。稳定 24–48 小时后，再把 Agent 和项目工作负载以容器形式部署。
 
 ## 2. 当前环境结论
 
@@ -61,7 +61,12 @@
 - UFW 默认拒绝入站，允许出站，只放行 `tailscale0` 的 TCP 22。
 - 4 GB swapfile，`vm.swappiness=10`，不使用需人工解锁的全盘加密。
 - 安全更新自动安装，但不自动重启。
-- `mihomo-bootstrap`、`mihomo`、`agentbox-proxy-update.timer`、`ssh`、`tailscaled` 和 `fstrim.timer` 开机自启。
+- 预装 Docker 官方仓库的 Docker CE、containerd、Buildx 和 Compose 插件；daemon 拉取镜像固定经 7897，启用 `live-restore`、`local` 日志驱动和默认 `no-new-privileges`。
+- Docker 创建专用 `agentbox-egress` 网络。需要外网的业务容器同时挂载该网络并载入 `/srv/agentbox/proxy.env`，经只对该网络开放的转发器使用 7898 完整规则。
+- Docker bridge 的默认端口发布地址为 `127.0.0.1`；`DOCKER-USER` 链只接受宿主机 Docker bridge 出站和 `tailscale0` 入站，其余外部容器入站拒绝。对外服务还必须在 Tailnet ACL 中逐端口授权。
+- 所有 Agent、数据库、任务队列、浏览器自动化和项目服务都放在 `/srv/agentbox/<stack>` 的 Compose 栈中。`agent` 不加入等同 root 权限的 `docker` 组，使用 `sudo docker compose ...` 管理。
+- 宿主机只保留 OpenSSH、Tailscale、UFW/iptables、双 Mihomo、Docker/containerd、时间同步、磁盘维护和系统安全更新；这些是接管与容器运行底座，不容器化。
+- `mihomo-bootstrap`、`mihomo`、`agentbox-proxy-update.timer`、`ssh`、`tailscaled`、`docker`、`containerd`、`agentbox-container-proxy` 和 `fstrim.timer` 开机自启。
 
 ## 5. 建设顺序
 
@@ -72,7 +77,7 @@
 5. 确认预检通过后，使用同一固定安装器执行 Debian 13 网络安装。
 6. Debian 安装器在 DHCP 后启动 initrd 内的 Mihomo，并将 APT 镜像代理设为 `127.0.0.1:7897`。
 7. 安装完成前落盘双 Mihomo、完整私密 profile、离线编译器、刷新/回滚服务；APT/shell 初始仍走 7897，`tailscaled` 永久走 7897。
-8. 首次启动后执行 `bootstrap-debian.sh`；生产 7898 通过 HTTPS 检查后才切换日常 APT/shell，并启用自动更新，然后建立 `agent` + Tailscale + SSH。
+8. 首次启动后执行 `bootstrap-debian.sh`；生产 7898 通过 HTTPS 检查后才切换日常 APT/shell，并启用自动更新，然后建立 `agent` + Tailscale + SSH，安装并加固 Docker，创建容器专用代理网络。
 9. 实体电脑验证两条独立 SSH 会话和 `sudo`，然后执行 `finalize-debian.sh` 锁定 root。
 10. 重启验收并观察 24–48 小时，再安装 Agent 工具链。
 
@@ -84,15 +89,18 @@
 - 7897 是静态“救生艇”，不会随订阅自动变化。若这个保底节点的密码、证书、地址或协议失效，7898 的订阅更新和 Tailscale 都会失去外网；应在它失效前通过新的订阅配置重新建立保底节点。
 - 远程订阅及用户自定义 JavaScript 被视为可信输入，但仍在无 `process`、`require`、动态代码生成和网络 API 的 Node `vm` 中执行，单次限制 5 秒、输入输出限制 10 MiB。脚本失败会拒绝整次更新并保留旧生产配置。
 - 生产实例故障不应影响 Tailscale/SSH；但单个节点本身同时被两实例使用，因此节点级失效仍会影响两条链路。
+- Docker 发布端口会绕过 UFW 的常规 INPUT 规则；本方案同时使用默认 loopback 绑定和 Docker 官方预留的 `DOCKER-USER` 链。Compose 文件不得使用 `network_mode: host`，不得无审查地显式绑定 `0.0.0.0`。
+- `live-restore` 只能降低 Docker daemon 短暂重启或补丁更新的中断，并不代替 Compose 的 `restart: unless-stopped`，也不能跨宿主机停机维持服务。
 - 客户机内的 systemd 可恢复进程，但无法在云平台关闭整台虚拟机时自我唤醒。
 - [CtYun 保活工具](https://github.com/leleji/CtYun) 待基础系统稳定后单独审计。本机部署只能防止运行期间休眠，停机恢复仍需天翼平台或第二台外部常在设备。
 
 ## 7. 验收标准
 
-- Debian 重启后无需图形登录，两个 Mihomo、Tailscale 和 SSH 自动恢复。
+- Debian 重启后无需图形登录，两个 Mihomo、Tailscale、SSH、Docker 和容器代理转发器自动恢复。
 - 实体电脑可使用 `ssh agent@agentbox`，公网接口不能访问 TCP 22。
 - root SSH、SSH 密码认证和 Tailscale SSH 关闭；手机不持有 SSH 私钥。
 - APT、GitHub HTTPS 和未来 Agent 通过 7898 的完整规则出站；Tailscale 通过独立 7897 出站。
+- Docker daemon 能通过 7897 拉取镜像，Compose 可用；业务容器接入 `agentbox-egress` 后通过 7898 出站，公网接口不能直接访问已发布容器端口。
 - 强制执行一次 `sudo update-agentbox-proxy --force` 能成功刷新；故意提供无效候选时不会替换最后可用的生产配置。
 - 临时 Tailscale auth key 已撤销，Git 仓库不包含任何节点或账号凭据。
 - 安全更新自动安装，但不会无人值守自动重启。
@@ -110,4 +118,7 @@
 - [Clash Verge Rev v2.5.2](https://github.com/clash-verge-rev/clash-verge-rev/releases/tag/v2.5.2)
 - [Clash Verge Rev headless Linux 结论](https://github.com/clash-verge-rev/clash-verge-rev/issues/7079)
 - [js-yaml](https://github.com/nodeca/js-yaml)
+- [Docker Engine on Debian](https://docs.docker.com/engine/install/debian/)
+- [Docker daemon proxy](https://docs.docker.com/engine/daemon/proxy/)
+- [Docker with iptables](https://docs.docker.com/engine/network/firewall-iptables/)
 - [Linux.do 天翼云电脑 Debian 实践](https://linux.do/t/topic/654530)
