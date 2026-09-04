@@ -140,7 +140,7 @@ date -Is
 . /proxy-bootstrap/start-proxy.sh
 wget -S --spider https://deb.debian.org/debian/
 wget -S --spider https://pkgs.tailscale.com/
-wget -S --spider https://raw.githubusercontent.com/InvictusNightmares/ai-tools/main/doc/debian-dd-runbook.md
+wget -S --spider https://raw.githubusercontent.com/InvictusNightmares/ai-tools/main/doc/agentbox/debian-dd-runbook.md
 ```
 
 通过标准：

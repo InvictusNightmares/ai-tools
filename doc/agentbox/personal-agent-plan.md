@@ -30,7 +30,7 @@
 
 当前 Codex 位于将被重装的机器中，Alpine 预检的第一次重启就会终止本进程。连续性由三个外部接管点保证：
 
-1. GitHub 中的本方案和 [Debian 重装手册](debian-dd-runbook.md)。
+1. GitHub 中的本方案和 [Debian 重装手册](./debian-dd-runbook.md)。
 2. 实体电脑上的仓库副本、Codex App、Tailscale 和 SSH 私钥。
 3. 天翼外部控制台和官方 Windows 重装功能。
 
