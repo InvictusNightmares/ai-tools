@@ -5,7 +5,8 @@
 - 主机名 / 管理用户：`agentbox` / `agent`
 - 远程入口：Tailscale + 标准 OpenSSH
 - 外网出口：双 Mihomo + Clash Verge Rev 完整订阅增强链
-- 时区：`Asia/Shanghai`
+- 时区：`America/Los_Angeles`（自动切换 PST/PDT）
+- 系统语言 / 键盘：仅 `en_US.UTF-8` / US
 
 ## 1. 目标
 
@@ -48,7 +49,8 @@
 
 ## 4. 基础系统基线
 
-- Debian 13，主机名 `agentbox`，时区 `Asia/Shanghai`。
+- Debian 13，主机名 `agentbox`，时区 `America/Los_Angeles`（自动切换 PST/PDT）。
+- 系统界面、locale、键盘和命令输出统一为英文：只生成 `en_US.UTF-8`，使用 US 键盘；不安装中文 locale、字体、输入法或语言任务包。仓库中的中文操作手册仅供实体电脑上的操作者阅读，不属于新系统语言配置。
 - `mihomo-bootstrap.service` 在 `127.0.0.1:7897` 提供固定保底出口，只服务安装、订阅刷新和 Tailscale。
 - `mihomo.service` 在 `127.0.0.1:7898` 提供完整订阅、自定义规则、策略组和脚本增强后的生产出口；APT、交互 shell、Git 和未来的 Agent 默认使用它。
 - Tailscale 的控制面和 DERP HTTPS 固定经 7897 出站，不依赖 7898 的自定义规则；受限网络下可能长期显示 `relay` 而不是 `direct`。

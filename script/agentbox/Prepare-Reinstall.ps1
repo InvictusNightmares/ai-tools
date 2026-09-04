@@ -16,7 +16,7 @@ $Expected = @{
     UpstreamDebianCfg        = '53DA483158C7D526987BAFE6BF450FFC93A32E5B7B0D16DAA6126F21731A4161'
     PatchedBat               = '85D1783C9EE86A224D4E942E64052EE4CAC0613F455F1829D16CB78B058EF0A4'
     PatchedSh                = '46C2750B44CAEED5500AE758F880A2B0DD39E474991C99179229BD3A8E37D3EF'
-    PatchedDebianCfg         = '42A129FA89BB21C551BB6C73474FF07381005F0D422D5B2C3FD3165608EE6F25'
+    PatchedDebianCfg         = 'C72584170B2A3630D02AAFF0F3E6DBFF4C827C60259E05DAA9628E1660578BE7'
     CygwinSetup              = '2C9F2FB56E1FB687B5D9680AFA8F8B06E6214F0E483096AF0EAE1946431226C5'
     CygwinSignerThumbprint   = '7C470FD5026C30AA594D5D3782A060DDFFA0D1FD'
 }
@@ -151,9 +151,26 @@ function Add-ProxyHooksToReinstallSh {
 function Add-ProxyHooksToDebianCfg {
     param([Parameter(Mandatory)][string]$Content)
 
+    if (-not $Content.Contains('d-i time/zone string Asia/Shanghai')) {
+        throw 'Unable to find the Debian timezone patch anchor.'
+    }
+    if (-not $Content.Contains('d-i debian-installer/locale string en_US.UTF-8')) {
+        throw 'The pinned Debian preseed does not select the expected English locale.'
+    }
+
     $Content = $Content.Replace(
         'd-i mirror/country string manual',
         "d-i mirror/country string manual`nd-i mirror/http/proxy string http://127.0.0.1:7897"
+    )
+    $Content = $Content.Replace(
+        'd-i time/zone string Asia/Shanghai',
+        'd-i time/zone string America/Los_Angeles'
+    )
+    $Content = $Content.Replace('apbs04.zh-cn.html', 'apbs04.en.html')
+    $Content = [regex]::Replace(
+        $Content,
+        '(?m)^[^\r\n]*#[^\r\n]*[^\x00-\x7F][^\r\n]*(?:\r?\n|$)',
+        ''
     )
 
     $OldLateCommand = @(
@@ -199,11 +216,20 @@ function Test-StagingFiles {
 
     $BatContent = [IO.File]::ReadAllText($PatchedBatPath)
     $ShContent = [IO.File]::ReadAllText($PatchedShPath)
+    $DebianCfgContent = [IO.File]::ReadAllText($PatchedDebianCfgPath)
     if ($BatContent.Contains('bin456789/reinstall/main') -or $ShContent.Contains('bin456789/reinstall/main')) {
         throw 'An unpinned reinstall/main reference remains in a staged installer file.'
     }
     if ($BatContent -match '(?m)^\s*[^r].*curl .*--insecure' -or $ShContent -match '(?m)^\s*[^#].*curl .*--insecure') {
         throw 'An executable curl --insecure invocation remains in a staged installer file.'
+    }
+    if ($DebianCfgContent -notmatch '(?m)^d-i debian-installer/locale string en_US\.UTF-8$' -or
+        $DebianCfgContent -notmatch '(?m)^d-i keyboard-configuration/xkb-keymap select us$' -or
+        $DebianCfgContent -notmatch '(?m)^d-i time/zone string America/Los_Angeles$') {
+        throw 'The staged Debian preseed is not pinned to English, a US keyboard, and America/Los_Angeles.'
+    }
+    if ($DebianCfgContent -match 'Asia/Shanghai|(?i)zh[-_](?:cn|hans|hant)|[^\x00-\x7F]') {
+        throw 'Chinese locale, timezone, documentation, or non-ASCII text remains in the staged Debian preseed.'
     }
 }
 

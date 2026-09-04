@@ -8,13 +8,15 @@
 | --- | --- |
 | Debian | 13 / Trixie |
 | 主机 / 用户 | `agentbox` / `agent` |
+| 时区 | `America/Los_Angeles`（自动切换 PST/PDT） |
+| 系统语言 / 键盘 | 仅 `en_US.UTF-8` / US |
 | `reinstall` commit | `6b3a341b4bb5c0b93f25cc0a0518e9bd5088504b` |
 | 上游 `reinstall.bat` SHA-256 | `A7BD252241ADEE998FCF9F7C8FCE0EA61C34AAE32A347B278125B543C431984E` |
 | 上游 `reinstall.sh` SHA-256 | `FE8CF9D8FB800AA74480BBD2223F268259E2A6EADFEAB68C50A39B57F027139F` |
 | 上游 `debian.cfg` SHA-256 | `53DA483158C7D526987BAFE6BF450FFC93A32E5B7B0D16DAA6126F21731A4161` |
 | 加固后 `reinstall.bat` SHA-256 | `85D1783C9EE86A224D4E942E64052EE4CAC0613F455F1829D16CB78B058EF0A4` |
 | 双代理扩展后 `reinstall.sh` SHA-256 | `46C2750B44CAEED5500AE758F880A2B0DD39E474991C99179229BD3A8E37D3EF` |
-| 双代理扩展后 `debian.cfg` SHA-256 | `42A129FA89BB21C551BB6C73474FF07381005F0D422D5B2C3FD3165608EE6F25` |
+| 双代理扩展后 `debian.cfg` SHA-256 | `C72584170B2A3630D02AAFF0F3E6DBFF4C827C60259E05DAA9628E1660578BE7` |
 | Cygwin setup SHA-256 | `2C9F2FB56E1FB687B5D9680AFA8F8B06E6214F0E483096AF0EAE1946431226C5` |
 | Cygwin 签名指纹 | `7C470FD5026C30AA594D5D3782A060DDFFA0D1FD` |
 | Linux Mihomo | 1.19.29, amd64-v1 |
@@ -41,6 +43,7 @@
 - [ ] 密码管理器已保存随机临时 root 密码和独立 `agent` 本地密码。
 - [ ] 已确认除 GitHub 仓库与手册外不保留本机状态，接受 C:/D:/Windows RE 全部清除。
 - [ ] 已理解 7897 是 Tailscale 和订阅刷新的静态救生艇；生产规则或订阅失败不会切断它，但保底节点本身失效仍会导致远程失联。
+- [ ] 已确认新 Debian 使用 `America/Los_Angeles`、`en_US.UTF-8` 和 US 键盘，不安装中文 locale、字体、输入法或语言任务包。
 
 在 Tailscale Access controls 中把下面内容合并进现有 HuJSON 策略，并将邮箱替换为自己的 Tailscale 登录邮箱：
 
@@ -209,6 +212,8 @@ chmod 700 /root/bootstrap-debian.sh
 
 脚本先经 7897 安装 Node 等基础依赖，再验证 7898 的完整规则出口。只有 7898 能通过 GitHub HTTPS 检查时，才把 APT/交互 shell 切到 7898 并启用 profile 更新 timer；`tailscaled` 始终固定使用 7897。随后脚本交互请求实体电脑 SSH **公钥**、`agent` 本地密码，以及一次性不可复用的 `tag:agent-server` Tailscale auth key。它不会在这一步锁定 root。
 
+脚本同时把主机时区固定为 `America/Los_Angeles`（由系统时区数据库自动处理 PST/PDT），只生成并启用 `en_US.UTF-8`，清除已知中文 locale 全量包、中文桌面任务包、字体和输入法。Debian 软件包自带但未启用的翻译目录不做破坏性删改；系统选择、会话环境和控制台输出保持英文。
+
 ## 7. 检查点 D：SSH 验证后加固
 
 实体电脑第一个终端：
@@ -242,6 +247,8 @@ sudo reboot
 cat /etc/debian_version
 hostnamectl
 timedatectl
+locale
+locale -a
 swapon --show
 systemctl is-enabled mihomo-bootstrap mihomo agentbox-proxy-update.timer ssh tailscaled fstrim.timer
 systemctl is-active mihomo-bootstrap mihomo ssh tailscaled
@@ -256,7 +263,7 @@ ss -lntp
 journalctl -b -p warning --no-pager
 ```
 
-验收要求：两个 Mihomo/Tailscale/SSH 无人登录即自启，7897/7898 只监听 loopback，公网 TCP 22 不可访问，SSH 只接受 `agent` 公钥，4 GB swap 有效，root 已锁定，自动安全更新不触发自动重启。
+验收要求：`timedatectl` 显示 `America/Los_Angeles`，`locale` 的 `LANG`/`LANGUAGE`/`LC_ALL` 分别为 `en_US.UTF-8`、`en_US:en`、`en_US.UTF-8`，`locale -a` 含 `en_US.utf8` 且不含 `zh_*`；两个 Mihomo/Tailscale/SSH 无人登录即自启，7897/7898 只监听 loopback，公网 TCP 22 不可访问，SSH 只接受 `agent` 公钥，4 GB swap 有效，root 已锁定，自动安全更新不触发自动重启。
 
 如果 `tailscale status` 显示 `relay` 或 `tailscale netcheck` 显示 UDP 不可用，但实体电脑的 SSH 可持续连接，这符合“控制面和 DERP 经 Mihomo、UDP 直连不可用”的预期降级。不要为追求 `direct` 而开放公网 SSH；只有在天翼网络本身允许时，才考虑单独放行 Tailscale 的 UDP 41641。
 

@@ -43,7 +43,7 @@ if [[ ! $ssh_public_key =~ ^ssh-ed25519\ [A-Za-z0-9+/=]+([[:space:]].*)?$ ]]; th
 fi
 
 hostnamectl set-hostname agentbox
-timedatectl set-timezone Asia/Shanghai
+timedatectl set-timezone America/Los_Angeles
 if grep -qE '^127\.0\.1\.1[[:space:]]' /etc/hosts; then
   sed -i -E 's/^127\.0\.1\.1[[:space:]].*/127.0.1.1 agentbox/' /etc/hosts
 else
@@ -59,12 +59,65 @@ apt-get install -y \
   curl \
   git \
   gnupg \
+  locales \
   nodejs \
   openssh-server \
   sudo \
   ufw \
   unattended-upgrades \
   util-linux
+
+english_only_incompatible_packages=(
+  locales-all
+  task-chinese
+  task-chinese-desktop
+  fonts-arphic-bkai00mp
+  fonts-arphic-bsmi00lp
+  fonts-arphic-gbsn00lp
+  fonts-arphic-gkai00mp
+  fonts-arphic-ukai
+  fonts-arphic-uming
+  fonts-wqy-microhei
+  fonts-wqy-zenhei
+  ibus-chewing
+  ibus-libpinyin
+  ibus-pinyin
+  ibus-rime
+  fcitx-chewing
+  fcitx-googlepinyin
+  fcitx-libpinyin
+  fcitx-pinyin
+  fcitx-rime
+  fcitx5-chewing
+  fcitx5-chinese-addons
+  fcitx5-rime
+  zhcon
+)
+installed_incompatible_packages=()
+for package in "${english_only_incompatible_packages[@]}"; do
+  if dpkg-query -W -f='${db:Status-Status}\n' "$package" 2>/dev/null | grep -qx installed; then
+    installed_incompatible_packages+=("$package")
+  fi
+done
+if [[ ${#installed_incompatible_packages[@]} -gt 0 ]]; then
+  apt-get purge -y "${installed_incompatible_packages[@]}"
+fi
+
+printf 'en_US.UTF-8 UTF-8\n' >/etc/locale.gen
+locale-gen
+update-locale --reset LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US:en
+export LC_ALL=en_US.UTF-8
+
+if [[ $(timedatectl show --property=Timezone --value) != America/Los_Angeles ]]; then
+  echo "Failed to set the system timezone to America/Los_Angeles." >&2
+  exit 1
+fi
+if ! locale -a | grep -qx 'en_US.utf8' || locale -a | grep -Eiq '^zh([_.]|$)'; then
+  echo "The generated locale set is not English-only." >&2
+  exit 1
+fi
 
 node /usr/local/libexec/agentbox-profile-compiler.js --self-test
 
