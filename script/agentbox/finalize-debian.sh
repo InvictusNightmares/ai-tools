@@ -22,6 +22,21 @@ if ! ufw status | grep -Fq 'Status: active'; then
   echo "UFW is not active; refusing to harden SSH." >&2
   exit 1
 fi
+if ! systemctl is-active --quiet docker.service || \
+   ! systemctl is-active --quiet agentbox-container-proxy.service || \
+   ! docker network inspect agentbox-egress >/dev/null 2>&1 || \
+   ! docker compose version >/dev/null 2>&1; then
+  echo "The Docker application platform is incomplete; refusing to finalize the host." >&2
+  exit 1
+fi
+if id -nG agent | tr ' ' '\n' | grep -qx docker; then
+  echo "The agent user has root-equivalent docker group access; refusing to finalize the host." >&2
+  exit 1
+fi
+if ! iptables -C DOCKER-USER -j AGENTBOX-DOCKER >/dev/null 2>&1; then
+  echo "The Docker ingress guard is missing; refusing to finalize the host." >&2
+  exit 1
+fi
 
 cat >/etc/ssh/sshd_config.d/90-agentbox.conf <<'EOF'
 PermitRootLogin no
@@ -51,7 +66,15 @@ if [[ $confirmation != 'LOCK ROOT' ]]; then
 fi
 
 passwd -l root
-systemctl enable ssh tailscaled mihomo-bootstrap.service mihomo.service fstrim.timer
+systemctl enable \
+  ssh \
+  tailscaled \
+  mihomo-bootstrap.service \
+  mihomo.service \
+  docker.service \
+  containerd.service \
+  agentbox-container-proxy.service \
+  fstrim.timer
 if systemctl is-active --quiet mihomo.service; then
   systemctl enable agentbox-proxy-update.timer
 fi
