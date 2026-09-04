@@ -1,0 +1,12 @@
+[Unit]
+Description=Check whether the imported Clash profile is due for refresh
+
+[Timer]
+OnBootSec=30min
+OnUnitActiveSec=15min
+RandomizedDelaySec=2min
+Persistent=true
+Unit=agentbox-proxy-update.service
+
+[Install]
+WantedBy=timers.target

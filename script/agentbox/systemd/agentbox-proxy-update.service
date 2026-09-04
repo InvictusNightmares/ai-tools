@@ -1,0 +1,25 @@
+[Unit]
+Description=Refresh and safely activate the agentbox production proxy profile
+After=network-online.target mihomo-bootstrap.service mihomo.service
+Wants=network-online.target mihomo-bootstrap.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/update-agentbox-proxy
+UMask=0077
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateTmp=true
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=strict
+ReadWritePaths=/etc/mihomo /etc/agentbox-profile/profiles /var/lib/agentbox-profile /var/lib/mihomo /run
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+LockPersonality=true
+TimeoutStartSec=15min
