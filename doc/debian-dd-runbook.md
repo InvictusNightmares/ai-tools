@@ -11,6 +11,7 @@
 | 时区 | `America/Los_Angeles`（自动切换 PST/PDT） |
 | 系统语言 / 键盘 | 仅 `en_US.UTF-8` / US |
 | 容器运行时 | Docker CE + containerd + Buildx + Compose（Docker 官方 Debian 仓库） |
+| Headless Chrome | `ghcr.io/browserless/chrome:v2.56.2@sha256:1be15d1e3bad53e89d07ef529a52615739f77b7cd997a49c0ec97aaa78d0fcaf` |
 | `reinstall` commit | `6b3a341b4bb5c0b93f25cc0a0518e9bd5088504b` |
 | 上游 `reinstall.bat` SHA-256 | `A7BD252241ADEE998FCF9F7C8FCE0EA61C34AAE32A347B278125B543C431984E` |
 | 上游 `reinstall.sh` SHA-256 | `FE8CF9D8FB800AA74480BBD2223F268259E2A6EADFEAB68C50A39B57F027139F` |
@@ -241,6 +242,10 @@ networks:
 
 不要使用 `network_mode: host`，不要挂载 `/var/run/docker.sock`，不要使用 `privileged: true`，不要把密钥写进镜像或 Compose。默认只允许本机访问发布端口；需要从实体电脑访问的新端口，必须同时显式绑定 Tailscale 地址并在 Tailnet grant 中逐端口授权。
 
+初始化脚本会直接启动 `/srv/agentbox/headless-chrome/compose.yaml`：Browserless v2.56.2 的实际 Google Chrome 镜像被 tag 和 digest 双重固定，仅连接内部 `agentbox-browser` 和出口 `agentbox-egress`，不设置 `ports`。随机 256-bit token 分别以 root-only Compose 环境和 `root:agent` 0640 客户端环境保存，任何正常输出都不会显示 token。Chrome 限制为 2 个并发会话、10 个排队请求、5 分钟超时、2 GB `/dev/shm`、4 GB 内存和 4 CPU。
+
+未来 Agent 容器需同时加入 `agentbox-browser` 网络并安全加载 `/srv/agentbox/headless-chrome/client.env`。Browserless v2 的 Chrome WebSocket 基址是 `ws://headless-chrome:3000/chrome`；由于 Browserless 要求自带代理按会话传入，客户端必须把 `BROWSERLESS_PROXY_SERVER` 和 `BROWSERLESS_LANGUAGE` 分别编码为 `--proxy-server`、`--lang` launch 参数，不能依赖 Chrome 自动读取 `HTTP_PROXY`。不得把 token 放进 URL 日志、Git 或聊天。
+
 ## 7. 检查点 D：SSH 验证后加固
 
 实体电脑第一个终端：
@@ -285,6 +290,9 @@ sudo docker version
 sudo docker compose version
 sudo docker info --format '{{.LoggingDriver}}'
 sudo docker network inspect agentbox-egress
+sudo docker network inspect agentbox-browser
+sudo docker inspect --format '{{.State.Health.Status}}' agentbox-headless-chrome
+sudo docker compose --env-file /srv/agentbox/headless-chrome/.env --file /srv/agentbox/headless-chrome/compose.yaml ps
 sudo iptables -S DOCKER-USER
 id -nG agent
 systemctl list-timers agentbox-proxy-update.timer --no-pager
@@ -296,7 +304,7 @@ ss -lntp
 journalctl -b -p warning --no-pager
 ```
 
-验收要求：`timedatectl` 显示 `America/Los_Angeles`，`locale` 的 `LANG`/`LANGUAGE`/`LC_ALL` 分别为 `en_US.UTF-8`、`en_US:en`、`en_US.UTF-8`，`locale -a` 含 `en_US.utf8` 且不含 `zh_*`；两个 Mihomo/Tailscale/SSH/Docker/容器代理无人登录即自启；Docker 日志驱动为 `local`，Compose 与 `agentbox-egress` 可用，`agent` 不属于 `docker` 组；7897/7898 的宿主机实例只监听 loopback，容器代理只监听专用 bridge，公网 TCP 22 和容器发布端口不可访问；SSH 只接受 `agent` 公钥，4 GB swap 有效，root 已锁定，自动安全更新不触发自动重启。
+验收要求：`timedatectl` 显示 `America/Los_Angeles`，`locale` 的 `LANG`/`LANGUAGE`/`LC_ALL` 分别为 `en_US.UTF-8`、`en_US:en`、`en_US.UTF-8`，`locale -a` 含 `en_US.utf8` 且不含 `zh_*`；两个 Mihomo/Tailscale/SSH/Docker/容器代理无人登录即自启；Docker 日志驱动为 `local`，Compose、`agentbox-egress` 和内部 `agentbox-browser` 可用，Headless Chrome 为 `healthy` 且没有宿主机端口映射，`agent` 不属于 `docker` 组；7897/7898 的宿主机实例只监听 loopback，容器代理只监听专用 bridge，公网 TCP 22 和容器发布端口不可访问；SSH 只接受 `agent` 公钥，4 GB swap 有效，root 已锁定，自动安全更新不触发自动重启。
 
 如果 `tailscale status` 显示 `relay` 或 `tailscale netcheck` 显示 UDP 不可用，但实体电脑的 SSH 可持续连接，这符合“控制面和 DERP 经 Mihomo、UDP 直连不可用”的预期降级。不要为追求 `direct` 而开放公网 SSH；只有在天翼网络本身允许时，才考虑单独放行 Tailscale 的 UDP 41641。
 

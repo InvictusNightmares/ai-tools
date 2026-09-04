@@ -61,6 +61,7 @@ apt-get install -y \
   gnupg \
   locales \
   nodejs \
+  openssl \
   openssh-server \
   socat \
   sudo \
@@ -259,7 +260,7 @@ if ! id agent >/dev/null 2>&1; then
   useradd --create-home --shell /bin/bash agent
 fi
 usermod -aG sudo agent
-install -d -m 0750 -o agent -g agent /srv/agentbox
+install -d -m 0750 -o root -g agent /srv/agentbox
 
 echo "Set the local password for agent. It is used for console login and sudo, not SSH."
 passwd agent
@@ -423,8 +424,8 @@ http_proxy=http://$container_proxy_gateway:7898
 https_proxy=http://$container_proxy_gateway:7898
 no_proxy=localhost,127.0.0.1,::1,.ts.net,$container_proxy_subnet
 EOF
-chown agent:agent /srv/agentbox/proxy.env
-chmod 0644 /srv/agentbox/proxy.env
+chown root:agent /srv/agentbox/proxy.env
+chmod 0640 /srv/agentbox/proxy.env
 
 if ! ufw status | grep -Fq '7898/tcp on ab-egress0'; then
   ufw allow in on ab-egress0 to "$container_proxy_gateway" port 7898 proto tcp \
@@ -434,9 +435,103 @@ fi
 systemctl daemon-reload
 systemctl enable --now agentbox-container-proxy.service
 
+if ! docker network inspect agentbox-browser >/dev/null 2>&1; then
+  docker network create --driver bridge --internal agentbox-browser >/dev/null
+fi
+install -d -m 0750 -o root -g agent \
+  /srv/agentbox/headless-chrome \
+  /srv/agentbox/secrets
+if [[ ! -s /srv/agentbox/secrets/browserless-token ]]; then
+  openssl rand -hex 32 >/srv/agentbox/secrets/browserless-token
+fi
+chown root:agent /srv/agentbox/secrets/browserless-token
+chmod 0640 /srv/agentbox/secrets/browserless-token
+browserless_token=$(tr -d '\r\n' </srv/agentbox/secrets/browserless-token)
+if [[ ! $browserless_token =~ ^[a-f0-9]{64}$ ]]; then
+  echo "The Browserless authentication token is malformed." >&2
+  exit 1
+fi
+printf 'BROWSERLESS_TOKEN=%s\n' "$browserless_token" \
+  >/srv/agentbox/headless-chrome/.env
+chown root:root /srv/agentbox/headless-chrome/.env
+chmod 0600 /srv/agentbox/headless-chrome/.env
+
+cat >/srv/agentbox/headless-chrome/client.env <<EOF
+BROWSERLESS_BASE_URL=ws://headless-chrome:3000/chrome
+BROWSERLESS_TOKEN=$browserless_token
+BROWSERLESS_PROXY_SERVER=http://$container_proxy_gateway:7898
+BROWSERLESS_LANGUAGE=en-US
+EOF
+chown root:agent /srv/agentbox/headless-chrome/client.env
+chmod 0640 /srv/agentbox/headless-chrome/client.env
+unset browserless_token
+
+cat >/srv/agentbox/headless-chrome/compose.yaml <<'EOF'
+name: agentbox-headless-chrome
+
+services:
+  headless-chrome:
+    image: ghcr.io/browserless/chrome:v2.56.2@sha256:1be15d1e3bad53e89d07ef529a52615739f77b7cd997a49c0ec97aaa78d0fcaf
+    container_name: agentbox-headless-chrome
+    restart: unless-stopped
+    init: true
+    env_file:
+      - /srv/agentbox/proxy.env
+    environment:
+      CONCURRENT: "2"
+      HEALTH: "true"
+      LANG: en_US.UTF-8
+      LANGUAGE: en_US:en
+      LC_ALL: en_US.UTF-8
+      MAX_CPU_PERCENT: "85"
+      MAX_MEMORY_PERCENT: "85"
+      QUEUED: "10"
+      TIMEOUT: "300000"
+      TOKEN: "${BROWSERLESS_TOKEN}"
+      TZ: America/Los_Angeles
+    shm_size: 2gb
+    mem_limit: 4g
+    cpus: 4.0
+    pids_limit: 512
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          node -e "fetch('http://127.0.0.1:3000/pressure?token='+encodeURIComponent(process.env.TOKEN)).then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - agentbox-browser
+      - agentbox-egress
+
+networks:
+  agentbox-browser:
+    external: true
+  agentbox-egress:
+    external: true
+EOF
+chown root:agent \
+  /srv/agentbox/headless-chrome/client.env \
+  /srv/agentbox/headless-chrome/compose.yaml
+chmod 0640 /srv/agentbox/headless-chrome/client.env
+chmod 0644 /srv/agentbox/headless-chrome/compose.yaml
+
+docker compose \
+  --env-file /srv/agentbox/headless-chrome/.env \
+  --file /srv/agentbox/headless-chrome/compose.yaml \
+  up --detach --wait --wait-timeout 180
+
 docker version >/dev/null
 docker compose version >/dev/null
 docker run --rm hello-world >/dev/null
+if [[ $(docker inspect --format '{{.State.Health.Status}}' agentbox-headless-chrome) != healthy ]]; then
+  echo "The Headless Chrome service did not become healthy." >&2
+  exit 1
+fi
 if id -nG agent | tr ' ' '\n' | grep -qx docker; then
   echo "The agent user must not belong to the root-equivalent docker group." >&2
   exit 1
@@ -453,5 +548,6 @@ else
 fi
 echo "Docker Engine, Buildx, and Compose are ready; manage workloads with sudo docker."
 echo "Application stacks belong under /srv/agentbox and must attach to agentbox-egress when using /srv/agentbox/proxy.env."
+echo "Headless Chrome is healthy, English-only at runtime, and internal to agentbox-browser; its token was not printed."
 echo "From the physical PC, test: ssh -i ~/.ssh/agentbox_ed25519 agent@agentbox"
 echo "Then test sudo -v and run finalize-debian.sh from that SSH session."

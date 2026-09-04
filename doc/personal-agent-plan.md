@@ -63,6 +63,7 @@
 - 安全更新自动安装，但不自动重启。
 - 预装 Docker 官方仓库的 Docker CE、containerd、Buildx 和 Compose 插件；daemon 拉取镜像固定经 7897，启用 `live-restore`、`local` 日志驱动和默认 `no-new-privileges`。
 - Docker 创建专用 `agentbox-egress` 网络。需要外网的业务容器同时挂载该网络并载入 `/srv/agentbox/proxy.env`，经只对该网络开放的转发器使用 7898 完整规则。
+- 预装 `ghcr.io/browserless/chrome:v2.56.2` 的真实 Headless Chrome（amd64，镜像 digest 固定），仅加入内部 `agentbox-browser` 与出口 `agentbox-egress` 网络，不发布宿主机端口；使用随机 256-bit token、2 个并发会话、10 个排队请求、5 分钟会话上限、2 GB `/dev/shm` 和 4 GB 内存上限。
 - Docker bridge 的默认端口发布地址为 `127.0.0.1`；`DOCKER-USER` 链只接受宿主机 Docker bridge 出站和 `tailscale0` 入站，其余外部容器入站拒绝。对外服务还必须在 Tailnet ACL 中逐端口授权。
 - 所有 Agent、数据库、任务队列、浏览器自动化和项目服务都放在 `/srv/agentbox/<stack>` 的 Compose 栈中。`agent` 不加入等同 root 权限的 `docker` 组，使用 `sudo docker compose ...` 管理。
 - 宿主机只保留 OpenSSH、Tailscale、UFW/iptables、双 Mihomo、Docker/containerd、时间同步、磁盘维护和系统安全更新；这些是接管与容器运行底座，不容器化。
@@ -101,6 +102,7 @@
 - root SSH、SSH 密码认证和 Tailscale SSH 关闭；手机不持有 SSH 私钥。
 - APT、GitHub HTTPS 和未来 Agent 通过 7898 的完整规则出站；Tailscale 通过独立 7897 出站。
 - Docker daemon 能通过 7897 拉取镜像，Compose 可用；业务容器接入 `agentbox-egress` 后通过 7898 出站，公网接口不能直接访问已发布容器端口。
+- `agentbox-headless-chrome` 容器健康，Agent 容器只能通过 `agentbox-browser:3000` 内网和 token 连接；每次创建浏览器会话时显式传入 `/srv/agentbox/headless-chrome/client.env` 中的 7898 代理地址。
 - 强制执行一次 `sudo update-agentbox-proxy --force` 能成功刷新；故意提供无效候选时不会替换最后可用的生产配置。
 - 临时 Tailscale auth key 已撤销，Git 仓库不包含任何节点或账号凭据。
 - 安全更新自动安装，但不会无人值守自动重启。
@@ -121,4 +123,5 @@
 - [Docker Engine on Debian](https://docs.docker.com/engine/install/debian/)
 - [Docker daemon proxy](https://docs.docker.com/engine/daemon/proxy/)
 - [Docker with iptables](https://docs.docker.com/engine/network/firewall-iptables/)
+- [Browserless open-source Docker deployment](https://docs.browserless.io/enterprise/open-source)
 - [Linux.do 天翼云电脑 Debian 实践](https://linux.do/t/topic/654530)
