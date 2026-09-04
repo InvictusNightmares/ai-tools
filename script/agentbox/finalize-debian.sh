@@ -10,8 +10,8 @@ if [[ ! -s /home/agent/.ssh/authorized_keys ]]; then
   echo "agent has no authorized_keys; refusing to harden SSH." >&2
   exit 1
 fi
-if ! systemctl is-active --quiet mihomo; then
-  echo "Mihomo is not active; refusing to harden the only remote path." >&2
+if ! systemctl is-active --quiet mihomo-bootstrap.service; then
+  echo "The bootstrap Mihomo service is not active; refusing to harden the remote path." >&2
   exit 1
 fi
 if ! tailscale status >/dev/null 2>&1; then
@@ -51,7 +51,10 @@ if [[ $confirmation != 'LOCK ROOT' ]]; then
 fi
 
 passwd -l root
-systemctl enable ssh tailscaled mihomo fstrim.timer
+systemctl enable ssh tailscaled mihomo-bootstrap.service mihomo.service fstrim.timer
+if systemctl is-active --quiet mihomo.service; then
+  systemctl enable agentbox-proxy-update.timer
+fi
 
 echo
 echo "Root password is locked and SSH hardening is complete."

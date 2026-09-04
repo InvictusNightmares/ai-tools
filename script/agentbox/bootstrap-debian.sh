@@ -18,15 +18,16 @@ if [[ ${ID:-} != debian || ${VERSION_ID:-} != 13* ]]; then
   exit 1
 fi
 
-if [[ ! -s /etc/mihomo/config.yaml || ! -x /usr/local/bin/mihomo ]]; then
-  echo "The private Mihomo bootstrap was not installed by the Debian installer." >&2
+if [[ ! -s /etc/mihomo-bootstrap/config.yaml || ! -s /etc/mihomo/config.yaml || \
+      ! -x /usr/local/bin/mihomo || ! -x /usr/local/libexec/agentbox-profile-compiler.js ]]; then
+  echo "The private dual-proxy bundle was not installed by the Debian installer." >&2
   exit 1
 fi
 
 systemctl daemon-reload
-systemctl enable --now mihomo
-if ! systemctl is-active --quiet mihomo; then
-  journalctl -u mihomo --no-pager -n 100 >&2
+systemctl enable --now mihomo-bootstrap.service mihomo.service
+if ! systemctl is-active --quiet mihomo-bootstrap.service; then
+  journalctl -u mihomo-bootstrap.service --no-pager -n 100 >&2
   exit 1
 fi
 
@@ -58,10 +59,39 @@ apt-get install -y \
   curl \
   git \
   gnupg \
+  nodejs \
   openssh-server \
   sudo \
   ufw \
-  unattended-upgrades
+  unattended-upgrades \
+  util-linux
+
+node /usr/local/libexec/agentbox-profile-compiler.js --self-test
+
+production_ready=0
+if systemctl is-active --quiet mihomo.service && \
+    curl --silent --show-error --fail --head \
+      --connect-timeout 5 --max-time 20 \
+      --proxy http://127.0.0.1:7898 \
+      https://github.com/ >/dev/null 2>&1; then
+  production_ready=1
+  cat >/etc/apt/apt.conf.d/80agentbox-proxy <<'EOF'
+Acquire::http::Proxy "http://127.0.0.1:7898/";
+Acquire::https::Proxy "http://127.0.0.1:7898/";
+EOF
+  cat >/etc/profile.d/agentbox-proxy.sh <<'EOF'
+export http_proxy=http://127.0.0.1:7898
+export https_proxy=http://127.0.0.1:7898
+export HTTP_PROXY=http://127.0.0.1:7898
+export HTTPS_PROXY=http://127.0.0.1:7898
+EOF
+  install -d -o root -g root -m 0700 /var/lib/agentbox-profile
+  touch /var/lib/agentbox-profile/last-success
+  chmod 0600 /var/lib/agentbox-profile/last-success
+else
+  echo "WARNING: the production rules proxy on 127.0.0.1:7898 failed its HTTPS health check." >&2
+  echo "The bootstrap proxy and Tailscale path will remain independent on 127.0.0.1:7897." >&2
+fi
 
 if ! id agent >/dev/null 2>&1; then
   useradd --create-home --shell /bin/bash agent
@@ -112,8 +142,8 @@ apt-get install -y tailscale
 install -d -m 0755 /etc/systemd/system/tailscaled.service.d
 cat >/etc/systemd/system/tailscaled.service.d/proxy.conf <<'EOF'
 [Unit]
-Wants=mihomo.service
-After=mihomo.service
+Wants=mihomo-bootstrap.service
+After=mihomo-bootstrap.service
 
 [Service]
 Environment=HTTP_PROXY=http://127.0.0.1:7897
@@ -124,6 +154,11 @@ systemctl daemon-reload
 systemctl enable --now ssh
 systemctl enable --now tailscaled
 systemctl enable --now fstrim.timer
+if [[ $production_ready -eq 1 ]]; then
+  systemctl enable --now agentbox-proxy-update.timer
+else
+  systemctl disable --now agentbox-proxy-update.timer 2>/dev/null || true
+fi
 
 read -r -s -p "Paste the one-time tagged Tailscale auth key: " tailscale_auth_key
 echo
@@ -147,5 +182,11 @@ ufw --force enable
 
 echo
 echo "Bootstrap completed. Root is intentionally not locked yet."
+if [[ $production_ready -eq 1 ]]; then
+  echo "Daily APT/shell traffic uses the full imported rules on 127.0.0.1:7898."
+  echo "Tailscale remains on the independent bootstrap proxy at 127.0.0.1:7897."
+else
+  echo "Daily traffic temporarily remains on 127.0.0.1:7897; diagnose mihomo.service before enabling the update timer."
+fi
 echo "From the physical PC, test: ssh -i ~/.ssh/agentbox_ed25519 agent@agentbox"
 echo "Then test sudo -v and run finalize-debian.sh from that SSH session."

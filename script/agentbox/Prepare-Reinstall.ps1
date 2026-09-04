@@ -15,8 +15,8 @@ $Expected = @{
     UpstreamSh               = 'FE8CF9D8FB800AA74480BBD2223F268259E2A6EADFEAB68C50A39B57F027139F'
     UpstreamDebianCfg        = '53DA483158C7D526987BAFE6BF450FFC93A32E5B7B0D16DAA6126F21731A4161'
     PatchedBat               = '85D1783C9EE86A224D4E942E64052EE4CAC0613F455F1829D16CB78B058EF0A4'
-    PatchedSh                = 'E21CB9F52DCAE7FE74E57947859F380F6AC67034F0FB4DEB32A8E3DFC94729E6'
-    PatchedDebianCfg         = '63DBD57708CE9AFDC2815292156C2C81359CC6CCBE875A884241B21381ED01EA'
+    PatchedSh                = '46C2750B44CAEED5500AE758F880A2B0DD39E474991C99179229BD3A8E37D3EF'
+    PatchedDebianCfg         = '42A129FA89BB21C551BB6C73474FF07381005F0D422D5B2C3FD3165608EE6F25'
     CygwinSetup              = '2C9F2FB56E1FB687B5D9680AFA8F8B06E6214F0E483096AF0EAE1946431226C5'
     CygwinSignerThumbprint   = '7C470FD5026C30AA594D5D3782A060DDFFA0D1FD'
 }
@@ -86,66 +86,60 @@ function Add-ProxyHooksToReinstallSh {
     param([Parameter(Mandatory)][string]$Content)
 
     $OldCommandLine = '        nextos_cmdline+=" url=$nextos_ks"'
-    $NewCommandLine = @'
-        if [ -d "$(dirname "$THIS_SCRIPT")/proxy-bootstrap" ]; then
-            nextos_cmdline+=" file=/debian.cfg mirror/http/proxy=http://127.0.0.1:7897"
-        else
-            nextos_cmdline+=" url=$nextos_ks"
-        fi
-'@.TrimEnd("`r", "`n")
+    $NewCommandLine = @(
+        '        if [ -d "$(dirname "$THIS_SCRIPT")/proxy-bootstrap" ]; then',
+        '            nextos_cmdline+=" file=/debian.cfg mirror/http/proxy=http://127.0.0.1:7897"',
+        '        else',
+        '            nextos_cmdline+=" url=$nextos_ks"',
+        '        fi'
+    ) -join "`n"
     if (-not $Content.Contains($OldCommandLine)) {
         throw 'Unable to find the Debian kernel-command-line patch anchor.'
     }
     $Content = $Content.Replace($OldCommandLine, $NewCommandLine)
 
-    $OldNetworkHook = @'
-        : get_ip_conf_cmd
-
-        # 运行 trans.sh，保存配置
-'@.TrimEnd("`r", "`n")
-    $NewNetworkHook = @'
-        : get_ip_conf_cmd
-
-        if [ -x /proxy-bootstrap/mihomo ]; then
-            chmod 700 /proxy-bootstrap/mihomo
-            /proxy-bootstrap/mihomo -d /proxy-bootstrap -f /proxy-bootstrap/config.yaml >/var/log/mihomo-bootstrap.log 2>&1 &
-            proxy_pid=$!
-            sleep 3
-            if ! kill -0 "$proxy_pid" 2>/dev/null; then
-                cat /var/log/mihomo-bootstrap.log >&2
-                exit 1
-            fi
-            db_set mirror/http/proxy http://127.0.0.1:7897
-        fi
-
-        # 运行 trans.sh，保存配置
-'@.TrimEnd("`r", "`n")
+    $OldNetworkHook = '        : get_ip_conf_cmd'
+    $NewNetworkHook = @(
+        '        : get_ip_conf_cmd',
+        '',
+        '        if [ -x /proxy-bootstrap/mihomo ]; then',
+        '            chmod 700 /proxy-bootstrap/mihomo',
+        '            /proxy-bootstrap/mihomo -d /proxy-bootstrap -f /proxy-bootstrap/config.yaml >/var/log/mihomo-bootstrap.log 2>&1 &',
+        '            proxy_pid=$!',
+        '            sleep 3',
+        '            if ! kill -0 "$proxy_pid" 2>/dev/null; then',
+        '                cat /var/log/mihomo-bootstrap.log >&2',
+        '                exit 1',
+        '            fi',
+        '            db_set mirror/http/proxy http://127.0.0.1:7897',
+        '        fi'
+    ) -join "`n"
     if (-not $Content.Contains($OldNetworkHook)) {
         throw 'Unable to find the Debian network hook patch anchor.'
     }
     $Content = $Content.Replace($OldNetworkHook, $NewNetworkHook)
 
     $OldBundleHook = @(
-        '    if is_distro_like_debian $nextos_distro; then'
+        '    if is_distro_like_debian $nextos_distro; then',
         '        mod_initrd_debian_kali'
     ) -join "`n"
     $NewBundleHook = @(
-        '    bootstrap_proxy_dir=$(dirname "$THIS_SCRIPT")/proxy-bootstrap'
-        '    if [ -d "$bootstrap_proxy_dir" ]; then'
-        '        for file in mihomo config.yaml mihomo.service start-proxy.sh; do'
-        '            [ -f "$bootstrap_proxy_dir/$file" ] || error_and_exit "Missing proxy bootstrap file: $file"'
-        '        done'
-        '        cp -a "$bootstrap_proxy_dir" "$initrd_dir/proxy-bootstrap"'
-        '        chmod 700 "$initrd_dir/proxy-bootstrap/mihomo" "$initrd_dir/proxy-bootstrap/start-proxy.sh"'
-        '        chmod 600 "$initrd_dir/proxy-bootstrap/config.yaml"'
-        '        if is_distro_like_debian $nextos_distro; then'
-        '            debian_cfg=$(dirname "$THIS_SCRIPT")/debian.cfg'
-        '            [ -f "$debian_cfg" ] || error_and_exit "Missing pinned proxy-aware debian.cfg"'
-        '            cp "$debian_cfg" "$initrd_dir/debian.cfg"'
-        '        fi'
-        '    fi'
-        ''
-        '    if is_distro_like_debian $nextos_distro; then'
+        '    bootstrap_proxy_dir=$(dirname "$THIS_SCRIPT")/proxy-bootstrap',
+        '    if [ -d "$bootstrap_proxy_dir" ]; then',
+        '        for file in mihomo config.yaml production.yaml start-proxy.sh install-target.sh; do',
+        '            [ -f "$bootstrap_proxy_dir/$file" ] || error_and_exit "Missing proxy bootstrap file: $file"',
+        '        done',
+        '        cp -a "$bootstrap_proxy_dir" "$initrd_dir/proxy-bootstrap"',
+        '        chmod 700 "$initrd_dir/proxy-bootstrap/mihomo" "$initrd_dir/proxy-bootstrap/start-proxy.sh" "$initrd_dir/proxy-bootstrap/install-target.sh"',
+        '        chmod 600 "$initrd_dir/proxy-bootstrap/config.yaml" "$initrd_dir/proxy-bootstrap/production.yaml"',
+        '        if is_distro_like_debian $nextos_distro; then',
+        '            debian_cfg=$(dirname "$THIS_SCRIPT")/debian.cfg',
+        '            [ -f "$debian_cfg" ] || error_and_exit "Missing pinned proxy-aware debian.cfg"',
+        '            cp "$debian_cfg" "$initrd_dir/debian.cfg"',
+        '        fi',
+        '    fi',
+        '',
+        '    if is_distro_like_debian $nextos_distro; then',
         '        mod_initrd_debian_kali'
     ) -join "`n"
     if (-not $Content.Contains($OldBundleHook)) {
@@ -162,29 +156,18 @@ function Add-ProxyHooksToDebianCfg {
         "d-i mirror/country string manual`nd-i mirror/http/proxy string http://127.0.0.1:7897"
     )
 
-    $OldLateCommand = @'
-    in-target systemctl enable ssh; \
-
-    if [ "$username" = root ]; then \
-'@.TrimEnd("`r", "`n")
-    $NewLateCommand = @'
-    in-target systemctl enable ssh; \
-
-    mkdir -p /target/usr/local/bin /target/etc/mihomo /target/etc/systemd/system /target/etc/systemd/system/tailscaled.service.d /target/etc/profile.d; \
-    cp /proxy-bootstrap/mihomo /target/usr/local/bin/mihomo; \
-    cp /proxy-bootstrap/config.yaml /target/etc/mihomo/config.yaml; \
-    cp /proxy-bootstrap/mihomo.service /target/etc/systemd/system/mihomo.service; \
-    for file in Country.mmdb geoip.dat geosite.dat cache.db; do if [ -f "/proxy-bootstrap/$file" ]; then cp "/proxy-bootstrap/$file" /target/etc/mihomo/; fi; done; \
-    chmod 0755 /target/usr/local/bin/mihomo; \
-    chmod 0700 /target/etc/mihomo; \
-    chmod 0600 /target/etc/mihomo/config.yaml; \
-    printf '%s\n' 'Acquire::http::Proxy "http://127.0.0.1:7897/";' 'Acquire::https::Proxy "http://127.0.0.1:7897/";' >/target/etc/apt/apt.conf.d/80agentbox-proxy; \
-    printf '%s\n' 'export http_proxy=http://127.0.0.1:7897' 'export https_proxy=http://127.0.0.1:7897' 'export HTTP_PROXY=http://127.0.0.1:7897' 'export HTTPS_PROXY=http://127.0.0.1:7897' >/target/etc/profile.d/agentbox-proxy.sh; \
-    printf '%s\n' '[Unit]' 'Wants=mihomo.service' 'After=mihomo.service' '[Service]' 'Environment=HTTP_PROXY=http://127.0.0.1:7897' 'Environment=HTTPS_PROXY=http://127.0.0.1:7897' >/target/etc/systemd/system/tailscaled.service.d/proxy.conf; \
-    in-target systemctl enable mihomo; \
-
-    if [ "$username" = root ]; then \
-'@.TrimEnd("`r", "`n")
+    $OldLateCommand = @(
+        '    in-target systemctl enable ssh; \',
+        '',
+        '    if [ "$username" = root ]; then \'
+    ) -join "`n"
+    $NewLateCommand = @(
+        '    in-target systemctl enable ssh; \',
+        '',
+        '    /bin/sh /proxy-bootstrap/install-target.sh /target; \',
+        '',
+        '    if [ "$username" = root ]; then \'
+    ) -join "`n"
     if (-not $Content.Contains($OldLateCommand)) {
         throw 'Unable to find the Debian late-command patch anchor.'
     }

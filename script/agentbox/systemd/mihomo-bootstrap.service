@@ -1,0 +1,33 @@
+[Unit]
+Description=Agentbox bootstrap outbound proxy
+After=network-online.target
+Wants=network-online.target
+Before=tailscaled.service
+
+[Service]
+Type=simple
+User=mihomo
+Group=mihomo
+ExecStart=/usr/local/bin/mihomo -d /var/lib/mihomo-bootstrap -f /etc/mihomo-bootstrap/config.yaml
+Restart=always
+RestartSec=3
+UMask=0077
+LimitNOFILE=1048576
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateTmp=true
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/mihomo-bootstrap
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+LockPersonality=true
+
+[Install]
+WantedBy=multi-user.target
