@@ -37,6 +37,11 @@ if ! iptables -C DOCKER-USER -j AGENTBOX-DOCKER >/dev/null 2>&1; then
   echo "The Docker ingress guard is missing; refusing to finalize the host." >&2
   exit 1
 fi
+if ! docker network inspect agentbox-browser >/dev/null 2>&1 || \
+   [[ $(docker inspect --format '{{.State.Health.Status}}' agentbox-headless-chrome 2>/dev/null) != healthy ]]; then
+  echo "The internal Headless Chrome service is not healthy; refusing to finalize the host." >&2
+  exit 1
+fi
 
 cat >/etc/ssh/sshd_config.d/90-agentbox.conf <<'EOF'
 PermitRootLogin no
