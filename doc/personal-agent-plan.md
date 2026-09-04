@@ -1,279 +1,99 @@
-# TeleAgent 云电脑 7×24 个人 Agent 助理建设方案
-
-- 文档状态：待评审，未实施
-- 适用设备：天翼云 TeleAgent 云电脑精英版
-- 编制日期：2026-09-04
-- 时区：Asia/Shanghai
-
-## 一、建设目标
-
-将当前云电脑建设为综合型个人 Agent 助理，覆盖：
-
-- 邮件、日历和 GitHub 每日汇总。
-- 研发、服务、日志、备份和成本监控。
-- 行业、竞品、政策和价格情报。
-- 文档、表格、PPT 和知识整理。
-- 行程、续费等个人行政事务。
-
-可用性目标：
-
-- 7×24 接收和执行计划任务。
-- 允许计划维护和平台维护重启。
-- Windows 启动后 5 分钟内恢复后台服务。
-- 任务持久化，重启或断网后自动补跑。
-- 对外发送、生产修改、删除、支付等操作必须审批。
-
-## 二、总体架构
-
-采用三层保障：
-
-1. TeleAgent 平台任务
-   - 使用 TeleAgent 原生定时任务。
-   - 让天翼云平台能够识别实例正在执行 Agent 工作。
-   - 每 30 分钟运行一次轻量健康检查。
-2. Windows 后台服务
-   - `worker` 执行本地任务。
-   - `watchdog` 检测并拉起异常进程。
-   - `catch-up` 补跑关机、断网期间错过的任务。
-   - 不依赖 Windows 用户自动登录。
-3. 外部失联监控
-   - 本机每 5 分钟发送一次 HTTPS 心跳。
-   - 外部服务连续 15 分钟未收到心跳时发送邮件告警。
-   - 解决“整台云电脑离线后无法主动报警”的问题。
-
-TeleAgent 官方宣传支持 Agent 任务 7×24 云端执行，但公开资料没有明确说明精英版是否完全免除公众版休眠策略，因此需要通过实测确认：
-
-- [TeleAgent 产品说明](https://www.ctyun.cn/qzdh/143867)
-- [天翼云公众版挂机规则](https://www.ctyun.cn/document/10026992/10027218)
-
-## 三、基础环境建设
-
-### 3.1 TeleAgent 组件检查
-
-当前发现：
-
-- 系统存在 `ecloudAiAssistant` 和 `agent_start` 启动注册项。
-- 注册项指向的程序文件当前不存在。
-- 没有发现 TeleAgent 或 Codex 专属计划任务。
-
-实施时应：
-
-- 通过天翼云官方安装包或镜像修复功能恢复 TeleAgent。
-- 不覆盖或伪造天翼云系统组件。
-- 修复后验证 TeleAgent 原生任务能否在客户端断开后继续运行。
-
-### 3.2 本地 Agent 服务
-
-代码位置：
-
-```text
-D:\Code\ai-tools\script\personal-agent
-```
-
-运行数据位置：
-
-```text
-D:\Code\ai-tools\.agent-data
-```
-
-使用当前已有的 Node.js 24 开发，第一阶段不依赖 Python 和 Docker。
-
-后台组件：
-
-- `agent-worker`：任务执行器。
-- `agent-watchdog`：进程守护器。
-- `agent-scheduler`：本地调度和补跑。
-- `agent-doctor`：健康诊断。
-- `agent-cli`：人工查询、测试和审批入口。
-
-通过 Windows 任务计划程序配置：
-
-- 系统启动时运行 worker。
-- 每 5 分钟运行 watchdog。
-- 任务失败后自动重试。
-- 使用独立低权限服务账号。
-- 选择“无论用户是否登录都运行”。
-- 不配置 Windows 桌面自动登录。
-
-### 3.3 维护策略
-
-- 每月第一个周日 03:00–03:30 为维护窗口。
-- 安装必要安全更新后允许重启。
-- 重启后自动恢复 worker、watchdog 和任务队列。
-- 自动生成维护与恢复报告。
-- 不长期关闭 Windows 安全更新。
-
-## 四、第一阶段助理能力
-
-### 4.1 接入范围
-
-安装并授权：
-
-- Gmail
-- Google Calendar
-- GitHub
-
-首个 GitHub 监控仓库：
-
-```text
-InvictusNightmares/ai-tools
-```
-
-私有数据通过连接器访问，不使用网页模拟登录，也不把账号密码写进脚本。
-
-### 4.2 每日早报
-
-每天北京时间 09:00 生成，内容包括：
-
-- Gmail 最近 24 小时的重要、未读和待回复邮件。
-- 当天及未来 48 小时的日程、冲突和准备事项。
-- `ai-tools` 的 PR、Issue、Actions 和 Release 状态。
-- 云电脑心跳、磁盘空间、失败任务和补跑情况。
-- 今日最重要的三项事项。
-- 需要用户批准的邮件或操作草稿。
-
-输出渠道：
-
-- Codex 任务。
-- 用户指定的个人邮箱。
-
-固定发给本人邮箱的每日早报视为预授权操作。其他邮件发送、日历修改和 GitHub 写操作必须等待批准。
-
-OpenAI 官方文档说明，云端计划任务可以使用连接器但不能直接访问本地文件；本地项目任务则依赖云电脑和桌面应用保持运行：
-
-- [计划任务](https://learn.chatgpt.com/docs/automations?surface=app)
-- [自定义与连接器](https://learn.chatgpt.com/docs/customization/overview)
-
-## 五、后续能力扩展
-
-### 5.1 技术运维管家
-
-- 代码仓库和 CI 失败监控。
-- AI 网关健康检查。
-- API Token 用量和费用汇总。
-- 日志异常分析。
-- 备份成功率检查。
-- 依赖漏洞和证书到期提醒。
-
-### 5.2 情报研究雷达
-
-- 行业新闻和政策变化。
-- 竞品网站、价格和产品更新。
-- GitHub 项目版本更新。
-- 指定关键词和市场机会。
-- 每周生成带来源的研究报告。
-
-### 5.3 知识与办公助理
-
-- 整理本地文档和研究资料。
-- 生成报告、表格和演示文稿。
-- 建立决策记录和可搜索摘要。
-- 从会议资料提取行动项。
-- 自动生成邮件、方案和周报草稿。
-
-### 5.4 个人行政助理
-
-- 行程准备和日程冲突提醒。
-- 订阅、账单和证件到期提醒。
-- 旅行、购物和服务调研。
-- 支付、预订、退订及账号变更始终人工批准。
-
-## 六、数据与安全
-
-- 邮件和日历原文不在本机长期保存。
-- 只保存摘要、来源 ID、链接、时间和行动项。
-- 摘要长期保留，运行日志保留 30 天。
-- 使用 SQLite 保存任务、摘要、审批和审计记录。
-- 所有任务使用唯一执行键，防止重启后重复执行。
-- 密钥存入连接器平台或 Windows Credential Manager/DPAPI。
-- 禁止在 Git 仓库、日志和普通配置文件中保存明文密钥。
-- C 盘可用空间低于 8 GB 时告警。
-- D 盘可用空间低于 15 GB 时告警。
-- 不使用模拟键鼠、空转高负载等方式规避平台策略。
-
-## 七、操作接口
-
-计划提供以下命令：
-
-```text
-agent-hub status
-agent-hub doctor
-agent-hub run <job>
-agent-hub catch-up
-agent-hub approve <action-id>
-agent-hub reject <action-id>
-```
-
-主要配置：
-
-```yaml
-timezone: Asia/Shanghai
-briefTime: "09:00"
-githubRepositories:
-  - InvictusNightmares/ai-tools
-rawContentRetention: false
-summaryRetentionDays: 0
-heartbeatIntervalMinutes: 5
-offlineThresholdMinutes: 15
-```
-
-权限等级：
-
-- `read_only`：自动读取和分析。
-- `draft`：自动生成草稿。
-- `preauthorized`：仅限固定发给本人的每日早报。
-- `approval_required`：所有外部修改和高风险操作。
-
-## 八、验收方案
-
-### 8.1 本地守护测试
-
-- 人工终止 worker。
-- 验证 watchdog 在 5 分钟内拉起。
-- 验证未完成任务继续执行且不重复。
-- 验证无人登录时后台服务仍能启动。
-
-### 8.2 故障恢复测试
-
-- 模拟网络中断和恢复。
-- 模拟 API 超时、限流和连接器失效。
-- 验证失败重试、错误留痕和降级早报。
-- 重启 Windows，验证任务队列和心跳自动恢复。
-
-### 8.3 天翼云常驻测试
-
-分两轮断开客户端：
-
-1. 连续断开 2 小时。
-2. 连续断开 26 小时。
-
-测试期间记录：
-
-- 每分钟本机心跳。
-- 外部心跳接收时间。
-- Windows 启动时间。
-- TeleAgent 任务执行记录。
-- 是否发生平台休眠、关机或重启。
-
-判定：
-
-- 如果 26 小时内持续在线，确认 TeleAgent 原生任务可满足当前套餐的常驻要求。
-- 如果发生平台休眠或关机，停止继续修改内部保活脚本，转为向天翼云确认精英版策略。
-- 如果套餐无法关闭平台休眠，则迁移到支持自定义电源策略的政企版或按需实例。
-
-### 8.4 功能验收
-
-- 每日早报在 09:15 前送达 Codex 和邮箱。
-- 邮件、日历和 GitHub 信息能够正确去重。
-- 除固定早报外，所有外部修改均进入审批队列。
-- 本地数据库不包含邮件和日历原文。
-- 机器重启、断网和进程崩溃后均不会丢失任务。
-
-## 九、当前结论
-
-- 可以编写持续运行的保活和守护程序。
-- 本机 Windows 层面不存在可用的系统睡眠/休眠状态。
-- 本机脚本可以解决进程崩溃、开机恢复和任务补跑。
-- 是否能阻止天翼云平台关机，取决于 TeleAgent 精英版的平台策略，不能仅靠 Windows 内部死循环保证。
-- 最终目标是“计划维护后自动恢复、任务不丢、服务持续可用”，不承诺单台虚拟机绝对零重启。
-- 本文仅为建设计划；创建本文档不会安装插件、修改系统、创建任务或运行保活服务。
+# `agentbox` 7×24 个人编码 Agent 建设方案
+
+- 目标设备：天翼云 TeleAgent 云电脑精英版
+- 目标系统：Debian 13（Trixie）
+- 主机名 / 管理用户：`agentbox` / `agent`
+- 远程入口：Tailscale + 标准 OpenSSH
+- 外网出口：Mihomo + 用户自有 Hysteria2 节点
+- 时区：`Asia/Shanghai`
+
+## 1. 目标
+
+将当前 Windows 云电脑改造成无桌面 Linux Agent 主机，用于代码修改、测试、构建、调研和文档等任务。日常从实体电脑通过 `ssh agent@agentbox` 接管，不再依赖 Windows 桌面。
+
+第一阶段只建设基础系统、外网代理、Tailscale 和 SSH，不安装 Docker、OpenClaw、Hermes、CtYun 保活程序或 Codex。稳定 24–48 小时后再建设 Agent 工具链。
+
+## 2. 当前环境结论
+
+- OpenStack/KVM 虚拟机，SeaBIOS 传统 BIOS，MBR 启动。
+- 8 逻辑 CPU、16 GB 内存、120 GB Red Hat VirtIO SCSI 单磁盘。
+- C: 和 D: 是同一块磁盘的两个分区；正式重装会同时删除 C:、D: 和 Windows RE。
+- Red Hat VirtIO 网卡使用 DHCP，MTU 1450，Linux 具备原生 VirtIO 支持。
+- 天翼外部客户端能在客户机失效时重装官方 Windows，这是唯一最终恢复手段。
+- 嵌套虚拟化不可用，WSL2 不是可行替代。
+- 云电脑不能直连公网。当前 Windows 使用 Clash Verge Rev / Mihomo 1.19.29 的 `Meta Tunnel` TUN 模式，实际出口为用户自有 Hysteria2 节点，本地混合端口为 `127.0.0.1:7897`。
+
+因此，Windows 中的 Clash 不能被假设为可跨重启服务。Alpine Live、Debian 安装器和新 Debian 的第一次启动都必须自带 Linux Mihomo 引导包，否则无法下载 Debian 软件或注册 Tailscale。
+
+## 3. 接管与秘密边界
+
+当前 Codex 位于将被重装的机器中，Alpine 预检的第一次重启就会终止本进程。连续性由三个外部接管点保证：
+
+1. GitHub 中的本方案和 [Debian 重装手册](debian-dd-runbook.md)。
+2. 实体电脑上的仓库副本、Codex App、Tailscale 和 SSH 私钥。
+3. 天翼外部控制台和官方 Windows 重装功能。
+
+不复制 `.codex`、`auth.json`、会话数据库或缓存。临时 root 密码、`agent` 密码、SSH 私钥、Tailscale auth key 和节点凭据不得进入 Git、聊天或日志。
+
+节点配置由 `Prepare-ProxyBootstrap.ps1` 从当前活动 Clash 配置在本机内生成：
+
+- 通过 Mihomo 本地命名管道解析当前 `MATCH → 策略组 → 实际节点`，不输出节点名、地址或凭据。
+- 保留内联 `proxies` 节点，移除规则订阅、外部控制端和 TUN，将所有引导流量强制经过当前已验证节点。
+- 私密包位于被 `.gitignore` 忽略的 `.agentbox-staging` 目录，Windows ACL 只允许当前管理员、Administrators 和 SYSTEM。
+- 私密包会进入安装 initrd 并最终存放在 Debian 的 `/etc/mihomo`，文件权限限制为 root。
+
+## 4. 基础系统基线
+
+- Debian 13，主机名 `agentbox`，时区 `Asia/Shanghai`。
+- Mihomo 开机自启，提供 `127.0.0.1:7897` HTTP/SOCKS 出口；APT、交互 shell 和 `tailscaled` 明确使用该代理。
+- Tailscale 的控制面和 DERP HTTPS 经 Mihomo 出站；受限网络下可能长期显示 `relay` 而不是 `direct`，编码与 SSH 可用性优先于直连延迟。
+- 日常管理用户 `agent` 加入 `sudo`；root 只在引导期间使用。
+- OpenSSH TCP 22 只允许从 `tailscale0` 进入，只接受 `agent` 的 Ed25519 公钥。
+- Tailscale 节点使用 `tag:agent-server`，不开启 Tailscale SSH。
+- UFW 默认拒绝入站，允许出站，只放行 `tailscale0` 的 TCP 22。
+- 4 GB swapfile，`vm.swappiness=10`，不使用需人工解锁的全盘加密。
+- 安全更新自动安装，但不自动重启。
+- `mihomo`、`ssh`、`tailscaled` 和 `fstrim.timer` 开机自启。
+
+## 5. 建设顺序
+
+1. 将手册、准备脚本和 Debian 引导脚本提交、推送 GitHub。
+2. 实体电脑克隆对应 commit，准备 Codex App、Tailnet 和专用 SSH 密钥。
+3. 在 Windows 中生成经哈希校验的安装器和带 ACL 的私密 Mihomo 引导包。
+4. 启动 Alpine Live，先验证 VirtIO/DHCP，再从 initrd 启动 Linux Mihomo，验证通过代理访问外网；不写磁盘，返回 Windows。
+5. 确认预检通过后，使用同一固定安装器执行 Debian 13 网络安装。
+6. Debian 安装器在 DHCP 后启动 initrd 内的 Mihomo，并将 APT 镜像代理设为 `127.0.0.1:7897`。
+7. 安装完成前将 Mihomo、配置、APT/shell 代理和 `tailscaled` systemd 代理 drop-in 复制到目标系统。
+8. 首次启动后执行 `bootstrap-debian.sh`，建立 `agent` + Tailscale + SSH。
+9. 实体电脑验证两条独立 SSH 会话和 `sudo`，然后执行 `finalize-debian.sh` 锁定 root。
+10. 重启验收并观察 24–48 小时，再安装 Agent 工具链。
+
+## 6. 风险与可用性边界
+
+- `bin456789/reinstall` 和 Mihomo 都是第三方组件。安装器锁定 commit，原文件和修改文件均校验 SHA-256；Mihomo 锁定与当前 Windows 相同的 1.19.29 版本和官方发布哈希。
+- Debian 安装期间仍需要外部镜像站；Alpine 无损预检必须先证明 Linux Mihomo 可用，否则不得清盘。
+- Mihomo HTTP 代理不能转发 Tailscale 的 UDP 打洞流量；若平台原生 UDP 出站也不可用，Tailnet 流量会回退到 DERP 中继，这是预期降级而非失联。
+- 如自有节点密码、证书、地址或协议发生变化，必须在 Windows 上重新生成私密引导包并重做 Alpine 预检。
+- 客户机内的 systemd 可恢复进程，但无法在云平台关闭整台虚拟机时自我唤醒。
+- [CtYun 保活工具](https://github.com/leleji/CtYun) 待基础系统稳定后单独审计。本机部署只能防止运行期间休眠，停机恢复仍需天翼平台或第二台外部常在设备。
+
+## 7. 验收标准
+
+- Debian 重启后无需图形登录，Mihomo、Tailscale 和 SSH 自动恢复。
+- 实体电脑可使用 `ssh agent@agentbox`，公网接口不能访问 TCP 22。
+- root SSH、SSH 密码认证和 Tailscale SSH 关闭；手机不持有 SSH 私钥。
+- APT、GitHub HTTPS 和 Tailscale 通过 Mihomo 出站正常。
+- 临时 Tailscale auth key 已撤销，Git 仓库不包含任何节点或账号凭据。
+- 安全更新自动安装，但不会无人值守自动重启。
+- 断开天翼客户端 2 小时和 26 小时的平台行为已记录。
+
+## 8. 参考
+
+- [bin456789/reinstall](https://github.com/bin456789/reinstall)
+- [Debian 发行版](https://www.debian.org/releases/)
+- [Tailscale Linux 安装](https://tailscale.com/docs/install/linux)
+- [Tailscale 服务器建议](https://tailscale.com/docs/how-to/set-up-servers)
+- [Tailscale Grants](https://tailscale.com/docs/features/access-control/grants)
+- [Tailscale Auth keys](https://tailscale.com/docs/features/access-control/auth-keys)
+- [MetaCubeX/mihomo](https://github.com/MetaCubeX/mihomo)
+- [Linux.do 天翼云电脑 Debian 实践](https://linux.do/t/topic/654530)
