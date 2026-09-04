@@ -199,7 +199,7 @@ Mihomo 正常后，先通过安装器写入的 APT 代理安装 HTTPS 检查工�
 apt-get update
 apt-get install -y ca-certificates curl
 curl -I https://deb.debian.org/debian/
-curl -fL -o /root/bootstrap-debian.sh https://raw.githubusercontent.com/InvictusNightmares/ai-tools/BOOTSTRAP_COMMIT_TO_BE_PINNED/script/agentbox/bootstrap-debian.sh
+curl -fL -o /root/bootstrap-debian.sh https://raw.githubusercontent.com/InvictusNightmares/ai-tools/04645f31ab10dda0fdb81cacb5d5df4d5bb11a71/script/agentbox/bootstrap-debian.sh
 chmod 700 /root/bootstrap-debian.sh
 /root/bootstrap-debian.sh
 ```
@@ -218,7 +218,7 @@ sudo -v
 在该 SSH 会话中：
 
 ```sh
-curl -fL -o /tmp/finalize-debian.sh https://raw.githubusercontent.com/InvictusNightmares/ai-tools/BOOTSTRAP_COMMIT_TO_BE_PINNED/script/agentbox/finalize-debian.sh
+curl -fL -o /tmp/finalize-debian.sh https://raw.githubusercontent.com/InvictusNightmares/ai-tools/04645f31ab10dda0fdb81cacb5d5df4d5bb11a71/script/agentbox/finalize-debian.sh
 chmod 700 /tmp/finalize-debian.sh
 sudo /tmp/finalize-debian.sh
 ```
