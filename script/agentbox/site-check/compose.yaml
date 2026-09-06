@@ -1,0 +1,30 @@
+name: agentbox-site-check
+services:
+  site-check:
+    image: ghcr.io/browserless/chrome:v2.56.2@sha256:1be15d1e3bad53e89d07ef529a52615739f77b7cd997a49c0ec97aaa78d0fcaf
+    entrypoint: [node, /app/check.mjs]
+    command: [run]
+    user: '1000:1000'
+    init: true
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+    pids_limit: 128
+    tmpfs: ['/tmp:size=16m,mode=1777']
+    env_file: [/srv/agentbox/headless-chrome/client.env]
+    environment:
+      HOME: /tmp
+      TZ: America/Los_Angeles
+    volumes:
+      - ./app:/app:ro
+      - ./output:/output
+    networks: [agentbox-browser]
+    logging:
+      driver: local
+      options:
+        max-size: 5m
+        max-file: '2'
+networks:
+  agentbox-browser:
+    external: true
