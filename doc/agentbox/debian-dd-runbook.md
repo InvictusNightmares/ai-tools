@@ -240,8 +240,8 @@ Mihomo 正常后，先通过安装器写入的 APT 代理安装 HTTPS 检查工�
 apt-get update
 apt-get install -y ca-certificates curl
 curl -I https://deb.debian.org/debian/
-curl -fL -o /root/bootstrap-debian.sh https://raw.githubusercontent.com/InvictusNightmares/ai-tools/f8ce10a75e26fc65a2a80b73db7e6e1c02cb09ff/script/agentbox/bootstrap-debian.sh &&
-printf '%s\n' '864cca99d804ebc181ac0d270836c7cbcb7f399cba674f296d7b238568f7e778  /root/bootstrap-debian.sh' | sha256sum -c - &&
+curl -fL -o /root/bootstrap-debian.sh https://raw.githubusercontent.com/InvictusNightmares/ai-tools/aa32363b774c68a770d86350e68aa8c8d46564aa/script/agentbox/bootstrap-debian.sh &&
+printf '%s\n' '4e2d24f5633577ec8addf40be485db73533c6bd7040893bf6dfc6edacc7e825b  /root/bootstrap-debian.sh' | sha256sum -c - &&
 chmod 700 /root/bootstrap-debian.sh &&
 /root/bootstrap-debian.sh
 ```
@@ -249,6 +249,8 @@ chmod 700 /root/bootstrap-debian.sh &&
 脚本先经 7897 安装 Node 等基础依赖，再验证 7898 的完整规则出口。只有 7898 能通过 GitHub HTTPS 检查时，才把 APT/交互 shell 切到 7898 并启用 profile 更新 timer；`tailscaled` 始终固定使用 7897。随后脚本交互请求实体电脑 SSH **公钥**、`agent` 本地密码，以及一次性不可复用的 `tag:agent-server` Tailscale auth key。它不会在这一步锁定 root。
 
 脚本同时把主机时区固定为 `America/Los_Angeles`（由系统时区数据库自动处理 PST/PDT），只生成并启用 `en_US.UTF-8`，清除已知中文 locale 全量包、中文桌面任务包、字体和输入法。Debian 软件包自带但未启用的翻译目录不做破坏性删改；系统选择、会话环境和控制台输出保持英文。
+
+脚本安装并启用 `systemd-timesyncd`，通过 Debian NTP 池自动校时；同步失败会停止初始化，先检查原生 UDP 123 连通性。`America/Los_Angeles` 只决定显示时区，系统时钟和虚拟 RTC 均使用正确 UTC。Windows 遗留的错误 RTC 时间须在 NTP 同步后写回，不能靠修改时区抵消。
 
 脚本还会屏蔽 `sleep.target`、`suspend.target`、`hibernate.target`、`hybrid-sleep.target` 和 `suspend-then-hibernate.target`，并写入 `/etc/systemd/{sleep,logind}.conf.d/90-agentbox.conf`：禁止所有睡眠/休眠模式，空闲、虚拟电源/重启/睡眠键及合盖均不触发自动停机，空闲会话不自动退出。屏蔽立即生效，logind 配置在计划内的重启验收时加载；不要屏蔽 `shutdown.target` 或 `reboot.target`，管理员仍需能主动维护机器。
 
@@ -318,11 +320,12 @@ sudo reboot
 cat /etc/debian_version
 hostnamectl
 timedatectl
+timedatectl timesync-status
 locale
 locale -a
 swapon --show
-systemctl is-enabled mihomo-bootstrap mihomo agentbox-proxy-update.timer ssh tailscaled docker containerd agentbox-container-proxy fstrim.timer
-systemctl is-active mihomo-bootstrap mihomo ssh tailscaled docker containerd agentbox-container-proxy
+systemctl is-enabled systemd-timesyncd mihomo-bootstrap mihomo agentbox-proxy-update.timer ssh tailscaled docker containerd agentbox-container-proxy fstrim.timer
+systemctl is-active systemd-timesyncd mihomo-bootstrap mihomo ssh tailscaled docker containerd agentbox-container-proxy
 curl --proxy http://127.0.0.1:7897 -I https://github.com/
 curl --proxy http://127.0.0.1:7898 -I https://github.com/
 sudo docker version
@@ -345,7 +348,7 @@ ss -lntp
 journalctl -b -p warning --no-pager
 ```
 
-验收要求：`timedatectl` 显示 `America/Los_Angeles`，`locale` 的 `LANG`/`LANGUAGE`/`LC_ALL` 分别为 `en_US.UTF-8`、`en_US:en`、`en_US.UTF-8`，`locale -a` 含 `en_US.utf8` 且不含 `zh_*`；两个 Mihomo/Tailscale/SSH/Docker/容器代理无人登录即自启；Docker 日志驱动为 `local`，Compose、`agentbox-egress` 和内部 `agentbox-browser` 可用，Headless Chrome 为 `healthy` 且没有宿主机端口映射，`agent` 不属于 `docker` 组；7897/7898 的宿主机实例只监听 loopback，容器代理只监听专用 bridge，公网 TCP 22 和容器发布端口不可访问；SSH 只接受 `agent` 公钥，4 GB swap 有效，root 已锁定，自动安全更新不触发自动重启。
+验收要求：`timedatectl` 显示 `America/Los_Angeles`、`System clock synchronized: yes`、`NTP service: active` 和 `RTC in local TZ: no`，UTC 与可信时间源一致；`locale` 的 `LANG`/`LANGUAGE`/`LC_ALL` 分别为 `en_US.UTF-8`、`en_US:en`、`en_US.UTF-8`，`locale -a` 含 `en_US.utf8` 且不含 `zh_*`；两个 Mihomo/Tailscale/SSH/Docker/容器代理无人登录即自启；Docker 日志驱动为 `local`，Compose、`agentbox-egress` 和内部 `agentbox-browser` 可用，Headless Chrome 为 `healthy` 且没有宿主机端口映射，`agent` 不属于 `docker` 组；7897/7898 的宿主机实例只监听 loopback，容器代理只监听专用 bridge，公网 TCP 22 和容器发布端口不可访问；SSH 只接受 `agent` 公钥，4 GB swap 有效，root 已锁定，自动安全更新不触发自动重启。
 
 如果 `tailscale status` 显示 `relay` 或 `tailscale netcheck` 显示 UDP 不可用，但实体电脑的 SSH 可持续连接，这符合“控制面和 DERP 经 Mihomo、UDP 直连不可用”的预期降级。不要为追求 `direct` 而开放公网 SSH；只有在天翼网络本身允许时，才考虑单独放行 Tailscale 的 UDP 41641。
 
