@@ -160,6 +160,40 @@ function Remove-TopLevelYamlSections {
     $Result.ToArray()
 }
 
+function Get-BootstrapDirectRules {
+    param(
+        [Parameter(Mandatory)][AllowEmptyString()][string[]]$SourceLines,
+        [Parameter(Mandatory)][string]$ConcreteProxyName
+    )
+    # Preserve only an existing exact-host DIRECT rule for the selected node.
+    # Its own subscription endpoint must not be sent back through that node.
+    $Payload = @{ config = ($SourceLines -join "`n"); proxyName = $ConcreteProxyName } | ConvertTo-Json -Compress
+    $EncodedPayload = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($Payload))
+    $YamlPath = Join-Path $PSScriptRoot 'vendor/js-yaml.cjs'
+    $Script = @'
+const fs = require('fs'), net = require('net'), yaml = require(process.argv[1]);
+try {
+  const input = JSON.parse(Buffer.from(fs.readFileSync(0, 'utf8').trim(), 'base64').toString('utf8'));
+  const source = yaml.load(input.config);
+  const node = source.proxies.find(proxy => proxy.name === input.proxyName);
+  if (!node || typeof node.server !== 'string') throw new Error('Missing selected node');
+  const server = node.server.toLowerCase(), version = net.isIP(server);
+  const type = version === 4 ? 'IP-CIDR' : version === 6 ? 'IP-CIDR6' : 'DOMAIN';
+  const address = version === 4 ? `${server}/32` : version === 6 ? `${server}/128` : server;
+  const rules = (source.rules || []).filter(rule => {
+    if (typeof rule !== 'string') return false;
+    const parts = rule.split(',').map(part => part.trim());
+    return parts[0] === type && parts[1].toLowerCase() === address && parts[2] === 'DIRECT' &&
+      (parts.length === 3 || (version !== 0 && parts.length === 4 && parts[3] === 'no-resolve'));
+  });
+  process.stdout.write(JSON.stringify([...new Set(rules)]));
+} catch { process.exit(1); }
+'@
+    $RuleOutput = $EncodedPayload | & node.exe -e $Script $YamlPath 2>$null
+    if ($LASTEXITCODE -ne 0) { throw 'Could not inspect the selected node direct rules.' }
+    ($RuleOutput -join "`n") | ConvertFrom-Json
+}
+
 function New-LinuxBootstrapConfig {
     param(
         [Parameter(Mandatory)][AllowEmptyString()][string[]]$SourceLines,
@@ -173,13 +207,16 @@ function New-LinuxBootstrapConfig {
         'external-controller-cors', 'external-controller-pipe', 'secret'
     )
     $BaseLines = Remove-TopLevelYamlSections -Lines $SourceLines -SectionNames $SectionsToRemove
+    $DirectRules = @(Get-BootstrapDirectRules -SourceLines $SourceLines -ConcreteProxyName $ConcreteProxyName)
     $QuotedProxyName = "'" + $ConcreteProxyName.Replace("'", "''") + "'"
     $Suffix = @(
         '', 'mixed-port: 7897', 'allow-lan: false', "bind-address: '127.0.0.1'",
         'mode: rule', 'tun:', '  enable: false', 'proxy-groups:',
         '  - name: BOOTSTRAP', '    type: select', '    proxies:',
-        "      - $QuotedProxyName", 'rules:', '  - MATCH,BOOTSTRAP', ''
+        "      - $QuotedProxyName", 'rules:'
     )
+    foreach ($Rule in $DirectRules) { $Suffix += "  - $Rule" }
+    $Suffix += @('  - MATCH,BOOTSTRAP', '')
     ($BaseLines + $Suffix) -join "`n"
 }
 
@@ -369,7 +406,7 @@ foreach ($Path in @($SourceRuntimePath, $WindowsMihomoPath, $SourceProfilesPath)
 }
 if (-not (Test-Path -LiteralPath $SourceProfileDirectory -PathType Container)) { throw "Clash profile directory is missing: $SourceProfileDirectory" }
 
-$ConfigLines = Get-Content -LiteralPath $SourceRuntimePath
+$ConfigLines = Get-Content -LiteralPath $SourceRuntimePath -Encoding UTF8
 $PipeLine = $ConfigLines | Where-Object { $_ -match '^external-controller-pipe:\s*' } | Select-Object -First 1
 if ($null -eq $PipeLine -or $PipeLine -notmatch '\\\\.\\pipe\\([^\s]+)') { throw 'Unable to determine the local Mihomo named pipe.' }
 $PipeName = $Matches[1]

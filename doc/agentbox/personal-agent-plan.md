@@ -39,7 +39,7 @@
 节点和规则配置由 `Prepare-ProxyBootstrap.ps1` 从当前活动 Clash 配置在本机内生成：
 
 - 通过 Mihomo 本地命名管道解析当前 `MATCH → 策略组 → 实际节点`，不输出节点名、地址或凭据。
-- 生成 `127.0.0.1:7897` 引导配置：保留内联节点，移除订阅、规则、外部控制端和 TUN，将流量强制经过当前已验证节点。
+- 生成 `127.0.0.1:7897` 引导配置：保留内联节点，移除订阅、完整规则、外部控制端和 TUN；仅保留当前选中节点在源配置中已有的精确主机 `DIRECT` 规则，其余流量经过当前已验证节点。节点和订阅服务在同一主机时，这条规则可避免请求绕回代理节点而超时。
 - 同时复制当前远程 profile、全局及 profile 专属的 Merge/JavaScript、Rules/Proxies/Groups、规则缓存和选择缓存；订阅 URL 仍只存在私密包中。
 - 使用与 Clash Verge Rev 2.5.2 相同的增强顺序离线编译 `127.0.0.1:7898` 生产配置，并与 Windows 当前渲染配置的 `proxies`、`proxy-providers`、`proxy-groups`、`rule-providers`、`rules` 五个关键区块逐项比较。不一致即停止。
 - 私密包位于被 `.gitignore` 忽略的 `.agentbox-staging` 目录，Windows ACL 只允许当前管理员、Administrators 和 SYSTEM。
