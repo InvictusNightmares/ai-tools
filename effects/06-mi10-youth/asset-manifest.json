@@ -1,0 +1,1288 @@
+{
+  "reference": "https://s1.mi.com/m/webgl/mi10Yjd/",
+  "captured": "2026-09-06",
+  "files": [
+    {
+      "path": "public/Img/Icon_sc/Loadx.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/Loadx.jpg",
+      "bytes": 29795,
+      "sha256": "b34044806d2c6d0c622a658688b38545e4441f3641d398443318d7ca324436f2"
+    },
+    {
+      "path": "public/Img/Icon_sc/bg1.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/bg1.png",
+      "bytes": 162740,
+      "sha256": "3ca4b7717ba71ae73880c91acade09cc58cf37433b7c2255997895fa84e14789"
+    },
+    {
+      "path": "public/Img/Icon_sc/bg2.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/bg2.png",
+      "bytes": 89118,
+      "sha256": "be5a02103045d2dde93330a5971b19b224d4c3201ea0f54b195b650946fd7426"
+    },
+    {
+      "path": "public/Img/Icon_sc/bg3.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/bg3.png",
+      "bytes": 34347,
+      "sha256": "3ce82d85fa5bd1ccf0b0426a9c9ee05be5dbb9e8018fcf9bec04396b50e4bc3e"
+    },
+    {
+      "path": "public/Img/Icon_sc/bg4.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/bg4.png",
+      "bytes": 19415,
+      "sha256": "b4dc7705d158219238bc098c56652742b9c8a16e78c6d1c92750bb12935556e0"
+    },
+    {
+      "path": "public/Img/Icon_sc/btn_01_1.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/btn_01_1.png",
+      "bytes": 35114,
+      "sha256": "fa36b5acc2e955cde961fc5d4bf1382734cd25cb5fa6be05266a593203bdb318"
+    },
+    {
+      "path": "public/Img/Icon_sc/btn_01_2.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/btn_01_2.png",
+      "bytes": 27726,
+      "sha256": "48aac26cbe3d6cde71d35170799cb1508829d90149a63e4a9ee46349c8453d16"
+    },
+    {
+      "path": "public/Img/Icon_sc/btn_02_1.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/btn_02_1.png",
+      "bytes": 36889,
+      "sha256": "955ce1f690f025c393476dc5c685da2bbf0dc555371991f38267d2cc8db008e2"
+    },
+    {
+      "path": "public/Img/Icon_sc/btn_02_2.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/btn_02_2.png",
+      "bytes": 27844,
+      "sha256": "b4a43200df1bbc845ed0e6cc4c4f9c03ac6ebebea2244dc298551b843c654b07"
+    },
+    {
+      "path": "public/Img/Icon_sc/btn_03_1.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/btn_03_1.png",
+      "bytes": 39825,
+      "sha256": "946bd5e562034a5173943e5e7ff57db943bde3813e7b405b5a63145a5122e9cd"
+    },
+    {
+      "path": "public/Img/Icon_sc/btn_03_2.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/btn_03_2.png",
+      "bytes": 28990,
+      "sha256": "168b6359f6146d6075d5acb1d53d9b2c1ae7efa4859e43b38ca508748d21e3ac"
+    },
+    {
+      "path": "public/Img/Icon_sc/btn_04_1.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/btn_04_1.png",
+      "bytes": 38922,
+      "sha256": "da0ad4b895f98c5c5cac26699b0f028615401b20ae4de9d8246365163ece583c"
+    },
+    {
+      "path": "public/Img/Icon_sc/btn_04_2.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/btn_04_2.png",
+      "bytes": 29840,
+      "sha256": "9e597f7ff65e992b1adb24bf5424c230664cf57478ba428b38f9548aa2fec5b6"
+    },
+    {
+      "path": "public/Img/Icon_sc/btn_05_1.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/btn_05_1.png",
+      "bytes": 35003,
+      "sha256": "25ac9f1c257cce7539da2e1ac96a8c27e2b51c3ef8531932c3b84c07578663e5"
+    },
+    {
+      "path": "public/Img/Icon_sc/btn_05_2.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/btn_05_2.png",
+      "bytes": 27601,
+      "sha256": "99f3fb6ebf073f4d4730b6ecfdc587466e6416559e0c2a1105ecba481c635fa2"
+    },
+    {
+      "path": "public/Img/Icon_sc/btn_06.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/btn_06.png",
+      "bytes": 60869,
+      "sha256": "1ba1595312ddb53ee950997a0d7f9473cc0954c7cbaf63ead41465819a9bec8e"
+    },
+    {
+      "path": "public/Img/Icon_sc/btn_close.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/btn_close.png",
+      "bytes": 20209,
+      "sha256": "50b7c677fa4f0fe8a83025a45955d100b4b3a4c17c46a62212caa91bf343edf5"
+    },
+    {
+      "path": "public/Img/Icon_sc/color1_1.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/color1_1.png",
+      "bytes": 27335,
+      "sha256": "c9ba82d0717a8d9b2583512aab850c20991d574eaabce96bd59e3ca51a1ea55f"
+    },
+    {
+      "path": "public/Img/Icon_sc/color1_2.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/color1_2.png",
+      "bytes": 26560,
+      "sha256": "cff70f1b4c6e19c67928f68f60f2719f82406fded3849e1b17b8166d402bc2bc"
+    },
+    {
+      "path": "public/Img/Icon_sc/color2_1.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/color2_1.png",
+      "bytes": 28690,
+      "sha256": "56a90881166dd60044f217fe81553d8a5876a0cb7e34492a5d06f877d2596895"
+    },
+    {
+      "path": "public/Img/Icon_sc/color2_2.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/color2_2.png",
+      "bytes": 28005,
+      "sha256": "a72383db61e369e3367412c9acdeb0fe08b9bc788c7f4c016fc36d256a84c925"
+    },
+    {
+      "path": "public/Img/Icon_sc/color3_1.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/color3_1.png",
+      "bytes": 28305,
+      "sha256": "2c756e515873f275210ee58952fd3749b279b5ce7928fe08dad8481d142a95fe"
+    },
+    {
+      "path": "public/Img/Icon_sc/color3_2.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/color3_2.png",
+      "bytes": 27777,
+      "sha256": "43ea82a85129cbb843788ad78c9cffd0d9ed9aa9c40c4164dd53a962bcf4bafb"
+    },
+    {
+      "path": "public/Img/Icon_sc/color4_1.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/color4_1.png",
+      "bytes": 30694,
+      "sha256": "5df63812afcf43ab44bee27c17d270b9de9882485d16d323146fad1e5fa66aeb"
+    },
+    {
+      "path": "public/Img/Icon_sc/color4_2.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/color4_2.png",
+      "bytes": 30036,
+      "sha256": "7ee24f97b54ca7bcd00b94ecec49ad045a78a079041da0b811bb0e3f34c95590"
+    },
+    {
+      "path": "public/Img/Icon_sc/color5_1.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/color5_1.png",
+      "bytes": 31418,
+      "sha256": "daaefa049d32ca1df28b282d50fd41aa76ac1bd79c3d1b805ec34e471ca4b423"
+    },
+    {
+      "path": "public/Img/Icon_sc/color5_2.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/color5_2.png",
+      "bytes": 30556,
+      "sha256": "7651646ad0d96a7ca985f7e847f2d3247b064619f6b47aff17395b0d3d76e6fd"
+    },
+    {
+      "path": "public/Img/Icon_sc/img_x.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/img_x.png",
+      "bytes": 23535,
+      "sha256": "acac76dd5274af776c5ece2c382371edce42a58d0fcf121c9540d369907a263a"
+    },
+    {
+      "path": "public/Img/Icon_sc/play.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/play.png",
+      "bytes": 20558,
+      "sha256": "603e7455b47ef4bd79a4c10028cdeffacc38ed01d150af30d02323b0b786a8f3"
+    },
+    {
+      "path": "public/Img/Icon_sc/point.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/Icon_sc/point.png",
+      "bytes": 18814,
+      "sha256": "91092a391ca706859faa91ec17c6a11dd7dc0d284f02a042552ca265bec48352"
+    },
+    {
+      "path": "public/Img/images/A1.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/images/A1.jpg",
+      "bytes": 220317,
+      "sha256": "73faf6e107175ae4dd015554790157b08222d128273233c36dab9944412bab78"
+    },
+    {
+      "path": "public/Img/images/A2.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/images/A2.jpg",
+      "bytes": 100407,
+      "sha256": "7b3c9a0ebf1aa1e63fc91bbafe7471f54059cef09cdc9285cd68accdbaa3f491"
+    },
+    {
+      "path": "public/Img/images/A3.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/images/A3.jpg",
+      "bytes": 381761,
+      "sha256": "af4d13d99d202c25b274b07fc5ffdc9a57ef1def5552a664a441a543487246f4"
+    },
+    {
+      "path": "public/Img/images/A4.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/images/A4.jpg",
+      "bytes": 217126,
+      "sha256": "37752a198758e14f877c1509f68763466e5c75359f6785c8ef1b62debab58fbd"
+    },
+    {
+      "path": "public/Img/images/A5.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/images/A5.jpg",
+      "bytes": 135867,
+      "sha256": "3b30f6b8334f2da2ab5e6e975873ad73a715197879e3648fd8d6748a4b0eb5ae"
+    },
+    {
+      "path": "public/Img/images/B1.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/images/B1.jpg",
+      "bytes": 88458,
+      "sha256": "25415e9cd2f2553baf289bfea9a128bc97877bab4d8b3440ec14320c3b4f33f7"
+    },
+    {
+      "path": "public/Img/images/B2.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/images/B2.jpg",
+      "bytes": 116929,
+      "sha256": "b66267150a401191aef019840c12ad62585c5e50022f96fc84ce5776b0d4bc60"
+    },
+    {
+      "path": "public/Img/images/B3.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/images/B3.jpg",
+      "bytes": 177317,
+      "sha256": "870bab8780588e40174eb5c0a47920f8ed6b07d25bbe1f4e3d20300f3dd686e1"
+    },
+    {
+      "path": "public/Img/images/B4.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/images/B4.jpg",
+      "bytes": 146433,
+      "sha256": "2a3077f06347b0d6a804617304b46ce10d6d4ac87a867c010b5b09b3d315f1e3"
+    },
+    {
+      "path": "public/Img/images/B5.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/images/B5.jpg",
+      "bytes": 119609,
+      "sha256": "4b5976adb2fa32e35aa16c0a642e514dd943297c6df62b7066a2859bc03ca12e"
+    },
+    {
+      "path": "public/Img/temp.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/temp.jpg",
+      "bytes": 160179,
+      "sha256": "82052468ce575b24071a5c569968502c9ab032492620e467ee3804c07fb6a854"
+    },
+    {
+      "path": "public/Img/video/A01.mp4",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/video/A01.mp4",
+      "bytes": 893776,
+      "sha256": "703ed89236af31835575803e7c508b621f23e74b72b0f02b40b3cf860ae66962"
+    },
+    {
+      "path": "public/Img/video/A02.mp4",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/video/A02.mp4",
+      "bytes": 1493726,
+      "sha256": "614afdd9809801e8b2d2099c1d4ed17994a60112c89fccc7ec6200a588de470e"
+    },
+    {
+      "path": "public/Img/video/A03.mp4",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/video/A03.mp4",
+      "bytes": 2127668,
+      "sha256": "de21e0ea59274debd8190807d8e30a0e679087bce120849d7bfb72244f02999f"
+    },
+    {
+      "path": "public/Img/video/A04.mp4",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/video/A04.mp4",
+      "bytes": 1580203,
+      "sha256": "3c225a680eddf807fcbc2ef0bc5cd673e87cdb127cc7374f4884743edf47eafc"
+    },
+    {
+      "path": "public/Img/video/A05.mp4",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/video/A05.mp4",
+      "bytes": 5459291,
+      "sha256": "ced39019f1ee5dcd89adb900f6c6e6bdb366d6a6f6b3a08158401b5ce2e55965"
+    },
+    {
+      "path": "public/Img/video/poster/A01.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/video/poster/A01.jpg",
+      "bytes": 90482,
+      "sha256": "525d1454fc350eccf9bd952b3091d66d7dce8575a2e4c88d12669fafec8c993c"
+    },
+    {
+      "path": "public/Img/video/poster/A02.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/video/poster/A02.jpg",
+      "bytes": 127567,
+      "sha256": "6c59d09a1a0cd52e90128b5bb2073f50430f2b975b19fb3eb59a95f65426cf12"
+    },
+    {
+      "path": "public/Img/video/poster/A03.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/video/poster/A03.jpg",
+      "bytes": 72219,
+      "sha256": "b63b9dd1770e23c696d3818f938f86d6a99cc717d17fd7bb383aaf7221dace1f"
+    },
+    {
+      "path": "public/Img/video/poster/A04.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/video/poster/A04.jpg",
+      "bytes": 93595,
+      "sha256": "28b9d62d98d6a7aaf404fed47ff478aacfd6407105d006ce323b0f15587242ff"
+    },
+    {
+      "path": "public/Img/video/poster/A05.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/Img/video/poster/A05.jpg",
+      "bytes": 47699,
+      "sha256": "9b5acc96a1864e2a0ecaf54fa98a2832e3d66045a4cdc549a5fef9d28932ab36"
+    },
+    {
+      "path": "public/files/assets/29143061/1/model.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29143061/1/model.png",
+      "bytes": 203293,
+      "sha256": "26d191e8873c76045258be34b39ca006d46e24bae366c08db13a48e6404c0cc6"
+    },
+    {
+      "path": "public/files/assets/29143088/1/YuYanTu.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29143088/1/YuYanTu.json",
+      "bytes": 462214,
+      "sha256": "3b1f9a384ce6d9878207218236392d5d1862423a4400379a04664af8fa278928"
+    },
+    {
+      "path": "public/files/assets/29143091/1/2.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29143091/1/2.jpg",
+      "bytes": 885,
+      "sha256": "0bb6fdfc429fe7d377cad36b8114a131eb14203dd2de85a8f25b992e85484efe"
+    },
+    {
+      "path": "public/files/assets/29143094/1/3.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29143094/1/3.jpg",
+      "bytes": 949,
+      "sha256": "591286762b7e68b90812a39852469e3972f5c917502cc8aa18773e7a89d0b020"
+    },
+    {
+      "path": "public/files/assets/29143130/1/01.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29143130/1/01.jpg",
+      "bytes": 687,
+      "sha256": "ab7ea05e3da2fad80eef84d3fe618a9a3e870f993c4a5b9e560f85b137e50d47"
+    },
+    {
+      "path": "public/files/assets/29143165/1/1.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29143165/1/1.jpg",
+      "bytes": 596,
+      "sha256": "6abe999552769acc093d79ea4213476dda57be76e29483cff29392a8ee24ed58"
+    },
+    {
+      "path": "public/files/assets/29143218/1/flake_n.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29143218/1/flake_n.png",
+      "bytes": 160292,
+      "sha256": "087415a04b5c1441c2a9bc3ad7abc5de9021c5386ea9db197ed931c40a73ffe5"
+    },
+    {
+      "path": "public/files/assets/29143276/1/03.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29143276/1/03.jpg",
+      "bytes": 1064,
+      "sha256": "039a6c45c920c1ca017aa9de2cc46bee1f73089de3c32dda7e65e2a83c0f6dc0"
+    },
+    {
+      "path": "public/files/assets/29143299/1/point.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29143299/1/point.png",
+      "bytes": 1992,
+      "sha256": "3814325af9bc73435f5632aaaf97d655fd9c881b0567358daea13aa05b5ae4fb"
+    },
+    {
+      "path": "public/files/assets/29143300/1/cameraText.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29143300/1/cameraText.png",
+      "bytes": 41819,
+      "sha256": "d08fe79d73f7c4add5eedad94832790107429f12a38391650cdc0dc38da51a49"
+    },
+    {
+      "path": "public/files/assets/29143309/1/cameraText.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29143309/1/cameraText.png",
+      "bytes": 41819,
+      "sha256": "d08fe79d73f7c4add5eedad94832790107429f12a38391650cdc0dc38da51a49"
+    },
+    {
+      "path": "public/files/assets/29143317/1/02.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29143317/1/02.jpg",
+      "bytes": 1018,
+      "sha256": "22227e937b4ed4e17a00229ae7c9e185a616de452e63e3dc32b81e063aaaae3f"
+    },
+    {
+      "path": "public/files/assets/29143318/1/hotspot.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29143318/1/hotspot.png",
+      "bytes": 982,
+      "sha256": "68df6c72ad25d21cb2ce1345f1d0d64c0379e1b87ad8d02de3ec6d3d26db6966"
+    },
+    {
+      "path": "public/files/assets/29143321/1/hotspot.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29143321/1/hotspot.png",
+      "bytes": 982,
+      "sha256": "021b29150eafa8adbf28683c6a49e0c7eb893856d27e1e05efbbae5e6fe6e9a9"
+    },
+    {
+      "path": "public/files/assets/29681153/1/man1.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29681153/1/man1.png",
+      "bytes": 155307,
+      "sha256": "8e7556f3832c20483ebd9dec838a1448ca265270cee2a03c9dd56dcda868d0f5"
+    },
+    {
+      "path": "public/files/assets/29681423/1/man3.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29681423/1/man3.png",
+      "bytes": 128195,
+      "sha256": "7f71851b07de92a879306b8594c3ba30175077a2f8d872b0e5d591ea826383e7"
+    },
+    {
+      "path": "public/files/assets/29681424/1/man2.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29681424/1/man2.png",
+      "bytes": 133525,
+      "sha256": "25b02f59ae2eec141fd3f20203586397e9665b02df60013c88371000392b7036"
+    },
+    {
+      "path": "public/files/assets/29681425/1/man4.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29681425/1/man4.png",
+      "bytes": 147737,
+      "sha256": "307fde5809444e0631e2eeca62073d1ff71a9cd322d6579b54a2cc578cc88bb4"
+    },
+    {
+      "path": "public/files/assets/29681426/1/man5.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29681426/1/man5.png",
+      "bytes": 124098,
+      "sha256": "4cb5a423eaaba63e96f1dbe1ae6d0a2fcd8dcf72e08d38c368392caee5befd5f"
+    },
+    {
+      "path": "public/files/assets/29687221/1/eye3.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29687221/1/eye3.png",
+      "bytes": 15577,
+      "sha256": "e0c841eaf890cc085ce1f12bf9bd35d42d23844e6bbfe88cb8e11dcdf598f90a"
+    },
+    {
+      "path": "public/files/assets/29687222/1/eye1_2.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29687222/1/eye1_2.png",
+      "bytes": 6081,
+      "sha256": "f8e584997d4c222385a96e2016dbed88279fcd56d36434bccb3bc4a8c9dd225d"
+    },
+    {
+      "path": "public/files/assets/29687223/1/eye1_1.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29687223/1/eye1_1.png",
+      "bytes": 9136,
+      "sha256": "796159838995beca5f65e79cf7ae497f2181e323d2da848cc6e7900be684ad4e"
+    },
+    {
+      "path": "public/files/assets/29687224/1/eye4.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29687224/1/eye4.png",
+      "bytes": 58814,
+      "sha256": "c23678e95f8b907a94ffef191c4862650a1826b8d789b143a00794065a2d6c1e"
+    },
+    {
+      "path": "public/files/assets/29687225/1/eye2.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29687225/1/eye2.png",
+      "bytes": 19468,
+      "sha256": "1089e2f4516d73fc14adfaf467ede417225645adb34e85f6f79b9e5b5dadbc06"
+    },
+    {
+      "path": "public/files/assets/29689235/1/eye5_1.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29689235/1/eye5_1.png",
+      "bytes": 23685,
+      "sha256": "0dddad9afeaeafd330315e09b52029e2912b28da546adb79903f33c692a6ea07"
+    },
+    {
+      "path": "public/files/assets/29689236/1/eye5_2.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29689236/1/eye5_2.png",
+      "bytes": 25167,
+      "sha256": "c7f8785ef2b108ce98a3551a397fc65012fb5aa61026205d8a970adaac2b0271"
+    },
+    {
+      "path": "public/files/assets/29832442/1/cam_u_01.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29832442/1/cam_u_01.json",
+      "bytes": 759978,
+      "sha256": "bc80df9925e4683849a56a8201e718bc24490cf7840df15739dadd20fbab3e80"
+    },
+    {
+      "path": "public/files/assets/29832456/1/cam_u_02.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29832456/1/cam_u_02.json",
+      "bytes": 141116,
+      "sha256": "2b3a00c146db07936c8452a076df5e1ec49158c7a37adba008c57d5c52a75f20"
+    },
+    {
+      "path": "public/files/assets/29832459/1/cam_u_03.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29832459/1/cam_u_03.json",
+      "bytes": 28012,
+      "sha256": "f4aa551366bf19fe6a56c3d6f318fb3d9fea05263d2152542a9da1ef884d3651"
+    },
+    {
+      "path": "public/files/assets/29832481/1/cam_d_a.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29832481/1/cam_d_a.json",
+      "bytes": 4572,
+      "sha256": "76ad71dae9fbb4c8e8f8dd8ef9c9886259a4a7840e8dbf2fd626e880ec78d75f"
+    },
+    {
+      "path": "public/files/assets/29832488/1/cam_d_class.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29832488/1/cam_d_class.json",
+      "bytes": 3224,
+      "sha256": "03309150b53cc7ec4e953defb03cb66a9d2dcd7a334f1b7bc0266f47a351409c"
+    },
+    {
+      "path": "public/files/assets/29832529/1/sm_01.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29832529/1/sm_01.json",
+      "bytes": 41688,
+      "sha256": "044bc1df0e3a6a4727cfb31cad4d716066391c5c660a0c4552dec9b868771ac5"
+    },
+    {
+      "path": "public/files/assets/29832534/1/hg_01.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29832534/1/hg_01.json",
+      "bytes": 639105,
+      "sha256": "ad5d14a1250f2e82d4e52ead1b377aaff8b8eb77c2374bd585cf58edacc037a2"
+    },
+    {
+      "path": "public/files/assets/29832539/1/dg_01.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29832539/1/dg_01.json",
+      "bytes": 179795,
+      "sha256": "9577f1ffb4d9a39df124f319db798a2bafd1c176f498b57ee37d1011b0d24cb2"
+    },
+    {
+      "path": "public/files/assets/29832547/1/cam_cb_01.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29832547/1/cam_cb_01.json",
+      "bytes": 578530,
+      "sha256": "64d80d8ead2b0ae9b9dcf1b405ce3c8f46e4aeefdb5c8141da93f9322d047756"
+    },
+    {
+      "path": "public/files/assets/29859044/1/he_int_ao.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29859044/1/he_int_ao.jpg",
+      "bytes": 95735,
+      "sha256": "ea92ff8e015d5c540274d6d5bd3607264a0b6bb4a393d5468a90850e5678b2bd"
+    },
+    {
+      "path": "public/files/assets/29859045/1/ao_02.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29859045/1/ao_02.jpg",
+      "bytes": 926039,
+      "sha256": "7a220636cbe7c4dc3aa69770477f3613834b483ad44498ae98a9903f36bd9963"
+    },
+    {
+      "path": "public/files/assets/29859046/1/ao_01.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29859046/1/ao_01.jpg",
+      "bytes": 1861394,
+      "sha256": "839cf2ea25cdfeaff86017857d674bc9baf432004896b97e582246fce7193fa4"
+    },
+    {
+      "path": "public/files/assets/29859116/1/he_ext.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29859116/1/he_ext.json",
+      "bytes": 8166,
+      "sha256": "94cbfbb11c5d22c20206c92cf9fd7c599b57deb64a5a696da35177e95d3d5485"
+    },
+    {
+      "path": "public/files/assets/29859120/1/he_int.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29859120/1/he_int.json",
+      "bytes": 34125,
+      "sha256": "a2929124b13dd0fd2f12e1e6397bcf2a253024cb294dec3d506b002cdb28ef17"
+    },
+    {
+      "path": "public/files/assets/29859577/1/he_int_ao.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29859577/1/he_int_ao.jpg",
+      "bytes": 95735,
+      "sha256": "ea92ff8e015d5c540274d6d5bd3607264a0b6bb4a393d5468a90850e5678b2bd"
+    },
+    {
+      "path": "public/files/assets/29871434/1/zzzzzzzzzzzzzzzzzzzzzzzz.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29871434/1/zzzzzzzzzzzzzzzzzzzzzzzz.json",
+      "bytes": 95304,
+      "sha256": "316bb472e9bbed13e993cc32f80b5d9c4637358cab6505f3debf5a28ef485bce"
+    },
+    {
+      "path": "public/files/assets/29872301/1/cam_d_a-dxt.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29872301/1/cam_d_a-dxt.dds",
+      "bytes": 1398256,
+      "sha256": "8c090a6cfc3ec6466eccf8482aa9a01d195144925d8a871cb9e09e33cd01c94e"
+    },
+    {
+      "path": "public/files/assets/29872301/1/cam_d_a-pvr.ktx",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29872301/1/cam_d_a-pvr.ktx",
+      "bytes": 699276,
+      "sha256": "f584c99cde62cf1c22de9144a5217bc1dac3c9ba4ae651c8cb03f0a4bb24a8ea"
+    },
+    {
+      "path": "public/files/assets/29872301/1/cam_d_a.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29872301/1/cam_d_a.png",
+      "bytes": 767266,
+      "sha256": "f0c6023f6b2e5ae0164e3da414e55fe550dd9404cc8224ddda14c81801bbaec1"
+    },
+    {
+      "path": "public/files/assets/29872317/1/black.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29872317/1/black.jpg",
+      "bytes": 48870,
+      "sha256": "be56b228ed3eebc0c55a77f0333b81b6e0bbc6459e8d454bf21648c665023212"
+    },
+    {
+      "path": "public/files/assets/29872318/1/ora-gold.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29872318/1/ora-gold.jpg",
+      "bytes": 56807,
+      "sha256": "c0942c3f918a1bab09ab10daf669e72c09f1ed7322ecfeeaaeea753aab912768"
+    },
+    {
+      "path": "public/files/assets/29872319/1/blue.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29872319/1/blue.jpg",
+      "bytes": 69224,
+      "sha256": "1b89346467e4657c16dbc16cea989d4267badea501fb36fe471d985a1a42fae2"
+    },
+    {
+      "path": "public/files/assets/29872345/1/green.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29872345/1/green.jpg",
+      "bytes": 69572,
+      "sha256": "eba2b301ebeb132cac6864c0af8a7b7dedbc14d95a844deecb36c6b14dad566b"
+    },
+    {
+      "path": "public/files/assets/29872346/1/white.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29872346/1/white.jpg",
+      "bytes": 49522,
+      "sha256": "144da7f2418e4496f73af597e8849fe0c5e47a23ee428e718d06610e208b6e40"
+    },
+    {
+      "path": "public/files/assets/29872352/1/AO.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29872352/1/AO.jpg",
+      "bytes": 1575393,
+      "sha256": "aba6f08499d41b74a8912625f4170fc16447a0b5206b37873abdc8cfc1d58dec"
+    },
+    {
+      "path": "public/files/assets/29872355/1/cpu_tex-dxt.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29872355/1/cpu_tex-dxt.dds",
+      "bytes": 699192,
+      "sha256": "37eec2936dcbcb8b8e72be999aa3ccc2a379e40f240c605cd38913a25f59a4e4"
+    },
+    {
+      "path": "public/files/assets/29872355/1/cpu_tex-pvr.ktx",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29872355/1/cpu_tex-pvr.ktx",
+      "bytes": 699276,
+      "sha256": "7f1c0f61bc31d11e9e34db3454855208b1b7f318007089a3c96e5957fff46946"
+    },
+    {
+      "path": "public/files/assets/29872355/1/cpu_tex.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29872355/1/cpu_tex.jpg",
+      "bytes": 849698,
+      "sha256": "1b61636008681a15b69337332ffc99cfc7799f486a4cfe118b69d496f20e5a83"
+    },
+    {
+      "path": "public/files/assets/29872457/1/Battery.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29872457/1/Battery.json",
+      "bytes": 645192,
+      "sha256": "46eb046daba633aea37ba6cb759b9bf32636c1bd66c92fa4f019e3eabeb6f7b9"
+    },
+    {
+      "path": "public/files/assets/29872464/1/Blocker.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29872464/1/Blocker.json",
+      "bytes": 947,
+      "sha256": "bd9055fe190d187e9673d140abe1bf053f7a11c04b67c56946b7ee7106ee4a34"
+    },
+    {
+      "path": "public/files/assets/29872468/1/copper.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29872468/1/copper.json",
+      "bytes": 63428,
+      "sha256": "38a679300c4b397aedc90722b3be7b9dc4814665c18f9d5b859e2423a9940ca1"
+    },
+    {
+      "path": "public/files/assets/29872473/1/cpu.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29872473/1/cpu.json",
+      "bytes": 91761,
+      "sha256": "2b3310f615c5881ba308b9f930c20c70aee8de58888733d2d75d4593b86501dd"
+    },
+    {
+      "path": "public/files/assets/29877889/1/hg_jianbian.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29877889/1/hg_jianbian.jpg",
+      "bytes": 69662,
+      "sha256": "7f6ae737ae912667ff99cd93ee57fdee5cab7e77b2294a3a20686791bc1bb39a"
+    },
+    {
+      "path": "public/files/assets/29877941/1/ext.glsl",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29877941/1/ext.glsl",
+      "bytes": 2999,
+      "sha256": "30c600fb5f4b45694546d49ada402c0dc72db686f9bfee25acc3e261020041c8"
+    },
+    {
+      "path": "public/files/assets/29877942/1/main.glsl",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29877942/1/main.glsl",
+      "bytes": 1269,
+      "sha256": "b9547cec3ce4485e9b245ea99813561449a9bed1c036c75069a884ef8855737d"
+    },
+    {
+      "path": "public/files/assets/29902566/1/jianbian_01.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29902566/1/jianbian_01.json",
+      "bytes": 873,
+      "sha256": "ac1faf310e6da51d12c7f8045bc6341274bb4e639e0ca674b194c49cc19bb9ef"
+    },
+    {
+      "path": "public/files/assets/29943751/1/guang.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29943751/1/guang.json",
+      "bytes": 2269,
+      "sha256": "029afeefc000d70b2a4a09838fe3522adb41d2197c62efdd0d87ba5e8e336943"
+    },
+    {
+      "path": "public/files/assets/29947450/1/blue.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29947450/1/blue.png",
+      "bytes": 418527,
+      "sha256": "587170389ca938786efaaeb198aef33cd2bd6b559de98a07952ba3e1efedbfc6"
+    },
+    {
+      "path": "public/files/assets/29947871/1/edge_02.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29947871/1/edge_02.json",
+      "bytes": 385382,
+      "sha256": "b424d5af3f98f2a6037f8504ef05cff197e5741611043e14c0a2bbcae337a499"
+    },
+    {
+      "path": "public/files/assets/29960034/1/guang02-dxt.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29960034/1/guang02-dxt.dds",
+      "bytes": 1398256,
+      "sha256": "3c7d37808691760963c14e0ea987d7988c1869c895c3c1e57c3c3657a10903cf"
+    },
+    {
+      "path": "public/files/assets/29960034/1/guang02-pvr.ktx",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29960034/1/guang02-pvr.ktx",
+      "bytes": 699276,
+      "sha256": "6bd471644815d98110bd562e619b484640f45b37c8da49f98b88ed00a8a0f834"
+    },
+    {
+      "path": "public/files/assets/29960034/1/guang02.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29960034/1/guang02.png",
+      "bytes": 148493,
+      "sha256": "ad9df28b11f3111c514d04e059f53c31f4fe752b51204ef0bbbf1dc66e759069"
+    },
+    {
+      "path": "public/files/assets/29981116/1/KangJuChi.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29981116/1/KangJuChi.json",
+      "bytes": 7070,
+      "sha256": "0fcbc1a412336ed247bed087cb7db44a0dc33928a1b7df032ebbff8f1f874eaf"
+    },
+    {
+      "path": "public/files/assets/29981192/1/text_normal_512-dxt.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29981192/1/text_normal_512-dxt.dds",
+      "bytes": 174904,
+      "sha256": "4f85c9e865b636035a3595dde2fd05e1e41ecbfa3685769d0b70c4d0bfc93507"
+    },
+    {
+      "path": "public/files/assets/29981192/1/text_normal_512-pvr.ktx",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29981192/1/text_normal_512-pvr.ktx",
+      "bytes": 174984,
+      "sha256": "7c168f01632a351518b97094e68e5d125ab6559b934c6b5e9d6ebdcf86f4f18f"
+    },
+    {
+      "path": "public/files/assets/29981192/1/text_normal_512.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29981192/1/text_normal_512.jpg",
+      "bytes": 247166,
+      "sha256": "afe69a208a426d9ad28bd93796ce4e7ef25ced6c1deb738a6134c31fcd7de685"
+    },
+    {
+      "path": "public/files/assets/29981194/1/text_texture.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29981194/1/text_texture.jpg",
+      "bytes": 66842,
+      "sha256": "f968a11c58d9099c62670472bbddddec5a1b8dc8c978d3dd27e58798c89ad70b"
+    },
+    {
+      "path": "public/files/assets/29981520/1/photo_plane.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29981520/1/photo_plane.json",
+      "bytes": 9278,
+      "sha256": "1267302ff4c145bd68b3f542e181a101bbb708bb3353217e14be93c0f7cdc080"
+    },
+    {
+      "path": "public/files/assets/29986502/1/edge_01_plus.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29986502/1/edge_01_plus.json",
+      "bytes": 1340625,
+      "sha256": "8179d535e2ca0f642357fa09073ebc9beddb1a69aa3dc3791aa0536351b8d583"
+    },
+    {
+      "path": "public/files/assets/29988185/1/zhu_01.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29988185/1/zhu_01.json",
+      "bytes": 994,
+      "sha256": "6d85b57cf8d162c57d09643d57cadd1e6c12178f118a9f87e1a206306edbd133"
+    },
+    {
+      "path": "public/files/assets/29988446/1/zhu_01_a.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/29988446/1/zhu_01_a.png",
+      "bytes": 206065,
+      "sha256": "6acadefca6b6d64aaf0ba690e1c876100e34d8375f838fe91c8d95bfe48784e9"
+    },
+    {
+      "path": "public/files/assets/30045973/1/cam_u_04.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30045973/1/cam_u_04.json",
+      "bytes": 33519,
+      "sha256": "2154a6f3458d8d07ed468bb7a8b6906e4154bccf5261231dc8cd8d9a4542af0b"
+    },
+    {
+      "path": "public/files/assets/30045978/1/cam_u_05.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30045978/1/cam_u_05.json",
+      "bytes": 65617,
+      "sha256": "1d9191ed0ec55aa6bade2b6d3a09cebf9d9d2f72dd03d8bbe1236bbeb9a56ce6"
+    },
+    {
+      "path": "public/files/assets/30095536/1/n2.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30095536/1/n2.jpg",
+      "bytes": 5398,
+      "sha256": "33aa455229f7a9c1b4c180e0047d8d5321f5f2be59d6ec23d5b1429e9e850cea"
+    },
+    {
+      "path": "public/files/assets/30102055/1/black.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30102055/1/black.png",
+      "bytes": 71222,
+      "sha256": "72314696f6f093c5d433e71e4711494d97c243731bfd6954c7cdc4095d7f75d5"
+    },
+    {
+      "path": "public/files/assets/30103883/1/wen.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30103883/1/wen.jpg",
+      "bytes": 40892,
+      "sha256": "6c4cf9cf40bccbe92903afb5a125f3bf29cd2224906305417531792d315cedc5"
+    },
+    {
+      "path": "public/files/assets/30117681/1/0.6x-dxt.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30117681/1/0.6x-dxt.dds",
+      "bytes": 699192,
+      "sha256": "d1adc1860ff62ce27046d04142f3f062b0715031f8f3f7a2ee64a245ad940d0a"
+    },
+    {
+      "path": "public/files/assets/30117681/1/0.6x-pvr.ktx",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30117681/1/0.6x-pvr.ktx",
+      "bytes": 699276,
+      "sha256": "69e6ca5484941295b8c5ba5ead7fcb839fb2f8c352644c89f3e5c1a4eef4dfe2"
+    },
+    {
+      "path": "public/files/assets/30117681/1/0.6x.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30117681/1/0.6x.jpg",
+      "bytes": 156857,
+      "sha256": "c0f993620c94c1cc87a8f589122a7d409e0392f2c7b7ebe86bd7f1935411b788"
+    },
+    {
+      "path": "public/files/assets/30132903/1/battery.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30132903/1/battery.png",
+      "bytes": 16620,
+      "sha256": "1662518b9e9d1a3eece0c4cc2440f9776fa0102c3b14fa069122c9552321d195"
+    },
+    {
+      "path": "public/files/assets/30132905/1/cool.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30132905/1/cool.png",
+      "bytes": 17451,
+      "sha256": "17998bdbf702b10f14d78eac4e5c3c6b280bfa2b1356962628044cb046bad070"
+    },
+    {
+      "path": "public/files/assets/30132906/1/motor.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30132906/1/motor.png",
+      "bytes": 12685,
+      "sha256": "f91d25d39162a824b9548eccb9a235e25632c09aea4461acccce22886e09fd5d"
+    },
+    {
+      "path": "public/files/assets/30132907/1/processor.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30132907/1/processor.png",
+      "bytes": 15412,
+      "sha256": "f751b01b0f79a0d4511565528eba9063f4d04a1382dc07427dd6c79fcbf83127"
+    },
+    {
+      "path": "public/files/assets/30132908/1/screen.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30132908/1/screen.png",
+      "bytes": 12790,
+      "sha256": "808b80d3256796e919900d4799ab3b5cfd52c6d1232bf79bfa54ca312289d514"
+    },
+    {
+      "path": "public/files/assets/30133240/1/guang_01.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30133240/1/guang_01.json",
+      "bytes": 2272,
+      "sha256": "69d7b8599dba23a434f8ab71775294eb99f866b7512a67d3d83e3b3eb6eefc39"
+    },
+    {
+      "path": "public/files/assets/30133243/1/guang_02.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30133243/1/guang_02.json",
+      "bytes": 1574,
+      "sha256": "653e3811176bfd82ced9a18b9deab4ef81aa88925755c448c144b4fc7ccdf948"
+    },
+    {
+      "path": "public/files/assets/30136062/1/guang_02-dxt.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30136062/1/guang_02-dxt.dds",
+      "bytes": 1398256,
+      "sha256": "69cdcfd87c93a0f335938cf3bae06f2dd3f4178fa75dc5a287de24407a619cc2"
+    },
+    {
+      "path": "public/files/assets/30136062/1/guang_02-pvr.ktx",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30136062/1/guang_02-pvr.ktx",
+      "bytes": 699276,
+      "sha256": "c73289caf0a1a49e74c01bdf2575fb8909a11944ffb6cb9e54429ed1e6cf6643"
+    },
+    {
+      "path": "public/files/assets/30136062/1/guang_02.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30136062/1/guang_02.png",
+      "bytes": 142930,
+      "sha256": "54c36997e6e15c08273979fe6a56854c1dd4be7dc017a167bbdd9e576e032797"
+    },
+    {
+      "path": "public/files/assets/30147479/1/Mi10Lite_En3_Room_1.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30147479/1/Mi10Lite_En3_Room_1.json",
+      "bytes": 449146,
+      "sha256": "b5fc1dddc1b6da57c5d0f6e55fa71dbaa09a417b31e392f16c87615970efb3d7"
+    },
+    {
+      "path": "public/files/assets/30147556/1/Mi10Lite_En3_Room_1_4k.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30147556/1/Mi10Lite_En3_Room_1_4k.jpg",
+      "bytes": 2955955,
+      "sha256": "628480c430740f871681c25c8aae105dad5172444fe160c5ea2a1ead9ecb9c3e"
+    },
+    {
+      "path": "public/files/assets/30180000/1/40x-dxt.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180000/1/40x-dxt.dds",
+      "bytes": 699192,
+      "sha256": "58925fa07e8b1504cbf618ce3fd87dbca602e4e9d3ee3cc5637d0b5c793dead7"
+    },
+    {
+      "path": "public/files/assets/30180000/1/40x-pvr.ktx",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180000/1/40x-pvr.ktx",
+      "bytes": 699276,
+      "sha256": "b6989b2c8b91525d587a7661cd726881ed6d2fb9af5eefcaeb3f56164dabf2b9"
+    },
+    {
+      "path": "public/files/assets/30180000/1/40x.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180000/1/40x.jpg",
+      "bytes": 57972,
+      "sha256": "d5051410be1a86058f414a5c5ea1b07d7b2571d770099902336705e73a53defd"
+    },
+    {
+      "path": "public/files/assets/30180001/1/1.72x-dxt.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180001/1/1.72x-dxt.dds",
+      "bytes": 699192,
+      "sha256": "aa2c144b96b5dd4269fe0d72123261ba6dd8c7fce2167642a46120d160dea9b2"
+    },
+    {
+      "path": "public/files/assets/30180001/1/1.72x-pvr.ktx",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180001/1/1.72x-pvr.ktx",
+      "bytes": 699276,
+      "sha256": "2ae36dff500579910005b2694b6d088543fd7b8fe6c40590d8aa1a613424fdaf"
+    },
+    {
+      "path": "public/files/assets/30180001/1/1.72x.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180001/1/1.72x.jpg",
+      "bytes": 81162,
+      "sha256": "a21b2fb53103210605bb2f2a0d672b149770959c8c99e2cb0a3b40172901e1c8"
+    },
+    {
+      "path": "public/files/assets/30180002/1/0.78x-dxt.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180002/1/0.78x-dxt.dds",
+      "bytes": 699192,
+      "sha256": "6eafb4271c2277ba75790b9920d6e47f80a952c58f06f67f9ade7ebdd80846c2"
+    },
+    {
+      "path": "public/files/assets/30180002/1/0.78x-pvr.ktx",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180002/1/0.78x-pvr.ktx",
+      "bytes": 699276,
+      "sha256": "33475eadb559e426e4f0b2d83912c4b2907581b53f7ecd8b564c4d60c2120946"
+    },
+    {
+      "path": "public/files/assets/30180002/1/0.78x.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180002/1/0.78x.jpg",
+      "bytes": 105609,
+      "sha256": "a6e1a6c95362187d5692d08488533c6d06ab29df09372e63c1b95ae23368ccdc"
+    },
+    {
+      "path": "public/files/assets/30180003/1/1.01x-dxt.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180003/1/1.01x-dxt.dds",
+      "bytes": 699192,
+      "sha256": "970c0e5479e8f38aa3dfdace4494142623d280a9798ea2e9d90893f14548583f"
+    },
+    {
+      "path": "public/files/assets/30180003/1/1.01x-pvr.ktx",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180003/1/1.01x-pvr.ktx",
+      "bytes": 699276,
+      "sha256": "4ce82afe201dad45c045ea1539f6de8496607274439e9004612896beb34c1847"
+    },
+    {
+      "path": "public/files/assets/30180003/1/1.01x.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180003/1/1.01x.jpg",
+      "bytes": 79722,
+      "sha256": "9a30f3ab2406a0b4a5b513daeccb931e221f9471e70bf76576624099caf7ac78"
+    },
+    {
+      "path": "public/files/assets/30180004/1/1.32x-dxt.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180004/1/1.32x-dxt.dds",
+      "bytes": 699192,
+      "sha256": "a1114be500994acba469469e187e2c1e56d7a58066e62c5a03e257bcd1def580"
+    },
+    {
+      "path": "public/files/assets/30180004/1/1.32x-pvr.ktx",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180004/1/1.32x-pvr.ktx",
+      "bytes": 699276,
+      "sha256": "cf789b13c26d181816e9844756da71d1d02335604f5f6f252a935ca845433993"
+    },
+    {
+      "path": "public/files/assets/30180004/1/1.32x.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180004/1/1.32x.jpg",
+      "bytes": 95933,
+      "sha256": "5beac27ed11bf00b2d19db3539237c897b54ef891482cfea63cdd92674f89cee"
+    },
+    {
+      "path": "public/files/assets/30180005/1/2.9x-dxt.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180005/1/2.9x-dxt.dds",
+      "bytes": 699192,
+      "sha256": "520bb83d45a6af860ddd05795a97d120b24a8134b720ef9abca48ef006a389ef"
+    },
+    {
+      "path": "public/files/assets/30180005/1/2.9x-pvr.ktx",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180005/1/2.9x-pvr.ktx",
+      "bytes": 699276,
+      "sha256": "160c0c4886defcb853da6806885dfd3087968ea40499c0a22e5f11a2fef9b65d"
+    },
+    {
+      "path": "public/files/assets/30180005/1/2.9x.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180005/1/2.9x.jpg",
+      "bytes": 79151,
+      "sha256": "a2222d871cba4dc4d98cc9d57517acdea546bc6b39fcd44f016e1b16b6908efb"
+    },
+    {
+      "path": "public/files/assets/30180006/1/6.37x-dxt.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180006/1/6.37x-dxt.dds",
+      "bytes": 699192,
+      "sha256": "b64682e3ea55bf5df6c623f28d8407f6a1f98d5398c1b201a8f1505949610dd8"
+    },
+    {
+      "path": "public/files/assets/30180006/1/6.37x-pvr.ktx",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180006/1/6.37x-pvr.ktx",
+      "bytes": 699276,
+      "sha256": "6096ddd3455c68461b7b45aa054d3d7e3b2cd8e1d29923cf389a6347923b5fcf"
+    },
+    {
+      "path": "public/files/assets/30180006/1/6.37x.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180006/1/6.37x.jpg",
+      "bytes": 104733,
+      "sha256": "a9865ef08ed67c05e47565351367e9dc43046fb33a03ed31dd79236fcf0ba71f"
+    },
+    {
+      "path": "public/files/assets/30180007/1/2.23x-dxt.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180007/1/2.23x-dxt.dds",
+      "bytes": 699192,
+      "sha256": "78fc18d4a1847af44a45ec6bf245910681302865dcb63c8b1d9c78de09c9b263"
+    },
+    {
+      "path": "public/files/assets/30180007/1/2.23x-pvr.ktx",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180007/1/2.23x-pvr.ktx",
+      "bytes": 699276,
+      "sha256": "8637392ae190fb3f4366f75c7cc022ec6b0e1a35f5483cf750043b86b31e4398"
+    },
+    {
+      "path": "public/files/assets/30180007/1/2.23x.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180007/1/2.23x.jpg",
+      "bytes": 104158,
+      "sha256": "d91659bee04496277f4913806f3d975425622027f7cd2d61365f0763b77abcd2"
+    },
+    {
+      "path": "public/files/assets/30180008/1/4.9x-dxt.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180008/1/4.9x-dxt.dds",
+      "bytes": 699192,
+      "sha256": "15406db054f89c90f6e1c96bdb6add1bf89abbb5c65e0100521d19bfa956fb73"
+    },
+    {
+      "path": "public/files/assets/30180008/1/4.9x-pvr.ktx",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180008/1/4.9x-pvr.ktx",
+      "bytes": 699276,
+      "sha256": "926ce9a32ccc318ecfa77cc0c10b15500fcb5947f35626ddbfe14693be8f1ce6"
+    },
+    {
+      "path": "public/files/assets/30180008/1/4.9x.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180008/1/4.9x.jpg",
+      "bytes": 81080,
+      "sha256": "ac116a44b21bcc80c8a77140c7c500c65b2d68c061edeef4b11202bc6776d969"
+    },
+    {
+      "path": "public/files/assets/30180010/1/8.29x-dxt.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180010/1/8.29x-dxt.dds",
+      "bytes": 699192,
+      "sha256": "93cafc9af9dca227632f4e9ea188e88ed0a18d6833578c4ad827a60ea26a9f7e"
+    },
+    {
+      "path": "public/files/assets/30180010/1/8.29x-pvr.ktx",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180010/1/8.29x-pvr.ktx",
+      "bytes": 699276,
+      "sha256": "0e3d5872f4cf95c59197c08d7b8b0f0d811d21908b786686abab833cfc80672d"
+    },
+    {
+      "path": "public/files/assets/30180010/1/8.29x.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180010/1/8.29x.jpg",
+      "bytes": 123411,
+      "sha256": "a09da17925fde25a2560ce8db5bb9e93631b41a8b72bd70d58c94a46f208fb3b"
+    },
+    {
+      "path": "public/files/assets/30180011/1/10.773x-dxt.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180011/1/10.773x-dxt.dds",
+      "bytes": 699192,
+      "sha256": "5ee3dd625dfcd0f3e6bb35db124a26f5fc2429725955d3d31a60ba1a2d34b335"
+    },
+    {
+      "path": "public/files/assets/30180011/1/10.773x-pvr.ktx",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180011/1/10.773x-pvr.ktx",
+      "bytes": 699276,
+      "sha256": "a19a4cc40c2b9ab2f46d9af158bdb98265ca076e339222bfbe88e034148fe5c3"
+    },
+    {
+      "path": "public/files/assets/30180011/1/10.773x.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180011/1/10.773x.jpg",
+      "bytes": 79213,
+      "sha256": "8c687b7ff18cd75a137cb94ecc49c15a6a62a64bef835544521610f79c332441"
+    },
+    {
+      "path": "public/files/assets/30180012/1/23.67x-dxt.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180012/1/23.67x-dxt.dds",
+      "bytes": 699192,
+      "sha256": "7c3e52ee6d97342b4a4cf5accb58d5e13424a4f0ef36157f57f12fbe30151985"
+    },
+    {
+      "path": "public/files/assets/30180012/1/23.67x-pvr.ktx",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180012/1/23.67x-pvr.ktx",
+      "bytes": 699276,
+      "sha256": "8197340efe56eda141351e1ed54618e020125343b933f4a473779ba0119f3122"
+    },
+    {
+      "path": "public/files/assets/30180012/1/23.67x.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180012/1/23.67x.jpg",
+      "bytes": 74447,
+      "sha256": "e8ede97df814552a5119acf300cb3e4cc63a5799cb337ce6a14bbdee0edaf3e8"
+    },
+    {
+      "path": "public/files/assets/30180014/1/30x-dxt.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180014/1/30x-dxt.dds",
+      "bytes": 699192,
+      "sha256": "c9e6239db5d5e0be6f4f284c02940d98df48b66bb7a19ac8cf822eb38c515ea4"
+    },
+    {
+      "path": "public/files/assets/30180014/1/30x-pvr.ktx",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180014/1/30x-pvr.ktx",
+      "bytes": 699276,
+      "sha256": "58d16fbab75219b1737f5bdc0e9ecbe3b97dc196f75061b6f51352f7f4ddc48c"
+    },
+    {
+      "path": "public/files/assets/30180014/1/30x.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180014/1/30x.jpg",
+      "bytes": 59556,
+      "sha256": "623daa734f6d8fae9e21af9dfdc2fe00b3ddb3b66396fb2721844b9a33e2ee2d"
+    },
+    {
+      "path": "public/files/assets/30180015/1/18.2x-dxt.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180015/1/18.2x-dxt.dds",
+      "bytes": 699192,
+      "sha256": "8754e3a6d444b101692948027b5d3feed8938c88d8690b65dc4daa5eab094368"
+    },
+    {
+      "path": "public/files/assets/30180015/1/18.2x-pvr.ktx",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180015/1/18.2x-pvr.ktx",
+      "bytes": 699276,
+      "sha256": "2ac2e1f96e679f2167a5fcaf00617c209ec3a1e0797f4f8ede1fc3bb482f973f"
+    },
+    {
+      "path": "public/files/assets/30180015/1/18.2x.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30180015/1/18.2x.jpg",
+      "bytes": 100606,
+      "sha256": "e57b964b6ae22ff07c675253caaa33c2ef036e0aadbdd4c135040e6ab2d8f7c8"
+    },
+    {
+      "path": "public/files/assets/30215686/1/3.77x-dxt.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30215686/1/3.77x-dxt.dds",
+      "bytes": 699192,
+      "sha256": "889fb2c067d3774ac6ea9839e6d832d6535ecf561bd02a18d6e6961372a62b9c"
+    },
+    {
+      "path": "public/files/assets/30215686/1/3.77x-pvr.ktx",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30215686/1/3.77x-pvr.ktx",
+      "bytes": 699276,
+      "sha256": "145932f9be1acff4c49c2db884c8ae8e8ad2fb5f06e49f7eae076db100d3360c"
+    },
+    {
+      "path": "public/files/assets/30215686/1/3.77x.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30215686/1/3.77x.jpg",
+      "bytes": 109054,
+      "sha256": "3cc1c1839093a3d42c5242800b98fdada8e0bf9a02e64ee7fce958e6df1851fb"
+    },
+    {
+      "path": "public/files/assets/30215687/1/14x-dxt.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30215687/1/14x-dxt.dds",
+      "bytes": 699192,
+      "sha256": "81b92e5908bbeea48b13abe659064866b77252a041f7bdd233a67931017b849e"
+    },
+    {
+      "path": "public/files/assets/30215687/1/14x-pvr.ktx",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30215687/1/14x-pvr.ktx",
+      "bytes": 699276,
+      "sha256": "b4131eae19447bd5b33911151956aec8d86726a865647813069b32527f7dd122"
+    },
+    {
+      "path": "public/files/assets/30215687/1/14x.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30215687/1/14x.jpg",
+      "bytes": 88402,
+      "sha256": "4fd400046dc2d15bff86ff5bbe2e89c7b76be750be7499272eca261a1f05bc35"
+    },
+    {
+      "path": "public/files/assets/30237763/1/Mi10Lite_En3_Room_1_Table.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30237763/1/Mi10Lite_En3_Room_1_Table.json",
+      "bytes": 653422,
+      "sha256": "061ceae9262e9bfb7601c1849026cb5804906b75b44e9a3d9d85a4df86ec9a18"
+    },
+    {
+      "path": "public/files/assets/30244727/1/deskTexture-dxt.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30244727/1/deskTexture-dxt.dds",
+      "bytes": 699192,
+      "sha256": "51440f5e244a785b3c350f220bfec16e69a05f6bdb50fcb79512b66c52da57a9"
+    },
+    {
+      "path": "public/files/assets/30244727/1/deskTexture-pvr.ktx",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30244727/1/deskTexture-pvr.ktx",
+      "bytes": 699276,
+      "sha256": "8704ea775784cb943436eb17e53ce2de9f16ef130fb19302fe499a42e7f23196"
+    },
+    {
+      "path": "public/files/assets/30244727/1/deskTexture.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30244727/1/deskTexture.jpg",
+      "bytes": 277085,
+      "sha256": "0b851015cbfdf65fdc926b736495fde2377cc505f810f3ae3a54f92a45b01842"
+    },
+    {
+      "path": "public/files/assets/30247115/1/Mi10Lite_En3_HDR_4K_Room9_negx.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30247115/1/Mi10Lite_En3_HDR_4K_Room9_negx.png",
+      "bytes": 357813,
+      "sha256": "40bada23b07fc089a0ac0744ca4bb1196b06c6711fd35b7070fd22beaccd5fa8"
+    },
+    {
+      "path": "public/files/assets/30247117/1/Mi10Lite_En3_HDR_4K_Room9_negy.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30247117/1/Mi10Lite_En3_HDR_4K_Room9_negy.png",
+      "bytes": 487629,
+      "sha256": "5a4f6b8422115d9cf38b1ca4977cda4235fd8bc111939cf3e08b080c5bfe2c7d"
+    },
+    {
+      "path": "public/files/assets/30247122/1/Mi10Lite_En3_HDR_4K_Room9_negz.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30247122/1/Mi10Lite_En3_HDR_4K_Room9_negz.png",
+      "bytes": 381843,
+      "sha256": "dbba412c22d514f8a94896241562882fb3aac757057bb75b170a916677c27d15"
+    },
+    {
+      "path": "public/files/assets/30247123/1/Mi10Lite_En3_HDR_4K_Room9_posx.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30247123/1/Mi10Lite_En3_HDR_4K_Room9_posx.png",
+      "bytes": 417676,
+      "sha256": "be6a5109ab2e9bd4b25bde2c25ecf1997ea4736643a6b077c6de55daac90a57b"
+    },
+    {
+      "path": "public/files/assets/30247124/1/Mi10Lite_En3_HDR_4K_Room9_posy.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30247124/1/Mi10Lite_En3_HDR_4K_Room9_posy.png",
+      "bytes": 301550,
+      "sha256": "6f803679cebf6c5157dcd763800daf54e533d59604c61ca7ef9c0453ca93bfe4"
+    },
+    {
+      "path": "public/files/assets/30247126/1/Mi10Lite_En3_HDR_4K_Room9_posz.png",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30247126/1/Mi10Lite_En3_HDR_4K_Room9_posz.png",
+      "bytes": 387086,
+      "sha256": "783daf53ac831049d4d3cb09bbce551848c1884b1d725334c50bed0de647593e"
+    },
+    {
+      "path": "public/files/assets/30247127/1/sky.dds",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30247127/1/sky.dds",
+      "bytes": 524456,
+      "sha256": "d36cbdef62cd80ee435c2798095d962de972739661081e8e6553d54642553eae"
+    },
+    {
+      "path": "public/files/assets/30289706/1/Mi10Lite_En3_Room_1_Table_Shadow_1K.jpg",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30289706/1/Mi10Lite_En3_Room_1_Table_Shadow_1K.jpg",
+      "bytes": 11230,
+      "sha256": "580ed013bba1e77dadd811e352a49ee3f83fb177f32aac0d0962c51848e5d594"
+    },
+    {
+      "path": "public/files/assets/30289708/1/Mi10Lite_En3_Room_1_table_shadow.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30289708/1/Mi10Lite_En3_Room_1_table_shadow.json",
+      "bytes": 794,
+      "sha256": "f21e0e8145634e0b7ce13b87b48b5777279e9a8e4b7d96c790f8e2b439b08fff"
+    },
+    {
+      "path": "public/files/assets/30289710/1/Mi10Lite_En3_Room_1_table_leg.json",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/files/assets/30289710/1/Mi10Lite_En3_Room_1_table_leg.json",
+      "bytes": 13620,
+      "sha256": "0104abf1a6e750bdbba7144385589b7920b2d7402d0f9034a2926f720dc4956f"
+    },
+    {
+      "path": "public/fonts/MILanPro_Regular.ttf",
+      "source": "https://s1.mi.com/m/webgl/mi10Yjd/JS/MILanPro_Regular.ttf",
+      "bytes": 87076,
+      "sha256": "f1a3f334f857427381e17d42516c27068cfe81c97642ee877bd7b068121ea103"
+    }
+  ],
+  "omittedSourceResources": [
+    {
+      "path": "files/assets/29143271/1/BaseLoading.js",
+      "reason": "Upstream 404; unused legacy loading script. Its stale config entry is removed; src/runtime/loading.js implements the original active loading screen."
+    },
+    {
+      "path": "manifest.json",
+      "reason": "Upstream 404; unused manifest link removed."
+    }
+  ],
+  "sourceReconstruction": "src/ contains decoded UI logic and separated scene behaviors. Original editor project and original author variable names were not publicly supplied.",
+  "engine": {
+    "package": "playcanvas",
+    "version": "1.26.1",
+    "delivery": "npm dependency, no generated engine file in source tree"
+  }
+}

@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
+    />
+    <meta charset="utf-8" />
+    <title>小米10 青春版</title>
+    <link rel="stylesheet" href="styles/ui.css" />
+    <link rel="icon" href="data:," />
+  </head>
+
+  <body onload="getSizew()" onresize="window.getSizew && getSizew()">
+    <!-- canvas.html -->
+
+    <iframe
+      id="iframe"
+      title="小米10 青春版 3D 互动场景"
+      src="canvas.html"
+    ></iframe>
+
+    <div id="ALL">
+      <div class="side" id="sideL">
+        <img
+          draggable="false"
+          class="btn_img"
+          id="sideL_img"
+          src="Img/Icon_sc/btn_01_1.png"
+        />
+        <div>50X<br />潜望式变焦</div>
+      </div>
+      <div class="side" id="sideR">
+        <img
+          draggable="false"
+          class="btn_img"
+          id="sideR_img"
+          src="Img/Icon_sc/btn_02_1.png"
+        />
+        <div>AI 四摄<br />电影特效相机</div>
+      </div>
+
+      <div id="uiBottom">
+        <div id="uiscaleA">
+          <div class="btnA" id="btnA_01">
+            <img
+              draggable="false"
+              class="btn_img"
+              id="btnA_img_01"
+              src="Img/Icon_sc/btn_03_1.png"
+            />
+            <div>360°看外观</div>
+          </div>
+          <div class="btnA" id="btnA_02">
+            <img
+              draggable="false"
+              class="btn_img"
+              id="btnA_img_02"
+              src="Img/Icon_sc/btn_04_1.png"
+            />
+            <div>高能配置</div>
+          </div>
+          <a
+            href="https://item.jd.com/100006914135.html"
+            class="btnA"
+            id="btnA_03"
+            style="display: block"
+          >
+            <img
+              draggable="false"
+              class="btn_img"
+              id="btnA_img_03"
+              src="Img/Icon_sc/btn_05_1.png"
+            />
+            <div>糟糕<br />心动了</div>
+          </a>
+        </div>
+
+        <div id="uiscaleB">
+          <div class="btnB" id="btnB_01">
+            <img
+              draggable="false"
+              class="btn_imgs"
+              id="btnB_img_01"
+              src="Img/Icon_sc/color1_1.png"
+            />
+            <div>白桃乌龙</div>
+          </div>
+          <div class="btnB" id="btnB_02">
+            <img
+              draggable="false"
+              class="btn_imgs"
+              id="btnB_img_02"
+              src="Img/Icon_sc/color2_1.png"
+            />
+            <div>四季春奶绿</div>
+          </div>
+          <div class="btnB" id="btnB_03">
+            <img
+              draggable="false"
+              class="btn_imgs"
+              id="btnB_img_03"
+              src="Img/Icon_sc/color3_1.png"
+            />
+            <div>桃子西柚</div>
+          </div>
+          <div class="btnB" id="btnB_04">
+            <img
+              draggable="false"
+              class="btn_imgs"
+              id="btnB_img_04"
+              src="Img/Icon_sc/color4_1.png"
+            />
+            <div>蓝莓薄荷</div>
+          </div>
+          <div class="btnB" id="btnB_05">
+            <img
+              draggable="false"
+              class="btn_imgs"
+              id="btnB_img_05"
+              src="Img/Icon_sc/color5_1.png"
+            />
+            <div>黑巧风暴</div>
+          </div>
+          <div id="btnF_01">Mi 10 Pro</div>
+          <div id="btnF_02">Mi 10</div>
+        </div>
+      </div>
+      <div id="Etext1">Swipe to turn around.</div>
+      <div id="Etext2">仅为小米10青春版内部结构示意，请以实物为准。</div>
+      <div id="Etext3">仅为潜望式变焦原理示意，具体效果以实物为准。</div>
+
+      <div id="uiscaleC">
+        <img draggable="false" id="point_img" src="Img/Icon_sc/point.png" />
+        <div id="Ctittle">Text</div>
+        <div id="Ctext">Text<br />Text</div>
+        <div class="btnC" id="btnC_01">
+          <img
+            draggable="false"
+            class="btn_imgx"
+            id="btnC_img_01"
+            src="Img/Icon_sc/btn_06.png"
+          />
+          <div>Sample snaps!</div>
+        </div>
+        <div id="Cline"></div>
+      </div>
+
+      <div id="sampleimg_box">
+        <div id="sampleimg_box_trans">
+          <img id="sample_img" src="Img/temp.jpg" />
+        </div>
+      </div>
+
+      <div id="uiscaleD">
+        <div id="D2">
+          <div id="bg_box">
+            <img
+              draggable="false"
+              class="bg_img"
+              id="bg_img_01"
+              src="Img/Icon_sc/bg1.png"
+            />
+            <img
+              draggable="false"
+              class="bg_img"
+              id="bg_img_02"
+              src="Img/Icon_sc/bg2.png"
+            />
+            <img
+              draggable="false"
+              class="bg_img"
+              id="bg_img_03"
+              src="Img/Icon_sc/bg3.png"
+            />
+            <img
+              draggable="false"
+              class="bg_img"
+              id="bg_img_04"
+              src="Img/Icon_sc/bg4.png"
+            />
+          </div>
+
+          <div id="hot_cont">
+            <div class="hot_box">
+              <div class="hot_tittle" style="color: #ff5c33">
+                50倍潜望式变焦
+              </div>
+              <div class="hot_text">极限挑战！清晰拍下15公里外望京SOHO</div>
+              <div class="video_box">
+                <video
+                  onended="videoend(5)"
+                  onplaying="playinend(5)"
+                  class="video_mp4"
+                  id="video_5"
+                  preload="metadata"
+                  src="Img/video/A05.mp4"
+                  poster="Img/video/poster/A05.jpg"
+                  controlsList="nodownload nofullscreen"
+                  playsinline
+                ></video>
+                <img
+                  draggable="false"
+                  class="video_play"
+                  id="play_5"
+                  src="Img/Icon_sc/play.png"
+                />
+              </div>
+            </div>
+
+            <div class="hot_box">
+              <div class="hot_tittle" style="color: #48cd9e">
+                50倍的“ 取景自由”
+              </div>
+              <div class="hot_text">
+                神奇潜望式变焦，取景超稳超清晰，让你的创作视角足足延伸50倍
+              </div>
+              <div class="video_box">
+                <div class="hotimages" id="imageB_1"></div>
+                <div class="hotimages" id="imageB_2"></div>
+                <div class="hotimages" id="imageB_3"></div>
+                <div class="hotimages" id="imageB_0"></div>
+                <div id="image_end1"></div>
+                <div class="point_box">
+                  <div class="points" id="pointB1" style="opacity: 0.8"></div>
+                  <div class="points" id="pointB2"></div>
+                  <div class="points" id="pointB3"></div>
+                  <div class="points" id="pointB4"></div>
+                  <div class="points" id="pointB5"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="hot_box">
+              <div class="hot_tittle" style="color: #fcac41">AI 魔法分身</div>
+              <div class="hot_text">变出多个戏精，一起嗨</div>
+              <div class="video_box">
+                <video
+                  onended="videoend(1)"
+                  onplaying="playinend(1)"
+                  class="video_mp4"
+                  id="video_1"
+                  preload="metadata"
+                  src="Img/video/A01.mp4"
+                  poster="Img/video/poster/A01.jpg"
+                  controlsList="nodownload nofullscreen"
+                  playsinline
+                ></video>
+                <img
+                  draggable="false"
+                  class="video_play"
+                  id="play_1"
+                  src="Img/Icon_sc/play.png"
+                />
+              </div>
+            </div>
+
+            <div class="hot_box">
+              <div class="hot_tittle" style="color: #9133ff">AI 魔法万花筒</div>
+              <div class="hot_text">探索更多新鲜视角，玩出魔法范儿</div>
+              <div class="video_box">
+                <video
+                  onended="videoend(2)"
+                  onplaying="playinend(2)"
+                  class="video_mp4"
+                  id="video_2"
+                  preload="metadata"
+                  src="Img/video/A02.mp4"
+                  poster="Img/video/poster/A02.jpg"
+                  controlsList="nodownload nofullscreen"
+                  playsinline
+                ></video>
+                <img
+                  draggable="false"
+                  class="video_play"
+                  id="play_2"
+                  src="Img/Icon_sc/play.png"
+                />
+              </div>
+            </div>
+
+            <div class="hot_box">
+              <div class="hot_tittle" style="color: #336eff">前后双景</div>
+              <div class="hot_text">前前后后，一屏记录，导播级视角体验</div>
+              <div class="video_box">
+                <video
+                  onended="videoend(3)"
+                  onplaying="playinend(3)"
+                  class="video_mp4"
+                  id="video_3"
+                  preload="metadata"
+                  src="Img/video/A03.mp4"
+                  poster="Img/video/poster/A03.jpg"
+                  controlsList="nodownload nofullscreen"
+                  playsinline
+                ></video>
+                <img
+                  draggable="false"
+                  class="video_play"
+                  id="play_3"
+                  src="Img/Icon_sc/play.png"
+                />
+              </div>
+            </div>
+
+            <div class="hot_box">
+              <div class="hot_tittle" style="color: #48cd9e">AI 魔法表情</div>
+              <div class="hot_text">不仅有卡通版的你，还能直出GIF表情</div>
+              <div class="video_box">
+                <video
+                  onended="videoend(4)"
+                  onplaying="playinend(4)"
+                  class="video_mp4"
+                  id="video_4"
+                  preload="metadata"
+                  src="Img/video/A04.mp4"
+                  poster="Img/video/poster/A04.jpg"
+                  controlsList="nodownload nofullscreen"
+                  playsinline
+                ></video>
+                <img
+                  draggable="false"
+                  class="video_play"
+                  id="play_4"
+                  src="Img/Icon_sc/play.png"
+                />
+              </div>
+            </div>
+
+            <div class="hot_box">
+              <div class="hot_tittle" style="color: #fcac41">
+                全场景AI四摄，灵活多用
+              </div>
+              <div class="video_box">
+                <div class="hotimages" id="image_1"></div>
+                <div class="hotimages" id="image_2"></div>
+                <div class="hotimages" id="image_3"></div>
+                <div class="hotimages" id="image_0"></div>
+                <div id="image_end2"></div>
+                <div class="point_box">
+                  <div class="points" id="point1" style="opacity: 0.8"></div>
+                  <div class="points" id="point2"></div>
+                  <div class="points" id="point3"></div>
+                  <div class="points" id="point4"></div>
+                  <div class="points" id="point5"></div>
+                </div>
+              </div>
+              <div id="image_end3"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="samplebtn_box">
+        <img draggable="false" id="samplebtn_img" src="Img/Icon_sc/img_x.png" />
+        <div id="samplebtn_text">欣赏样片</div>
+      </div>
+
+      <div id="slidebtn_BG">
+        <div id="slidebtn_box">
+          <div id="slides_box"></div>
+          <div id="slidet_box">
+            <div class="slidetext" id="slidet_0">0.6x</div>
+            <div class="slidetext" id="slidet_1">1x</div>
+            <div class="slidetext" id="slidet_2">5x</div>
+            <div class="slidetext" id="slidet_3">50x</div>
+          </div>
+        </div>
+        <div id="sidetinfor">0.6x</div>
+      </div>
+
+      <img id="closex" src="Img/Icon_sc/btn_close.png" />
+    </div>
+
+    <div id="openbtn">打开盒子</div>
+
+    <div id="img_box"></div>
+  </body>
+
+  <script src="runtime/ui.js"></script>
+
+  <!-- Original analytics and domain-bound WeChat sharing are omitted for local use. -->
+</html>
