@@ -35,6 +35,7 @@ nft delete table inet agentbox_us 2>/dev/null || true
 rm -f /etc/systemd/system/mihomo.service.d/us-environment.conf
 rm -f /etc/systemd/system/docker.service.d/us-environment.conf /usr/local/sbin/agentbox-us-container-egress
 rm -f /etc/agentbox-profile/agentbox-policy.yaml
+rm -f /srv/agentbox/headless-chrome/policies/us-network.json
 # Restore only the recorded files, including the original private profile.
 tar -C / -xpf /root/agentbox-us-backup/before.tar
 tailscale set --accept-dns=true
@@ -149,11 +150,20 @@ EOF
 nft -c -f /srv/agentbox/us-environment/egress.nft
 systemctl daemon-reload
 systemctl enable --now agentbox-us-egress
+install -d -m 755 /srv/agentbox/headless-chrome/policies
+printf '%s\n' '{"WebRtcIPHandling":"disable_non_proxied_udp"}' >/srv/agentbox/headless-chrome/policies/us-network.json
+chmod 644 /srv/agentbox/headless-chrome/policies/us-network.json
 node <<'JS'
 const fs=require('fs'),y=require('/usr/local/libexec/vendor/js-yaml.cjs');
-const f='/srv/agentbox/headless-chrome/compose.yaml',c=y.load(fs.readFileSync(f,'utf8'));
+const f='/srv/agentbox/headless-chrome/compose.yaml' ,c=y.load(fs.readFileSync(f,'utf8'));
 c.services['headless-chrome'].image='agentbox-chrome-us:v2.56.2-1';
 c.services['headless-chrome'].dns=['172.18.0.1'];
+const browser=c.services['headless-chrome'];
+browser.volumes=browser.volumes||[];
+for (const dir of ['/etc/opt/chrome/policies/managed', '/etc/chromium/policies/managed', '/etc/opt/chrome_for_testing/policies/managed']) {
+  const mount=`/srv/agentbox/headless-chrome/policies/us-network.json:${dir}/us-network.json:ro`;
+  if (!browser.volumes.includes(mount)) browser.volumes.push(mount);
+}
 fs.writeFileSync(f,y.dump(c,{lineWidth:120}));
 const d='/etc/docker/daemon.json',dc=JSON.parse(fs.readFileSync(d,'utf8'));
 dc.dns=['172.18.0.1'];fs.writeFileSync(d,JSON.stringify(dc,null,2)+'\n');

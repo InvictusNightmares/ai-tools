@@ -18,6 +18,8 @@ applies a local policy after the imported Clash Verge enhancement chain.
   Tailscale, local networks, and the DMIT transport remain outside the TUN.
   A separate nftables OUTPUT/FORWARD gate prevents normal public traffic and
   plaintext DNS from falling back to the physical `ens3` interface.
+- Chrome uses the managed `WebRtcIPHandling=disable_non_proxied_udp` policy,
+  so WebRTC does not independently expose an IP through non-proxied UDP.
 - The rescue proxy on 7897 has its own encrypted DNS and remains independent of
   the production proxy on 7898. SSH remains key-only, with root SSH disabled.
 - The derived, pinned Chrome image removes the actual `fonts-noto-cjk` and
