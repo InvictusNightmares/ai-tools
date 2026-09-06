@@ -1,0 +1,21 @@
+{
+  "name": "mi10-youth-webgl-source",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Editable source reconstruction of the Xiaomi Mi 10 Youth WebGL experience",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "node scripts/server.mjs",
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/server.mjs --preview"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12"
+  },
+  "dependencies": {
+    "playcanvas": "1.26.1"
+  }
+}

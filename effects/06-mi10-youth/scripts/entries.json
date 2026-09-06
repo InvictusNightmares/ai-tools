@@ -1,0 +1,58 @@
+{
+  "ui.js": [
+    "src/ui/00-viewport.js",
+    "src/ui/01-hotspot-copy.js",
+    "src/ui/02-navigation.js",
+    "src/ui/03-color-picker.js",
+    "src/ui/04-zoom-slider.js",
+    "src/ui/05-unboxing.js",
+    "src/ui/06-video-player.js",
+    "src/ui/07-camera-gallery.js",
+    "src/ui/08-zoom-gallery.js"
+  ],
+  "scene.js": [
+    "src/scene/scripts/00-tween.js",
+    "src/scene/scripts/01-hotspot.js",
+    "src/scene/scripts/02-hide-hotspot-when-moving.js",
+    "src/scene/scripts/03-touch-input.js",
+    "src/scene/scripts/04-orbit-camera.js",
+    "src/scene/scripts/05-mouse-input.js",
+    "src/scene/scripts/06-keyboard-input.js",
+    "src/scene/scripts/07-change-camera-fov.js",
+    "src/scene/scripts/08-ext-color-manager.js",
+    "src/scene/scripts/09-platform-check.js",
+    "src/scene/scripts/10-button-image.js",
+    "src/scene/scripts/11-click-change-texture-button.js",
+    "src/scene/scripts/12-blast-model.js",
+    "src/scene/scripts/13-controller-blast.js",
+    "src/scene/scripts/14-controller-button-active.js",
+    "src/scene/scripts/15-fps.js",
+    "src/scene/scripts/16-material-controller.js",
+    "src/scene/scripts/17-breath-light.js",
+    "src/scene/scripts/18-click-camera-hotspot-button.js",
+    "src/scene/scripts/19-camera-ui.js",
+    "src/scene/scripts/20-version.js",
+    "src/scene/scripts/21-pan-model.js",
+    "src/scene/scripts/22-controller-camera.js",
+    "src/scene/scripts/23-controller-boxs.js",
+    "src/scene/scripts/24-open-box.js",
+    "src/scene/scripts/25-switch-box.js",
+    "src/scene/scripts/26-controller-cm.js",
+    "src/scene/scripts/27-mat-shader.js",
+    "src/scene/scripts/28-distance-zoom.js",
+    "src/scene/scripts/29-orbit-camera-control.js",
+    "src/scene/scripts/30-multiple-switch.js",
+    "src/scene/scripts/31-camera-texture-controller.js",
+    "src/scene/scripts/32-camera-light-controller.js",
+    "src/scene/scripts/33-bloom.js",
+    "src/scene/scripts/34-background-fade.js",
+    "src/scene/scripts/35-assets-loader.js",
+    "src/scene/scripts/36-asset-manager.js"
+  ],
+  "start.js": [
+    "src/runtime/start.js"
+  ],
+  "loading.js": [
+    "src/runtime/loading.js"
+  ]
+}
