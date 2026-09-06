@@ -1,0 +1,37 @@
+services:
+  keepalive:
+    image: agentbox-ctyun:975f0cb-agentbox1
+    container_name: agentbox-ctyun
+    restart: unless-stopped
+    user: '1654:1000'
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+    pids_limit: 128
+    stop_grace_period: 10s
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    environment:
+      TZ: America/Los_Angeles
+      HTTP_PROXY: http://172.18.0.1:7898
+      HTTPS_PROXY: http://172.18.0.1:7898
+      NO_PROXY: localhost,127.0.0.1,::1
+    volumes:
+      - ./data:/data
+      - ./challenges:/challenges
+    networks: [agentbox-egress]
+    healthcheck:
+      test: [CMD, dotnet, /app/CtYun.dll, health]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 90s
+    logging:
+      driver: local
+      options:
+        max-size: 5m
+        max-file: '2'
+networks:
+  agentbox-egress:
+    external: true

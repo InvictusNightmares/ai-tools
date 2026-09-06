@@ -372,6 +372,10 @@ curl --proxy http://127.0.0.1:7898 -I https://github.com/
 
 先确认天翼客户端“自动退出登录”和“自动锁屏”均为“永不”。Debian 的禁用休眠配置不能阻止平台从虚拟机外部关机；必须通过以下断连观察和独立平台保活验证分别确认，不能仅凭 systemd 配置宣称永久在线。CtYun 的部署边界见[建设方案](./personal-agent-plan.md#6-风险与可用性边界)。
 
+平台保活使用仓库中的 [CtYun 单桌面部署模块](../../script/agentbox/ctyun/README.md)，不要直接运行上游默认程序。该模块固定上游版本，移除第三方 OCR，要求人工验证码/短信登录，按指定 DesktopId 每 60 秒更新连接，并持久保存私密会话。完成初次登录后，Compose 的 `restart: unless-stopped` 可在宿主机启动后恢复保活；账号会话失效时仍需人工重新认证。
+
+先按模块手册通过至少三个连续握手周期、容器健康检查及重启复用会话验收，再进行下面的断连观察。只有构建成功、容器启动或 Debian 防休眠配置生效，都不能代替真实平台保活验收。
+
 1. 断开天翼图形客户端 2 小时，通过 SSH 验证。
 2. 再断开 26 小时，检查平台休眠、停机或重启。
 3. 观察 24–48 小时的 `journalctl`、磁盘、两个 Mihomo、profile 更新 timer、Tailscale、SSH、Docker 和 `agentbox-container-proxy`。
