@@ -4,6 +4,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
+const { isIP } = require('node:net');
 
 const yaml = require(path.join(__dirname, 'vendor', 'js-yaml.cjs'));
 
@@ -326,6 +327,46 @@ function sanitizeHeadless(config, port) {
   return sortTopLevel(result);
 }
 
+// Applied last and only when explicitly installed on this cloud computer.
+// A subscription refresh cannot restore domestic DIRECT rules or system DNS.
+function applyUsPolicy(config, policy, port) {
+  if (policy.environment !== 'us' || isIP(policy['proxy-server']) !== 4 ||
+      !/^[a-z0-9-]+\.ts\.net$/.test(policy['tailnet-domain'] || '')) {
+    fail('Invalid Agentbox US environment policy.');
+  }
+  const server = policy['proxy-server'];
+  const proxies = (config.proxies || []).filter(p => isObject(p) && p.server === server &&
+    typeof p.name === 'string' && ['vless', 'hysteria2'].includes(p.type));
+  if (!proxies.length) fail('The subscription has no eligible US proxy; refusing a direct fallback.');
+  const group = 'AGENTBOX-US';
+  if (config.proxies.some(p => p.name === group)) fail('Reserved US policy name is used by a proxy.');
+  config['proxy-groups'] = (config['proxy-groups'] || []).filter(g => g.name !== group);
+  config['proxy-groups'].push({ name: group, type: 'fallback', proxies: proxies.map(p => p.name),
+    url: 'https://www.gstatic.com/generate_204', interval: 300, lazy: false });
+  const excludes = ['127.0.0.0/8', '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16',
+    '100.64.0.0/10', '169.254.0.0/16', `${server}/32`, '::1/128', 'fc00::/7', 'fe80::/10'];
+  config.rules = [
+    ...excludes.map(cidr => `${cidr.includes(':') ? 'IP-CIDR6' : 'IP-CIDR'},${cidr},DIRECT,no-resolve`),
+    ...(config.rules || []).filter(r => /,REJECT(?:-DROP)?(?:,no-resolve)?$/.test(r)),
+    `MATCH,${group}`,
+  ];
+  config.ipv6 = false;
+  config.dns = {
+    enable: true, listen: port === 7898 ? '0.0.0.0:53' : '127.0.0.1:1053',
+    ipv6: false, 'enhanced-mode': 'redir-host', 'use-hosts': true, 'use-system-hosts': true,
+    // Literal DoH IPs and literal proxy IPs require no public bootstrap lookup.
+    'default-nameserver': ['1.1.1.1'],
+    nameserver: [`https://1.1.1.1/dns-query#${group}`, `https://8.8.8.8/dns-query#${group}`, `tls://9.9.9.9#${group}`],
+    'nameserver-policy': { [`+.${policy['tailnet-domain']}`]: '100.100.100.100#tailscale0' },
+  };
+  config.tun = { enable: port === 7898, device: 'ab-us', stack: 'gvisor', mtu: 1400,
+    'auto-route': true, 'auto-detect-interface': true, 'strict-route': true,
+    'iproute2-table-index': 2022, 'iproute2-rule-index': 9000,
+    'route-exclude-address': excludes,
+  };
+  return config;
+}
+
 function compile(bundle, sourceFile, port) {
   const { byUid, current } = loadProfiles(bundle);
   const option = isObject(current.option) ? current.option : {};
@@ -347,7 +388,9 @@ function compile(bundle, sourceFile, port) {
   config = runUserScript(loadItem(bundle, byUid, option.script || 'Script', 'script', 'function main(config){return config}'), config, current.name || '');
 
   config = cleanupProxyGroups(config);
-  return sanitizeHeadless(config, port);
+  const sanitized = sanitizeHeadless(config, port);
+  const policyFile = path.join(bundle, 'agentbox-policy.yaml');
+  return fs.existsSync(policyFile) ? applyUsPolicy(sanitized, readYaml(policyFile), port) : sanitized;
 }
 
 function stable(value) {
@@ -417,6 +460,18 @@ function selfTest() {
   if (merged.a.b !== 1 || merged.a.c !== 2 || merged.x[0] !== 2) fail('deep merge self-test failed');
   const scripted = runUserScript('function main(c){c.ok=true;return c}', { A: 1 }, 'test');
   if (scripted.a !== 1 || scripted.ok !== true) fail('script sandbox self-test failed');
+  const fixture = { proxies: [{name: 'US', type: 'vless', server: '203.0.113.7'}],
+    'proxy-groups': [], rules: ['GEOIP,CN,DIRECT', 'DOMAIN,ads.example,REJECT', 'MATCH,DIRECT', 'RULE-SET,REJECT,DIRECT'] };
+  const policy = {environment: 'us', 'proxy-server': '203.0.113.7', 'tailnet-domain': 'tail123.ts.net'};
+  const prod = applyUsPolicy(structuredClone(fixture), policy, 7898);
+  const candidate = applyUsPolicy(structuredClone(fixture), policy, 17898);
+  if (!prod.tun.enable || candidate.tun.enable || prod.dns.listen === candidate.dns.listen ||
+      prod.rules.includes('GEOIP,CN,DIRECT') || prod.rules.includes('RULE-SET,REJECT,DIRECT') || prod.rules.at(-1) !== 'MATCH,AGENTBOX-US' ||
+      !prod.rules.includes('DOMAIN,ads.example,REJECT') ||
+      prod.dns.nameserver.some(s => !s.endsWith('#AGENTBOX-US'))) fail('US policy isolation self-test failed');
+  let refused = false;
+  try { applyUsPolicy({...fixture, proxies: []}, policy, 7898); } catch { refused = true; }
+  if (!refused) fail('Missing US node must fail closed');
   process.stdout.write('agentbox profile compiler self-test passed\n');
 }
 

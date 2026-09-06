@@ -394,3 +394,7 @@ curl --proxy http://127.0.0.1:7898 -I https://github.com/
 | Alpine Live 且未写盘 | `reboot` 返回 Windows |
 | Debian 安装中 | 天翼控制台查看日志；不随意重启 |
 | Disk 0 已清除且无法启动 | 天翼外部客户端重装官方 Windows |
+
+### 美国使用环境与境外 DNS
+
+在已完成基础验收的云电脑上，可安装 [US environment](../../script/agentbox/us-environment/README.md)。这会在在线订阅增强链之后固定美国出站策略，用 Cloudflare/Google DoH 和 Quad9 DoT 经 DMIT 解析，并让宿主机和容器普通流量经过 TUN。保持原 720 分钟订阅刷新、LA 时区和 SSH 密钥认证。实际检测使用 [site-check](../../script/agentbox/site-check/README.md)，完成后下载两站截图，再清理任务备份和临时文件。
