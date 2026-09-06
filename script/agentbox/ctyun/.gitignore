@@ -1,0 +1,4 @@
+data/
+challenges/
+build/
+*.local.json

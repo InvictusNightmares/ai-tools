@@ -15,7 +15,7 @@ $Expected = @{
     UpstreamSh               = 'FE8CF9D8FB800AA74480BBD2223F268259E2A6EADFEAB68C50A39B57F027139F'
     UpstreamDebianCfg        = '53DA483158C7D526987BAFE6BF450FFC93A32E5B7B0D16DAA6126F21731A4161'
     PatchedBat               = '85D1783C9EE86A224D4E942E64052EE4CAC0613F455F1829D16CB78B058EF0A4'
-    PatchedSh                = 'DF8385EA660B43B3720542CDD8D7DBAFF9B00586EF5C05C83D2C1D65949D5834'
+    PatchedSh                = '78362DC3C3ACD009AB9C6DFE7B22B3CF5BD72935B3A0254A1026E9D219CFD356'
     PatchedDebianCfg         = 'C72584170B2A3630D02AAFF0F3E6DBFF4C827C60259E05DAA9628E1660578BE7'
     CygwinSetup              = '2C9F2FB56E1FB687B5D9680AFA8F8B06E6214F0E483096AF0EAE1946431226C5'
     CygwinSignerThumbprint   = '7C470FD5026C30AA594D5D3782A060DDFFA0D1FD'
@@ -84,6 +84,13 @@ function Assert-CygwinSignature {
 
 function Add-ProxyHooksToReinstallSh {
     param([Parameter(Mandatory)][string]$Content)
+
+    $OldAlpineCarryHook = '        for dir in /configs /custom_drivers; do'
+    $NewAlpineCarryHook = '        for dir in /configs /custom_drivers /proxy-bootstrap; do'
+    if (-not $Content.Contains($OldAlpineCarryHook)) {
+        throw 'Unable to find the Alpine switch_root directory handoff patch anchor.'
+    }
+    $Content = $Content.Replace($OldAlpineCarryHook, $NewAlpineCarryHook)
 
     $OldCommandLine = '        nextos_cmdline+=" url=$nextos_ks"'
     $NewCommandLine = @(

@@ -5,14 +5,14 @@
 - 主机名 / 管理用户：`agentbox` / `agent`
 - 远程入口：Tailscale + 标准 OpenSSH
 - 外网出口：双 Mihomo + Clash Verge Rev 完整订阅增强链
-- 时区：`America/Los_Angeles`（自动切换 PST/PDT）
+- 时区：`America/Los_Angeles`（自动切换 PST/PDT）；`systemd-timesyncd` 自动校时，系统时钟和 RTC 使用 UTC。
 - 系统语言 / 键盘：仅 `en_US.UTF-8` / US
 
 ## 1. 目标
 
 将当前 Windows 云电脑改造成无桌面 Linux Agent 主机，用于代码修改、测试、构建、调研和文档等任务。日常从实体电脑通过 `ssh agent@agentbox` 接管，不再依赖 Windows 桌面。
 
-第一阶段建设基础系统、外网代理、Tailscale、SSH 和 Docker 运行底座，但不安装 OpenClaw、Hermes、CtYun 保活程序或 Codex。稳定 24–48 小时后，再把 Agent 和项目工作负载以容器形式部署。
+第一阶段建设基础系统、外网代理、Tailscale、SSH、Docker 运行底座和防休眠策略，并单独审计天翼平台保活；不安装 OpenClaw、Hermes 或 Codex。稳定 24–48 小时后，再把 Agent 和项目工作负载以容器形式部署。
 
 ## 2. 当前环境结论
 
@@ -39,7 +39,7 @@
 节点和规则配置由 `Prepare-ProxyBootstrap.ps1` 从当前活动 Clash 配置在本机内生成：
 
 - 通过 Mihomo 本地命名管道解析当前 `MATCH → 策略组 → 实际节点`，不输出节点名、地址或凭据。
-- 生成 `127.0.0.1:7897` 引导配置：保留内联节点，移除订阅、规则、外部控制端和 TUN，将流量强制经过当前已验证节点。
+- 生成 `127.0.0.1:7897` 引导配置：保留内联节点，移除订阅、完整规则、外部控制端和 TUN；仅保留当前选中节点在源配置中已有的精确主机 `DIRECT` 规则，其余流量经过当前已验证节点。节点和订阅服务在同一主机时，这条规则可避免请求绕回代理节点而超时。
 - 同时复制当前远程 profile、全局及 profile 专属的 Merge/JavaScript、Rules/Proxies/Groups、规则缓存和选择缓存；订阅 URL 仍只存在私密包中。
 - 使用与 Clash Verge Rev 2.5.2 相同的增强顺序离线编译 `127.0.0.1:7898` 生产配置，并与 Windows 当前渲染配置的 `proxies`、`proxy-providers`、`proxy-groups`、`rule-providers`、`rules` 五个关键区块逐项比较。不一致即停止。
 - 私密包位于被 `.gitignore` 忽略的 `.agentbox-staging` 目录，Windows ACL 只允许当前管理员、Administrators 和 SYSTEM。
@@ -61,6 +61,7 @@
 - UFW 默认拒绝入站，允许出站，只放行 `tailscale0` 的 TCP 22。
 - 4 GB swapfile，`vm.swappiness=10`，不使用需人工解锁的全盘加密。
 - 安全更新自动安装，但不自动重启。
+- 禁止 suspend、hibernate、hybrid-sleep 和 suspend-then-hibernate；logind 不因空闲、虚拟电源/重启/睡眠键或合盖自动停机，也不因空闲退出会话。管理员明确执行的关机、重启仍然有效。
 - 预装 Docker 官方仓库的 Docker CE、containerd、Buildx 和 Compose 插件；daemon 拉取镜像固定经 7897，启用 `live-restore`、`local` 日志驱动和默认 `no-new-privileges`。
 - Docker 创建专用 `agentbox-egress` 网络。需要外网的业务容器同时挂载该网络并载入 `/srv/agentbox/proxy.env`，经只对该网络开放的转发器使用 7898 完整规则。
 - 预装 `ghcr.io/browserless/chrome:v2.56.2` 的真实 Headless Chrome（amd64，镜像 digest 固定），仅加入内部 `agentbox-browser` 与出口 `agentbox-egress` 网络，不发布宿主机端口；使用随机 256-bit token、2 个并发会话、10 个排队请求、5 分钟会话上限、2 GB `/dev/shm` 和 4 GB 内存上限。
@@ -93,7 +94,8 @@
 - Docker 发布端口会绕过 UFW 的常规 INPUT 规则；本方案同时使用默认 loopback 绑定和 Docker 官方预留的 `DOCKER-USER` 链。Compose 文件不得使用 `network_mode: host`，不得无审查地显式绑定 `0.0.0.0`。
 - `live-restore` 只能降低 Docker daemon 短暂重启或补丁更新的中断，并不代替 Compose 的 `restart: unless-stopped`，也不能跨宿主机停机维持服务。
 - 客户机内的 systemd 可恢复进程，但无法在云平台关闭整台虚拟机时自我唤醒。
-- [CtYun 保活工具](https://github.com/leleji/CtYun) 待基础系统稳定后单独审计。本机部署只能防止运行期间休眠，停机恢复仍需天翼平台或第二台外部常在设备。
+- 天翼客户端的“自动退出登录”和“自动锁屏”设为“永不”；这两项不能证明平台不会关闭虚拟机。平台断连后的停机行为必须按下述 2 小时、26 小时观察确认。
+- [CtYun 保活工具](https://github.com/leleji/CtYun) 必须在部署前单独审计并限定为目标云电脑。审阅版本 `975f0cb85780e135e620d851d943a7ab65e5021e` 默认连接账号下所有桌面，并调用第三方 OCR 处理登录验证码；不能直接按默认配置部署。验证码由用户在登录流程中手动处理，账号、密码及会话凭据仅保存在私密运行目录。仓库提供经限定的 [CtYun 部署模块](../../script/agentbox/ctyun/README.md)，实现单桌面匹配、人工登录、私密会话复用、每分钟连接更新及完整协议握手健康检查。必须完成真实登录、至少三个连续握手周期与容器重启验收后才算平台保活部署完成。本机部署只能在虚拟机运行时保活，停机恢复仍需天翼平台或第二台外部常在设备。
 
 ## 7. 验收标准
 
@@ -106,6 +108,7 @@
 - 强制执行一次 `sudo update-agentbox-proxy --force` 能成功刷新；故意提供无效候选时不会替换最后可用的生产配置。
 - 临时 Tailscale auth key 已撤销，Git 仓库不包含任何节点或账号凭据。
 - 安全更新自动安装，但不会无人值守自动重启。
+- 重启后五个 sleep/suspend/hibernate 相关 target 保持 `masked`，logind 的空闲和电源键动作均为 `ignore`，空闲退出超时为无限。
 - 断开天翼客户端 2 小时和 26 小时的平台行为已记录。
 
 ## 8. 参考
