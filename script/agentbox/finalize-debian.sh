@@ -43,8 +43,11 @@ if ! docker network inspect agentbox-browser >/dev/null 2>&1 || \
   exit 1
 fi
 
-cat >/etc/ssh/sshd_config.d/90-agentbox.conf <<'EOF'
+# OpenSSH uses the first value it reads. The installer leaves a
+# 01-permitrootlogin.conf file, so the managed policy must load before it.
+cat >/etc/ssh/sshd_config.d/00-agentbox.conf <<'EOF'
 PermitRootLogin no
+AuthenticationMethods publickey
 PasswordAuthentication no
 KbdInteractiveAuthentication no
 PubkeyAuthentication yes
@@ -55,7 +58,23 @@ ClientAliveInterval 120
 ClientAliveCountMax 3
 EOF
 
+# Remove the managed file used by older Agentbox bootstrap versions.
+rm -f /etc/ssh/sshd_config.d/90-agentbox.conf
 sshd -t
+effective_ssh_config=$(sshd -T)
+for setting in \
+  'permitrootlogin no' \
+  'authenticationmethods publickey' \
+  'passwordauthentication no' \
+  'kbdinteractiveauthentication no' \
+  'pubkeyauthentication yes' \
+  'allowusers agent'; do
+  if ! grep -Fqx "$setting" <<<"$effective_ssh_config"; then
+    echo "The effective SSH configuration does not enforce: $setting" >&2
+    exit 1
+  fi
+done
+unset effective_ssh_config setting
 systemctl reload ssh
 
 echo

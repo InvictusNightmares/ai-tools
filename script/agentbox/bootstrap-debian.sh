@@ -65,9 +65,32 @@ apt-get install -y \
   openssh-server \
   socat \
   sudo \
+  systemd-timesyncd \
   ufw \
   unattended-upgrades \
-  util-linux
+  util-linux \
+  util-linux-extra
+
+install -d -m 0755 /etc/systemd/timesyncd.conf.d
+cat >/etc/systemd/timesyncd.conf.d/90-agentbox.conf <<'EOF'
+[Time]
+NTP=1.debian.pool.ntp.org 0.debian.pool.ntp.org 2.debian.pool.ntp.org 3.debian.pool.ntp.org
+ConnectionRetrySec=10s
+EOF
+systemctl enable systemd-timesyncd.service
+systemctl restart systemd-timesyncd.service
+systemctl restart systemd-timedated.service
+for _ in {1..60}; do
+  [[ $(timedatectl show -p NTPSynchronized --value) == yes ]] && break
+  sleep 2
+done
+if [[ $(timedatectl show -p NTPSynchronized --value) != yes ]]; then
+  echo 'NTP synchronization failed; check the native UDP 123 path before continuing.' >&2
+  exit 1
+fi
+# Windows may have left its local wall time in the virtual RTC. Store UTC so
+# the next Debian boot starts from the corrected clock; keep the LA timezone.
+hwclock --systohc --utc
 
 english_only_incompatible_packages=(
   locales-all
@@ -111,6 +134,34 @@ update-locale --reset LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US:en
 export LC_ALL=en_US.UTF-8
+
+# Keep the server running when idle or when the virtual power/sleep keys fire.
+# Cloud-side forced shutdown still requires a platform/external recovery path.
+install -d -m 0755 /etc/systemd/sleep.conf.d /etc/systemd/logind.conf.d
+cat >/etc/systemd/sleep.conf.d/90-agentbox.conf <<'EOF'
+[Sleep]
+AllowSuspend=no
+AllowHibernation=no
+AllowHybridSleep=no
+AllowSuspendThenHibernate=no
+EOF
+cat >/etc/systemd/logind.conf.d/90-agentbox.conf <<'EOF'
+[Login]
+IdleAction=ignore
+StopIdleSessionSec=infinity
+HandlePowerKey=ignore
+HandlePowerKeyLongPress=ignore
+HandleRebootKey=ignore
+HandleRebootKeyLongPress=ignore
+HandleSuspendKey=ignore
+HandleSuspendKeyLongPress=ignore
+HandleHibernateKey=ignore
+HandleHibernateKeyLongPress=ignore
+HandleLidSwitch=ignore
+HandleLidSwitchExternalPower=ignore
+HandleLidSwitchDocked=ignore
+EOF
+systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
 
 if [[ $(timedatectl show --property=Timezone --value) != America/Los_Angeles ]]; then
   echo "Failed to set the system timezone to America/Los_Angeles." >&2

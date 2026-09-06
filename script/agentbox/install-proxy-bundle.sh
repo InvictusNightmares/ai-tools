@@ -109,6 +109,8 @@ find "$target/etc/agentbox-profile" -type f -exec chmod 0600 {} \;
 chmod 0750 "$target/var/lib/mihomo-bootstrap" "$target/var/lib/mihomo"
 chmod 0700 "$target/var/lib/agentbox-profile"
 chroot "$target" chown root:mihomo \
+    /etc/mihomo-bootstrap \
+    /etc/mihomo \
     /etc/mihomo-bootstrap/config.yaml \
     /etc/mihomo/config.yaml \
     /etc/mihomo/config.yaml.previous

@@ -115,6 +115,9 @@ if [[ $candidate_ok -ne 1 ]]; then
   echo 'candidate proxy did not pass the GitHub HTTPS health check; keeping the current production config' >&2
   exit 1
 fi
+if [[ -e $bundle/agentbox-policy.yaml ]]; then
+  python3 /usr/local/libexec/agentbox-check-dns.py 127.0.0.1 1053
+fi
 kill "$candidate_pid" 2>/dev/null || true
 wait "$candidate_pid" 2>/dev/null || true
 candidate_pid=''
@@ -141,6 +144,10 @@ for _ in {1..20}; do
   sleep 1
 done
 
+if [[ $production_ok -eq 1 && -e $bundle/agentbox-policy.yaml ]]; then
+  python3 /usr/local/libexec/agentbox-check-dns.py 127.0.0.1 53 || production_ok=0
+fi
+
 if [[ $production_ok -ne 1 ]]; then
   echo 'production health check failed; rolling back to the last known-good config' >&2
   if [[ -s $previous_config ]]; then
@@ -155,4 +162,7 @@ node "$compiler" --bundle "$bundle" --replace-current-source --source "$work/sub
 install -d -o root -g root -m 0700 "$state_dir"
 touch "$last_success"
 chmod 0600 "$last_success"
+if [[ -e $bundle/agentbox-policy.yaml ]]; then
+  rm -f -- "$previous_config"
+fi
 echo 'agentbox production proxy profile updated successfully'
