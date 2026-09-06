@@ -65,9 +65,32 @@ apt-get install -y \
   openssh-server \
   socat \
   sudo \
+  systemd-timesyncd \
   ufw \
   unattended-upgrades \
-  util-linux
+  util-linux \
+  util-linux-extra
+
+install -d -m 0755 /etc/systemd/timesyncd.conf.d
+cat >/etc/systemd/timesyncd.conf.d/90-agentbox.conf <<'EOF'
+[Time]
+NTP=1.debian.pool.ntp.org 0.debian.pool.ntp.org 2.debian.pool.ntp.org 3.debian.pool.ntp.org
+ConnectionRetrySec=10s
+EOF
+systemctl enable systemd-timesyncd.service
+systemctl restart systemd-timesyncd.service
+systemctl restart systemd-timedated.service
+for _ in {1..60}; do
+  [[ $(timedatectl show -p NTPSynchronized --value) == yes ]] && break
+  sleep 2
+done
+if [[ $(timedatectl show -p NTPSynchronized --value) != yes ]]; then
+  echo 'NTP synchronization failed; check the native UDP 123 path before continuing.' >&2
+  exit 1
+fi
+# Windows may have left its local wall time in the virtual RTC. Store UTC so
+# the next Debian boot starts from the corrected clock; keep the LA timezone.
+hwclock --systohc --utc
 
 english_only_incompatible_packages=(
   locales-all
