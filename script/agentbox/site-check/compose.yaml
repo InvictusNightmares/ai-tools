@@ -1,10 +1,11 @@
 name: agentbox-site-check
 services:
   site-check:
-    image: ghcr.io/browserless/chrome:v2.56.2@sha256:1be15d1e3bad53e89d07ef529a52615739f77b7cd997a49c0ec97aaa78d0fcaf
+    image: agentbox-chrome-us:v2.56.2-1@sha256:c9b1dd7e9652ced2b30274649883ee6ae34ba3382306b56995b8a73ce227a874
+    pull_policy: never
     entrypoint: [node, /app/check.mjs]
     command: [run]
-    user: '1000:1000'
+    user: '0:0'
     init: true
     read_only: true
     cap_drop: [ALL]

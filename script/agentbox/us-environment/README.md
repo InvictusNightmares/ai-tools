@@ -21,7 +21,7 @@ applies a local policy after the imported Clash Verge enhancement chain.
 - Chrome uses the managed `WebRtcIPHandling=disable_non_proxied_udp` policy,
   so WebRTC does not independently expose an IP through non-proxied UDP.
 - The rescue proxy on 7897 has its own encrypted DNS and remains independent of
-  the production proxy on 7898. SSH remains key-only, with root SSH disabled.
+  the production proxy on 7898. SSH remains key-only for the sole root administrator; password and keyboard-interactive authentication stay disabled.
 - The derived, pinned Chrome image removes the actual `fonts-noto-cjk` and
   `fonts-wqy-zenhei` packages and keeps English/Unicode fallback fonts. There are
   no JavaScript overrides of fonts, timezone, user agent, or platform.

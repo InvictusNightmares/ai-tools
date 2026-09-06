@@ -7,7 +7,7 @@ FROM mcr.microsoft.com/dotnet/runtime:8.0-bookworm-slim@sha256:d0eda6432ed68938b
 WORKDIR /app
 COPY --from=build /out/ ./
 COPY LICENSE.upstream ./LICENSE.upstream
-USER 1654:1000
+USER 1654:1654
 ENV DOTNET_EnableDiagnostics=0 DOTNET_CLI_TELEMETRY_OPTOUT=1
 ENTRYPOINT ["dotnet", "/app/CtYun.dll"]
 CMD ["run"]

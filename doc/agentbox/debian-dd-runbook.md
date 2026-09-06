@@ -7,7 +7,7 @@
 | 项目 | 固定值 |
 | --- | --- |
 | Debian | 13 / Trixie |
-| 主机 / 用户 | `agentbox` / `agent` |
+| 主机 / 用户 | `agentbox` / `root` |
 | 时区 | `America/Los_Angeles`（自动切换 PST/PDT） |
 | 系统语言 / 键盘 | 仅 `en_US.UTF-8` / US |
 | 容器运行时 | Docker CE + containerd + Buildx + Compose（Docker 官方 Debian 仓库） |
@@ -46,7 +46,7 @@
 - [ ] 已生成一次性、不可复用、非 Ephemeral、带 `tag:agent-server` 的 auth key；仅临时保存在密码管理器。
 - [ ] 实体电脑已生成专用 Ed25519 密钥，私钥未复制到云电脑或手机。
 - [ ] 天翼外部客户端可打开控制台，且可在不进入 Windows 时重装官方 Windows。
-- [ ] 密码管理器已保存随机临时 root 密码和独立 `agent` 本地密码。
+- [ ] 密码管理器已保存随机临时 root 密码。
 - [ ] 已确认除 GitHub 仓库与手册外不保留本机状态，接受 C:/D:/Windows RE 全部清除。
 - [ ] 已理解 7897 是 Tailscale 和订阅刷新的静态救生艇；生产规则或订阅失败不会切断它，但保底节点本身失效仍会导致远程失联。
 - [ ] 已确认新 Debian 使用 `America/Los_Angeles`、`en_US.UTF-8` 和 US 键盘，不安装中文 locale、字体、输入法或语言任务包。
@@ -234,19 +234,17 @@ systemctl status mihomo-bootstrap mihomo --no-pager
 
 两个配置目录必须为 `root:mihomo`、0750，配置文件为 `root:mihomo`、0640。若旧版安装器留下 `root:root` 的 0750 目录，服务账号无法遍历目录，即使配置文件属组正确也会启动失败；先修正两个目录的属组，再重启并验证代理。诊断时不要把包含节点信息的完整日志或配置粘贴到聊天。
 
-Mihomo 正常后，先通过安装器写入的 APT 代理安装 HTTPS 检查工具，再下载固定版初始化脚本：
+Mihomo 正常后，将当前已审阅仓库中的 [bootstrap-debian.sh](../../script/agentbox/bootstrap-debian.sh) 保存到云电脑 `/root/bootstrap-debian.sh`，核对本机与云端 SHA256 一致。全新安装尚无 SSH 时通过天翼管理员终端落盘；已有 root SSH 时可从实体电脑用 `scp script/agentbox/bootstrap-debian.sh root@agentbox:/root/` 上传。旧版固定下载链接会创建 agent，不再用于本方案。然后通过安装器写入的 APT 代理检查 HTTPS 并运行：
 
 ```sh
 apt-get update
 apt-get install -y ca-certificates curl
 curl -I https://deb.debian.org/debian/
-curl -fL -o /root/bootstrap-debian.sh https://raw.githubusercontent.com/InvictusNightmares/ai-tools/aa32363b774c68a770d86350e68aa8c8d46564aa/script/agentbox/bootstrap-debian.sh &&
-printf '%s\n' '4e2d24f5633577ec8addf40be485db73533c6bd7040893bf6dfc6edacc7e825b  /root/bootstrap-debian.sh' | sha256sum -c - &&
 chmod 700 /root/bootstrap-debian.sh &&
 /root/bootstrap-debian.sh
 ```
 
-脚本先经 7897 安装 Node 等基础依赖，再验证 7898 的完整规则出口。只有 7898 能通过 GitHub HTTPS 检查时，才把 APT/交互 shell 切到 7898 并启用 profile 更新 timer；`tailscaled` 始终固定使用 7897。随后脚本交互请求实体电脑 SSH **公钥**、`agent` 本地密码，以及一次性不可复用的 `tag:agent-server` Tailscale auth key。它不会在这一步锁定 root。
+脚本先经 7897 安装 Node 等基础依赖，再验证 7898 的完整规则出口。只有 7898 能通过 GitHub HTTPS 检查时，才把 APT/交互 shell 切到 7898 并启用 profile 更新 timer；`tailscaled` 始终固定使用 7897。随后脚本交互请求实体电脑 SSH **公钥**，以及一次性不可复用的 `tag:agent-server` Tailscale auth key。它不会在这一步锁定 root。
 
 脚本同时把主机时区固定为 `America/Los_Angeles`（由系统时区数据库自动处理 PST/PDT），只生成并启用 `en_US.UTF-8`，清除已知中文 locale 全量包、中文桌面任务包、字体和输入法。Debian 软件包自带但未启用的翻译目录不做破坏性删改；系统选择、会话环境和控制台输出保持英文。
 
@@ -254,7 +252,7 @@ chmod 700 /root/bootstrap-debian.sh &&
 
 脚本还会屏蔽 `sleep.target`、`suspend.target`、`hibernate.target`、`hybrid-sleep.target` 和 `suspend-then-hibernate.target`，并写入 `/etc/systemd/{sleep,logind}.conf.d/90-agentbox.conf`：禁止所有睡眠/休眠模式，空闲、虚拟电源/重启/睡眠键及合盖均不触发自动停机，空闲会话不自动退出。屏蔽立即生效，logind 配置在计划内的重启验收时加载；不要屏蔽 `shutdown.target` 或 `reboot.target`，管理员仍需能主动维护机器。
 
-脚本还会从 Docker 官方 Debian 13 仓库安装 Docker CE、containerd、Buildx 和 Compose。Docker daemon 拉镜像固定经 7897；未来业务容器通过专用 `agentbox-egress` 网络和 `/srv/agentbox/proxy.env` 使用 7898。默认端口发布只绑定 loopback，`DOCKER-USER` 额外拒绝非 Tailscale 入站。`agent` 不加入 `docker` 组，管理容器统一使用 `sudo docker ...`。
+脚本还会从 Docker 官方 Debian 13 仓库安装 Docker CE、containerd、Buildx 和 Compose。Docker daemon 拉镜像固定经 7897；未来业务容器通过专用 `agentbox-egress` 网络和 `/srv/agentbox/proxy.env` 使用 7898。默认端口发布只绑定 loopback，`DOCKER-USER` 额外拒绝非 Tailscale 入站。管理员使用 `root` 执行 `docker ...`；不再创建 `agent` 账号。
 
 宿主机与容器的边界固定为：OpenSSH、Tailscale、UFW/iptables、双 Mihomo、Docker/containerd、时间/磁盘/安全更新留在 systemd；Agent worker、数据库、队列、浏览器自动化、Dashboard 和项目服务放进 Compose。接管层依赖项不得容器化，否则 Docker 故障会同时切断修复入口。
 
@@ -280,7 +278,7 @@ networks:
 
 不要使用 `network_mode: host`，不要挂载 `/var/run/docker.sock`，不要使用 `privileged: true`，不要把密钥写进镜像或 Compose。默认只允许本机访问发布端口；需要从实体电脑访问的新端口，必须同时显式绑定 Tailscale 地址并在 Tailnet grant 中逐端口授权。
 
-初始化脚本会直接启动 `/srv/agentbox/headless-chrome/compose.yaml`：Browserless v2.56.2 的实际 Google Chrome 镜像被 tag 和 digest 双重固定，仅连接内部 `agentbox-browser` 和出口 `agentbox-egress`，不设置 `ports`。随机 256-bit token 分别以 root-only Compose 环境和 `root:agent` 0640 客户端环境保存，任何正常输出都不会显示 token。Chrome 限制为 2 个并发会话、10 个排队请求、5 分钟超时、2 GB `/dev/shm`、4 GB 内存和 4 CPU。
+初始化脚本会直接启动 `/srv/agentbox/headless-chrome/compose.yaml`：Browserless v2.56.2 的实际 Google Chrome 镜像被 tag 和 digest 双重固定，仅连接内部 `agentbox-browser` 和出口 `agentbox-egress`，不设置 `ports`。随机 256-bit token 分别以 root-only Compose 环境和 `root:root` 0640 客户端环境保存，任何正常输出都不会显示 token。Chrome 限制为 2 个并发会话、10 个排队请求、5 分钟超时、2 GB `/dev/shm`、4 GB 内存和 4 CPU。
 
 未来 Agent 容器需同时加入 `agentbox-browser` 网络并安全加载 `/srv/agentbox/headless-chrome/client.env`。Browserless v2 的 Chrome WebSocket 基址是 `ws://headless-chrome:3000/chrome`；由于 Browserless 要求自带代理按会话传入，客户端必须把 `BROWSERLESS_PROXY_SERVER` 和 `BROWSERLESS_LANGUAGE` 分别编码为 `--proxy-server`、`--lang` launch 参数，不能依赖 Chrome 自动读取 `HTTP_PROXY`。不得把 token 放进 URL 日志、Git 或聊天。
 
@@ -288,32 +286,38 @@ networks:
 
 ## 7. 检查点 D：SSH 验证后加固
 
+已按旧方案部署的主机需先迁移：使用 [enable-root-ssh.sh](../../script/agentbox/enable-root-ssh.sh) 和实体电脑现有 Ed25519 公钥，由当前管理员执行 `sudo bash enable-root-ssh.sh admin.pub`。它暂时保留 root、agent 两个公钥入口；必须通过一条新的 root SSH 连接验证 UID 为 0，随后才把 `AllowUsers` 收窄为 `root`，迁移旧账号的文件归属和任务，再删除 agent 账号及组。不要在新入口验证前删除旧账号。此迁移不会开启 SSH 密码认证，也不需要重新打开天翼桌面。
+
 实体电脑第一个终端：
 
 ```powershell
-ssh -i "$env:USERPROFILE\.ssh\agentbox_ed25519" agent@agentbox
-sudo -v
+ssh -i "$env:USERPROFILE\.ssh\agentbox_ed25519" root@agentbox
+id -u  # 应输出 0
 ```
 
-在该 SSH 会话中：
+先从实体电脑上传当前已审阅版本：
 
 ```sh
-curl -fL -o /tmp/finalize-debian.sh https://raw.githubusercontent.com/InvictusNightmares/ai-tools/f8ce10a75e26fc65a2a80b73db7e6e1c02cb09ff/script/agentbox/finalize-debian.sh &&
-printf '%s\n' '9234d8ab3948df698c5b8094905e3496d6c20e0bd84f919884790a38b7d3201c  /tmp/finalize-debian.sh' | sha256sum -c - &&
-chmod 700 /tmp/finalize-debian.sh &&
-sudo /tmp/finalize-debian.sh
+scp script/agentbox/finalize-debian.sh root@agentbox:/root/finalize-debian.sh
 ```
 
-脚本重载 SSH 后会暂停。保留第一个会话，在第二个终端重新验证 SSH 和 `sudo`。只有成功后才返回第一个会话输入 `LOCK ROOT`。
+核对本机和云端 SHA256 一致后，在该 root SSH 会话中：
 
-SSH 永久基线是公钥认证：`agent` 的本地密码只用于控制台和 `sudo`，不得为方便维护重新开启 SSH 密码认证。策略写入 `00-agentbox.conf`，优先于安装器遗留的 `01-permitrootlogin.conf`；OpenSSH 对这些选项采用首个读到的值，不能把较晚加载的 `90-*.conf` 当成覆盖。脚本必须在重载和锁 root 前检查 `sshd -T` 的实际结果，确认 `PermitRootLogin no`、`AuthenticationMethods publickey`、`PasswordAuthentication no`、`KbdInteractiveAuthentication no`、`PubkeyAuthentication yes` 和 `AllowUsers agent`。
+```sh
+chmod 700 /root/finalize-debian.sh &&
+/root/finalize-debian.sh
+```
+
+脚本重载 SSH 后会暂停。保留第一个会话，在第二个终端重新验证 root 公钥 SSH。只有成功后才返回第一个会话输入 `LOCK ROOT PASSWORD`。
+
+SSH 永久基线是 root 公钥认证：本机为单人使用，管理员直接使用 `root`，不保留 `agent` 账号。root 密码锁定不等于禁用公钥登录，不得重新开启 SSH 密码或交互认证。策略写入 `00-agentbox.conf`，优先于安装器遗留的 `01-permitrootlogin.conf`；OpenSSH 对这些选项采用首个读到的值，不能把较晚加载的 `90-*.conf` 当成覆盖。脚本必须在重载和锁 root 密码前检查 `sshd -T` 的实际结果，确认 `PermitRootLogin prohibit-password`（`sshd -T` 显示 `without-password`）、`AuthenticationMethods publickey`、`PasswordAuthentication no`、`KbdInteractiveAuthentication no`、`PubkeyAuthentication yes` 和 `AllowUsers root`。
 
 然后在 Tailscale 管理台确认一次性 auth key 已自动撤销（若仍显示有效则手动撤销），删除密码管理器中的临时副本，并确认 `agentbox` 由 `tag:agent-server` 管理。
 
 ## 8. 重启验收
 
 ```sh
-sudo reboot
+reboot
 ```
 
 重新 SSH 后执行：
@@ -330,43 +334,44 @@ systemctl is-enabled systemd-timesyncd mihomo-bootstrap mihomo agentbox-proxy-up
 systemctl is-active systemd-timesyncd mihomo-bootstrap mihomo ssh tailscaled docker containerd agentbox-container-proxy
 curl --proxy http://127.0.0.1:7897 -I https://github.com/
 curl --proxy http://127.0.0.1:7898 -I https://github.com/
-sudo docker version
-sudo docker compose version
-sudo docker info --format '{{.LoggingDriver}}'
-sudo docker network inspect agentbox-egress
-sudo docker network inspect agentbox-browser
-sudo docker inspect --format '{{.State.Health.Status}}' agentbox-headless-chrome
-sudo docker compose --env-file /srv/agentbox/headless-chrome/.env --file /srv/agentbox/headless-chrome/compose.yaml ps
-sudo iptables -S DOCKER-USER
-id -nG agent
+docker version
+docker compose version
+docker info --format '{{.LoggingDriver}}'
+docker network inspect agentbox-egress
+docker network inspect agentbox-browser
+docker inspect --format '{{.State.Health.Status}}' agentbox-headless-chrome
+docker compose --env-file /srv/agentbox/headless-chrome/.env --file /srv/agentbox/headless-chrome/compose.yaml ps
+iptables -S DOCKER-USER
+id -u
+getent passwd agent  # 应无输出
 systemctl list-timers agentbox-proxy-update.timer --no-pager
 tailscale status
 tailscale netcheck
-sudo ufw status verbose
-sudo sshd -T | grep -E 'permitrootlogin|authenticationmethods|passwordauthentication|kbdinteractiveauthentication|pubkeyauthentication|allowusers'
+ufw status verbose
+sshd -T | grep -E 'permitrootlogin|authenticationmethods|passwordauthentication|kbdinteractiveauthentication|pubkeyauthentication|allowusers'
 systemctl is-enabled sleep.target suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
 busctl introspect org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager | grep -E 'IdleAction|StopIdleSessionUSec|Handle(Power|Reboot|Suspend|Hibernate|Lid)'
 ss -lntp
 journalctl -b -p warning --no-pager
 ```
 
-验收要求：`timedatectl` 显示 `America/Los_Angeles`、`System clock synchronized: yes`、`NTP service: active` 和 `RTC in local TZ: no`，UTC 与可信时间源一致；`locale` 的 `LANG`/`LANGUAGE`/`LC_ALL` 分别为 `en_US.UTF-8`、`en_US:en`、`en_US.UTF-8`，`locale -a` 含 `en_US.utf8` 且不含 `zh_*`；两个 Mihomo/Tailscale/SSH/Docker/容器代理无人登录即自启；Docker 日志驱动为 `local`，Compose、`agentbox-egress` 和内部 `agentbox-browser` 可用，Headless Chrome 为 `healthy` 且没有宿主机端口映射，`agent` 不属于 `docker` 组；7897/7898 的宿主机实例只监听 loopback，容器代理只监听专用 bridge，公网 TCP 22 和容器发布端口不可访问；SSH 只接受 `agent` 公钥，4 GB swap 有效，root 已锁定，自动安全更新不触发自动重启。
+验收要求：`timedatectl` 显示 `America/Los_Angeles`、`System clock synchronized: yes`、`NTP service: active` 和 `RTC in local TZ: no`，UTC 与可信时间源一致；`locale` 的 `LANG`/`LANGUAGE`/`LC_ALL` 分别为 `en_US.UTF-8`、`en_US:en`、`en_US.UTF-8`，`locale -a` 含 `en_US.utf8` 且不含 `zh_*`；两个 Mihomo/Tailscale/SSH/Docker/容器代理无人登录即自启；Docker 日志驱动为 `local`，Compose、`agentbox-egress` 和内部 `agentbox-browser` 可用，Headless Chrome 为 `healthy` 且没有宿主机端口映射，宿主机不存在 `agent` 账号；7897/7898 的宿主机实例只监听 loopback，容器代理只监听专用 bridge，公网 TCP 22 和容器发布端口不可访问；SSH 只接受 root 公钥，4 GB swap 有效，root 密码已锁定，自动安全更新不触发自动重启。
 
 如果 `tailscale status` 显示 `relay` 或 `tailscale netcheck` 显示 UDP 不可用，但实体电脑的 SSH 可持续连接，这符合“控制面和 DERP 经 Mihomo、UDP 直连不可用”的预期降级。不要为追求 `direct` 而开放公网 SSH；只有在天翼网络本身允许时，才考虑单独放行 Tailscale 的 UDP 41641。
 
 完成重启验收后手动做一次订阅刷新：
 
 ```sh
-sudo update-agentbox-proxy --force
-sudo systemctl status mihomo-bootstrap mihomo agentbox-proxy-update.service --no-pager
-sudo journalctl -u agentbox-proxy-update.service -n 50 --no-pager
+update-agentbox-proxy --force
+systemctl status mihomo-bootstrap mihomo agentbox-proxy-update.service --no-pager
+journalctl -u agentbox-proxy-update.service -n 50 --no-pager
 ```
 
 更新器不会把订阅 URL、节点名或规则写入正常日志。它通过 7897 下载，用临时 17898 实例验证，再原子替换 7898；失败保持原配置。上一版保存在 `/etc/mihomo/config.yaml.previous`。如必须人工回滚：
 
 ```sh
-sudo install -o root -g mihomo -m 0640 /etc/mihomo/config.yaml.previous /etc/mihomo/config.yaml
-sudo systemctl restart mihomo
+install -o root -g mihomo -m 0640 /etc/mihomo/config.yaml.previous /etc/mihomo/config.yaml
+systemctl restart mihomo
 curl --proxy http://127.0.0.1:7898 -I https://github.com/
 ```
 

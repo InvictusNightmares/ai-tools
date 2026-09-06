@@ -307,19 +307,14 @@ After=mihomo-bootstrap.service
 ExecStartPost=/usr/local/sbin/agentbox-docker-firewall
 EOF
 
-if ! id agent >/dev/null 2>&1; then
-  useradd --create-home --shell /bin/bash agent
+install -d -m 0750 -o root -g root /srv/agentbox
+install -d -m 0700 -o root -g root /root/.ssh
+touch /root/.ssh/authorized_keys
+if ! grep -Fxq "$ssh_public_key" /root/.ssh/authorized_keys; then
+  printf '\n%s\n' "$ssh_public_key" >>/root/.ssh/authorized_keys
 fi
-usermod -aG sudo agent
-install -d -m 0750 -o root -g agent /srv/agentbox
-
-echo "Set the local password for agent. It is used for console login and sudo, not SSH."
-passwd agent
-
-install -d -m 0700 -o agent -g agent /home/agent/.ssh
-printf '%s\n' "$ssh_public_key" >/home/agent/.ssh/authorized_keys
-chown agent:agent /home/agent/.ssh/authorized_keys
-chmod 0600 /home/agent/.ssh/authorized_keys
+chown root:root /root/.ssh/authorized_keys
+chmod 0600 /root/.ssh/authorized_keys
 unset ssh_public_key
 
 if ! swapon --show=NAME --noheadings | grep -qx '/swapfile'; then
@@ -475,7 +470,7 @@ http_proxy=http://$container_proxy_gateway:7898
 https_proxy=http://$container_proxy_gateway:7898
 no_proxy=localhost,127.0.0.1,::1,.ts.net,$container_proxy_subnet
 EOF
-chown root:agent /srv/agentbox/proxy.env
+chown root:root /srv/agentbox/proxy.env
 chmod 0640 /srv/agentbox/proxy.env
 
 if ! ufw status | grep -Fq '7898/tcp on ab-egress0'; then
@@ -489,13 +484,13 @@ systemctl enable --now agentbox-container-proxy.service
 if ! docker network inspect agentbox-browser >/dev/null 2>&1; then
   docker network create --driver bridge --internal agentbox-browser >/dev/null
 fi
-install -d -m 0750 -o root -g agent \
+install -d -m 0750 -o root -g root \
   /srv/agentbox/headless-chrome \
   /srv/agentbox/secrets
 if [[ ! -s /srv/agentbox/secrets/browserless-token ]]; then
   openssl rand -hex 32 >/srv/agentbox/secrets/browserless-token
 fi
-chown root:agent /srv/agentbox/secrets/browserless-token
+chown root:root /srv/agentbox/secrets/browserless-token
 chmod 0640 /srv/agentbox/secrets/browserless-token
 browserless_token=$(tr -d '\r\n' </srv/agentbox/secrets/browserless-token)
 if [[ ! $browserless_token =~ ^[a-f0-9]{64}$ ]]; then
@@ -513,7 +508,7 @@ BROWSERLESS_TOKEN=$browserless_token
 BROWSERLESS_PROXY_SERVER=http://$container_proxy_gateway:7898
 BROWSERLESS_LANGUAGE=en-US
 EOF
-chown root:agent /srv/agentbox/headless-chrome/client.env
+chown root:root /srv/agentbox/headless-chrome/client.env
 chmod 0640 /srv/agentbox/headless-chrome/client.env
 unset browserless_token
 
@@ -565,7 +560,7 @@ networks:
   agentbox-egress:
     external: true
 EOF
-chown root:agent \
+chown root:root \
   /srv/agentbox/headless-chrome/client.env \
   /srv/agentbox/headless-chrome/compose.yaml
 chmod 0640 /srv/agentbox/headless-chrome/client.env
@@ -583,10 +578,7 @@ if [[ $(docker inspect --format '{{.State.Health.Status}}' agentbox-headless-chr
   echo "The Headless Chrome service did not become healthy." >&2
   exit 1
 fi
-if id -nG agent | tr ' ' '\n' | grep -qx docker; then
-  echo "The agent user must not belong to the root-equivalent docker group." >&2
-  exit 1
-fi
+
 unset container_proxy_gateway container_proxy_subnet
 
 echo
@@ -597,8 +589,8 @@ if [[ $production_ready -eq 1 ]]; then
 else
   echo "Daily traffic temporarily remains on 127.0.0.1:7897; diagnose mihomo.service before enabling the update timer."
 fi
-echo "Docker Engine, Buildx, and Compose are ready; manage workloads with sudo docker."
+echo "Docker Engine, Buildx, and Compose are ready; manage workloads as root with docker."
 echo "Application stacks belong under /srv/agentbox and must attach to agentbox-egress when using /srv/agentbox/proxy.env."
 echo "Headless Chrome is healthy, English-only at runtime, and internal to agentbox-browser; its token was not printed."
-echo "From the physical PC, test: ssh -i ~/.ssh/agentbox_ed25519 agent@agentbox"
-echo "Then test sudo -v and run finalize-debian.sh from that SSH session."
+echo "From the physical PC, test: ssh -i ~/.ssh/agentbox_ed25519 root@agentbox"
+echo "Then run finalize-debian.sh from that root SSH session."
