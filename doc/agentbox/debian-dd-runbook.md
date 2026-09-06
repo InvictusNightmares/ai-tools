@@ -17,7 +17,7 @@
 | 上游 `reinstall.sh` SHA-256 | `FE8CF9D8FB800AA74480BBD2223F268259E2A6EADFEAB68C50A39B57F027139F` |
 | 上游 `debian.cfg` SHA-256 | `53DA483158C7D526987BAFE6BF450FFC93A32E5B7B0D16DAA6126F21731A4161` |
 | 加固后 `reinstall.bat` SHA-256 | `85D1783C9EE86A224D4E942E64052EE4CAC0613F455F1829D16CB78B058EF0A4` |
-| 双代理扩展后 `reinstall.sh` SHA-256 | `DF8385EA660B43B3720542CDD8D7DBAFF9B00586EF5C05C83D2C1D65949D5834` |
+| 双代理扩展后 `reinstall.sh` SHA-256 | `78362DC3C3ACD009AB9C6DFE7B22B3CF5BD72935B3A0254A1026E9D219CFD356` |
 | 双代理扩展后 `debian.cfg` SHA-256 | `C72584170B2A3630D02AAFF0F3E6DBFF4C827C60259E05DAA9628E1660578BE7` |
 | Cygwin setup SHA-256 | `2C9F2FB56E1FB687B5D9680AFA8F8B06E6214F0E483096AF0EAE1946431226C5` |
 | Cygwin 签名指纹 | `7C470FD5026C30AA594D5D3782A060DDFFA0D1FD` |
@@ -28,6 +28,8 @@
 | js-yaml | 5.2.2，CJS SHA-256 `67784D9C17C101918E97F9456957AD6E558CE2F9A50627F40298D5672365BDC1` |
 
 上述数值于 2026-09-04 校验。`Prepare-Reinstall.ps1` 会固定上游 commit、预下载经签名的 Cygwin，将已知 HTTP 地址替换为 HTTPS，并拒绝哈希偏差。
+
+`reinstall.sh` 扩展哈希于 2026-09-06 更新：除 Cygwin 复制权限修复外，Alpine 在 `switch_root` 前必须将 `/proxy-bootstrap` 随 `/configs` 一起复制到新根目录。只把代理包放进 initrd，不能保证登录后的 Live 系统仍可访问它。
 
 `Prepare-ProxyBootstrap.ps1` 会生成私密双代理包：7897 为静态保底节点，7898 为当前远程订阅经过完整 Merge/JavaScript/Rules/Proxies/Groups 增强后的生产配置。脚本会把生产关键区块与 Windows 当前 Clash Verge 渲染结果比较；任何差异都停止。该目录含订阅 URL、节点凭据和自定义规则，只能存在 `.agentbox-staging` 内，绝对不得提交、粘贴到聊天或发送给他人。
 
@@ -133,6 +135,10 @@ ip route
 cat /etc/resolv.conf
 date -Is
 ```
+
+如果 Live 环境没有 `lsblk`，用 `cat /proc/partitions` 和 `cat /proc/mounts` 核对磁盘容量、分区及未挂载状态。若控制台同时显示 `tty0` 和 `tty1` 登录提示，切换到独立的 `tty2` 后登录。
+
+启动代理前必须确认 `/proxy-bootstrap/mihomo` 存在，且 `sha256sum /proxy-bootstrap/mihomo` 与上表一致；目录应为 0700，配置应为 0600。若目录缺失，本轮预检失败，返回 Windows 用修复后的生成器重新生成安装器并再跑 Alpine 预检，不从 Windows 分区挂载读取私密包。
 
 再从 initrd 启动私密 Linux Mihomo：
 
