@@ -5,7 +5,7 @@
 - 主机名 / 管理用户：`agentbox` / `agent`
 - 远程入口：Tailscale + 标准 OpenSSH
 - 外网出口：双 Mihomo + Clash Verge Rev 完整订阅增强链
-- 时区：`America/Los_Angeles`（自动切换 PST/PDT）
+- 时区：`America/Los_Angeles`（自动切换 PST/PDT）；`systemd-timesyncd` 自动校时，系统时钟和 RTC 使用 UTC。
 - 系统语言 / 键盘：仅 `en_US.UTF-8` / US
 
 ## 1. 目标
