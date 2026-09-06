@@ -112,6 +112,34 @@ export LANG=en_US.UTF-8
 export LANGUAGE=en_US:en
 export LC_ALL=en_US.UTF-8
 
+# Keep the server running when idle or when the virtual power/sleep keys fire.
+# Cloud-side forced shutdown still requires a platform/external recovery path.
+install -d -m 0755 /etc/systemd/sleep.conf.d /etc/systemd/logind.conf.d
+cat >/etc/systemd/sleep.conf.d/90-agentbox.conf <<'EOF'
+[Sleep]
+AllowSuspend=no
+AllowHibernation=no
+AllowHybridSleep=no
+AllowSuspendThenHibernate=no
+EOF
+cat >/etc/systemd/logind.conf.d/90-agentbox.conf <<'EOF'
+[Login]
+IdleAction=ignore
+StopIdleSessionSec=infinity
+HandlePowerKey=ignore
+HandlePowerKeyLongPress=ignore
+HandleRebootKey=ignore
+HandleRebootKeyLongPress=ignore
+HandleSuspendKey=ignore
+HandleSuspendKeyLongPress=ignore
+HandleHibernateKey=ignore
+HandleHibernateKeyLongPress=ignore
+HandleLidSwitch=ignore
+HandleLidSwitchExternalPower=ignore
+HandleLidSwitchDocked=ignore
+EOF
+systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
+
 if [[ $(timedatectl show --property=Timezone --value) != America/Los_Angeles ]]; then
   echo "Failed to set the system timezone to America/Los_Angeles." >&2
   exit 1
