@@ -162,33 +162,27 @@ async Task KeepAlive(CtYunApi api, DesktopInfo info, Config config, Cancellation
         await ws.ConnectAsync(uri, invoker, cycle.Token);
         var connect = new ConnecMessage { type = 1, ssl = 1, host = uri.Host, port = uri.Port.ToString(), ca = info.CaCert, cert = info.ClientCert, key = info.ClientKey, servername = info.Host + ":" + info.Port, oqs = 0 };
         await ws.SendAsync(JsonSerializer.SerializeToUtf8Bytes(connect), WebSocketMessageType.Text, true, cycle.Token);
-        await Task.Delay(500, cycle.Token);
+        // The proxy returns a one-byte acknowledgement before the SPICE stream.
+        // WebSocket messages can split or combine any subsequent protocol records.
+        var input = new SpiceStream(ws);
+        Policy.ProxyReply(await input.ReadExactly(1, cycle.Token));
         await ws.SendAsync(Convert.FromBase64String("UkVEUQIAAAACAAAAGgAAAAAAAAABAAEAAAABAAAAEgAAAAkAAAAECAAA"), WebSocketMessageType.Binary, true, cycle.Token);
-        var buffer = new byte[8192];
+        var linkHeader = await input.ReadExactly(16, cycle.Token);
+        var linkBody = await input.ReadExactly(Policy.LinkBodyLength(linkHeader), cycle.Token);
+        Policy.LinkReply(linkBody);
+        await ws.SendAsync(new Encryption().Execute(linkHeader.Concat(linkBody).ToArray()), WebSocketMessageType.Binary, true, cycle.Token);
+        Policy.AuthReply(await input.ReadExactly(4, cycle.Token));
         while (ws.State == WebSocketState.Open)
         {
-            using var message = new MemoryStream();
-            WebSocketReceiveResult received;
-            do
+            var header = await input.ReadExactly(6, cycle.Token);
+            var body = await input.ReadExactly(Policy.FrameBodyLength(header), cycle.Token);
+            if (BinaryPrimitives.ReadUInt16LittleEndian(header) != 103) continue;
+            // MAIN_INIT contains eight uint32 fields. A header alone is not a handshake.
+            if (body.Length < 32) throw new InvalidDataException();
+            var payload = JsonSerializer.SerializeToUtf8Bytes(new { type = 1, userName = api.LoginInfo.UserName, userInfo = "", userId = api.LoginInfo.UserId });
+            await ws.SendAsync(new SendInfo { Type = 118, Data = payload }.ToBuffer(true), WebSocketMessageType.Binary, true, cycle.Token);
+            if (!ready)
             {
-                received = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), cycle.Token);
-                if (received.MessageType == WebSocketMessageType.Close) throw new IOException();
-                if (message.Length + received.Count > 1024 * 1024) throw new InvalidDataException();
-                message.Write(buffer, 0, received.Count);
-            } while (!received.EndOfMessage);
-            var bytes = message.ToArray();
-            if (bytes.Length == 0) continue;
-            if (bytes.AsSpan().StartsWith("REDQ"u8))
-            {
-                if (bytes.Length < 182) throw new InvalidDataException();
-                await ws.SendAsync(new Encryption().Execute(bytes), WebSocketMessageType.Binary, true, cycle.Token);
-                continue;
-            }
-            foreach (var type in Policy.FrameTypes(bytes))
-            {
-                if (type != 103) continue;
-                var payload = JsonSerializer.SerializeToUtf8Bytes(new { type = 1, userName = api.LoginInfo.UserName, userInfo = "", userId = api.LoginInfo.UserId });
-                await ws.SendAsync(new SendInfo { Type = 118, Data = payload }.ToBuffer(true), WebSocketMessageType.Binary, true, cycle.Token);
                 ready = true;
                 SetHealth("connected");
                 Console.WriteLine("KEEPALIVE_HANDSHAKE_OK target=" + config.DesktopId);
@@ -231,29 +225,40 @@ static class Policy
             throw new InvalidDataException();
         return new Uri(root, "/clinkProxy/" + id + "/MAIN");
     }
-    public static List<ushort> FrameTypes(byte[] bytes)
+    public static void ProxyReply(byte[] reply)
     {
-        var types = new List<ushort>();
-        // The SPICE auth result is a standalone uint32; it is not an app frame.
-        if (bytes.Length == 4)
-        {
-            if (BinaryPrimitives.ReadUInt32LittleEndian(bytes) != 0) throw new InvalidDataException();
-            return types;
-        }
-        int offset = 0;
-        while (offset < bytes.Length)
-        {
-            if (bytes.Length - offset < 6)
-            {
-                if (bytes.Skip(offset).All(value => value == 0)) break;
-                throw new InvalidDataException();
-            }
-            int length = BinaryPrimitives.ReadInt32LittleEndian(bytes.AsSpan(offset + 2, 4));
-            if (length < 0 || length > bytes.Length - offset - 6) throw new InvalidDataException();
-            types.Add(BinaryPrimitives.ReadUInt16LittleEndian(bytes.AsSpan(offset, 2)));
-            offset += 6 + length;
-        }
-        return types;
+        if (reply.Length != 1 || reply[0] != 1) throw new InvalidDataException();
+    }
+    public static int LinkBodyLength(byte[] header)
+    {
+        if (header.Length != 16 || !header.AsSpan(0, 4).SequenceEqual("REDQ"u8) ||
+            BinaryPrimitives.ReadUInt32LittleEndian(header.AsSpan(4)) != 2) throw new InvalidDataException();
+        uint length = BinaryPrimitives.ReadUInt32LittleEndian(header.AsSpan(12));
+        if (length < 178 || length > SpiceStream.MaxRecordBytes - 16) throw new InvalidDataException();
+        return (int)length;
+    }
+    public static void LinkReply(byte[] body)
+    {
+        if (body.Length < 178 || BinaryPrimitives.ReadUInt32LittleEndian(body) != 0) throw new InvalidDataException();
+        uint common = BinaryPrimitives.ReadUInt32LittleEndian(body.AsSpan(166));
+        uint channel = BinaryPrimitives.ReadUInt32LittleEndian(body.AsSpan(170));
+        uint offset = BinaryPrimitives.ReadUInt32LittleEndian(body.AsSpan(174));
+        if (common == 0 || offset < 178 || (ulong)offset + ((ulong)common + channel) * 4 > (ulong)body.Length)
+            throw new InvalidDataException();
+        // Our request advertises the mini header capability; require server support.
+        if ((BinaryPrimitives.ReadUInt32LittleEndian(body.AsSpan((int)offset)) & (1u << 3)) == 0)
+            throw new InvalidDataException();
+    }
+    public static void AuthReply(byte[] reply)
+    {
+        if (reply.Length != 4 || BinaryPrimitives.ReadUInt32LittleEndian(reply) != 0) throw new InvalidDataException();
+    }
+    public static int FrameBodyLength(byte[] header)
+    {
+        if (header.Length != 6) throw new InvalidDataException();
+        uint length = BinaryPrimitives.ReadUInt32LittleEndian(header.AsSpan(2));
+        if (length > SpiceStream.MaxRecordBytes) throw new InvalidDataException();
+        return (int)length;
     }
     static async Task NoRedirect()
     {
@@ -282,6 +287,33 @@ static class Policy
         await server;
         if (other.Pending()) throw new Exception("WebSocket followed a cross-origin redirect");
     }
+    static async Task WireRegression(byte[] wire, int chunk)
+    {
+        using var socket = new FixtureSocket(wire, chunk);
+        var input = new SpiceStream(socket);
+        ProxyReply(await input.ReadExactly(1, CancellationToken.None));
+        var header = await input.ReadExactly(16, CancellationToken.None);
+        LinkReply(await input.ReadExactly(LinkBodyLength(header), CancellationToken.None));
+        AuthReply(await input.ReadExactly(4, CancellationToken.None));
+        var frame = await input.ReadExactly(6, CancellationToken.None);
+        var data = await input.ReadExactly(FrameBodyLength(frame), CancellationToken.None);
+        if (BinaryPrimitives.ReadUInt16LittleEndian(frame) != 103 || data.Length != 32)
+            throw new Exception("split/coalesced protocol regression");
+    }
+    static async Task RejectAsyncRead()
+    {
+        foreach (var messageType in new[] {WebSocketMessageType.Text, WebSocketMessageType.Close})
+        {
+            using var socket = new FixtureSocket(new byte[] {1}, 1, messageType);
+            try { await new SpiceStream(socket).ReadExactly(1, CancellationToken.None); }
+            catch (Exception ex) when (ex is IOException or InvalidDataException) { continue; }
+            throw new Exception("nonbinary protocol input accepted");
+        }
+        using var truncated = new FixtureSocket(new byte[] {103}, 1);
+        try { await new SpiceStream(truncated).ReadExactly(6, CancellationToken.None); }
+        catch (IOException) { return; }
+        throw new Exception("truncated protocol input accepted");
+    }
     public static int SelfTest()
     {
         int passed = 0;
@@ -295,14 +327,83 @@ static class Policy
         Reject(() => Endpoint("localhost:443", "2"));
         Reject(() => Endpoint("example.com/other", "2"));
         Good(Endpoint("example.com:8443", "2").AbsolutePath == "/clinkProxy/2/MAIN");
-        Good(FrameTypes(new byte[] {103, 0, 0, 0, 0, 0}).Single() == 103);
-        Good(FrameTypes(new byte[] {103, 0, 0, 0, 0, 0, 0, 0, 0, 0}).Single() == 103);
-        Reject(() => FrameTypes(new byte[] {103, 0, 0, 0, 0, 0, 1}));
-        Reject(() => FrameTypes(new byte[] {1, 0, 0, 0}));
-        Reject(() => FrameTypes(new byte[] {103, 0, 9, 0, 0, 0}));
-        Reject(() => FrameTypes(new byte[] {103, 0, 255, 255, 255, 255}));
+        ProxyReply(new byte[] {1}); passed++;
+        Reject(() => ProxyReply(new byte[] {0}));
+        Reject(() => ProxyReply(new byte[] {1, 1}));
+        AuthReply(new byte[4]); passed++;
+        Reject(() => AuthReply(new byte[] {1, 0, 0, 0}));
+        Good(FrameBodyLength(new byte[] {103, 0, 32, 0, 0, 0}) == 32);
+        Reject(() => FrameBodyLength(new byte[] {103}));
+        Reject(() => FrameBodyLength(new byte[] {103, 0, 255, 255, 255, 255}));
+        byte[] link = new byte[16];
+        "REDQ"u8.CopyTo(link); link[4] = 2; link[12] = 182;
+        Good(LinkBodyLength(link) == 182);
+        Reject(() => LinkBodyLength(new byte[16]));
+        byte[] body = new byte[182];
+        body[166] = 1; body[174] = 178; body[178] = 8;
+        LinkReply(body); passed++;
+        body[178] = 0; Reject(() => LinkReply(body)); body[178] = 8;
+        body[0] = 1; Reject(() => LinkReply(body)); body[0] = 0;
+        var wire = new byte[] {1}.Concat(link).Concat(body).Concat(new byte[4])
+            .Concat(new byte[] {103, 0, 32, 0, 0, 0}).Concat(new byte[32]).ToArray();
+        foreach (int chunk in new[] {1, 3, 16, wire.Length})
+        {
+            WireRegression(wire, chunk).GetAwaiter().GetResult(); passed++;
+        }
+        RejectAsyncRead().GetAwaiter().GetResult(); passed++;
         NoRedirect().GetAwaiter().GetResult(); passed++;
         Console.WriteLine($"SELF_TEST_OK {passed} checks");
         return 0;
+    }
+}
+
+// This bridge carries a byte stream, independent of WebSocket message boundaries.
+sealed class SpiceStream(WebSocket socket)
+{
+    public const int MaxRecordBytes = 1024 * 1024;
+    readonly byte[] buffer = new byte[8192];
+    int offset, available;
+    public async Task<byte[]> ReadExactly(int length, CancellationToken stop)
+    {
+        if (length < 0 || length > MaxRecordBytes) throw new InvalidDataException();
+        var result = new byte[length];
+        int written = 0;
+        while (written < length)
+        {
+            if (available == 0)
+            {
+                var received = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), stop);
+                if (received.MessageType == WebSocketMessageType.Close) throw new EndOfStreamException();
+                if (received.MessageType != WebSocketMessageType.Binary) throw new InvalidDataException();
+                offset = 0; available = received.Count;
+                if (available == 0) continue;
+            }
+            int count = Math.Min(available, length - written);
+            buffer.AsSpan(offset, count).CopyTo(result.AsSpan(written));
+            offset += count; available -= count; written += count;
+        }
+        return result;
+    }
+}
+
+sealed class FixtureSocket(byte[] bytes, int chunk, WebSocketMessageType messageType = WebSocketMessageType.Binary) : WebSocket
+{
+    int offset;
+    public override WebSocketCloseStatus? CloseStatus => null;
+    public override string CloseStatusDescription => null;
+    public override WebSocketState State => WebSocketState.Open;
+    public override string SubProtocol => "binary";
+    public override void Abort() { }
+    public override void Dispose() { }
+    public override Task CloseAsync(WebSocketCloseStatus status, string description, CancellationToken stop) => Task.CompletedTask;
+    public override Task CloseOutputAsync(WebSocketCloseStatus status, string description, CancellationToken stop) => Task.CompletedTask;
+    public override Task SendAsync(ArraySegment<byte> buffer, WebSocketMessageType type, bool endOfMessage, CancellationToken stop) => Task.CompletedTask;
+    public override Task<WebSocketReceiveResult> ReceiveAsync(ArraySegment<byte> buffer, CancellationToken stop)
+    {
+        stop.ThrowIfCancellationRequested();
+        if (offset == bytes.Length) return Task.FromResult(new WebSocketReceiveResult(0, WebSocketMessageType.Close, true));
+        int count = Math.Min(Math.Min(chunk, buffer.Count), bytes.Length - offset);
+        Array.Copy(bytes, offset, buffer.Array, buffer.Offset, count); offset += count;
+        return Task.FromResult(new WebSocketReceiveResult(count, messageType, true));
     }
 }
