@@ -33,12 +33,14 @@ docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-
 
 ## 安装配置
 
+宿主机只使用 root 管理账号；容器内部 UID/GID 1654 是服务身份，不依赖宿主机 agent 账号。
+
 在管理员终端安装本目录已核验的 `compose.yaml` 和 `manage.sh`：
 
 ```sh
 install -d -o root -g root -m 0755 /srv/agentbox/ctyun
 install -d -o 1654 -g 1654 -m 0700 /srv/agentbox/ctyun/data
-install -d -o 1654 -g 1000 -m 0750 /srv/agentbox/ctyun/challenges
+install -d -o 1654 -g 1654 -m 0750 /srv/agentbox/ctyun/challenges
 install -o root -g root -m 0644 compose.yaml /srv/agentbox/ctyun/compose.yaml
 install -o root -g root -m 0755 manage.sh /usr/local/sbin/agentbox-ctyun
 ```
@@ -52,8 +54,8 @@ python3 script/agentbox/ctyun/prepare-config.py --desktop-id 23698108
 它只读取上述两个明确字段，输出到 Git 忽略的 `.agentbox-staging/ctyun/accounts.json`（0600）。通过已验证的密钥 SSH 私密上传该文件；管理员安装后删除上传副本：
 
 ```sh
-install -o 1654 -g 1654 -m 0600 /home/agent/accounts.json /srv/agentbox/ctyun/data/accounts.json
-rm /home/agent/accounts.json
+install -o 1654 -g 1654 -m 0600 /root/accounts.json /srv/agentbox/ctyun/data/accounts.json
+rm /root/accounts.json
 agentbox-ctyun check
 ```
 
@@ -67,7 +69,7 @@ agentbox-ctyun check
 agentbox-ctyun login
 ```
 
-看到 `HUMAN_CAPTCHA_REQUIRED` 时，把 `/srv/agentbox/ctyun/challenges/captcha.png` 经密钥 SSH 下载到实体电脑，由用户查看并在该终端输入；程序不会识别验证码。图像只对容器用户和 `agent` 组可读，提交答案后自动删除。首次绑定可能需要短信验证码，同样由用户输入且不回显。不要把验证码或图片纳入持久日志/仓库，查看后删除本机临时图片。
+看到 `HUMAN_CAPTCHA_REQUIRED` 时，把 `/srv/agentbox/ctyun/challenges/captcha.png` 经密钥 SSH 下载到实体电脑，由用户查看并在该终端输入；程序不会识别验证码。图像由容器内部 UID/GID 1654 持有，宿主机管理员通过 root SSH 读取，提交答案后自动删除。首次绑定可能需要短信验证码，同样由用户输入且不回显。不要把验证码或图片纳入持久日志/仓库，查看后删除本机临时图片。
 
 `LOGIN_OK` 表示目标可见且会话已私密保存；管理命令随后启动后台。以下检查通过后才算部署完成：
 

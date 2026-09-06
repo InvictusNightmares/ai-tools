@@ -15,7 +15,7 @@ import unittest
 
 
 class SshPolicyTest(unittest.TestCase):
-    def test_installer_include_cannot_enable_root_or_password_login(self):
+    def test_installer_include_cannot_enable_password_login(self):
         sshd = shutil.which("sshd") or "/usr/sbin/sshd"
         match = re.search(
             r"cat >(/etc/ssh/sshd_config\.d/[^\s]+) <<'EOF'\n(.*?)\nEOF",
@@ -49,12 +49,12 @@ class SshPolicyTest(unittest.TestCase):
             )
             effective = set(result.stdout.splitlines())
             for setting in (
-                "permitrootlogin no",
+                "permitrootlogin without-password",
                 "authenticationmethods publickey",
                 "passwordauthentication no",
                 "kbdinteractiveauthentication no",
                 "pubkeyauthentication yes",
-                "allowusers agent",
+                "allowusers root",
             ):
                 with self.subTest(setting=setting):
                     keyword = setting.split()[0]

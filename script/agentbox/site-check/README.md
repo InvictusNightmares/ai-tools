@@ -13,7 +13,9 @@
 
 ## 部署
 
-宿主机复用既有 Docker 和 `/srv/agentbox/headless-chrome`，不再安装 Node/Chromium，不发布额外端口。检测容器只连接内部 `agentbox-browser` 网络，使用已经存在并固定摘要的 Browserless 镜像中的 Node；真实网页仍由云电脑的 Chrome 通过 7898 访问。
+宿主机复用既有 Docker 和 `/srv/agentbox/headless-chrome`，不再安装 Node/Chromium，不发布额外端口。检测容器只连接内部 `agentbox-browser` 网络，与常驻浏览器共用本机 `agentbox-chrome-us:v2.56.2-1` 定制镜像中的 Node；真实网页仍由云电脑的 Chrome 通过 7898 访问。
+
+Compose 固定已验收镜像的摘要，并设置 `pull_policy: never`，缺少该本机镜像时直接失败。首次部署前先按 [US environment](../us-environment/README.md) 构建浏览器镜像；重新构建后，通过 `docker image inspect` 核对实际摘要并更新检测 Compose。网站检测仅临时创建容器，退出后自动删除；日常保留保活、定制浏览器两个镜像即可。原版 Browserless 镜像用于构建定制版，构建及验收完成后可删除其独立镜像引用，共享层仍由定制镜像保留。
 
 运行目录：
 
@@ -28,14 +30,14 @@
     package.json
     package-lock.json
     node_modules/          # DMIT 原有 Playwright 环境
-  output/                  # agent:agent，0750
+  output/                  # root:root，0750
 ```
 
 `app` 与配置归 root 管理、只读挂载。管理员从 DMIT 仅复制 `package.json`、`package-lock.json`、`node_modules`，再加入本目录入口文件；上传包需核对 SHA256 后安装。不得复制 DMIT 其他服务配置、账号或浏览器历史。以后需要重建依赖时，在独立暂存目录执行 `npm ci --ignore-scripts --omit=dev`，使用仓库锁文件，不运行 `npm update`。
 
 容器从既有 `/srv/agentbox/headless-chrome/client.env` 读取 Browserless token；不要运行会展开秘密的 `docker compose config`（可用 `config --quiet`），不要打印容器完整环境或完整连接 URL。token 不进入网页，不写入检测结果。
 
-将 `manage.sh` 安装为 root 所有的 `/usr/local/bin/site-check`，模式 0755。入口只允许 `run` 和 `inspect`，用 `flock` 防止重叠检测。运行容器为 UID/GID 1000、根文件系统只读、无 capabilities、无 Docker socket；退出即删除容器。
+将 `manage.sh` 安装为 root 所有的 `/usr/local/bin/site-check`，模式 0755。入口只允许 `run` 和 `inspect`，用 `flock` 防止重叠检测。检测入口容器为 UID/GID 0，仅拥有检测输出目录的写权限、根文件系统只读、无 capabilities、无 Docker socket；退出即删除容器。
 
 ## 使用与证据
 
@@ -45,7 +47,7 @@
 site-check
 ```
 
-普通 `agent` 用户执行 `sudo site-check`。如需先查看页面结构而不点击 Fuck Claude 的扫描按钮，用 `sudo site-check inspect`；此模式只表示采集完成，不判定检测通过。不要为无人值守方便而给 `agent` 增加 Docker 组或开放 SSH 密码登录。
+通过 `ssh ctyun` 以 root 执行管理命令。如需先查看页面结构而不点击 Fuck Claude 的扫描按钮，用 `site-check inspect`；此模式只表示采集完成，不判定检测通过。宿主机不再创建 agent 账号，SSH 始终只接受密钥。
 
 每次生成独立 UTC 时间戳目录，打印 `report.json` 的绝对路径。目录包含原始页面文字、页面结构、视口与整页截图，以及实际浏览器语言、时区、UA、网络请求失败信息。凭据不放入输出。使用现有密钥 SSH 下载该目录即可查看。
 

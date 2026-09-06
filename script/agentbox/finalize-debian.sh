@@ -6,8 +6,8 @@ if [[ $(id -u) -ne 0 ]]; then
   exit 1
 fi
 
-if [[ ! -s /home/agent/.ssh/authorized_keys ]]; then
-  echo "agent has no authorized_keys; refusing to harden SSH." >&2
+if [[ ! -s /root/.ssh/authorized_keys ]]; then
+  echo "root has no authorized_keys; refusing to harden SSH." >&2
   exit 1
 fi
 if ! systemctl is-active --quiet mihomo-bootstrap.service; then
@@ -29,10 +29,7 @@ if ! systemctl is-active --quiet docker.service || \
   echo "The Docker application platform is incomplete; refusing to finalize the host." >&2
   exit 1
 fi
-if id -nG agent | tr ' ' '\n' | grep -qx docker; then
-  echo "The agent user has root-equivalent docker group access; refusing to finalize the host." >&2
-  exit 1
-fi
+
 if ! iptables -C DOCKER-USER -j AGENTBOX-DOCKER >/dev/null 2>&1; then
   echo "The Docker ingress guard is missing; refusing to finalize the host." >&2
   exit 1
@@ -46,13 +43,13 @@ fi
 # OpenSSH uses the first value it reads. The installer leaves a
 # 01-permitrootlogin.conf file, so the managed policy must load before it.
 cat >/etc/ssh/sshd_config.d/00-agentbox.conf <<'EOF'
-PermitRootLogin no
+PermitRootLogin prohibit-password
 AuthenticationMethods publickey
 PasswordAuthentication no
 KbdInteractiveAuthentication no
 PubkeyAuthentication yes
 PermitEmptyPasswords no
-AllowUsers agent
+AllowUsers root
 X11Forwarding no
 ClientAliveInterval 120
 ClientAliveCountMax 3
@@ -63,12 +60,12 @@ rm -f /etc/ssh/sshd_config.d/90-agentbox.conf
 sshd -t
 effective_ssh_config=$(sshd -T)
 for setting in \
-  'permitrootlogin no' \
+  'permitrootlogin without-password' \
   'authenticationmethods publickey' \
   'passwordauthentication no' \
   'kbdinteractiveauthentication no' \
   'pubkeyauthentication yes' \
-  'allowusers agent'; do
+  'allowusers root'; do
   if ! grep -Fqx "$setting" <<<"$effective_ssh_config"; then
     echo "The effective SSH configuration does not enforce: $setting" >&2
     exit 1
@@ -80,12 +77,12 @@ systemctl reload ssh
 echo
 echo "The hardened SSH configuration is active, but the current session remains open."
 echo "Keep this session open. From a second terminal on the physical PC, verify:"
-echo "  ssh -i ~/.ssh/agentbox_ed25519 agent@agentbox"
-echo "  sudo -v"
+echo "  ssh -i ~/.ssh/agentbox_ed25519 root@agentbox"
+echo "  id -u  # must print 0"
 echo
-read -r -p "After the second SSH and sudo test succeeds, type LOCK ROOT: " confirmation
-if [[ $confirmation != 'LOCK ROOT' ]]; then
-  echo "Root remains unlocked. Re-run this script after fixing remote access." >&2
+read -r -p "After the second root SSH test succeeds, type LOCK ROOT PASSWORD: " confirmation
+if [[ $confirmation != 'LOCK ROOT PASSWORD' ]]; then
+  echo "Root password remains unlocked. Re-run this script after fixing remote access." >&2
   exit 1
 fi
 
@@ -104,5 +101,5 @@ if systemctl is-active --quiet mihomo.service; then
 fi
 
 echo
-echo "Root password is locked and SSH hardening is complete."
+echo "Root password is locked; root public-key SSH remains enabled."
 echo "Revoke the one-time auth key in the Tailscale admin console, then reboot and test again."

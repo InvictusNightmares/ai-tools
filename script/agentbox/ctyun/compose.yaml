@@ -3,7 +3,7 @@ services:
     image: agentbox-ctyun:975f0cb-agentbox2
     container_name: agentbox-ctyun
     restart: unless-stopped
-    user: '1654:1000'
+    user: '1654:1654'
     read_only: true
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
