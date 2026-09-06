@@ -5,6 +5,7 @@
 ## 运行约束
 
 - 一个账号只允许连接 `accounts.json` 指定的一个 DesktopId；列表无匹配、重复匹配或连接返回 ID 不符均拒绝。当前 Agentbox 的授权目标是 `23698108`，安装时必须核对。
+- 按天翼官方客户端顺序先校验一字节代理确认，再完成 SPICE 链接和认证；按声明长度读取有界字节流，支持跨 WebSocket 消息拆包、合包。 链接、认证及业务消息是不同记录，格式参见 [SPICE 协议](https://www.spice-space.org/spice-protocol.html)。
 - 每 60 秒重新获取目标连接信息并建立 WebSocket。只有收到服务端完整 103 帧并发送用户信息响应后才报告握手成功；容器运行或 API 返回成功本身不算保活验收。
 - 登录及短信验证码由人手动输入，不回显。没有 OCR、验证码第三方上传或后台自动尝试登录。登录/API/WebSocket 均保留 TLS 验证并禁止 HTTP 自动重定向。
 - 账号密码、固定设备码和登录会话存于私密 `/data`，不放到镜像、环境变量或日志。会话绑定账号和设备码，后台及重启复用。平台使会话失效后，需执行人工登录命令重新认证；不能承诺永远无需人工。
@@ -24,8 +25,8 @@ python3 script/agentbox/ctyun/prepare-build.py --output /tmp/agentbox-ctyun-buil
 将构建包经已经验证的密钥 SSH 上传到云电脑。管理员先复制到 root 私有目录并核对本机构建命令输出的 SHA256，再解压及构建：
 
 ```sh
-docker build --progress=plain -t agentbox-ctyun:975f0cb-agentbox1 /root/agentbox-ctyun-build
-docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges agentbox-ctyun:975f0cb-agentbox1 self-test
+docker build --progress=plain -t agentbox-ctyun:975f0cb-agentbox2 /root/agentbox-ctyun-build
+docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges agentbox-ctyun:975f0cb-agentbox2 self-test
 ```
 
 镜像构建自动运行测试，包含单目标选择、无效 ID、错误/截断协议帧、全零尾部填充和一个真实 loopback 跨源 302 WebSocket 拒绝测试。该测试不连接天翼平台。
