@@ -1,0 +1,18 @@
+{
+  "name": "site-check",
+  "version": "1.0.0",
+  "description": "Agentbox environment snapshots from two public detector pages",
+  "main": "check.mjs",
+  "scripts": {
+    "check": "node --check check.mjs && node --check cdp.mjs && node --check completion.mjs",
+    "start": "node check.mjs run",
+    "inspect": "node check.mjs inspect",
+    "test": "node --test test-completion.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "playwright-core": "^1.62.1"
+  }
+}

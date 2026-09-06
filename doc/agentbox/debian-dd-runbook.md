@@ -284,6 +284,8 @@ networks:
 
 未来 Agent 容器需同时加入 `agentbox-browser` 网络并安全加载 `/srv/agentbox/headless-chrome/client.env`。Browserless v2 的 Chrome WebSocket 基址是 `ws://headless-chrome:3000/chrome`；由于 Browserless 要求自带代理按会话传入，客户端必须把 `BROWSERLESS_PROXY_SERVER` 和 `BROWSERLESS_LANGUAGE` 分别编码为 `--proxy-server`、`--lang` launch 参数，不能依赖 Chrome 自动读取 `HTTP_PROXY`。不得把 token 放进 URL 日志、Git 或聊天。
 
+需要检测云电脑实际浏览器环境时，使用 [site-check 检测工具](../../script/agentbox/site-check/README.md)。它复用上述 Chrome 和 7898 出口，在云电脑上打开 Net.Coffee Claude 检测及 Fuck Claude，保留页面实际完成状态、环境数据和截图；未完成的扫描非零退出。网站评分不代替真实 Claude 账号/CLI 验证。
+
 ## 7. 检查点 D：SSH 验证后加固
 
 实体电脑第一个终端：
