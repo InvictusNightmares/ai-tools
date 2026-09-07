@@ -1,5 +1,5 @@
 [Unit]
-Description=Refresh and safely activate the agentbox production proxy profile
+Description=Refresh and safely activate the agentbox online proxy profiles
 After=network-online.target mihomo-bootstrap.service mihomo.service
 Wants=network-online.target mihomo-bootstrap.service
 
@@ -18,7 +18,7 @@ ProtectKernelLogs=true
 ProtectKernelModules=true
 ProtectKernelTunables=true
 ProtectSystem=strict
-ReadWritePaths=/etc/mihomo /etc/agentbox-profile/profiles /var/lib/agentbox-profile /var/lib/mihomo /run
+ReadWritePaths=/etc/mihomo /etc/mihomo-bootstrap /etc/agentbox-profile/profiles /var/lib/agentbox-profile /var/lib/mihomo /var/lib/mihomo-bootstrap /run
 RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
 RestrictNamespaces=true
 LockPersonality=true

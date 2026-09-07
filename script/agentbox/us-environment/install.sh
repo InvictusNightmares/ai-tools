@@ -50,6 +50,7 @@ install -m 0644 "$source_dir/us-environment/Dockerfile" /srv/agentbox/us-environ
 docker build --network=none -t agentbox-chrome-us:v2.56.2-1 /srv/agentbox/us-environment
 install -m 0755 "$source_dir/agentbox-profile-compiler.js" /usr/local/libexec/agentbox-profile-compiler.js
 install -m 0755 "$source_dir/update-agentbox-proxy.sh" /usr/local/sbin/update-agentbox-proxy
+install -m 0644 "$source_dir/systemd/agentbox-proxy-update.service" /etc/systemd/system/agentbox-proxy-update.service
 install -m 0755 "$source_dir/us-environment/check-dns.py" /usr/local/libexec/agentbox-check-dns.py
 cat >/etc/agentbox-profile/agentbox-policy.yaml <<'EOF'
 environment: us
@@ -100,9 +101,8 @@ nameserver 127.0.0.1
 search tailb6a44b.ts.net
 options timeout:3 attempts:2
 EOF
-# This gate stays in place if the production TUN exits: normal public traffic
-# cannot silently fall back to the physical China interface. Preserve DHCP,
-# local management, the DMIT tunnel, and Tailscale's own marked transport.
+# Keep ordinary processes behind the TUN and block external DNS bypasses.
+# Mihomo itself may honor DIRECT rules from the online subscription.
 cat >/srv/agentbox/us-environment/egress.nft <<'EOF'
 table inet agentbox_us {
  chain forward {
@@ -113,6 +113,7 @@ table inet agentbox_us {
   type filter hook output priority -10; policy accept;
   oifname != "ens3" return
   meta l4proto { tcp, udp } th dport { 53, 853 } reject
+  meta skuid "mihomo" return
   meta mark & 0xff0000 == 0x80000 return
   ip daddr 179.253.245.229 return
   udp sport 68 udp dport 67 return
@@ -136,7 +137,7 @@ EOF
 chmod 755 /usr/local/sbin/agentbox-us-egress
 cat >/etc/systemd/system/agentbox-us-egress.service <<'EOF'
 [Unit]
-Description=Prevent public traffic and plaintext DNS escaping the US tunnel
+Description=Keep applications behind Mihomo and prevent external DNS bypasses
 Before=mihomo.service
 After=network-pre.target
 Wants=network-pre.target

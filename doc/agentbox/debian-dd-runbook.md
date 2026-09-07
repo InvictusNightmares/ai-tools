@@ -33,7 +33,7 @@
 
 `Prepare-ProxyBootstrap.ps1` 会生成私密双代理包：7897 为静态保底节点，7898 为当前远程订阅经过完整 Merge/JavaScript/Rules/Proxies/Groups 增强后的生产配置。脚本会把生产关键区块与 Windows 当前 Clash Verge 渲染结果比较；任何差异都停止。该目录含订阅 URL、节点凭据和自定义规则，只能存在 `.agentbox-staging` 内，绝对不得提交、粘贴到聊天或发送给他人。
 
-7897 在 `MATCH,BOOTSTRAP` 前仅保留源配置中针对选中节点自身的精确 `DIRECT` 规则（IPv4 `/32`、IPv6 `/128` 或精确 `DOMAIN`）；不保留其他主机、网段或域名后缀的直连规则，也不创建源配置中不存在的直连策略。当 DMIT 同时提供代理和在线订阅时，删掉这条自身直连规则会让订阅下载绕回同一个代理节点而超时。7898 继续使用完整订阅规则，在线刷新仍固定通过 7897 下载。
+安装引导阶段，7897 在 `MATCH,BOOTSTRAP` 前仅保留源配置中针对选中节点自身的精确 `DIRECT` 规则（IPv4 `/32`、IPv6 `/128` 或精确 `DOMAIN`）；不保留其他主机、网段或域名后缀的直连规则，也不创建源配置中不存在的直连策略。当 DMIT 同时提供代理和在线订阅时，删掉这条自身直连规则会让订阅下载绕回同一个代理节点而超时。7898 继续使用完整订阅规则，在线刷新仍固定通过 7897 下载。完成后若启用本文末尾的美国环境，7897 也切换为完整在线订阅规则，与 7898 同步刷新；静态保底规则只用于此前的安装引导阶段。
 
 ## 1. 检查点 A：外部接管
 
@@ -367,7 +367,9 @@ systemctl status mihomo-bootstrap mihomo agentbox-proxy-update.service --no-page
 journalctl -u agentbox-proxy-update.service -n 50 --no-pager
 ```
 
-更新器不会把订阅 URL、节点名或规则写入正常日志。它通过 7897 下载，用临时 17898 实例验证，再原子替换 7898；失败保持原配置。上一版保存在 `/etc/mihomo/config.yaml.previous`。如必须人工回滚：
+更新器不会把订阅 URL、节点名或规则写入正常日志。它通过 7897 下载一次，用临时 17898 实例验证。启用美国环境后，同一份订阅同时生成 7897/7898 配置；依次替换并检查 HTTPS 和 DNS，配置未变化则不重启。任何替换、重启或验收失败都会恢复两边原配置；成功后删除本次临时回滚副本。两个进程各有独立缓存，只有 7898 启用 TUN；7897 的 DNS 监听 `127.0.0.1:1054`，7898 使用 53，临时验收使用 1053，国外解析策略一致。经 Tailscale 切换 7897 时，应通过 systemd 执行，避免 SSH 短暂重连中断更新。
+
+未启用美国环境的基础安装仍只更新 7898，并保留 `/etc/mihomo/config.yaml.previous`，其人工回滚方式为：
 
 ```sh
 install -o root -g mihomo -m 0640 /etc/mihomo/config.yaml.previous /etc/mihomo/config.yaml
@@ -388,7 +390,7 @@ curl --proxy http://127.0.0.1:7898 -I https://github.com/
 3. 观察 24–48 小时的 `journalctl`、磁盘、两个 Mihomo、profile 更新 timer、Tailscale、SSH、Docker 和 `agentbox-container-proxy`。
 4. 稳定后才以 Compose 栈安装 Codex/Agent、GitHub 认证代理和项目工具链；不把这些业务服务直接安装到宿主机。
 
-本次问题全部解决且验收通过后，再按清单删除安装、诊断和修复过程中生成的临时文件及备份。不要递归清理未知目录，不删除 SSH 私钥、可信主机指纹、当前代理配置或私密 profile。删除 `/etc/mihomo/config.yaml.previous` 会移除当前手工回滚副本；下次成功订阅更新仍会重新生成它，这不等于禁用更新器的失败回滚机制。
+本次问题全部解决且验收通过后，再按清单删除安装、诊断和修复过程中生成的临时文件及备份。不要递归清理未知目录，不删除 SSH 私钥、可信主机指纹、当前代理配置或私密 profile。美国环境更新器只在更新事务期间保留回滚副本，失败自动恢复、成功自动删除；基础安装模式则仍保留上一版供手工恢复。
 
 ## 10. 恢复矩阵
 
@@ -402,4 +404,4 @@ curl --proxy http://127.0.0.1:7898 -I https://github.com/
 
 ### 美国使用环境与境外 DNS
 
-在已完成基础验收的云电脑上，可安装 [US environment](../../script/agentbox/us-environment/README.md)。这会在在线订阅增强链之后固定美国出站策略，用 Cloudflare/Google DoH 和 Quad9 DoT 经 DMIT 解析，并让宿主机和容器普通流量经过 TUN。保持原 720 分钟订阅刷新、LA 时区和 SSH 密钥认证。实际检测使用 [site-check](../../script/agentbox/site-check/README.md)，完成后下载两站截图，再清理任务备份和临时文件。
+在已完成基础验收的云电脑上，可安装 [US environment](../../script/agentbox/us-environment/README.md)。云电脑原样使用在线订阅下发的分流规则、规则集和策略组，不套用桌面的 Merge/Script，也不把国内直连改为代理。额外策略仅保留 Cloudflare/Google DoH 和 Quad9 DoT 经 DMIT 解析，以及宿主机和容器的 TUN 接管；DNS 专用组不接管普通流量。防火墙允许 Mihomo 按订阅执行 DIRECT，仍禁止普通进程绕过 TUN 和外部 53/853 DNS。保持原 720 分钟订阅刷新、LA 时区和 SSH 密钥认证。实际检测使用 [site-check](../../script/agentbox/site-check/README.md)，完成后下载两站截图，再清理任务备份和临时文件。
