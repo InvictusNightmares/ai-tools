@@ -1,0 +1,53 @@
+name: agentbox-hermes
+services:
+  hermes:
+    image: nousresearch/hermes-agent:v2026.8.31@sha256:87af7c6a5ee383834f75eb9a3fb509ccaacbab5d54084b086b48b84917e28efc
+    platform: linux/amd64
+    container_name: agentbox-hermes
+    pull_policy: never
+    command: [gateway, run]
+    restart: unless-stopped
+    stop_grace_period: 90s
+    mem_limit: 6g
+    cpus: 4.0
+    pids_limit: 1024
+    # Official s6 bootstrap starts as root and drops application processes
+    # to this UID. Setting Compose user: would bypass that bootstrap.
+    environment:
+      HERMES_UID: '10000'
+      HERMES_GID: '10000'
+      HERMES_HOME: /opt/data
+      HERMES_WRITE_SAFE_ROOT: /opt/data:/workspace:/tmp
+      HERMES_DASHBOARD: '1'
+      HERMES_DASHBOARD_HOST: 0.0.0.0
+      HERMES_DASHBOARD_PORT: '9119'
+      TZ: Asia/Shanghai
+    env_file: [/srv/agentbox/proxy.env]
+    working_dir: /workspace
+    volumes:
+      - ./data:/opt/data
+      - ./workspace:/workspace
+    networks: [agentbox-egress, agentbox-browser]
+    # Publish only on CTYun's Tailscale address; existing firewall admits tailscale0.
+    ports:
+      - '100.121.133.84:9119:9119'
+    healthcheck:
+      test:
+        - CMD
+        - /opt/hermes/.venv/bin/python
+        - -c
+        - "from gateway.status import get_running_pid; raise SystemExit(0 if get_running_pid() else 1)"
+      interval: 60s
+      timeout: 15s
+      start_period: 120s
+      retries: 3
+    logging:
+      driver: local
+      options:
+        max-size: 10m
+        max-file: '3'
+networks:
+  agentbox-egress:
+    external: true
+  agentbox-browser:
+    external: true

@@ -1,0 +1,63 @@
+# Hermes v0.21.0 / v2026.8.31. Secrets live only in data/.env.
+model:
+  provider: dmit-cpa
+  default: deepseek-v4-pro
+providers:
+  dmit-cpa:
+    api: https://179.253.245.229:8317
+    key_env: CPA_API_KEY
+    transport: messages
+    default_model: deepseek-v4-pro
+    models:
+      - deepseek-v4-pro
+      - deepseek-v4-flash-vision
+      - claude-sonnet-4-6
+      - claude-opus-4-6
+      - gemini-3.8-flash
+timezone: Asia/Shanghai
+terminal:
+  backend: local
+  cwd: /workspace
+agent:
+  max_turns: 60
+  api_max_retries: 2
+  run_budget_seconds: 1800
+  verify_on_stop: true
+approvals:
+  mode: manual
+  timeout: 300
+  cron_mode: deny
+  single_query_mode: deny
+  unattended_mode: deny
+  mcp_reload_confirm: true
+  destructive_slash_confirm: true
+security:
+  redact_secrets: true
+cron:
+  model: deepseek-v4-pro
+  model_provider: dmit-cpa
+  max_parallel_jobs: 1
+  allow_agent_scheduling: false
+  preflight: true
+web:
+  keyless_fallback: true
+  keyless_rescue: true
+browser:
+  inactivity_timeout: 120
+  command_timeout: 30
+  dialog_policy: must_respond
+platforms:
+  feishu:
+    unauthorized_dm_behavior: ignore
+    extra:
+      group_policy: disabled
+platform_toolsets:
+  cli: [web, browser, terminal, file, memory, session_search, skills, todo, cronjob, code_execution, clarify, vision]
+  feishu: [web, browser, terminal, file, memory, session_search, skills, todo, cronjob, code_execution, clarify, vision]
+# Explicitly keep every enabled auxiliary task on the same CPA provider.
+auxiliary:
+  vision: {provider: dmit-cpa, model: claude-sonnet-4-6}
+  title_generation: {provider: dmit-cpa, model: claude-sonnet-4-6}
+  session_search: {provider: dmit-cpa, model: claude-sonnet-4-6}
+  compression: {provider: dmit-cpa, model: deepseek-v4-pro}
+  background_review: {provider: dmit-cpa, model: claude-sonnet-4-6}

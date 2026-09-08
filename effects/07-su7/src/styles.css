@@ -1,0 +1,447 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #fff;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+#root {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+.webgl-wrapper {
+  z-index: 0;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  overflow: clip;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  contain: strict;
+}
+.webgl-canvas {
+  outline: none;
+}
+#css-container {
+  position: absolute;
+  top: 0%;
+}
+.StateTable-container {
+  position: absolute;
+  top: 25vmin;
+  right: 0%;
+  height: 50vmin;
+  width: 3rem;
+  margin: 0vmin 2% 0% 0%;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}
+.StateTable-container .StateTable-content {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+.StateTable-container .StateTable-content .backgroundLine {
+  position: absolute;
+  height: 100%;
+  width: 1px;
+  background-color: #ffffffa0;
+}
+.StateTable-container .StateTable-content .item {
+  position: relative;
+  right: calc(0.25rem - 0.5px);
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: #fff;
+}
+.StateTable-container .StateTable-content .item .item-Line {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  width: calc(0.5rem + 6px);
+  height: calc(0.5rem + 6px);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #ff9245;
+}
+.StateTable-container .StateTable-content .item .tableName {
+  -webkit-user-select: none;
+  user-select: none;
+  position: relative;
+  height: 1rem;
+  width: 1rem;
+  top: -4px;
+  left: -2rem;
+  color: #ccc;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+}
+.StateTable-container .StateTable-content .item .tableName div {
+  font-size: 0.7rem;
+  white-space: nowrap;
+  transition: all 0.3s;
+}
+.StateTable-container .StateTable-content .item .clickBox {
+  cursor: pointer;
+  position: absolute;
+  top: -1.25rem;
+  left: -3.5rem;
+  height: 3rem;
+  width: 5rem;
+}
+#preloader {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 40px;
+  color: azure;
+  background-color: #000;
+  -webkit-user-select: none;
+  user-select: none;
+}
+#preloader .progress-bar {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+#preloader .progress-bar .progress-bar-svg {
+  position: relative;
+  left: -5vmin;
+  top: -5vmin;
+  height: 25vmin;
+}
+#preloader .progress-bar .speed-line-bg {
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-width: 8px;
+  stroke: #ccc;
+  fill: none;
+}
+#preloader .progress-bar .speed-line {
+  fill: url(#linear_0);
+  opacity: 100;
+}
+#preloader .progress-num {
+  font-size: 5vmin;
+  position: absolute;
+  color: #fff;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.version {
+  z-index: 10;
+  top: 1%;
+  left: 1%;
+  font-size: 1vmin;
+  position: absolute;
+  color: #fff;
+}
+.TopInfo-container {
+  position: absolute;
+  top: 0%;
+  width: 100%;
+  margin-top: 5vmin;
+  transition: 0.2s all 0.3s;
+  pointer-events: none;
+}
+.TopInfo-container .TopInfo-content {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #fff;
+}
+.TopInfo-container .TopInfo-content .addon {
+  position: absolute;
+  bottom: -15vmin;
+  left: 6rem;
+  width: 10vmin;
+  height: 10vmin;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 2.5vmin;
+}
+.TopInfo-container .TopInfo-content .addon div {
+  white-space: nowrap;
+  margin-top: 1vmin;
+  color: #fff;
+  display: flex;
+}
+.ColorBar-container {
+  position: absolute;
+  bottom: 0%;
+  width: 100%;
+  pointer-events: none;
+  display: flex;
+  justify-content: space-evenly;
+}
+.ColorBar-container .ColorBar-content {
+  position: relative;
+  margin-bottom: 5vmin;
+  height: 2.8rem;
+  background-color: #ccc3;
+  border-radius: 1.5rem;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+.ColorBar-container .ColorBar-content .Bar {
+  pointer-events: all;
+  cursor: pointer;
+  position: relative;
+  margin: 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-size: 100% 100%;
+}
+.ColorBar-container .ColorBar-content .Bar .Bar-Line {
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  width: calc(2rem + 6px);
+  height: calc(2rem + 6px);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #fff;
+}
+
+.Mute-container {
+  position: absolute;
+  top: 5vmin;
+  right: 2vmax;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+.Mute-container .Mute-content {
+  display: flex;
+  border-radius: 0.8rem;
+  margin-right: 1rem;
+  margin-top: 1.4rem;
+  pointer-events: all;
+  transition: all 0.3s;
+}
+.Mute-container .Mute-content img {
+  width: 1.6rem;
+  margin: 0%;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.Mute-container .Mute-content:hover {
+  transform: scale(1.2);
+}
+.screenshot {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  flex-direction: column;
+  pointer-events: none;
+}
+.screenshot p {
+  -webkit-user-select: none;
+  user-select: none;
+  color: #ffffff80;
+  font-size: 0.6rem;
+}
+.screenshot #screenshot-img {
+  pointer-events: all;
+  border: solid 1px #bababa;
+}
+.screenshot .camera {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  bottom: 5vmin;
+  pointer-events: all;
+}
+.screenshot .camera img {
+  width: 2.8rem;
+  transition: all 0.2s;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  cursor: pointer;
+}
+.screenshot .camera img:hover {
+  scale: 1.1;
+}
+.key_Light {
+  z-index: 3;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  pointer-events: none;
+  opacity: 0;
+  animation: anim 0.5s;
+}
+@keyframes anim {
+  0% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+.LeftCustomBar-container {
+  position: absolute;
+  height: 100%;
+  width: 16rem;
+  left: 5vmin;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+.LeftCustomBar-container .LeftCustomBar-content {
+  position: relative;
+  height: 20rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.LeftCustomBar-container .LeftCustomBar-content .LeftCustomBar-top {
+  width: 100%;
+  height: 100%;
+}
+.LeftCustomBar-container
+  .LeftCustomBar-content
+  .LeftCustomBar-top
+  .Slider-content {
+  width: 16rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+.LeftCustomBar-container
+  .LeftCustomBar-content
+  .LeftCustomBar-top
+  .Slider-content
+  .Slider-table {
+  display: flex;
+  align-items: center;
+}
+.LeftCustomBar-container
+  .LeftCustomBar-content
+  .LeftCustomBar-top
+  .Slider-content
+  .Slider-table
+  p {
+  color: #fff;
+  display: flex;
+  width: 3rem;
+  margin: 0px 1rem 2px;
+}
+.LeftCustomBar-container
+  .LeftCustomBar-content
+  .LeftCustomBar-top
+  .Slider-content
+  .Slider-table
+  .SliderHue {
+  width: 11rem;
+  pointer-events: all;
+  cursor: pointer;
+}
+.LeftCustomBar-container
+  .LeftCustomBar-content
+  .LeftCustomBar-top
+  .Slider-content
+  .Slider-table
+  .SliderHue
+  .w-color-alpha-fill {
+  margin-top: -6px;
+}
+.LeftCustomBar-container
+  .LeftCustomBar-content
+  .LeftCustomBar-top
+  .Slider-content
+  .Slider-table
+  .SliderHue
+  .w-color-interactive {
+  border-radius: 50%;
+}
+.LeftCustomBar-container
+  .LeftCustomBar-content
+  .LeftCustomBar-top
+  .Slider-content
+  .Bar-table {
+  display: flex;
+}
+.LeftCustomBar-container
+  .LeftCustomBar-content
+  .LeftCustomBar-top
+  .Slider-content
+  .Bar-table
+  .Bar {
+  pointer-events: all;
+  position: relative;
+  margin: 0.5rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background-size: 100% 100%;
+}
+.LeftCustomBar-container
+  .LeftCustomBar-content
+  .LeftCustomBar-top
+  .Slider-content
+  .Bar-table
+  .Bar
+  .Bar-Line {
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  width: calc(3rem + 6px);
+  height: calc(3rem + 6px);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #fff;
+}
+.LeftCustomBar-container .LeftCustomBar-content .LeftCustomBar-bottom {
+  position: absolute;
+  bottom: -2rem;
+  width: 50%;
+  height: 2rem;
+  display: flex;
+  justify-content: space-evenly;
+}
+.LeftCustomBar-container .LeftCustomBar-content .LeftCustomBar-bottom img {
+  height: 100%;
+  filter: invert(30%);
+  pointer-events: all;
+}
+.LeftCustomBar-container
+  .LeftCustomBar-content
+  .LeftCustomBar-bottom
+  img:hover {
+  filter: invert(0%);
+}

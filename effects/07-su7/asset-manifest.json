@@ -1,0 +1,284 @@
+[
+  {
+    "path": "1.0.5/audios/bgm2.mp3",
+    "url": "https://gamemcu.com/su7/1.0.5/audios/bgm2.mp3",
+    "bytes": 472761,
+    "sha256": "b1aef000903620f6589e20c7f9651268e149e8d0cc56e079d254f973e39f7593"
+  },
+  {
+    "path": "1.0.5/icon/ChangeButton.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/icon/ChangeButton.webp",
+    "bytes": 1048,
+    "sha256": "5868b809eb41377460cefbcb04427e8e08655c0229ebf8f03f96abae42b3c96a"
+  },
+  {
+    "path": "1.0.5/icon/b1.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/icon/b1.webp",
+    "bytes": 1066,
+    "sha256": "df53aac1b5734d405b293380985eedc1eba401ecafe7e6c4ca9fe75190224382"
+  },
+  {
+    "path": "1.0.5/icon/b10.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/icon/b10.webp",
+    "bytes": 2146,
+    "sha256": "b8a757ef354a9d2eafd2496b967042c9c85ca285b96b5699e9d2375a315cb35a"
+  },
+  {
+    "path": "1.0.5/icon/b12.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/icon/b12.webp",
+    "bytes": 2412,
+    "sha256": "1e27f785b0b52228186686526784b4515afb6d5b1bfad3df0c4ac8d8b17527d6"
+  },
+  {
+    "path": "1.0.5/icon/b13.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/icon/b13.webp",
+    "bytes": 1660,
+    "sha256": "1f7639b45faeb925dfa77d26d5ad1cff202ec8751823b9e1ff7b59ed31d71741"
+  },
+  {
+    "path": "1.0.5/icon/b2.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/icon/b2.webp",
+    "bytes": 834,
+    "sha256": "eb6baa69fddd7067220c2dfd97207d136a7430235071ff53d3cc25602d3d0f78"
+  },
+  {
+    "path": "1.0.5/icon/b3.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/icon/b3.webp",
+    "bytes": 666,
+    "sha256": "24efcaf2b3dc00f3d0bfaedbd1ca4b47e94645b11f29575352436493e18a3c60"
+  },
+  {
+    "path": "1.0.5/icon/b4.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/icon/b4.webp",
+    "bytes": 654,
+    "sha256": "319e2786f7c1838ad15083a242d5f89ac590aac5e559d5b38a42cb113bc42c7d"
+  },
+  {
+    "path": "1.0.5/icon/b5.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/icon/b5.webp",
+    "bytes": 716,
+    "sha256": "4efc324432d16c9c70db16f466eb25e375f7b62b48abf5b9fd38eb09e5f3c4de"
+  },
+  {
+    "path": "1.0.5/icon/b6.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/icon/b6.webp",
+    "bytes": 1098,
+    "sha256": "9e3458a3a4c624c00fa193d476687152f7ecaca1ffd1d36f06e39a74ece61161"
+  },
+  {
+    "path": "1.0.5/icon/b7.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/icon/b7.webp",
+    "bytes": 1116,
+    "sha256": "4b0ed8ad707f7a3fcdfb85b79bf6c47113e097b89bec9651aecc6712d00b1638"
+  },
+  {
+    "path": "1.0.5/icon/b8.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/icon/b8.webp",
+    "bytes": 980,
+    "sha256": "fe7d0251814df7f5232a9eb21cb6e176a891782e5c1d20bcd5b90fb6dde6d80a"
+  },
+  {
+    "path": "1.0.5/icon/b9.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/icon/b9.webp",
+    "bytes": 614,
+    "sha256": "e95e29a2abe8d73d1bdad33ee7459947a442038355a8af61f4b518fe8d475c81"
+  },
+  {
+    "path": "1.0.5/icon/close.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/icon/close.webp",
+    "bytes": 1446,
+    "sha256": "c6f9570205b3948461a728d212a5edc7ef67cf705b9020ad585361718b4c20a0"
+  },
+  {
+    "path": "1.0.5/icon/close2.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/icon/close2.webp",
+    "bytes": 2644,
+    "sha256": "67923904edeb49986d34e4cc7d98439d3c7a27ab593ff6787f9be795d3e350ee"
+  },
+  {
+    "path": "1.0.5/icon/custom.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/icon/custom.webp",
+    "bytes": 2864,
+    "sha256": "4c61d1ba59ac4c5f76a540a4d8f1df655a0a5e76977718b576a1d457ee5e09cc"
+  },
+  {
+    "path": "1.0.5/icon/open.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/icon/open.webp",
+    "bytes": 1670,
+    "sha256": "6ae9a8ba9b4b0f79aaed513207f0ab884e8ec011165c5fed77ade842c2d6d98d"
+  },
+  {
+    "path": "1.0.5/icon/photo.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/icon/photo.webp",
+    "bytes": 2690,
+    "sha256": "ab5680df2668a69ea1b9e5edf3c03c850ec3f1e1598757489efef6478f3d5692"
+  },
+  {
+    "path": "1.0.5/icon/xiaomi_su7.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/icon/xiaomi_su7.webp",
+    "bytes": 3684,
+    "sha256": "a77f0b0772d47aa2d324841cd25d0df6e1ba9566c41cd23b8e0ad00b49160f62"
+  },
+  {
+    "path": "1.0.5/mesh/sm_car.bin",
+    "url": "https://gamemcu.com/su7/1.0.5/mesh/sm_car.bin",
+    "bytes": 2156528,
+    "sha256": "960d608c6323cf2fb8faaf6780fc0a9355969be8c8260cd0c5b5ccce839e91c1"
+  },
+  {
+    "path": "1.0.5/mesh/sm_car_lightbar.bin",
+    "url": "https://gamemcu.com/su7/1.0.5/mesh/sm_car_lightbar.bin",
+    "bytes": 71716,
+    "sha256": "4486b486807b3aa4762c5552aaa3378535282bf8154baa1e7339e9cd983f9ca9"
+  },
+  {
+    "path": "1.0.5/mesh/sm_carradar.bin",
+    "url": "https://gamemcu.com/su7/1.0.5/mesh/sm_carradar.bin",
+    "bytes": 28912,
+    "sha256": "8af2ff21de536cc330877a3046edbf7b195323867e0ca2ffcf5078772786fa58"
+  },
+  {
+    "path": "1.0.5/mesh/sm_curvature.bin",
+    "url": "https://gamemcu.com/su7/1.0.5/mesh/sm_curvature.bin",
+    "bytes": 117772,
+    "sha256": "714a98ce77b6539c8ca9dfa0cb327afc760f09bc101e9d502b62f8cbb09b86b2"
+  },
+  {
+    "path": "1.0.5/mesh/sm_linecar.bin",
+    "url": "https://gamemcu.com/su7/1.0.5/mesh/sm_linecar.bin",
+    "bytes": 56684,
+    "sha256": "80377092503f9bc00119d13ebc6b19af3082806f47c69cfd24009c4c47ff8922"
+  },
+  {
+    "path": "1.0.5/mesh/sm_simplecar.bin",
+    "url": "https://gamemcu.com/su7/1.0.5/mesh/sm_simplecar.bin",
+    "bytes": 51352,
+    "sha256": "6691f5a6e8bd55c943412fa7884d0d96c8e3e865edfbfc85bd79a4d5fffe8e64"
+  },
+  {
+    "path": "1.0.5/mesh/sm_size.bin",
+    "url": "https://gamemcu.com/su7/1.0.5/mesh/sm_size.bin",
+    "bytes": 11296,
+    "sha256": "42a156ba5edd36f150df471b30bcdd7987e125c37c528ec223cc28f1fa51a773"
+  },
+  {
+    "path": "1.0.5/mesh/sm_speedup.bin",
+    "url": "https://gamemcu.com/su7/1.0.5/mesh/sm_speedup.bin",
+    "bytes": 9164,
+    "sha256": "f62ae454a02dd95d6d7422f6b07c41faabd064131953f7bb869cb433fd429874"
+  },
+  {
+    "path": "1.0.5/mesh/sm_startroom.raw.glb",
+    "url": "https://gamemcu.com/su7/1.0.5/mesh/sm_startroom.raw.glb",
+    "bytes": 391432,
+    "sha256": "c35b1848a4c15a9c2c382d2652fd9978269ad186810f3160ca83c4f155a41b7a"
+  },
+  {
+    "path": "1.0.5/mesh/sm_windspeed.bin",
+    "url": "https://gamemcu.com/su7/1.0.5/mesh/sm_windspeed.bin",
+    "bytes": 11740,
+    "sha256": "ef5606dbb96f7e4fa50f49ad2ef8ce6e4dbafb705d8104074955342732fd6103"
+  },
+  {
+    "path": "1.0.5/texture/t_car_body_AO.raw.jpg",
+    "url": "https://gamemcu.com/su7/1.0.5/texture/t_car_body_AO.raw.jpg",
+    "bytes": 725132,
+    "sha256": "e8876021263df3f71e14f5f8ddd751db2a49576582ef4888677a5e8334f03371"
+  },
+  {
+    "path": "1.0.5/texture/t_env_light.hdr",
+    "url": "https://gamemcu.com/su7/1.0.5/texture/t_env_light.hdr",
+    "bytes": 909071,
+    "sha256": "b4ad2dd9878e9f88f56f71adefa7ad511eb21d79e6203cc3d41284faba8aba21"
+  },
+  {
+    "path": "1.0.5/texture/t_env_night.hdr",
+    "url": "https://gamemcu.com/su7/1.0.5/texture/t_env_night.hdr",
+    "bytes": 90819,
+    "sha256": "db33677b5f23802b3a8411fc99b9113eb0c73ab33595aa03144132ba09fbddbe"
+  },
+  {
+    "path": "1.0.5/texture/t_floor_normal.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/texture/t_floor_normal.webp",
+    "bytes": 124956,
+    "sha256": "4472bc51d729c6e93a1fbdf53b73f743e0fa3ab717dd8259bde374e0322eb011"
+  },
+  {
+    "path": "1.0.5/texture/t_floor_roughness.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/texture/t_floor_roughness.webp",
+    "bytes": 236496,
+    "sha256": "6d7f19a0ae0e0a04e930602dd9fb548e75f7f9d01b382d04f0e1dbc92d43249e"
+  },
+  {
+    "path": "1.0.5/texture/t_gm02_car_body_bc.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/texture/t_gm02_car_body_bc.webp",
+    "bytes": 151552,
+    "sha256": "228062282be67f16d5d2f6ed1b99cb5dea06ec12c80400420f97e86f52e0a251"
+  },
+  {
+    "path": "1.0.5/texture/t_gm02_car_window_bc.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/texture/t_gm02_car_window_bc.webp",
+    "bytes": 40760,
+    "sha256": "e8847db214160275d7b71bde1cb0bd0af84a0b96fc0dd78bfc55cd4ef48abce9"
+  },
+  {
+    "path": "1.0.5/texture/t_gm02_car_window_roughness.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/texture/t_gm02_car_window_roughness.webp",
+    "bytes": 6550,
+    "sha256": "4f95854c34d8472c7b39427eb13482e4081782a361ee4c9421e099452270de84"
+  },
+  {
+    "path": "1.0.5/texture/t_gm02_floor_bc.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/texture/t_gm02_floor_bc.webp",
+    "bytes": 22442,
+    "sha256": "03bada3bb0762bc703b1d7c0c9444095cadf5ab5d18c44b4c3a57254c00fed19"
+  },
+  {
+    "path": "1.0.5/texture/t_gm_car_body_bc.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/texture/t_gm_car_body_bc.webp",
+    "bytes": 172728,
+    "sha256": "590fd5039d2886e7d92931ae139058a2b5ff5b5a4df7427aa3f00c22ac2e7d6b"
+  },
+  {
+    "path": "1.0.5/texture/t_police_Car_body_BC.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/texture/t_police_Car_body_BC.webp",
+    "bytes": 29350,
+    "sha256": "4e6252585da9c2b59a4a92332b95f2cb77b05752252e7b4bc332a838dc427ac9"
+  },
+  {
+    "path": "1.0.5/texture/t_police_floor_bc.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/texture/t_police_floor_bc.webp",
+    "bytes": 14528,
+    "sha256": "1c3d8821b8348bbf3b24995517121340661f91b1cb15404a1449047837d79b2b"
+  },
+  {
+    "path": "1.0.5/texture/t_saLine.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/texture/t_saLine.webp",
+    "bytes": 86,
+    "sha256": "0321eff412d637746b24285048512209733949a34fade800f273c9c6dd9c4e2d"
+  },
+  {
+    "path": "1.0.5/texture/t_scar_matcap.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/texture/t_scar_matcap.webp",
+    "bytes": 786,
+    "sha256": "82181607a0000a7cfc7106a1ff4948cd3b5061f3fe7d4301ab43295672803b70"
+  },
+  {
+    "path": "1.0.5/texture/t_startroom_ao.raw.jpg",
+    "url": "https://gamemcu.com/su7/1.0.5/texture/t_startroom_ao.raw.jpg",
+    "bytes": 95871,
+    "sha256": "2d18c6c008e18dcdf0bc6759cc462c91baa26a04822bdb617351028b5ec26151"
+  },
+  {
+    "path": "1.0.5/texture/t_startroom_light.raw.jpg",
+    "url": "https://gamemcu.com/su7/1.0.5/texture/t_startroom_light.raw.jpg",
+    "bytes": 127869,
+    "sha256": "fc68b3d042e4ae55aafbf75fdc384a4e1fe4aa582e0b78403f39720339ba58b3"
+  },
+  {
+    "path": "1.0.5/texture/t_street.webp",
+    "url": "https://gamemcu.com/su7/1.0.5/texture/t_street.webp",
+    "bytes": 3840,
+    "sha256": "0ac8c636d4a857fe7cb882352f2152de238ccd816aea2dc6b1eda16c095018e9"
+  }
+]

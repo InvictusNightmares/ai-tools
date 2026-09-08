@@ -14,6 +14,84 @@ installer_spec.loader.exec_module(installer)
 
 
 class MergeTests(unittest.TestCase):
+    def test_incomplete_catalog_refresh_keeps_previously_delivered_artifacts(self):
+        import io
+        import subprocess
+        import sys
+        import tarfile
+        receiver=next(v for v in builder.stage.__code__.co_consts if isinstance(v,str) and 'latest binary not staged' in v)
+        for status in ('building','failed'):
+            with self.subTest(status=status),tempfile.TemporaryDirectory() as tmp:
+                root=Path(tmp)/'node';root.mkdir()
+                for sha in ('a'*64,'b'*64):
+                    dest=root/'releases'/sha;dest.mkdir(parents=True);(dest/'sub2api').write_bytes(b'previously verified artifact')
+                catalog={'status':status,'releases':[{'version':'old','sha256':'a'*64}]}
+                stream=io.BytesIO()
+                with tarfile.open(fileobj=stream,mode='w:gz') as tar:
+                    data=json.dumps(catalog).encode();entry=tarfile.TarInfo('catalog.json');entry.size=len(data);tar.addfile(entry,io.BytesIO(data))
+                script=receiver.replace('/opt/sub2api-deploy/policy-releases',str(root))
+                subprocess.run([sys.executable,'-c',script],input=stream.getvalue(),check=True,capture_output=True)
+                self.assertTrue((root/'releases'/('b'*64)/'sub2api').exists())
+
+    def test_verified_cache_does_not_require_github_tag_lookup(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            home = Path(tmp)
+            result = home/'releases/0.2.1+policy-log.7'
+            result.mkdir(parents=True)
+            (result/'sub2api').write_bytes(b'verified fixture')
+            meta = {'patch_sha256':'b'*64, 'upstream_version':'0.2.1', 'upstream_commit':'a'*40}
+            record = {'version':'0.2.1+policy-log.7', 'patch_sha256':'b'*64,
+                      'upstream_commit':'a'*40, 'sha256':builder.digest(result/'sub2api'),
+                      'persistent_update_verified':True}
+            (result/'release.json').write_text(json.dumps(record))
+            with patch.object(builder, 'validate_bundle', return_value=meta), patch.object(builder, 'official_tag_commit', side_effect=RuntimeError('GitHub unavailable')) as lookup:
+                actual, path = builder.prepare(home, home/'bundle', {'tag_name':'v0.2.1'})
+                self.assertEqual(actual, record)
+                self.assertEqual(path, result)
+                lookup.assert_not_called()
+
+    def test_release_detection_uses_published_latest_not_newer_tags(self):
+        release = {'tag_name':'v0.2.1','draft':False,'prerelease':False}
+        with patch.object(builder, 'fetch', return_value=release):
+            self.assertEqual(builder.latest_official_release(), release)
+
+    def test_rate_limited_release_detection_uses_official_redirect(self):
+        from unittest.mock import MagicMock
+        response = MagicMock()
+        response.geturl.return_value = 'https://github.com/Wei-Shaw/sub2api/releases/tag/v0.2.1'
+        error = builder.urllib.error.HTTPError('api',403,'rate limit',{},None)
+        with patch.object(builder.urllib.request, 'urlopen') as open_url, patch.object(builder, 'fetch', side_effect=error):
+            open_url.return_value.__enter__.return_value = response
+            self.assertEqual(builder.latest_official_release()['tag_name'], 'v0.2.1')
+
+    def test_release_detection_rejects_foreign_or_prerelease_redirect(self):
+        from unittest.mock import MagicMock
+        for url in ['https://example.com/releases/tag/v0.2.2',
+                    'https://github.com/Wei-Shaw/sub2api/releases/tag/v0.2.3-beta']:
+            response = MagicMock()
+            response.geturl.return_value = url
+            error = builder.urllib.error.HTTPError('api',429,'rate limit',{},None)
+            with patch.object(builder.urllib.request, 'urlopen') as open_url, patch.object(builder, 'fetch', side_effect=error):
+                open_url.return_value.__enter__.return_value = response
+                with self.assertRaises(RuntimeError): builder.latest_official_release()
+
+    def test_blocked_release_message_preserves_version_and_cause(self):
+        error = builder.CompatibilityError('database schema changed', '数据库结构变化，等待兼容性验证')
+        message = builder.failure_message({'tag_name':'v0.2.2'}, error)
+        self.assertIn('v0.2.2', message)
+        self.assertIn('数据库结构变化', message)
+        self.assertNotIn('database schema changed', message)
+
+    def test_migration_runner_change_is_checked(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            runner = root/'backend/internal/repository/migrations_runner.go'
+            runner.parent.mkdir(parents=True)
+            runner.write_text('old locking behavior')
+            before = builder.migration_fingerprint(root)
+            runner.write_text('new locking behavior')
+            self.assertNotEqual(before, builder.migration_fingerprint(root))
+
     def test_nonoverlapping_upstream_change_survives(self):
         with tempfile.TemporaryDirectory() as tmp:
             base,custom,target=[Path(tmp)/n for n in ('base','custom','target')]

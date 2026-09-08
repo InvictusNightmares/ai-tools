@@ -37,7 +37,7 @@ def main():
                        fromfile=f'a/{rel}' if rel in files else '/dev/null',tofile=f'b/{rel}'))
     patch=''.join(changes).encode()
     (bundle/'policy-log.patch').write_bytes(patch)
-    meta.update(custom_version='0.2.0+policy-log.6',patch_sha256=hashlib.sha256(patch).hexdigest(),
+    meta.update(patch_sha256=hashlib.sha256(patch).hexdigest(),
                 source_file_count=added+modified,added_files=added,modified_files=modified)
     (bundle/'upstream.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2)+'\n')
     print(f'{added+modified} source files; {len(patch)} patch bytes; SHA256 {meta["patch_sha256"]}')

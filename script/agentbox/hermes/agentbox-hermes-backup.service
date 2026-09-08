@@ -1,0 +1,10 @@
+[Unit]
+Description=Consistent backup of the Hermes personal agent
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/srv/agentbox/hermes/backup.sh
+UMask=0077
+TimeoutStartSec=30min
