@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily Hermes backup at 04:30 Asia/Shanghai
+
+[Timer]
+OnCalendar=*-*-* 04:30:00 Asia/Shanghai
+Persistent=true
+Unit=agentbox-hermes-backup.service
+
+[Install]
+WantedBy=timers.target

@@ -286,10 +286,10 @@ index 0000000000000000000000000000000000000000..e57b9030fa7d26353621062abd4b1105
 +
 +func (deadlineRecorder) SetWriteDeadline(time.Time) error { return nil }
 diff --git a/backend/internal/handler/openai_chat_completions.go b/backend/internal/handler/openai_chat_completions.go
-index e74b11b9b629e7e92ff4218d1681192445df1f95..684bd2b130a496ad60da06c9af3d66945bb41d8f 100644
+index 147f4460a8eb683d17a242d7a803ddd74ab4bd87..3ddf4bd30aec893e1fc5c2f2e7895eda9e193f8c 100644
 --- a/backend/internal/handler/openai_chat_completions.go
 +++ b/backend/internal/handler/openai_chat_completions.go
-@@ -249,7 +249,7 @@
+@@ -250,7 +250,7 @@
  			return h.gatewayService.ForwardAsChatCompletions(c.Request.Context(), c, account, forwardBody, promptCacheKey, "")
  		}()
  		var cyberBlockBodyChat []byte
@@ -299,10 +299,10 @@ index e74b11b9b629e7e92ff4218d1681192445df1f95..684bd2b130a496ad60da06c9af3d6694
  		}
  		h.recordCyberPolicyIfMarked(c, apiKey, account, subscription, reqModel, err != nil, cyberBlockBodyChat, clientRequestedUsageFields(c, channelMapping, reqModel, ""), service.HashUsageRequestPayload(body))
 diff --git a/backend/internal/handler/openai_gateway_cyber_test.go b/backend/internal/handler/openai_gateway_cyber_test.go
-index 1b9fc53a9d07ca2e543fb5a1ddf5ce8b992391cf..f92b98cb95a371adb9169fc16de93e39342f17af 100644
+index 4be214cdc9dc8b4fe81ae1f031ab18d81daedf99..8c3f0673fb7ae4aafa03e20b0d16fc73edc86495 100644
 --- a/backend/internal/handler/openai_gateway_cyber_test.go
 +++ b/backend/internal/handler/openai_gateway_cyber_test.go
-@@ -5,6 +5,7 @@
+@@ -6,6 +6,7 @@
  	"strings"
  	"testing"
  
@@ -310,7 +310,7 @@ index 1b9fc53a9d07ca2e543fb5a1ddf5ce8b992391cf..f92b98cb95a371adb9169fc16de93e39
  	"github.com/Wei-Shaw/sub2api/internal/service"
  	"github.com/gin-gonic/gin"
  	"github.com/stretchr/testify/require"
-@@ -195,3 +196,41 @@
+@@ -234,3 +235,41 @@
  		})
  	}
  }
@@ -353,7 +353,7 @@ index 1b9fc53a9d07ca2e543fb5a1ddf5ce8b992391cf..f92b98cb95a371adb9169fc16de93e39
 +	require.Equal(t, "websocket", entries[1].Protocol)
 +}
 diff --git a/backend/internal/handler/openai_gateway_handler.go b/backend/internal/handler/openai_gateway_handler.go
-index ce67e07e85d86b36374452fe92109f18fc089d0a..5293c31808220d3934d921fd5a5ab746880c23d9 100644
+index d4e34e3b7b3907d68218bbb2f5d01aec0c1d206c..6e3d7604c59728fdfcbfcdcd9d5063647ecd3a9b 100644
 --- a/backend/internal/handler/openai_gateway_handler.go
 +++ b/backend/internal/handler/openai_gateway_handler.go
 @@ -20,6 +20,7 @@
@@ -372,7 +372,7 @@ index ce67e07e85d86b36374452fe92109f18fc089d0a..5293c31808220d3934d921fd5a5ab746
  	gatewayService             *service.OpenAIGatewayService
  	billingCacheService        *service.BillingCacheService
  	apiKeyService              *service.APIKeyService
-@@ -749,7 +751,7 @@
+@@ -773,7 +775,7 @@
  			return h.gatewayService.Forward(c.Request.Context(), c, account, attemptBody)
  		}()
  		var cyberBlockBodyHTTP []byte
@@ -381,7 +381,7 @@ index ce67e07e85d86b36374452fe92109f18fc089d0a..5293c31808220d3934d921fd5a5ab746
  			cyberBlockBodyHTTP = sessionHashBody
  		}
  		h.recordCyberPolicyIfMarked(c, apiKey, account, subscription, reqModel, err != nil, cyberBlockBodyHTTP, clientRequestedUsageFields(c, channelMapping, reqModel, ""), service.HashUsageRequestPayload(body))
-@@ -1314,7 +1316,7 @@
+@@ -1338,7 +1340,7 @@
  			return h.gatewayService.ForwardAsAnthropic(c.Request.Context(), c, account, forwardBody, promptCacheKey, defaultMappedModel)
  		}()
  		var cyberBlockBodyMsg []byte
@@ -390,7 +390,7 @@ index ce67e07e85d86b36374452fe92109f18fc089d0a..5293c31808220d3934d921fd5a5ab746
  			cyberBlockBodyMsg = body
  		}
  		h.recordCyberPolicyIfMarked(c, apiKey, account, subscription, reqModel, err != nil, cyberBlockBodyMsg, clientRequestedUsageFields(c, channelMappingMsg, reqModel, ""), service.HashUsageRequestPayload(body))
-@@ -2873,6 +2875,9 @@
+@@ -2962,6 +2964,9 @@
  
  		for {
  			err := h.gatewayService.ProxyResponsesWebSocketFromClient(ctx, c, wsConn, account, token, wsFirstMessage, hooks)
@@ -400,7 +400,7 @@ index ce67e07e85d86b36374452fe92109f18fc089d0a..5293c31808220d3934d921fd5a5ab746
  			if err == nil {
  				reqLog.Info("openai.websocket_ingress_closed", zap.Int64("account_id", account.ID))
  				return
-@@ -3950,6 +3955,7 @@
+@@ -4039,6 +4044,7 @@
  // 当前请求已发给用户，本方法只做事后记录，不影响响应。forwardErrored 为 true 时才写用量行，
  // 避免与正常 RecordUsage(forward 成功路径)重复。每请求至多记录一次。
  func (h *OpenAIGatewayHandler) recordCyberPolicyIfMarked(c *gin.Context, apiKey *service.APIKey, account *service.Account, subscription *service.UserSubscription, model string, forwardErrored bool, cyberBlockBody []byte, channelFields service.ChannelUsageFields, requestPayloadHash string) {
@@ -408,7 +408,7 @@ index ce67e07e85d86b36374452fe92109f18fc089d0a..5293c31808220d3934d921fd5a5ab746
  	mark := service.GetOpsCyberPolicy(c)
  	if mark == nil {
  		return
-@@ -4032,6 +4038,7 @@
+@@ -4121,6 +4127,7 @@
  		ClientIP:        clientIPStr,
  		CreatedAt:       time.Now(),
  	}
@@ -416,14 +416,14 @@ index ce67e07e85d86b36374452fe92109f18fc089d0a..5293c31808220d3934d921fd5a5ab746
  	if gwSvc != nil && apiKey != nil {
  		plan := buildCyberSessionBlockWritePlan(apiKey.ID, c, cyberBlockBody)
  		if len(plan.keys) > 0 {
-@@ -4096,6 +4103,7 @@
+@@ -4188,6 +4195,7 @@
  		return
  	}
  	service.ClearOpsCyberPolicy(c)
 +	service.ClearOpenAIPolicyObservation(c)
- 	c.Set(cyberPolicyRecordedKey, false)
- }
- 
+ 	if resetRecorded {
+ 		c.Set(cyberPolicyRecordedKey, false)
+ 	}
 diff --git a/backend/internal/handler/openai_images.go b/backend/internal/handler/openai_images.go
 index 18e1d59195e54adb689821f9f157b557e93b647f..f3fbe70b4c8f57f7c54d1d8a44f87e1267ddd529 100644
 --- a/backend/internal/handler/openai_images.go
@@ -2322,11 +2322,11 @@ index d23a21c62cf6e40c9c2307aa2714b80f7bb926df..5925bbfa875f09a0236c26a017e99222
 +	records.GET("/:id/body", h.Download)
 +}
 diff --git a/backend/internal/service/openai_gateway_cc_pipeline.go b/backend/internal/service/openai_gateway_cc_pipeline.go
-index a22288b70ae285d1cbbb000082635be2dee20b9b..6b0e4a20aed56c70d79479be543e2525149a4c7c 100644
+index 64585093891b31d1586a2d339f6a0380889435b0..fdc0ea5ec89d1af7d9b769ca6c7a123a0f92eb1b 100644
 --- a/backend/internal/service/openai_gateway_cc_pipeline.go
 +++ b/backend/internal/service/openai_gateway_cc_pipeline.go
-@@ -226,7 +226,7 @@
- 	if account.Proxy != nil {
+@@ -229,7 +229,7 @@
+ 	if account.ProxyID != nil && account.Proxy != nil {
  		proxyURL = account.Proxy.URL()
  	}
 -	resp, err := s.doOpenAIUpstream(upstreamReq, proxyURL, account)
@@ -2335,11 +2335,11 @@ index a22288b70ae285d1cbbb000082635be2dee20b9b..6b0e4a20aed56c70d79479be543e2525
  		return nil, s.handleOpenAIUpstreamTransportError(ctx, c, account, err, false)
  	}
 diff --git a/backend/internal/service/openai_gateway_chat_completions.go b/backend/internal/service/openai_gateway_chat_completions.go
-index c9a7e34b6a7bc1326fc929e018137a5d15030e06..980f31c506a79bbc9a0aa69de88ffda4c5e4b670 100644
+index 646c8860476137b7e6e3f27195af4aeefa1f6dbc..621ed0e4fd1b40ad6489b0ed62746517d486d149 100644
 --- a/backend/internal/service/openai_gateway_chat_completions.go
 +++ b/backend/internal/service/openai_gateway_chat_completions.go
 @@ -351,7 +351,7 @@
- 	if account.Proxy != nil {
+ 	if account.ProxyID != nil && account.Proxy != nil {
  		proxyURL = account.Proxy.URL()
  	}
 -	resp, err := s.doOpenAIUpstream(upstreamReq, proxyURL, account)
@@ -2348,10 +2348,10 @@ index c9a7e34b6a7bc1326fc929e018137a5d15030e06..980f31c506a79bbc9a0aa69de88ffda4
  		return nil, s.handleOpenAIUpstreamTransportError(ctx, c, account, err, false)
  	}
 diff --git a/backend/internal/service/openai_gateway_forward.go b/backend/internal/service/openai_gateway_forward.go
-index 18b5aff28e3d8ec5b006629d7a6ee1a08f5cc5b0..57455619142e7db07c93d69d98867dcf6fc52959 100644
+index e92f8b680e89ac0eda63c274c649c19724d00277..5ec8d49a56438f11f99d6c59f86ec36d51496b15 100644
 --- a/backend/internal/service/openai_gateway_forward.go
 +++ b/backend/internal/service/openai_gateway_forward.go
-@@ -1007,7 +1007,7 @@
+@@ -1037,7 +1037,7 @@
  
  		// Send request
  		upstreamStart := time.Now()
@@ -2361,7 +2361,7 @@ index 18b5aff28e3d8ec5b006629d7a6ee1a08f5cc5b0..57455619142e7db07c93d69d98867dcf
  		if headerGuard != nil && headerGuard.stopHeaderWait() {
  			if resp != nil && resp.Body != nil {
 diff --git a/backend/internal/service/openai_gateway_messages.go b/backend/internal/service/openai_gateway_messages.go
-index b12ab68044f2016f6239981a1fd2c705fa35dd05..c077df0f4fcfd2b2990127bddd1672547bddf343 100644
+index e755548a7dc43bec6cea3fc1f7821f7aae8caa4a..7e1d8a95f95e00adbc7b1551d6f1c215e8ad7950 100644
 --- a/backend/internal/service/openai_gateway_messages.go
 +++ b/backend/internal/service/openai_gateway_messages.go
 @@ -393,7 +393,7 @@
@@ -2374,7 +2374,7 @@ index b12ab68044f2016f6239981a1fd2c705fa35dd05..c077df0f4fcfd2b2990127bddd167254
  			return nil, s.handleOpenAIUpstreamTransportError(ctx, c, account, err, false)
  		}
 diff --git a/backend/internal/service/openai_gateway_passthrough.go b/backend/internal/service/openai_gateway_passthrough.go
-index ecca154781149efb97876dd765d09a0d75298980..d0619a3885fa07434fb6d304b7114b10e27e1b24 100644
+index 7a949209b94d56c0104fa9e0f9721c20f9ffd211..e8eabf6c893b2055acd6f68293d9befe0706f22e 100644
 --- a/backend/internal/service/openai_gateway_passthrough.go
 +++ b/backend/internal/service/openai_gateway_passthrough.go
 @@ -374,7 +374,7 @@
@@ -2387,10 +2387,10 @@ index ecca154781149efb97876dd765d09a0d75298980..d0619a3885fa07434fb6d304b7114b10
  		if err != nil {
  			// Transport-level failure (proxy/DNS/TCP/TLS — no HTTP response). Convert to
 diff --git a/backend/internal/service/openai_gateway_service.go b/backend/internal/service/openai_gateway_service.go
-index aaa2e30af7a0b97e4f07e7648c047e633b744f3d..b36129630bb46ea25d55eda671e98cecfdf9b46b 100644
+index 01ea7b5f486bafb9009a5119c970214e5bd50a56..d555e1218a913cd861d06252d53a12c25a94a99a 100644
 --- a/backend/internal/service/openai_gateway_service.go
 +++ b/backend/internal/service/openai_gateway_service.go
-@@ -423,34 +423,35 @@
+@@ -425,34 +425,35 @@
  
  // OpenAIGatewayService handles OpenAI API gateway operations
  type OpenAIGatewayService struct {
@@ -2455,7 +2455,7 @@ index aaa2e30af7a0b97e4f07e7648c047e633b744f3d..b36129630bb46ea25d55eda671e98cec
  	openaiWSPoolOnce               sync.Once
  	openaiWSStateStoreOnce         sync.Once
 diff --git a/backend/internal/service/openai_images.go b/backend/internal/service/openai_images.go
-index c661aade367cdbe08b12093521a4c10e182d15f5..81f6a722de52a460a47419300c61cbf00d3f8b7d 100644
+index 371b2986c21222465f5c5d3df08690bb7bfe874a..c732fff9877ef2ce8b7b434cc57ecde9088acfa4 100644
 --- a/backend/internal/service/openai_images.go
 +++ b/backend/internal/service/openai_images.go
 @@ -625,7 +625,7 @@
@@ -2468,10 +2468,10 @@ index c661aade367cdbe08b12093521a4c10e182d15f5..81f6a722de52a460a47419300c61cbf0
  	if err != nil {
  		safeErr := sanitizeUpstreamErrorMessage(err.Error())
 diff --git a/backend/internal/service/openai_images_responses.go b/backend/internal/service/openai_images_responses.go
-index 434c352da279cb619da567cc826ba2cb8d05d4ac..96bad3a1827e3b565b300158fbe1045ba431ce11 100644
+index 1ad5b5aaee87e1c9566233b665028df49c1fec5f..a856e8a527f48be629f5b45c8af60d7df4f94c9a 100644
 --- a/backend/internal/service/openai_images_responses.go
 +++ b/backend/internal/service/openai_images_responses.go
-@@ -1820,7 +1820,7 @@
+@@ -1824,7 +1824,7 @@
  		proxyURL = account.Proxy.URL()
  	}
  	upstreamStart := time.Now()
@@ -3133,13 +3133,13 @@ index 0000000000000000000000000000000000000000..641b0a6d13fc6503b4b4b855899ccd04
 +	require.Nil(t, GetOpenAIPolicyObservation(c))
 +}
 diff --git a/backend/internal/service/openai_ws_forwarder_ingress.go b/backend/internal/service/openai_ws_forwarder_ingress.go
-index e57c2dd89938efd80551cff14d5a76dde7d06ddf..416b4c9feceafc337f7bd249c0d95b389ede52b5 100644
+index aedd078ec6e450b06bfe0e336067eb0a5c65442f..ead07600fcf85392d6cdb3e677d762feee0072b1 100644
 --- a/backend/internal/service/openai_ws_forwarder_ingress.go
 +++ b/backend/internal/service/openai_ws_forwarder_ingress.go
-@@ -1100,6 +1100,9 @@
- 			}
- 			if openAIWSMessageShouldParseUsage(eventType, upstreamMessage) {
- 				parseOpenAIWSResponseUsageFromCompletedEvent(upstreamMessage, &usage)
+@@ -1140,6 +1140,9 @@
+ 			if firstTokenMs == nil && isTokenEvent {
+ 				ms := int(time.Since(turnStart).Milliseconds())
+ 				firstTokenMs = &ms
 +			}
 +			if s.policyObservationAvailable() {
 +				ObserveOpenAIPolicyPayload(c, account, upstreamMessage, http.StatusOK, "")
@@ -3147,7 +3147,7 @@ index e57c2dd89938efd80551cff14d5a76dde7d06ddf..416b4c9feceafc337f7bd249c0d95b38
  			imageCounter.AddSSEData(upstreamMessage)
  
 diff --git a/backend/internal/service/openai_ws_forwarder_v2.go b/backend/internal/service/openai_ws_forwarder_v2.go
-index 81f8631e96ce316e21b2eda6d39170b43dff89e7..661c7330bf3e0332069733a9c8dd8c579781511e 100644
+index 260ec3eedf72fc86cc64af8929f27891d7f33bb7..3aca5ef9b06123fa3f53151621680b92a71965cd 100644
 --- a/backend/internal/service/openai_ws_forwarder_v2.go
 +++ b/backend/internal/service/openai_ws_forwarder_v2.go
 @@ -582,6 +582,9 @@
@@ -3161,10 +3161,10 @@ index 81f8631e96ce316e21b2eda6d39170b43dff89e7..661c7330bf3e0332069733a9c8dd8c57
  		imageCounter.AddSSEData(message)
  
 diff --git a/backend/internal/service/openai_ws_http_bridge.go b/backend/internal/service/openai_ws_http_bridge.go
-index 8e5cbf6159861a1f2c74962b85ebba6097a9c90d..e3eec8880102ed8d0765a40490d1cb7fbfc73e95 100644
+index 03339deffc58a749cfbb65d19e9a4c6676474195..55a0759ed8efaa3613dc0bb1f288408b9d293685 100644
 --- a/backend/internal/service/openai_ws_http_bridge.go
 +++ b/backend/internal/service/openai_ws_http_bridge.go
-@@ -542,7 +542,7 @@
+@@ -545,7 +545,7 @@
  		if buildErr != nil {
  			return nil, buildErr
  		}
@@ -3174,7 +3174,7 @@ index 8e5cbf6159861a1f2c74962b85ebba6097a9c90d..e3eec8880102ed8d0765a40490d1cb7f
  			if turn == 1 {
  				return nil, s.handleOpenAIUpstreamTransportError(ctx, c, account, err, true)
 diff --git a/backend/internal/service/openai_ws_v2_passthrough_adapter.go b/backend/internal/service/openai_ws_v2_passthrough_adapter.go
-index 715a747918153562701c486480d007fe52edd5ae..62a8569de44e876bb42b217e10700df20545d6e7 100644
+index b7c294096514b765dfa90b3c0c1ee01f910601ca..8c4a440400534b41a617879294c563ef943c0979 100644
 --- a/backend/internal/service/openai_ws_v2_passthrough_adapter.go
 +++ b/backend/internal/service/openai_ws_v2_passthrough_adapter.go
 @@ -1272,6 +1272,9 @@
@@ -3894,7 +3894,7 @@ index 0000000000000000000000000000000000000000..5edbf088bf5ce2c5e48c3948831e74d7
 +  })
 +})
 diff --git a/frontend/src/components/layout/AppSidebar.vue b/frontend/src/components/layout/AppSidebar.vue
-index f39c8ed1b956a02ee455dd0daa997520dd503b33..67bbd2ab5b0d8e457520a006f22d91dae0011b65 100644
+index 265f94faca35a7700d5a7268c0f12f9930cb7823..647392965a815e91d525d2afb631b29563ae545a 100644
 --- a/frontend/src/components/layout/AppSidebar.vue
 +++ b/frontend/src/components/layout/AppSidebar.vue
 @@ -194,6 +194,7 @@
@@ -3905,7 +3905,7 @@ index f39c8ed1b956a02ee455dd0daa997520dd503b33..67bbd2ab5b0d8e457520a006f22d91da
  import { sanitizeSvg } from '@/utils/sanitize'
  import { sanitizeUrl } from '@/utils/url'
  import { FeatureFlags, makeSidebarFlag } from '@/utils/featureFlags'
-@@ -818,6 +819,7 @@
+@@ -821,6 +822,7 @@
        ],
      },
      { path: '/admin/usage', label: t('nav.usage'), icon: ChartIcon },

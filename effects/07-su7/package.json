@@ -1,0 +1,24 @@
+{
+  "name": "su7-webgl-source",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 8768",
+    "build": "vite build",
+    "build:single": "npm run check && node scripts/build-single.mjs",
+    "preview": "vite preview --host 127.0.0.1 --port 8769",
+    "check": "node scripts/check-assets.mjs"
+  },
+  "dependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "framer-motion": "11.18.2"
+  },
+  "devDependencies": {
+    "vite": "6.1.0"
+  }
+}
