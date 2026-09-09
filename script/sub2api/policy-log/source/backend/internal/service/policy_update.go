@@ -135,7 +135,7 @@ func (s *UpdateService) policyRollbackVersions() ([]RollbackVersion, error) {
 	}
 	result := make([]RollbackVersion, 0)
 	for _, r := range c.Releases {
-		if comparePolicyVersions(r.Version, s.currentVersion) < 0 {
+		if comparePolicyVersions(r.Version, s.currentVersion) < 0 && policyRollbackCompatible(s.currentVersion, r.Version) {
 			result = append(result, RollbackVersion{Version: r.Version, PublishedAt: r.PublishedAt})
 			if len(result) == maxRollbackVersions {
 				break
@@ -145,7 +145,17 @@ func (s *UpdateService) policyRollbackVersions() ([]RollbackVersion, error) {
 	return result, nil
 }
 
+// Migration 235 renames the group model column. Older binaries cannot read the
+// upgraded schema; restoring them requires an operator-led database restore.
+func policyRollbackCompatible(current, target string) bool {
+	return comparePolicyVersions(current, "0.2.4+policy-log.0") < 0 ||
+		comparePolicyVersions(target, "0.2.4+policy-log.0") >= 0
+}
+
 func (s *UpdateService) installPolicyUpdate(ctx context.Context, rollback string) error {
+	if rollback != "" && !policyRollbackCompatible(s.currentVersion, rollback) {
+		return fmt.Errorf("该版本需要恢复升级前的数据库，不能仅回退程序；请由管理员执行备份恢复")
+	}
 	if policyRestartPending() {
 		if rollback != "" {
 			return fmt.Errorf("已有待重启的定制更新，请先重启服务后再回退")

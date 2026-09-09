@@ -14,6 +14,32 @@ installer_spec.loader.exec_module(installer)
 
 
 class MergeTests(unittest.TestCase):
+    def test_each_node_receives_package_without_peer_dependency(self):
+        import tarfile
+        with tempfile.TemporaryDirectory() as tmp:
+            home = Path(tmp)
+            binary = home / 'binary'
+            binary.mkdir()
+            (binary / 'sub2api').write_bytes(b'verified binary fixture')
+            (binary / 'release.json').write_text('{}')
+            for failed_node in (None, 'qiyuan-us'):
+                calls = []
+                def send(args, **kwargs):
+                    self.assertIn('stdin', kwargs, 'each node receives its own package via SSH')
+                    node = args[-2]
+                    with tarfile.open(fileobj=kwargs['stdin'], mode='r:gz') as archive:
+                        self.assertEqual(archive.extractfile('sub2api').read(), b'verified binary fixture')
+                    calls.append(node)
+                    if node == failed_node:
+                        raise RuntimeError('fixture node unavailable')
+                with patch.object(builder, 'run', side_effect=send):
+                    if failed_node:
+                        with self.assertRaises(RuntimeError):
+                            builder.stage(home, {'status':'ready','releases':[]}, binary, {})
+                    else:
+                        builder.stage(home, {'status':'ready','releases':[]}, binary, {})
+                self.assertEqual(calls, ['qiyuan-us', 'qiyuan-tokyo'])
+
     def test_incomplete_catalog_refresh_keeps_previously_delivered_artifacts(self):
         import io
         import subprocess
@@ -36,11 +62,11 @@ class MergeTests(unittest.TestCase):
     def test_verified_cache_does_not_require_github_tag_lookup(self):
         with tempfile.TemporaryDirectory() as tmp:
             home = Path(tmp)
-            result = home/'releases/0.2.1+policy-log.7'
+            result = home/f'releases/0.2.1+policy-log.{builder.REVISION}'
             result.mkdir(parents=True)
             (result/'sub2api').write_bytes(b'verified fixture')
             meta = {'patch_sha256':'b'*64, 'upstream_version':'0.2.1', 'upstream_commit':'a'*40}
-            record = {'version':'0.2.1+policy-log.7', 'patch_sha256':'b'*64,
+            record = {'version':f'0.2.1+policy-log.{builder.REVISION}', 'patch_sha256':'b'*64,
                       'upstream_commit':'a'*40, 'sha256':builder.digest(result/'sub2api'),
                       'persistent_update_verified':True}
             (result/'release.json').write_text(json.dumps(record))

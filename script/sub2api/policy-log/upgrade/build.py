@@ -29,7 +29,7 @@ DEFAULT_HOME = Path("/data/sub2api-policy-build")
 FEATURES = ["policy-requests-v1", "policy-update-v1"]
 NODES = ("qiyuan-us", "qiyuan-tokyo")
 NODE_ROOT = "/opt/sub2api-deploy/policy-releases"
-REVISION = 7
+REVISION = 8
 NODE_IMAGE = "node:24-bookworm-slim@sha256:ba849c60be29959425b8734d57b8b4b7d56f98edd9504c9af091d5281095a71e"
 GO_IMAGE = "golang:1.27.1-bookworm@sha256:648f440f42a0958804efb24df176f806f9d353b41f1c0627f666428e40310f6b"
 POSTGRES_IMAGE = "postgres:18-alpine@sha256:d3e1620b530c944afa6e887d22eb899824da68e19c52024bf98f5220c88a65b2"
@@ -219,7 +219,7 @@ def compile_release(home, root, version, commit, bundle):
     container(home, GO_IMAGE, root, "backend",
               "export GOPATH=/cache/gopath GOCACHE=/cache/gobuild GOMAXPROCS=8 GOPROXY=https://goproxy.cn,https://proxy.golang.org,direct; "
               "go test -race ./internal/requestcontent; "
-              "go test -race -tags unit ./internal/service -run '^(TestPolicy|TestUpdateService)'; "
+              "go test -race -tags unit ./internal/service -run '^(TestPolicy|TestUpdateService|TestOpenAIImages|TestBuildOpenAIImages|TestAccountTest.*Image)'; "
               "go test -race ./internal/handler -run '^(TestPolicyRequestRecorder|TestClearCyberPolicy|TestOpenAIResponsesWebSocket.*Cyber)'; "
               "go test -race ./internal/handler/admin -run '^TestPolicyRequests'; "
               "go test -race ./migrations; "
@@ -420,16 +420,8 @@ print("staged",catalog["status"],flush=True)
         failures = []
         for node in NODES:
             try:
-                if node == "qiyuan-tokyo" and binary_dir:
-                    # Keep bulk data off the unreliable bastion-to-Tokyo upload
-                    # path. The encrypted package is fetched from the US node;
-                    # secrets, digests and the verifier still travel over SSH.
-                    import importlib.util
-                    spec = importlib.util.spec_from_file_location("policy_pull_transport", Path(__file__).with_name("pull_transport.py"))
-                    transport = importlib.util.module_from_spec(spec)
-                    spec.loader.exec_module(transport)
-                    transport.stage_tokyo(catalog, record, receiver, run)
-                    continue
+                # Each node receives the verified GPU-built artifact directly.
+                # A failure on one node must never require the other as a relay.
                 with archive.open("rb") as stream:
                     run(["ssh", "-T", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20", node,
                          "python3 -c " + shlex.quote(receiver)], stdin=stream, timeout=1200)
