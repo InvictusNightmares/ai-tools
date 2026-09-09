@@ -353,18 +353,18 @@ index 4be214cdc9dc8b4fe81ae1f031ab18d81daedf99..8c3f0673fb7ae4aafa03e20b0d16fc73
 +	require.Equal(t, "websocket", entries[1].Protocol)
 +}
 diff --git a/backend/internal/handler/openai_gateway_handler.go b/backend/internal/handler/openai_gateway_handler.go
-index d4e34e3b7b3907d68218bbb2f5d01aec0c1d206c..6e3d7604c59728fdfcbfcdcd9d5063647ecd3a9b 100644
+index 15a7cca8a2b5869823624cb19472e83825de9a96..994cd9d3bf30ff86eb4b52a870d2bb16b130379a 100644
 --- a/backend/internal/handler/openai_gateway_handler.go
 +++ b/backend/internal/handler/openai_gateway_handler.go
-@@ -20,6 +20,7 @@
- 	"github.com/Wei-Shaw/sub2api/internal/pkg/ctxkey"
+@@ -21,6 +21,7 @@
  	"github.com/Wei-Shaw/sub2api/internal/pkg/ip"
  	"github.com/Wei-Shaw/sub2api/internal/pkg/logger"
+ 	"github.com/Wei-Shaw/sub2api/internal/pkg/requestmodel"
 +	"github.com/Wei-Shaw/sub2api/internal/requestcontent"
  	"github.com/Wei-Shaw/sub2api/internal/securityaudit"
  	middleware2 "github.com/Wei-Shaw/sub2api/internal/server/middleware"
  	"github.com/Wei-Shaw/sub2api/internal/service"
-@@ -33,6 +34,7 @@
+@@ -34,6 +35,7 @@
  
  // OpenAIGatewayHandler handles OpenAI API gateway requests
  type OpenAIGatewayHandler struct {
@@ -372,7 +372,7 @@ index d4e34e3b7b3907d68218bbb2f5d01aec0c1d206c..6e3d7604c59728fdfcbfcdcd9d506364
  	gatewayService             *service.OpenAIGatewayService
  	billingCacheService        *service.BillingCacheService
  	apiKeyService              *service.APIKeyService
-@@ -773,7 +775,7 @@
+@@ -774,7 +776,7 @@
  			return h.gatewayService.Forward(c.Request.Context(), c, account, attemptBody)
  		}()
  		var cyberBlockBodyHTTP []byte
@@ -381,7 +381,7 @@ index d4e34e3b7b3907d68218bbb2f5d01aec0c1d206c..6e3d7604c59728fdfcbfcdcd9d506364
  			cyberBlockBodyHTTP = sessionHashBody
  		}
  		h.recordCyberPolicyIfMarked(c, apiKey, account, subscription, reqModel, err != nil, cyberBlockBodyHTTP, clientRequestedUsageFields(c, channelMapping, reqModel, ""), service.HashUsageRequestPayload(body))
-@@ -1338,7 +1340,7 @@
+@@ -1355,7 +1357,7 @@
  			return h.gatewayService.ForwardAsAnthropic(c.Request.Context(), c, account, forwardBody, promptCacheKey, defaultMappedModel)
  		}()
  		var cyberBlockBodyMsg []byte
@@ -390,7 +390,7 @@ index d4e34e3b7b3907d68218bbb2f5d01aec0c1d206c..6e3d7604c59728fdfcbfcdcd9d506364
  			cyberBlockBodyMsg = body
  		}
  		h.recordCyberPolicyIfMarked(c, apiKey, account, subscription, reqModel, err != nil, cyberBlockBodyMsg, clientRequestedUsageFields(c, channelMappingMsg, reqModel, ""), service.HashUsageRequestPayload(body))
-@@ -2962,6 +2964,9 @@
+@@ -2999,6 +3001,9 @@
  
  		for {
  			err := h.gatewayService.ProxyResponsesWebSocketFromClient(ctx, c, wsConn, account, token, wsFirstMessage, hooks)
@@ -400,7 +400,7 @@ index d4e34e3b7b3907d68218bbb2f5d01aec0c1d206c..6e3d7604c59728fdfcbfcdcd9d506364
  			if err == nil {
  				reqLog.Info("openai.websocket_ingress_closed", zap.Int64("account_id", account.ID))
  				return
-@@ -4039,6 +4044,7 @@
+@@ -4101,6 +4106,7 @@
  // 当前请求已发给用户，本方法只做事后记录，不影响响应。forwardErrored 为 true 时才写用量行，
  // 避免与正常 RecordUsage(forward 成功路径)重复。每请求至多记录一次。
  func (h *OpenAIGatewayHandler) recordCyberPolicyIfMarked(c *gin.Context, apiKey *service.APIKey, account *service.Account, subscription *service.UserSubscription, model string, forwardErrored bool, cyberBlockBody []byte, channelFields service.ChannelUsageFields, requestPayloadHash string) {
@@ -408,7 +408,7 @@ index d4e34e3b7b3907d68218bbb2f5d01aec0c1d206c..6e3d7604c59728fdfcbfcdcd9d506364
  	mark := service.GetOpsCyberPolicy(c)
  	if mark == nil {
  		return
-@@ -4121,6 +4127,7 @@
+@@ -4183,6 +4189,7 @@
  		ClientIP:        clientIPStr,
  		CreatedAt:       time.Now(),
  	}
@@ -416,7 +416,7 @@ index d4e34e3b7b3907d68218bbb2f5d01aec0c1d206c..6e3d7604c59728fdfcbfcdcd9d506364
  	if gwSvc != nil && apiKey != nil {
  		plan := buildCyberSessionBlockWritePlan(apiKey.ID, c, cyberBlockBody)
  		if len(plan.keys) > 0 {
-@@ -4188,6 +4195,7 @@
+@@ -4250,6 +4257,7 @@
  		return
  	}
  	service.ClearOpsCyberPolicy(c)
@@ -2287,7 +2287,7 @@ index 30f399eea39b6eede29fbcfcf5f1645e52e48073..388b50f5505164523d479da7fa65cf89
  	"GET /api/v1/admin/proxies/data":              "admin.proxies.export",
  	"GET /api/v1/admin/redeem-codes/export":       "admin.redeem_codes.export",
 diff --git a/backend/internal/server/routes/admin.go b/backend/internal/server/routes/admin.go
-index d23a21c62cf6e40c9c2307aa2714b80f7bb926df..5925bbfa875f09a0236c26a017e99222ab31470d 100644
+index c16ef695e03f30c63992009fea9040aa5f674578..f6679ab6bdaccf0e27603f2b556e6e5b67724756 100644
 --- a/backend/internal/server/routes/admin.go
 +++ b/backend/internal/server/routes/admin.go
 @@ -3,7 +3,9 @@
@@ -2310,7 +2310,7 @@ index d23a21c62cf6e40c9c2307aa2714b80f7bb926df..5925bbfa875f09a0236c26a017e99222
  
  		// 使用记录管理
  		registerUsageRoutes(admin, h)
-@@ -883,3 +888,10 @@
+@@ -885,3 +890,10 @@
  		c.Next()
  	}
  }
@@ -2322,7 +2322,7 @@ index d23a21c62cf6e40c9c2307aa2714b80f7bb926df..5925bbfa875f09a0236c26a017e99222
 +	records.GET("/:id/body", h.Download)
 +}
 diff --git a/backend/internal/service/openai_gateway_cc_pipeline.go b/backend/internal/service/openai_gateway_cc_pipeline.go
-index 64585093891b31d1586a2d339f6a0380889435b0..fdc0ea5ec89d1af7d9b769ca6c7a123a0f92eb1b 100644
+index 68640507dffd8f5de8f3470c16d9691abfc62dca..3af992c2bc2a4d20c38c5458e5e8456c2d5fb7d6 100644
 --- a/backend/internal/service/openai_gateway_cc_pipeline.go
 +++ b/backend/internal/service/openai_gateway_cc_pipeline.go
 @@ -229,7 +229,7 @@
@@ -2335,10 +2335,10 @@ index 64585093891b31d1586a2d339f6a0380889435b0..fdc0ea5ec89d1af7d9b769ca6c7a123a
  		return nil, s.handleOpenAIUpstreamTransportError(ctx, c, account, err, false)
  	}
 diff --git a/backend/internal/service/openai_gateway_chat_completions.go b/backend/internal/service/openai_gateway_chat_completions.go
-index 646c8860476137b7e6e3f27195af4aeefa1f6dbc..621ed0e4fd1b40ad6489b0ed62746517d486d149 100644
+index 403752baf5bfaaca850612edaf5f47e45f166bb2..ef595c6ce1c5996086e4948b47b8355196695fce 100644
 --- a/backend/internal/service/openai_gateway_chat_completions.go
 +++ b/backend/internal/service/openai_gateway_chat_completions.go
-@@ -351,7 +351,7 @@
+@@ -356,7 +356,7 @@
  	if account.ProxyID != nil && account.Proxy != nil {
  		proxyURL = account.Proxy.URL()
  	}
@@ -2348,10 +2348,10 @@ index 646c8860476137b7e6e3f27195af4aeefa1f6dbc..621ed0e4fd1b40ad6489b0ed62746517
  		return nil, s.handleOpenAIUpstreamTransportError(ctx, c, account, err, false)
  	}
 diff --git a/backend/internal/service/openai_gateway_forward.go b/backend/internal/service/openai_gateway_forward.go
-index e92f8b680e89ac0eda63c274c649c19724d00277..5ec8d49a56438f11f99d6c59f86ec36d51496b15 100644
+index 6837cb82369ae0daf399c78fd8f5085811ea6dcb..541d32cc707d7e920effdcd53c18f8bb90745e71 100644
 --- a/backend/internal/service/openai_gateway_forward.go
 +++ b/backend/internal/service/openai_gateway_forward.go
-@@ -1037,7 +1037,7 @@
+@@ -1044,7 +1044,7 @@
  
  		// Send request
  		upstreamStart := time.Now()
@@ -2361,10 +2361,10 @@ index e92f8b680e89ac0eda63c274c649c19724d00277..5ec8d49a56438f11f99d6c59f86ec36d
  		if headerGuard != nil && headerGuard.stopHeaderWait() {
  			if resp != nil && resp.Body != nil {
 diff --git a/backend/internal/service/openai_gateway_messages.go b/backend/internal/service/openai_gateway_messages.go
-index e755548a7dc43bec6cea3fc1f7821f7aae8caa4a..7e1d8a95f95e00adbc7b1551d6f1c215e8ad7950 100644
+index 7f3144752ddda1d4d0d75df60057037516f294de..cde7f90990b317b64f62ebd6f8b76ddcb8de05bd 100644
 --- a/backend/internal/service/openai_gateway_messages.go
 +++ b/backend/internal/service/openai_gateway_messages.go
-@@ -393,7 +393,7 @@
+@@ -392,7 +392,7 @@
  				return nil, fmt.Errorf("build grok retry request: %w", err)
  			}
  		}
@@ -2374,7 +2374,7 @@ index e755548a7dc43bec6cea3fc1f7821f7aae8caa4a..7e1d8a95f95e00adbc7b1551d6f1c215
  			return nil, s.handleOpenAIUpstreamTransportError(ctx, c, account, err, false)
  		}
 diff --git a/backend/internal/service/openai_gateway_passthrough.go b/backend/internal/service/openai_gateway_passthrough.go
-index 7a949209b94d56c0104fa9e0f9721c20f9ffd211..e8eabf6c893b2055acd6f68293d9befe0706f22e 100644
+index dfebb47a50efa054e945a27e2bf6ad40c62bc901..a61f9adb7f3f6985f9a77316a2682d76ccb78db0 100644
 --- a/backend/internal/service/openai_gateway_passthrough.go
 +++ b/backend/internal/service/openai_gateway_passthrough.go
 @@ -374,7 +374,7 @@
@@ -2387,7 +2387,7 @@ index 7a949209b94d56c0104fa9e0f9721c20f9ffd211..e8eabf6c893b2055acd6f68293d9befe
  		if err != nil {
  			// Transport-level failure (proxy/DNS/TCP/TLS — no HTTP response). Convert to
 diff --git a/backend/internal/service/openai_gateway_service.go b/backend/internal/service/openai_gateway_service.go
-index 01ea7b5f486bafb9009a5119c970214e5bd50a56..d555e1218a913cd861d06252d53a12c25a94a99a 100644
+index df7e66eb87d803af459f92875b6f7dc8296a5c7c..31eb95d4ae374ff26eeea13cb4bf3a3f818193a4 100644
 --- a/backend/internal/service/openai_gateway_service.go
 +++ b/backend/internal/service/openai_gateway_service.go
 @@ -425,34 +425,35 @@
@@ -2455,10 +2455,10 @@ index 01ea7b5f486bafb9009a5119c970214e5bd50a56..d555e1218a913cd861d06252d53a12c2
  	openaiWSPoolOnce               sync.Once
  	openaiWSStateStoreOnce         sync.Once
 diff --git a/backend/internal/service/openai_images.go b/backend/internal/service/openai_images.go
-index 371b2986c21222465f5c5d3df08690bb7bfe874a..c732fff9877ef2ce8b7b434cc57ecde9088acfa4 100644
+index 74058104fe4143fd4b62097e8cfdf8c75b80c885..4d801cc12840d63d55e6f8b2fa50028f8480abd9 100644
 --- a/backend/internal/service/openai_images.go
 +++ b/backend/internal/service/openai_images.go
-@@ -625,7 +625,7 @@
+@@ -636,7 +636,7 @@
  		proxyURL = account.Proxy.URL()
  	}
  	upstreamStart := time.Now()
@@ -2468,10 +2468,10 @@ index 371b2986c21222465f5c5d3df08690bb7bfe874a..c732fff9877ef2ce8b7b434cc57ecde9
  	if err != nil {
  		safeErr := sanitizeUpstreamErrorMessage(err.Error())
 diff --git a/backend/internal/service/openai_images_responses.go b/backend/internal/service/openai_images_responses.go
-index 1ad5b5aaee87e1c9566233b665028df49c1fec5f..a856e8a527f48be629f5b45c8af60d7df4f94c9a 100644
+index 1b7da71b96ef809b0b338ae13b5624e002116c8b..73574e1362a638b2f3779f9b47ac00f6b7f207f9 100644
 --- a/backend/internal/service/openai_images_responses.go
 +++ b/backend/internal/service/openai_images_responses.go
-@@ -1824,7 +1824,7 @@
+@@ -1840,7 +1840,7 @@
  		proxyURL = account.Proxy.URL()
  	}
  	upstreamStart := time.Now()
@@ -3133,10 +3133,10 @@ index 0000000000000000000000000000000000000000..641b0a6d13fc6503b4b4b855899ccd04
 +	require.Nil(t, GetOpenAIPolicyObservation(c))
 +}
 diff --git a/backend/internal/service/openai_ws_forwarder_ingress.go b/backend/internal/service/openai_ws_forwarder_ingress.go
-index aedd078ec6e450b06bfe0e336067eb0a5c65442f..ead07600fcf85392d6cdb3e677d762feee0072b1 100644
+index f24dc256978264b541a9db4cb7fa13ddc411871d..2020ef73352b2398ab8da5b2154c7a98b2a4a592 100644
 --- a/backend/internal/service/openai_ws_forwarder_ingress.go
 +++ b/backend/internal/service/openai_ws_forwarder_ingress.go
-@@ -1140,6 +1140,9 @@
+@@ -1145,6 +1145,9 @@
  			if firstTokenMs == nil && isTokenEvent {
  				ms := int(time.Since(turnStart).Milliseconds())
  				firstTokenMs = &ms
@@ -3147,10 +3147,10 @@ index aedd078ec6e450b06bfe0e336067eb0a5c65442f..ead07600fcf85392d6cdb3e677d762fe
  			imageCounter.AddSSEData(upstreamMessage)
  
 diff --git a/backend/internal/service/openai_ws_forwarder_v2.go b/backend/internal/service/openai_ws_forwarder_v2.go
-index 260ec3eedf72fc86cc64af8929f27891d7f33bb7..3aca5ef9b06123fa3f53151621680b92a71965cd 100644
+index 9f04d42640708582d029a82299be283c0c1b9a30..377dabb8ca28ba31721aa200e7320698977293b8 100644
 --- a/backend/internal/service/openai_ws_forwarder_v2.go
 +++ b/backend/internal/service/openai_ws_forwarder_v2.go
-@@ -582,6 +582,9 @@
+@@ -653,6 +653,9 @@
  		}
  		if openAIWSMessageShouldParseUsage(eventType, message) {
  			parseOpenAIWSResponseUsageFromCompletedEvent(message, usage)
@@ -3161,7 +3161,7 @@ index 260ec3eedf72fc86cc64af8929f27891d7f33bb7..3aca5ef9b06123fa3f53151621680b92
  		imageCounter.AddSSEData(message)
  
 diff --git a/backend/internal/service/openai_ws_http_bridge.go b/backend/internal/service/openai_ws_http_bridge.go
-index 03339deffc58a749cfbb65d19e9a4c6676474195..55a0759ed8efaa3613dc0bb1f288408b9d293685 100644
+index 52420c584aebd10e85aea98ce3f90595e3b4d234..30136467b69347dfeabf294992fb7912cd23ef62 100644
 --- a/backend/internal/service/openai_ws_http_bridge.go
 +++ b/backend/internal/service/openai_ws_http_bridge.go
 @@ -545,7 +545,7 @@
@@ -3174,10 +3174,10 @@ index 03339deffc58a749cfbb65d19e9a4c6676474195..55a0759ed8efaa3613dc0bb1f288408b
  			if turn == 1 {
  				return nil, s.handleOpenAIUpstreamTransportError(ctx, c, account, err, true)
 diff --git a/backend/internal/service/openai_ws_v2_passthrough_adapter.go b/backend/internal/service/openai_ws_v2_passthrough_adapter.go
-index b7c294096514b765dfa90b3c0c1ee01f910601ca..8c4a440400534b41a617879294c563ef943c0979 100644
+index 556ad0627436419c07db3d6d9457870325761eae..a14ff4d7207c48ece16ab6967cac7373c0e33115 100644
 --- a/backend/internal/service/openai_ws_v2_passthrough_adapter.go
 +++ b/backend/internal/service/openai_ws_v2_passthrough_adapter.go
-@@ -1272,6 +1272,9 @@
+@@ -1277,6 +1277,9 @@
  			BeforeWriteClient: func(msgType coderws.MessageType, payload []byte, wroteDownstream bool) error {
  				if msgType != coderws.MessageText {
  					return nil
@@ -3189,10 +3189,10 @@ index b7c294096514b765dfa90b3c0c1ee01f910601ca..8c4a440400534b41a617879294c563ef
  				if eventType == "response.created" {
 diff --git a/backend/internal/service/policy_update.go b/backend/internal/service/policy_update.go
 new file mode 100644
-index 0000000000000000000000000000000000000000..d2b1fbb5df9080c89365ccb6a500e50458827add
+index 0000000000000000000000000000000000000000..d822013d53f06e084bb3111723a31c665d4cc5cd
 --- /dev/null
 +++ b/backend/internal/service/policy_update.go
-@@ -0,0 +1,292 @@
+@@ -0,0 +1,302 @@
 +package service
 +
 +// Custom releases are prepared outside the serving process. Never fall back to
@@ -3330,7 +3330,7 @@ index 0000000000000000000000000000000000000000..d2b1fbb5df9080c89365ccb6a500e504
 +	}
 +	result := make([]RollbackVersion, 0)
 +	for _, r := range c.Releases {
-+		if comparePolicyVersions(r.Version, s.currentVersion) < 0 {
++		if comparePolicyVersions(r.Version, s.currentVersion) < 0 && policyRollbackCompatible(s.currentVersion, r.Version) {
 +			result = append(result, RollbackVersion{Version: r.Version, PublishedAt: r.PublishedAt})
 +			if len(result) == maxRollbackVersions {
 +				break
@@ -3340,7 +3340,17 @@ index 0000000000000000000000000000000000000000..d2b1fbb5df9080c89365ccb6a500e504
 +	return result, nil
 +}
 +
++// Migration 235 renames the group model column. Older binaries cannot read the
++// upgraded schema; restoring them requires an operator-led database restore.
++func policyRollbackCompatible(current, target string) bool {
++	return comparePolicyVersions(current, "0.2.4+policy-log.0") < 0 ||
++		comparePolicyVersions(target, "0.2.4+policy-log.0") >= 0
++}
++
 +func (s *UpdateService) installPolicyUpdate(ctx context.Context, rollback string) error {
++	if rollback != "" && !policyRollbackCompatible(s.currentVersion, rollback) {
++		return fmt.Errorf("该版本需要恢复升级前的数据库，不能仅回退程序；请由管理员执行备份恢复")
++	}
 +	if policyRestartPending() {
 +		if rollback != "" {
 +			return fmt.Errorf("已有待重启的定制更新，请先重启服务后再回退")
@@ -3487,10 +3497,10 @@ index 0000000000000000000000000000000000000000..d2b1fbb5df9080c89365ccb6a500e504
 +}
 diff --git a/backend/internal/service/policy_update_test.go b/backend/internal/service/policy_update_test.go
 new file mode 100644
-index 0000000000000000000000000000000000000000..7f86cbdf2768521e377098123b975300a5202eea
+index 0000000000000000000000000000000000000000..62e83f86d1c0e484891ffbcc98a765147942cc40
 --- /dev/null
 +++ b/backend/internal/service/policy_update_test.go
-@@ -0,0 +1,105 @@
+@@ -0,0 +1,115 @@
 +package service
 +
 +import (
@@ -3505,6 +3515,16 @@ index 0000000000000000000000000000000000000000..7f86cbdf2768521e377098123b975300
 +
 +	"github.com/stretchr/testify/require"
 +)
++
++func TestPolicyUpdateRollbackSchemaBoundary(t *testing.T) {
++	for _, target := range []string{"0.2.0+policy-log.6", "0.2.1+policy-log.7", "0.2.3+policy-log.7"} {
++		require.False(t, policyRollbackCompatible("0.2.4+policy-log.8", target))
++		s := NewUpdateService(nil, nil, "0.2.4+policy-log.8", "release")
++		require.ErrorContains(t, s.installPolicyUpdate(context.Background(), target), "数据库")
++	}
++	require.True(t, policyRollbackCompatible("0.2.4+policy-log.9", "0.2.4+policy-log.8"))
++	require.True(t, policyRollbackCompatible("0.2.1+policy-log.7", "0.2.0+policy-log.6"))
++}
 +
 +func policyFixture(t *testing.T) (string, string, policyRelease) {
 +	t.Helper()
@@ -3894,7 +3914,7 @@ index 0000000000000000000000000000000000000000..5edbf088bf5ce2c5e48c3948831e74d7
 +  })
 +})
 diff --git a/frontend/src/components/layout/AppSidebar.vue b/frontend/src/components/layout/AppSidebar.vue
-index 265f94faca35a7700d5a7268c0f12f9930cb7823..647392965a815e91d525d2afb631b29563ae545a 100644
+index b15866567ee3da37280e49c445d5d0c662ae3ceb..0a1d2ea1c182b599d4f1d902c6bc3a23d01ff78a 100644
 --- a/frontend/src/components/layout/AppSidebar.vue
 +++ b/frontend/src/components/layout/AppSidebar.vue
 @@ -194,6 +194,7 @@
@@ -4056,7 +4076,7 @@ index 0000000000000000000000000000000000000000..a6a449124e8a38ff5c49755e41ec8aef
 +  }
 +}
 diff --git a/frontend/src/router/index.ts b/frontend/src/router/index.ts
-index 1191944f525ceb3a87cbabd106e746e9e33c7756..2849fa9a59cfff2566580726d8dc36f4f2988f11 100644
+index 6ca13f3c5e9315ac421bdcc0aaa6830dbdab9fc1..12b945b92d66f35d49484da7b6fb06151e51fa99 100644
 --- a/frontend/src/router/index.ts
 +++ b/frontend/src/router/index.ts
 @@ -608,6 +608,12 @@

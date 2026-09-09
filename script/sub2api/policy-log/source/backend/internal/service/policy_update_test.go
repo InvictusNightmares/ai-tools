@@ -13,6 +13,16 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestPolicyUpdateRollbackSchemaBoundary(t *testing.T) {
+	for _, target := range []string{"0.2.0+policy-log.6", "0.2.1+policy-log.7", "0.2.3+policy-log.7"} {
+		require.False(t, policyRollbackCompatible("0.2.4+policy-log.8", target))
+		s := NewUpdateService(nil, nil, "0.2.4+policy-log.8", "release")
+		require.ErrorContains(t, s.installPolicyUpdate(context.Background(), target), "数据库")
+	}
+	require.True(t, policyRollbackCompatible("0.2.4+policy-log.9", "0.2.4+policy-log.8"))
+	require.True(t, policyRollbackCompatible("0.2.1+policy-log.7", "0.2.0+policy-log.6"))
+}
+
 func policyFixture(t *testing.T) (string, string, policyRelease) {
 	t.Helper()
 	root := t.TempDir()
