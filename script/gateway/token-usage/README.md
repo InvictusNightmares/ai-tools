@@ -28,8 +28,8 @@
 从仓库根目录运行：
 
 ```sh
-python3 script/sub2api/token-usage/daily/email_daily_report.py --help
-python3 script/sub2api/token-usage/daily/sub2api_daily_person_token_usage.py --help
+python3 script/gateway/token-usage/daily/email_daily_report.py --help
+python3 script/gateway/token-usage/daily/sub2api_daily_person_token_usage.py --help
 ```
 
 日期按默认 `Asia/Shanghai` 时区计算，起止日期均包含；可通过 `--timezone` 调整。不传日期时默认统计昨天。
