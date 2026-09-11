@@ -1,0 +1,606 @@
+{
+  "base_url": "http://106.14.254.110:9880/v1",
+  "models": [
+    "deepseek-flash",
+    "gpt-5.6-luna",
+    "gpt-5.6-terra",
+    "gpt-5.6-sol",
+    "gpt-6-astra"
+  ],
+  "started_at_epoch": 1789115200.449195,
+  "scenarios": [
+    {
+      "scenario": "gateway_architecture",
+      "title": "智能网关架构重构",
+      "results": [
+        {
+          "turn_id": "gateway_architecture:stage-deepseek-flash:turn-1",
+          "requested_model": "deepseek-flash",
+          "returned_model": "deepseek-flash",
+          "elapsed_ms": 4729,
+          "prompt_tokens": 268,
+          "cache_hit_tokens": null,
+          "cache_miss_tokens": null,
+          "completion_tokens": 700,
+          "finish_reason": "length",
+          "response_chars": 0,
+          "response_excerpt": "",
+          "usage_keys": [
+            "completion_tokens",
+            "completion_tokens_details",
+            "prompt_tokens",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [],
+          "status": "ok"
+        },
+        {
+          "turn_id": "gateway_architecture:stage-deepseek-flash:turn-2",
+          "requested_model": "deepseek-flash",
+          "returned_model": "deepseek-flash",
+          "elapsed_ms": 5487,
+          "prompt_tokens": 327,
+          "cache_hit_tokens": 128,
+          "cache_miss_tokens": 199,
+          "completion_tokens": 700,
+          "finish_reason": "length",
+          "response_chars": 0,
+          "response_excerpt": "",
+          "usage_keys": [
+            "completion_tokens",
+            "completion_tokens_details",
+            "prompt_tokens",
+            "prompt_tokens_details",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [
+            "cached_tokens"
+          ],
+          "status": "ok"
+        },
+        {
+          "turn_id": "gateway_architecture:stage-gpt-5.6-luna:turn-1",
+          "requested_model": "gpt-5.6-luna",
+          "returned_model": "gpt-5.6-luna",
+          "elapsed_ms": 77767,
+          "prompt_tokens": 459,
+          "cache_hit_tokens": null,
+          "cache_miss_tokens": null,
+          "completion_tokens": 4039,
+          "finish_reason": "stop",
+          "response_chars": 8178,
+          "response_excerpt": "以下审查基于目前已确认的约束；此前两轮的具体状态机和 key 名称未在当前可见上下文中给出，因此无法断言其实现细节。下面给出应当满足的状态机不变量、边界行为和需要补齐的验证项。 ## 1. 必须保持的核心不变量 ### 1.1 模型升级单调 候选模型顺序固定为： ```text Flash < Luna < Terra < Sol < Astra ``` 单个逻辑请求或会话内只能向上升级，不能自动降级： ```text Flash → Luna → Terra → Sol →",
+          "usage_keys": [
+            "completion_tokens",
+            "completion_tokens_details",
+            "prompt_tokens",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [],
+          "status": "ok"
+        },
+        {
+          "turn_id": "gateway_architecture:stage-gpt-5.6-luna:turn-2",
+          "requested_model": "gpt-5.6-luna",
+          "returned_model": "gpt-5.6-luna",
+          "elapsed_ms": 107299,
+          "prompt_tokens": 4395,
+          "cache_hit_tokens": null,
+          "cache_miss_tokens": null,
+          "completion_tokens": 5686,
+          "finish_reason": "stop",
+          "response_chars": 11494,
+          "response_excerpt": "以下是一份可按阶段独立发布的测试矩阵。这里的“通过”表示应由自动化测试、预发布压测或灰度观测验证；当前没有代码、现网指标和 schema，因此实际结果均为 **unknown**，不能视为已通过。 ## 1. 通用测试约定 ### 1.1 测试维度 每个阶段都应同时覆盖： - **质量**：响应正确性、协议一致性、工具调用正确性； - **延迟**：首字节、首 token、完整响应、升级额外延迟； - **缓存**：命中率、命名空间隔离、旧 generation 污染； - ",
+          "usage_keys": [
+            "completion_tokens",
+            "completion_tokens_details",
+            "prompt_tokens",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [],
+          "status": "ok"
+        },
+        {
+          "turn_id": "gateway_architecture:stage-gpt-5.6-terra:turn-1",
+          "requested_model": "gpt-5.6-terra",
+          "status": "http_502",
+          "detail": "{\"error\":{\"message\":\"Upstream HTTP/2 stream failed\",\"type\":\"upstream_error\"}}"
+        },
+        {
+          "turn_id": "gateway_architecture:stage-gpt-5.6-terra:turn-2",
+          "requested_model": "gpt-5.6-terra",
+          "returned_model": "gpt-5.6-terra",
+          "elapsed_ms": 113159,
+          "prompt_tokens": 10165,
+          "cache_hit_tokens": 8960,
+          "cache_miss_tokens": 1205,
+          "completion_tokens": 6137,
+          "finish_reason": "stop",
+          "response_chars": 14946,
+          "response_excerpt": "以下设计基于此前已确认的约束。Terra 阶段第 1 轮未产出有效清单，但前序上下文中的约束仍可用；对代码现状、Redis 拓扑、上游幂等能力等实现事实均仍为 **unknown**。 --- # 1. 设计目标与原则 ## 1.1 目标 新增只暴露 `auto` 的智能路由层，同时兼容： - OpenAI Responses； - OpenAI Chat Completions； - Anthropic Messages； - SSE； - WebSocket； - 工具调",
+          "usage_keys": [
+            "completion_tokens",
+            "completion_tokens_details",
+            "prompt_tokens",
+            "prompt_tokens_details",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [
+            "cached_tokens"
+          ],
+          "status": "ok"
+        },
+        {
+          "turn_id": "gateway_architecture:stage-gpt-5.6-sol:turn-1",
+          "requested_model": "gpt-5.6-sol",
+          "returned_model": "gpt-5.6-sol",
+          "elapsed_ms": 146547,
+          "prompt_tokens": 16354,
+          "cache_hit_tokens": null,
+          "cache_miss_tokens": null,
+          "completion_tokens": 8042,
+          "finish_reason": "stop",
+          "response_chars": 15744,
+          "response_excerpt": "下面是对上一版状态机的生产级边界审查。结论先行： > **当前设计满足“流式输出后不得换模型”的保守要求，但存在一个关键矛盾：如果 `CALLING_UPSTREAM` 之后一律禁止升级，那么绝大多数真实上游失败都无法触发 Flash→Luna→Terra→Sol→Astra，失败切换将基本不可用。** 需要把“请求是否已经发送”进一步拆成： 1. 是否已有客户端可见的语义事件； 2. 上游结果是否明确失败； 3. 是否可能产生外部副作用； 4. 是否产生了工具执行，而不仅仅",
+          "usage_keys": [
+            "completion_tokens",
+            "completion_tokens_details",
+            "prompt_tokens",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [],
+          "status": "ok"
+        },
+        {
+          "turn_id": "gateway_architecture:stage-gpt-5.6-sol:turn-2",
+          "requested_model": "gpt-5.6-sol",
+          "status": "TimeoutError"
+        },
+        {
+          "turn_id": "gateway_architecture:stage-gpt-6-astra:turn-1",
+          "requested_model": "gpt-6-astra",
+          "returned_model": "gpt-6-astra",
+          "elapsed_ms": 100641,
+          "prompt_tokens": 23329,
+          "cache_hit_tokens": null,
+          "cache_miss_tokens": null,
+          "completion_tokens": 3242,
+          "finish_reason": "stop",
+          "response_chars": 5481,
+          "response_excerpt": "## 1. 审查范围与当前结论 本轮只整理**目标、硬约束、关键风险和待验证事实**，不把前序建议视为已经实现。 - 可见上下文包含 Luna、Terra、Sol 阶段的设计和审查。 - Terra 第 1 轮、Sol 第 2 轮没有有效产物；此前 Luna 的测试矩阵仍可参考，但需要按 Sol 阶段的修正更新。 - 未提供仓库、配置、数据库 schema、上游接口文档或测试结果。**现有实现是否满足下述要求，全部为 unknown。** - 用户消息中的“当前路由阶段模型”",
+          "usage_keys": [
+            "completion_tokens",
+            "prompt_tokens",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [],
+          "status": "ok"
+        },
+        {
+          "turn_id": "gateway_architecture:stage-gpt-6-astra:turn-2",
+          "requested_model": "gpt-6-astra",
+          "returned_model": "gpt-6-astra",
+          "elapsed_ms": 138476,
+          "prompt_tokens": 26650,
+          "cache_hit_tokens": 23168,
+          "cache_miss_tokens": 3482,
+          "completion_tokens": 4404,
+          "finish_reason": "stop",
+          "response_chars": 9208,
+          "response_excerpt": "下面给出可落地的设计建议。**未检查代码、运行命令或验证上游行为；现有实现符合程度仍为 unknown。** 设计保留上一轮约束，并纠正前序几个问题：不能把“已发送上游请求”等同于“禁止失败切换”；不能把五级模型等同于最多五次实际调用；Redis key 隔离也不能直接证明上游 prompt cache 隔离。 # 1. 核心设计决策 1. **对外仅 `auto`**：三种 API 的模型发现、请求校验和响应模型字段统一处理；内部实际模型仅进入受控的用量和运维记录。 2. ",
+          "usage_keys": [
+            "completion_tokens",
+            "prompt_tokens",
+            "prompt_tokens_details",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [
+            "cached_tokens"
+          ],
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "scenario": "production_debug",
+      "title": "生产请求链路故障诊断",
+      "results": [
+        {
+          "turn_id": "production_debug:stage-deepseek-flash:turn-1",
+          "requested_model": "deepseek-flash",
+          "returned_model": "deepseek-flash",
+          "elapsed_ms": 5187,
+          "prompt_tokens": 268,
+          "cache_hit_tokens": null,
+          "cache_miss_tokens": null,
+          "completion_tokens": 700,
+          "finish_reason": "length",
+          "response_chars": 0,
+          "response_excerpt": "",
+          "usage_keys": [
+            "completion_tokens",
+            "completion_tokens_details",
+            "prompt_tokens",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [],
+          "status": "ok"
+        },
+        {
+          "turn_id": "production_debug:stage-deepseek-flash:turn-2",
+          "requested_model": "deepseek-flash",
+          "returned_model": "deepseek-flash",
+          "elapsed_ms": 5403,
+          "prompt_tokens": 323,
+          "cache_hit_tokens": 128,
+          "cache_miss_tokens": 195,
+          "completion_tokens": 700,
+          "finish_reason": "length",
+          "response_chars": 0,
+          "response_excerpt": "",
+          "usage_keys": [
+            "completion_tokens",
+            "completion_tokens_details",
+            "prompt_tokens",
+            "prompt_tokens_details",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [
+            "cached_tokens"
+          ],
+          "status": "ok"
+        },
+        {
+          "turn_id": "production_debug:stage-gpt-5.6-luna:turn-1",
+          "requested_model": "gpt-5.6-luna",
+          "returned_model": "gpt-5.6-luna",
+          "elapsed_ms": 88450,
+          "prompt_tokens": 437,
+          "cache_hit_tokens": null,
+          "cache_miss_tokens": null,
+          "completion_tokens": 4656,
+          "finish_reason": "stop",
+          "response_chars": 12540,
+          "response_excerpt": "下面给出一套用于多模型切换的**会话连续性数据结构、规范化规则和日志字段**。目标是把“会话身份”“业务上下文”“供应商缓存”“路由决策”分离，避免把某个协议入口或某个模型的缓存状态误当成会话本身。 ## 1. 当前已知事实与待验证点 已知： - 同一 API key 在不同协议入口产生了不同 `session_hash`。 - Redis 中看到的 session TTL 为 1 小时。 - 会话可能经历 `Flash → Terra → Astra` 的模型切换。 - 切",
+          "usage_keys": [
+            "completion_tokens",
+            "completion_tokens_details",
+            "prompt_tokens",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [],
+          "status": "ok"
+        },
+        {
+          "turn_id": "production_debug:stage-gpt-5.6-luna:turn-2",
+          "requested_model": "gpt-5.6-luna",
+          "returned_model": "gpt-5.6-luna",
+          "elapsed_ms": 77230,
+          "prompt_tokens": 5047,
+          "cache_hit_tokens": null,
+          "cache_miss_tokens": null,
+          "completion_tokens": 4151,
+          "finish_reason": "stop",
+          "response_chars": 7929,
+          "response_excerpt": "# 故障升级、回滚与验收标准 以下方案以此前约束为前提： - 不重置计数器； - 不泄露凭证； - 不直接重启生产服务； - 优先只读观测和低风险旁路验证； - 未建立基线前，不把未知值伪装成正常； - 多模型切换必须以业务会话连续性为先，供应商缓存只能作为性能优化，不能作为上下文来源。 --- ## 1. 故障分级 ### P0：必须立即停止自动升级 满足任一条件，即把相关自动升级路径置为停止或保护模式；如果无法按会话粒度停止，则暂时冻结该区域或该协议入口的自动升级。 1.",
+          "usage_keys": [
+            "completion_tokens",
+            "completion_tokens_details",
+            "prompt_tokens",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [],
+          "status": "ok"
+        },
+        {
+          "turn_id": "production_debug:stage-gpt-5.6-terra:turn-1",
+          "requested_model": "gpt-5.6-terra",
+          "returned_model": "gpt-5.6-terra",
+          "elapsed_ms": 118677,
+          "prompt_tokens": 9083,
+          "cache_hit_tokens": null,
+          "cache_miss_tokens": null,
+          "completion_tokens": 6516,
+          "finish_reason": "stop",
+          "response_chars": 14217,
+          "response_excerpt": "以下假设树以现有现象为输入，明确区分已知、未知和可证伪路径。目标不是立即定因，而是避免将“上下文丢失”“缓存字段缺失”和“东京首 token 慢”错误归为同一问题。 --- # 1. 已知事实、未知事实与工作边界 ## 已知事实 1. 东京区域长上下文请求的首 token 延迟偶发超过 20 秒。 2. 同一会话可能经历： ```text Flash → Terra → Astra ``` 3. 用户反馈模型升级后上下文偶尔丢失。 4. 有些响应仅见： ```json { \"",
+          "usage_keys": [
+            "completion_tokens",
+            "completion_tokens_details",
+            "prompt_tokens",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [],
+          "status": "ok"
+        },
+        {
+          "turn_id": "production_debug:stage-gpt-5.6-terra:turn-2",
+          "requested_model": "gpt-5.6-terra",
+          "returned_model": "gpt-5.6-terra",
+          "elapsed_ms": 133355,
+          "prompt_tokens": 15640,
+          "cache_hit_tokens": 8960,
+          "cache_miss_tokens": 6680,
+          "completion_tokens": 7321,
+          "finish_reason": "stop",
+          "response_chars": 15344,
+          "response_excerpt": "以下方案仅包含**只读观测、既有日志关联、旁路 trace、低频且无副作用的对照请求**；不要求重置计数器、清 Redis、变更路由/缓存配置、暴露凭证或重启生产服务。 对照实验应先使用： - 已批准的内部测试 API key 或脱敏测试租户； - 不含真实用户敏感内容的固定测试上下文； - 唯一但非敏感的测试标记，例如 `experiment_id`； - 不改变业务会话的单独 `conversation_id`； - 限速执行，避免在东京高峰期额外放大排队。 如果没有经过",
+          "usage_keys": [
+            "completion_tokens",
+            "completion_tokens_details",
+            "prompt_tokens",
+            "prompt_tokens_details",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [
+            "cached_tokens"
+          ],
+          "status": "ok"
+        },
+        {
+          "turn_id": "production_debug:stage-gpt-5.6-sol:turn-1",
+          "requested_model": "gpt-5.6-sol",
+          "status": "TimeoutError"
+        },
+        {
+          "turn_id": "production_debug:stage-gpt-5.6-sol:turn-2",
+          "requested_model": "gpt-5.6-sol",
+          "status": "TimeoutError"
+        },
+        {
+          "turn_id": "production_debug:stage-gpt-6-astra:turn-1",
+          "requested_model": "gpt-6-astra",
+          "returned_model": "gpt-6-astra",
+          "elapsed_ms": 65407,
+          "prompt_tokens": 23151,
+          "cache_hit_tokens": null,
+          "cache_miss_tokens": null,
+          "completion_tokens": 2095,
+          "finish_reason": "stop",
+          "response_chars": 3336,
+          "response_excerpt": "本轮先建立**可证伪的分层假设树**，不执行命令、不改变配置。继续保留约束：**不重置计数器、不泄露凭证、不直接重启生产服务**。 前两个 Sol 阶段只有失败占位信息，没有形成新证据；此前提出的数据结构、实验和回滚标准仍是**设计建议，并非已部署或已验证的事实**。 ## 一、证据边界 | 已知现象 | 目前不能推出的结论 | |---|---| | 东京长上下文请求首 token 偶发超过 20 秒 | 不能直接判定为上游排队或网络故障 | | Flash → Terra",
+          "usage_keys": [
+            "completion_tokens",
+            "completion_tokens_details",
+            "prompt_tokens",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [],
+          "status": "ok"
+        },
+        {
+          "turn_id": "production_debug:stage-gpt-6-astra:turn-2",
+          "requested_model": "gpt-6-astra",
+          "returned_model": "gpt-6-astra",
+          "elapsed_ms": 109075,
+          "prompt_tokens": 25285,
+          "cache_hit_tokens": 22912,
+          "cache_miss_tokens": 2373,
+          "completion_tokens": 3552,
+          "finish_reason": "stop",
+          "response_chars": 5781,
+          "response_excerpt": "下面给出一组**不改配置、先被动后主动、以证据支持或削弱假设**的观测与对照实验。此前提出的日志字段和开关均不视为已经存在；我没有执行任何命令或实验。 保留约束：**不重置计数器、不删除或续期 Redis 会话、不泄露凭证、不直接重启生产服务。** ## 1. 执行边界与证据规则 ### 不改配置的具体含义 可执行： - 查询已有日志、指标、trace； - 对已定位的 Redis key 做经批准的、小范围只读查询； - 离线分析既有脱敏样本； - 用批准的测试身份发低频、",
+          "usage_keys": [
+            "completion_tokens",
+            "prompt_tokens",
+            "prompt_tokens_details",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [
+            "cached_tokens"
+          ],
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "scenario": "agent_workflow",
+      "title": "多步代码代理任务规划",
+      "results": [
+        {
+          "turn_id": "agent_workflow:stage-deepseek-flash:turn-1",
+          "requested_model": "deepseek-flash",
+          "returned_model": "deepseek-flash",
+          "elapsed_ms": 5429,
+          "prompt_tokens": 244,
+          "cache_hit_tokens": null,
+          "cache_miss_tokens": null,
+          "completion_tokens": 700,
+          "finish_reason": "length",
+          "response_chars": 0,
+          "response_excerpt": "",
+          "usage_keys": [
+            "completion_tokens",
+            "completion_tokens_details",
+            "prompt_tokens",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [],
+          "status": "ok"
+        },
+        {
+          "turn_id": "agent_workflow:stage-deepseek-flash:turn-2",
+          "requested_model": "deepseek-flash",
+          "returned_model": "deepseek-flash",
+          "elapsed_ms": 5307,
+          "prompt_tokens": 299,
+          "cache_hit_tokens": 128,
+          "cache_miss_tokens": 171,
+          "completion_tokens": 700,
+          "finish_reason": "length",
+          "response_chars": 0,
+          "response_excerpt": "",
+          "usage_keys": [
+            "completion_tokens",
+            "completion_tokens_details",
+            "prompt_tokens",
+            "prompt_tokens_details",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [
+            "cached_tokens"
+          ],
+          "status": "ok"
+        },
+        {
+          "turn_id": "agent_workflow:stage-gpt-5.6-luna:turn-1",
+          "requested_model": "gpt-5.6-luna",
+          "returned_model": "gpt-5.6-luna",
+          "elapsed_ms": 84515,
+          "prompt_tokens": 416,
+          "cache_hit_tokens": null,
+          "cache_miss_tokens": null,
+          "completion_tokens": 4571,
+          "finish_reason": "stop",
+          "response_chars": 9898,
+          "response_excerpt": "## 本轮演练场景 假设第 1 批迁移已完成： - 旧 HTTP client 与统一 transport 并存； - 仅 `chat-stream` 类接口切换到统一 transport； - 普通请求、工具调用、幂等键、审计字段仍保持旧路径或由 transport 透传； - Node 20 和边缘 runtime 共用上层 transport API，但底层流适配器不同； - 支持通过 feature flag 按包、按调用方或按租户回退旧 client。 本轮发现回归",
+          "usage_keys": [
+            "completion_tokens",
+            "completion_tokens_details",
+            "prompt_tokens",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [],
+          "status": "ok"
+        },
+        {
+          "turn_id": "agent_workflow:stage-gpt-5.6-luna:turn-2",
+          "requested_model": "gpt-5.6-luna",
+          "returned_model": "gpt-5.6-luna",
+          "elapsed_ms": 82860,
+          "prompt_tokens": 4693,
+          "cache_hit_tokens": null,
+          "cache_miss_tokens": null,
+          "completion_tokens": 4421,
+          "finish_reason": "stop",
+          "response_chars": 8986,
+          "response_excerpt": "# 最终 adversarial review 以下审查以最坏情况为准：上游不稳定、下游慢、abort 与 timeout 同时发生、feature flag 在请求中途变化、重试已经部分输出、工具调用具有副作用。当前没有实际仓库代码、配置和 trace，因此以下问题是需要验证的风险，不是已确认缺陷。 ## 结论摘要 当前方案仍有 7 类高风险漏洞： 1. **流在部分输出后被透明重试，导致重复请求或重复工具调用**； 2. **backpressure 队列为了限长而丢 c",
+          "usage_keys": [
+            "completion_tokens",
+            "completion_tokens_details",
+            "prompt_tokens",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [],
+          "status": "ok"
+        },
+        {
+          "turn_id": "agent_workflow:stage-gpt-5.6-terra:turn-1",
+          "requested_model": "gpt-5.6-terra",
+          "returned_model": "gpt-5.6-terra",
+          "elapsed_ms": 116248,
+          "prompt_tokens": 9000,
+          "cache_hit_tokens": null,
+          "cache_miss_tokens": null,
+          "completion_tokens": 6367,
+          "finish_reason": "stop",
+          "response_chars": 16851,
+          "response_excerpt": "# 迁移基线：不变量、依赖图与第一批验证切片 ## 0. 已确认约束 本迁移必须同时满足： - 将旧 HTTP client 逐步替换为统一 transport； - 保留： - 重试； - 超时； - 流式 backpressure； - 工具调用； - 幂等键； - 审计字段； - 向后兼容； - 仓库约 80 个 TypeScript 包、约 2,000 个测试； - 部分包运行于 Node 20，部分包运行于 Edge runtime； - 必须允许分批合并； - 任",
+          "usage_keys": [
+            "completion_tokens",
+            "completion_tokens_details",
+            "prompt_tokens",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [],
+          "status": "ok"
+        },
+        {
+          "turn_id": "agent_workflow:stage-gpt-5.6-terra:turn-2",
+          "requested_model": "gpt-5.6-terra",
+          "returned_model": "gpt-5.6-terra",
+          "elapsed_ms": 168026,
+          "prompt_tokens": 15398,
+          "cache_hit_tokens": 7936,
+          "cache_miss_tokens": 7462,
+          "completion_tokens": 9228,
+          "finish_reason": "stop",
+          "response_chars": 21746,
+          "response_excerpt": "# 分阶段迁移方案 以下方案以“旧 client 长期可并存、统一 transport 分批接管、每个请求路径可独立回退”为原则设计。 由于尚未取得实际仓库清单，包名、flag 名、CI 命令、测试框架、审计 schema 和现有 HTTP API 均为 **unknown**。下文使用逻辑名称，实施前应映射到仓库中的真实实体。 --- ## 全局迁移规则 所有阶段都必须遵循以下规则： 1. **请求级路由固定** - 在请求起始处解析 feature flag； - 写入 ",
+          "usage_keys": [
+            "completion_tokens",
+            "completion_tokens_details",
+            "prompt_tokens",
+            "prompt_tokens_details",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [
+            "cached_tokens"
+          ],
+          "status": "ok"
+        },
+        {
+          "turn_id": "agent_workflow:stage-gpt-5.6-sol:turn-1",
+          "requested_model": "gpt-5.6-sol",
+          "returned_model": "gpt-5.6-sol",
+          "elapsed_ms": 104716,
+          "prompt_tokens": 24666,
+          "cache_hit_tokens": null,
+          "cache_miss_tokens": null,
+          "completion_tokens": 5254,
+          "finish_reason": "stop",
+          "response_chars": 12234,
+          "response_excerpt": "# 流式 backpressure 回归演练 > 以下是基于既有约束构造的故障演练，并非对真实仓库执行后的结论。实际包名、文件名、buffer 上限、flag 名称和监控数据均为 **unknown**。 ## 1. 模拟故障 第一批 Node 20 只读流式调用点切换到统一 transport 后，灰度出现： - 慢消费者请求的 RSS 随响应大小近似线性增长； - 首字节延迟正常，但尾延迟和 OOM 风险上升； - 快消费者、非流式请求没有明显异常； - 响应内容暂未观察",
+          "usage_keys": [
+            "completion_tokens",
+            "completion_tokens_details",
+            "prompt_tokens",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [],
+          "status": "ok"
+        },
+        {
+          "turn_id": "agent_workflow:stage-gpt-5.6-sol:turn-2",
+          "requested_model": "gpt-5.6-sol",
+          "status": "TimeoutError"
+        },
+        {
+          "turn_id": "agent_workflow:stage-gpt-6-astra:turn-1",
+          "requested_model": "gpt-6-astra",
+          "returned_model": "gpt-6-astra",
+          "elapsed_ms": 100165,
+          "prompt_tokens": 29612,
+          "cache_hit_tokens": null,
+          "cache_miss_tokens": null,
+          "completion_tokens": 3167,
+          "finish_reason": "stop",
+          "response_chars": 6168,
+          "response_excerpt": "# 迁移基线与首批可验证切片 本轮承接已确认约束，但不把前序演练假设当成仓库事实。**尚未读取代码、执行命令或运行测试**；真实包名、依赖边、阈值和服务端幂等能力均为 **unknown**。 前一轮的失败占位没有形成新的审查结论。当前保留已有产物设计，并补正其中影响安全性的边界。阶段内不因任务重新分类而降档；实际路由控制能力为 **unknown**，这里提供可供后续阶段验证的交接基线。 ## 1. 已确认约束与必要修正 保留： - 约 80 个 TypeScript 包、",
+          "usage_keys": [
+            "completion_tokens",
+            "completion_tokens_details",
+            "prompt_tokens",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [],
+          "status": "ok"
+        },
+        {
+          "turn_id": "agent_workflow:stage-gpt-6-astra:turn-2",
+          "requested_model": "gpt-6-astra",
+          "returned_model": "gpt-6-astra",
+          "elapsed_ms": 129304,
+          "prompt_tokens": 32822,
+          "cache_hit_tokens": 29440,
+          "cache_miss_tokens": 3382,
+          "completion_tokens": 4212,
+          "finish_reason": "stop",
+          "response_chars": 7648,
+          "response_excerpt": "# 分阶段迁移方案 本方案承接上一轮的 **INV-01～INV-12 不变量、逻辑依赖图、风险清单及 S0～S4 首批切片**，并保留对重试、取消和回滚边界的修正。 **执行状态：未读取仓库、未执行命令、未运行测试。** 实际包名、CI 命令、runtime 产品及版本、性能阈值、服务端幂等能力均为 **unknown**。以下是可用于实施评审的计划，不是已通过的迁移报告。 ## 1. 全阶段通用规则 ### 1.1 合并、启用、扩流分别审批 每个切片经过三个独立节点： `",
+          "usage_keys": [
+            "completion_tokens",
+            "prompt_tokens",
+            "prompt_tokens_details",
+            "total_tokens"
+          ],
+          "prompt_details_keys": [
+            "cached_tokens"
+          ],
+          "status": "ok"
+        }
+      ]
+    }
+  ],
+  "finished_at_epoch": 1789118057.345852
+}
