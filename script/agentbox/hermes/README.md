@@ -7,7 +7,7 @@
 - Hermes `0.21.0`，发布标签 `v2026.8.31`，源码提交 `29112bef099274229cadff79cdff7bf7b99c4b77`。
 - 镜像 `nousresearch/hermes-agent:v2026.8.31`，amd64 digest `sha256:87af7c6a5ee383834f75eb9a3fb509ccaacbab5d54084b086b48b84917e28efc`。
 - 默认模型 `deepseek-v4-pro`；备选 `deepseek-v4-flash-vision`、`claude-sonnet-4-6`、`claude-opus-4-6`、`gemini-3.8-flash`。
-- CPA 地址 `https://<private-cpa-endpoint>:8317`，`transport: messages`；Hermes 将其解析为 `anthropic_messages`，请求 `/v1/messages`。
+- CPA 地址保存在部署机的私有环境变量 `CPA_BASE_URL`，`transport: messages`；Hermes 将其解析为 `anthropic_messages`，请求 `/v1/messages`。
 - 主对话、压缩和 Cron 使用 CPA + `deepseek-v4-pro`；其余辅助模型目前为 CPA + Sonnet。`auxiliary` 指截图识别、标题、会话检索、压缩等辅助调用，不随主模型切换。
 - 应用 UID/GID `10000`，4 核、6 GiB。官方 s6 启动过程需要 root，随后切换应用身份。
 - 容器使用北京时间。宿主时区、原有代理分流、CTYun 保活和 Chrome 配置沿用现状。

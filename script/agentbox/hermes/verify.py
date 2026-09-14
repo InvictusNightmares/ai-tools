@@ -44,7 +44,7 @@ def core():
     assert config['approvals']['mode'] == 'manual'
     runtime = resolve_runtime_provider(requested='dmit-cpa')
     assert runtime['api_mode'] == 'anthropic_messages'
-    assert runtime['base_url'] == 'https://<private-cpa-endpoint>:8317'
+    assert runtime['base_url'].rstrip('/') == os.environ['CPA_BASE_URL'].rstrip('/')
     assert config['model']['default'] == 'deepseek-v4-pro'
     assert runtime['api_key'] == os.environ['CPA_API_KEY']
     emit('runtime', passed=True, uid=os.getuid(), protocol=runtime['api_mode'])

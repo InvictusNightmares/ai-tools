@@ -4,7 +4,8 @@ model:
   default: deepseek-v4-pro
 providers:
   dmit-cpa:
-    api: https://<private-cpa-endpoint>:8317
+    # install.sh replaces this private deployment placeholder from CPA_BASE_URL.
+    api: https://private-cpa.invalid:8317
     key_env: CPA_API_KEY
     transport: messages
     default_model: deepseek-v4-pro

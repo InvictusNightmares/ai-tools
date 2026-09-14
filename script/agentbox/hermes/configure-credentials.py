@@ -22,15 +22,22 @@ def main():
     assert incoming.get('FEISHU_APP_SECRET')
     for key, value in incoming.items():
         assert isinstance(value, str) and not any(c in value for c in "\n\r'"), 'Unsupported credential format'
+    env = BASE / 'data/.env'
+    assert env.is_file() and not env.is_symlink()
+    env_values = {}
+    for line in env.read_text().splitlines():
+        if line.strip() and not line.lstrip().startswith('#') and '=' in line:
+            key, value = line.split('=', 1)
+            env_values[key] = shlex.split(value, comments=False)[0] if shlex.split(value, comments=False) else ''
+    cpa_base_url = env_values.get('CPA_BASE_URL')
+    assert cpa_base_url
     request = urllib.request.Request(
-        'https://<private-cpa-endpoint>:8317/v1/models',
+        cpa_base_url.rstrip('/') + '/v1/models',
         headers={'Authorization': 'Bearer ' + incoming['CPA_API_KEY']},
     )
     with urllib.request.urlopen(request, timeout=30) as response:
         models = sorted(item['id'] for item in json.load(response).get('data', []))
     assert 'deepseek-v4-pro' in models
-    env = BASE / 'data/.env'
-    assert env.is_file() and not env.is_symlink()
     raw = env.read_text()
     values = {}
     for line in raw.splitlines():

@@ -3,6 +3,7 @@
 set -Eeuo pipefail
 [[ $(id -u) == 0 ]] || { echo 'root required' >&2; exit 1; }
 source_dir=$(cd -- "$(dirname -- "$0")/.." && pwd)
+: "${CPA_PROXY_SERVER:?Set CPA_PROXY_SERVER in the private deployment environment}"
 [[ -s /etc/agentbox-profile/profiles.yaml && -s /srv/agentbox/headless-chrome/compose.yaml ]]
 command -v nft >/dev/null
 [[ -c /dev/net/tun ]]
@@ -52,9 +53,9 @@ install -m 0755 "$source_dir/agentbox-profile-compiler.js" /usr/local/libexec/ag
 install -m 0755 "$source_dir/update-agentbox-proxy.sh" /usr/local/sbin/update-agentbox-proxy
 install -m 0644 "$source_dir/systemd/agentbox-proxy-update.service" /etc/systemd/system/agentbox-proxy-update.service
 install -m 0755 "$source_dir/us-environment/check-dns.py" /usr/local/libexec/agentbox-check-dns.py
-cat >/etc/agentbox-profile/agentbox-policy.yaml <<'EOF'
+cat >/etc/agentbox-profile/agentbox-policy.yaml <<EOF
 environment: us
-proxy-server: <private-cpa-endpoint>
+proxy-server: ${CPA_PROXY_SERVER}
 tailnet-domain: tailb6a44b.ts.net
 EOF
 chmod 600 /etc/agentbox-profile/agentbox-policy.yaml
@@ -62,7 +63,7 @@ chmod 600 /etc/agentbox-profile/agentbox-policy.yaml
 node <<'JS'
 const fs=require('fs'),y=require('/usr/local/libexec/vendor/js-yaml.cjs');
 const f='/etc/mihomo-bootstrap/config.yaml',c=y.load(fs.readFileSync(f,'utf8'));
-if (!c.proxies.every(p=>p.server==='<private-cpa-endpoint>')) throw Error('Unexpected rescue node address');
+if (!c.proxies.every(p=>p.server===process.env.CPA_PROXY_SERVER)) throw Error('Unexpected rescue node address');
 c.dns={enable:true,ipv6:false,'enhanced-mode':'redir-host','default-nameserver':['1.1.1.1'],
   nameserver:['https://1.1.1.1/dns-query#BOOTSTRAP','https://8.8.8.8/dns-query#BOOTSTRAP','tls://9.9.9.9#BOOTSTRAP']};
 fs.writeFileSync(f,y.dump(c));
@@ -103,7 +104,7 @@ options timeout:3 attempts:2
 EOF
 # Keep ordinary processes behind the TUN and block external DNS bypasses.
 # Mihomo itself may honor DIRECT rules from the online subscription.
-cat >/srv/agentbox/us-environment/egress.nft <<'EOF'
+cat >/srv/agentbox/us-environment/egress.nft <<EOF
 table inet agentbox_us {
  chain forward {
   type filter hook forward priority -10; policy accept;
@@ -115,7 +116,7 @@ table inet agentbox_us {
   meta l4proto { tcp, udp } th dport { 53, 853 } reject
   meta skuid "mihomo" return
   meta mark & 0xff0000 == 0x80000 return
-  ip daddr <private-cpa-endpoint> return
+  ip daddr ${CPA_PROXY_SERVER} return
   udp sport 68 udp dport 67 return
   ip daddr { 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 169.254.0.0/16 } return
   ip6 daddr fe80::/10 return

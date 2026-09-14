@@ -19,7 +19,23 @@ docker image inspect "$image" >/dev/null
 install -d -m 0700 "$dest" "$dest/backups" "$dest/verification"
 install -d -m 0700 -o 10000 -g 10000 "$dest/data" "$dest/workspace"
 install -m 0600 "$src/compose.yaml" "$dest/compose.yaml"
-install -m 0600 -o 10000 -g 10000 "$src/config.yaml" "$dest/data/config.yaml"
+python3 - "$src/config.yaml" "$dest/data/config.yaml" <<'PY'
+from pathlib import Path
+import sys
+source, target = map(Path, sys.argv[1:])
+env = Path('/srv/agentbox/hermes/data/.env')
+values = {}
+for line in env.read_text().splitlines():
+    line = line.strip()
+    if line and not line.startswith('#') and '=' in line:
+        key, value = line.split('=', 1)
+        values[key] = value.strip().strip('"').strip("'")
+base_url = values['CPA_BASE_URL'].rstrip('/')
+text = source.read_text().replace('https://private-cpa.invalid:8317', base_url)
+target.write_text(text)
+target.chmod(0o600)
+PY
+chown 10000:10000 "$dest/data/config.yaml"
 install -m 0644 -o 10000 -g 10000 "$src/workspace-instructions.md" "$dest/workspace/AGENTS.md"
 install -m 0755 "$src/backup.sh" "$dest/backup.sh"
 python3 - <<'PY'
@@ -38,6 +54,8 @@ def read_env(path):
             values[k]=v.strip().strip('\"').strip("'")
     return values
 values=read_env(env)
+assert values.get('CPA_BASE_URL'), 'Private CPA base URL is missing'
+assert re.fullmatch(r'https?://[^\s/]+(?::[0-9]+)?', values['CPA_BASE_URL']), 'Private CPA base URL is invalid'
 assert values.get('CPA_API_KEY'), 'Dedicated CPA key is missing'
 assert values.get('HERMES_DASHBOARD_BASIC_AUTH_USERNAME'), 'Dashboard username is missing'
 assert values.get('HERMES_DASHBOARD_BASIC_AUTH_PASSWORD_HASH') or values.get('HERMES_DASHBOARD_BASIC_AUTH_PASSWORD'), 'Dashboard password or password hash is missing'
