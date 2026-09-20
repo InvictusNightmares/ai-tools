@@ -1,0 +1,19 @@
+{
+  "schema": "work-observation-performance-evidence-v1",
+  "release": "observation-dev.9",
+  "output": "/data/work-observation-lab/full-capture-20260918-114845",
+  "scope": "websocket-only-extended",
+  "measured_requests": 1440,
+  "body_correct": true,
+  "capture_complete": true,
+  "expected_captured": 672,
+  "expected_written": 11424,
+  "capture_overhead_percent": {
+    "ws_4k_first": 2.0183,
+    "ws_4k_total": 0.0784,
+    "ws_64k_first": 2.2707,
+    "ws_64k_total": 3.6703
+  },
+  "every_round_within_5_percent": false,
+  "interpretation": "专项窗口显示优化后的WS平均开销低于5%，但仍保留单轮超标，不能替代完整三轮验收。"
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "work-observation-candidate-regression-v1",
+  "scope": "gpu_isolated_candidate",
+  "collector_binary": "/data/work-observation-lab/candidate-r2/work-observation/observe",
+  "collector_sha256": "7130a5d82f6e064e5c30ecd821f4a3a7af92e579824f24cb12a7d9a7399329d6",
+  "go_checks": {
+    "go_test": "passed",
+    "go_test_race": "passed",
+    "go_vet": "passed",
+    "static_build": "passed"
+  },
+  "isolated_smoke": {
+    "events": 6,
+    "completed": 5,
+    "process_interrupted": 1,
+    "clients": ["codex", "opencode", "hermes", "claude"],
+    "body_integrity": true,
+    "auth_headers_excluded": true,
+    "default_disabled": true,
+    "enable_disable": true,
+    "restart_gap_visible": true,
+    "export_to_evidence_and_analysis": true,
+    "production_changed": false
+  },
+  "native_codex_attempt": {
+    "result": "blocked_by_fixture_environment",
+    "installed_version": "codex-cli 0.135.0-alpha.1",
+    "error": "installed app-server rejects the historical --stdio driver flag",
+    "collector_failure": false,
+    "historical_four_client_evidence_retained": true
+  },
+  "employee_content_sent": false
+}

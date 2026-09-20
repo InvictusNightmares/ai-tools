@@ -1,0 +1,20 @@
+{
+  "region": "fixture",
+  "client": "Codex 0.154.0 app-server",
+  "scope": "native Codex through candidate with synthetic local auth Guard and models",
+  "checks": {
+    "initial_marker": true,
+    "multiple_native_tools": true,
+    "native_subagent": true,
+    "native_fork": true,
+    "native_cancel": true,
+    "resume_after_cancel": true
+  },
+  "collaboration_item_types": [
+    "collabAgentToolCall"
+  ],
+  "passed": true,
+  "binary_sha256": "7ecbec9d57730677ffe44fd3ec4dc577c88d7c39e0b94dccdb7b29e3b32975b3",
+  "driver_sha256": "45917a8d47da3f5200493dcde5c83365f47e42dda92e16099bdc8fd44c172e38",
+  "gateway_candidate": "v12.1"
+}

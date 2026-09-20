@@ -1,0 +1,89 @@
+name: gateway-acceptance-${ACCEPTANCE_REGION:-tokyo}
+
+x-runtime: &runtime
+  image: ${ACCEPTANCE_RUNTIME_IMAGE:?pinned runtime image required}
+  pull_policy: never
+  network_mode: host
+  user: "10001:10001"
+  read_only: true
+  restart: unless-stopped
+  stop_grace_period: 130s
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+  tmpfs: ["/tmp:rw,noexec,nosuid,size=64m,mode=1777"]
+  pids_limit: 128
+  logging:
+    driver: json-file
+    options: {max-size: "10m", max-file: "3"}
+
+services:
+  guard:
+    <<: *runtime
+    container_name: guard-acceptance-${ACCEPTANCE_REGION:-tokyo}
+    entrypoint: [/app/preflight-api]
+    mem_limit: 512m
+    environment:
+      PREFLIGHT_LISTEN_ADDR: 127.0.0.1:${ACCEPTANCE_GUARD_PORT:-8013}
+      GATEWAY_ADMIN_SECRET_FILE: /run/secrets/cache-secret
+      PREFLIGHT_AUDIT_LOG: /logs/guard-security.jsonl
+      PREFLIGHT_REGION: ${ACCEPTANCE_REGION:-tokyo}
+      PREFLIGHT_FAIL_CLOSED: "true"
+      PREFLIGHT_STRICT: "true"
+      PREFLIGHT_MAX_QUEUE: "128"
+      PREFLIGHT_QUEUE_TIMEOUT: 1s
+      PREFLIGHT_REQUEST_TIMEOUT: 30s
+      PREFLIGHT_MAX_CHUNK_CHARS: "20000"
+      GUARD_VLLM_BASE_URL: http://127.0.0.1:8001/v1
+      GUARD_MODEL: qwen3guard-gen-8b
+      GUARD_MODEL_VERSION: qwen3guard-gen-8b
+    volumes:
+      - ${ACCEPTANCE_ROOT}/bin/preflight-api:/app/preflight-api:ro
+      - ${ACCEPTANCE_ROOT}/logs/guard:/logs
+      - ${ACCEPTANCE_ROOT}/secrets/cache-secret:/run/secrets/cache-secret:ro
+
+  auto:
+    <<: *runtime
+    container_name: auto-acceptance-${ACCEPTANCE_REGION:-tokyo}
+    entrypoint: [/bin/sh, /app/run-auto.sh]
+    mem_limit: 2g
+    environment:
+      AUTO_NATIVE_FILES_ROOT: /state/files
+      AUTO_NATIVE_API_ORIGIN: ${SUB2API_ORIGIN:?regional Sub2API origin required}
+      AUTO_GATEWAY_MODE: regional
+      AUTO_GATEWAY_LISTEN: 127.0.0.1:${ACCEPTANCE_AUTO_PORT:-8093}
+      AUTO_GATEWAY_REGION: ${ACCEPTANCE_REGION:-tokyo}
+      AUTO_GATEWAY_AUTH_CHECK_URL: ${SUB2API_ORIGIN:?regional Sub2API origin required}/v1/models
+      AUTO_GATEWAY_MODEL_REVISION: guard-r17-semantic-v10-native-v27
+      AUTO_GATEWAY_BUFFERED_SSE: "1"
+      AUTO_GATEWAY_UPSTREAM_TIMEOUT_SECONDS: "3600"
+      AUTO_GATEWAY_CACHE_MAX_ENTRIES: "128"
+      AUTO_GATEWAY_MAX_RESPONSE_BYTES: "134217728"
+      AUTO_GATEWAY_SESSION_STATE_PATH: /state/session-state.json
+      AUTO_GATEWAY_USAGE_SINK_PATH: /logs/usage.jsonl
+      AUTO_GATEWAY_AUDIT_SINK_PATH: /logs/route-audit.jsonl
+      AUTO_GUARD_TIMEOUT_SECONDS: "35"
+      AUTO_GUARD_ENDPOINT: http://127.0.0.1:${ACCEPTANCE_GUARD_PORT:-8013}/v1/preflight
+      AUTO_CLASSIFIER_URL: ${SUB2API_ORIGIN:?regional Sub2API origin required}/v1/chat/completions
+      AUTO_CLASSIFIER_MODEL: gpt-5.6-luna
+      AUTO_CLASSIFIER_REVIEW_MODEL: gpt-5.6-sol
+      AUTO_UPSTREAM_CHAT_URL: ${SUB2API_ORIGIN:?regional Sub2API origin required}/v1/chat/completions
+      AUTO_UPSTREAM_RESPONSES_URL: ${SUB2API_ORIGIN:?regional Sub2API origin required}/v1/responses
+      AUTO_UPSTREAM_ANTHROPIC_URL: ${SUB2API_ORIGIN:?regional Sub2API origin required}/v1/messages
+      AUTO_UPSTREAM_COUNT_TOKENS_URL: ${SUB2API_ORIGIN:?regional Sub2API origin required}/v1/messages/count_tokens
+    volumes:
+      - ${ACCEPTANCE_ROOT}/bin/auto-server:/app/auto-server:ro
+      - ${ACCEPTANCE_ROOT}/deployment/run-auto.sh:/app/run-auto.sh:ro
+      - ${ACCEPTANCE_ROOT}/secrets/cache-secret:/run/secrets/cache-secret:ro
+      - ${ACCEPTANCE_ROOT}/logs/auto:/logs
+      - ${ACCEPTANCE_ROOT}/state:/state
+
+  ingress:
+    <<: *runtime
+    image: ${ACCEPTANCE_NGINX_IMAGE:?pinned nginx image required}
+    container_name: nginx-acceptance-${ACCEPTANCE_REGION:-tokyo}
+    entrypoint: [nginx]
+    command: [-c, /etc/nginx/nginx.conf, -g, "daemon off;"]
+    mem_limit: 128m
+    volumes:
+      - ${ACCEPTANCE_ROOT}/deployment/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ${ACCEPTANCE_ROOT}/logs/nginx:/logs

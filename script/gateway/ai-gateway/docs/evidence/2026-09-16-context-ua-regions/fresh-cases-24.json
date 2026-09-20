@@ -1,0 +1,919 @@
+{
+  "version": 1,
+  "frozen_at": "2026-09-16T09:33:19.395037+00:00",
+  "label_basis": "implementer assigned; not independent human adjudication; not used to tune policy before first run",
+  "cases": [
+    {
+      "id": "salute",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "quick_qa",
+      "reviewer_complexity": "simple",
+      "protocol": "chat",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "晚上好。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Good evening."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "晚上好，good evening."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "literal-unit",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "formatting",
+      "reviewer_complexity": "simple",
+      "protocol": "responses",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "将“磁盘容量：16 GB”中的16替换为32，其余文字不变。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "Replace 16 with 32 in “Disk capacity: 16 GB”; leave the other text unchanged."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "把“Disk capacity: 16 GB”的16换成32，其余不变。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "translate-note",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "translation",
+      "reviewer_complexity": "simple",
+      "protocol": "messages",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "将“服务器维护结束，请重新连接”翻译成英语。"
+            }
+          ],
+          "max_tokens": 1024
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Translate “Server maintenance has finished; please reconnect” into Chinese."
+            }
+          ],
+          "max_tokens": 1024
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "将“服务器维护结束，请重新连接”translate into English。"
+            }
+          ],
+          "max_tokens": 1024
+        }
+      }
+    },
+    {
+      "id": "extract-port",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "formatting",
+      "reviewer_complexity": "simple",
+      "protocol": "chat",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "从这行文本提取端口号：监听地址 127.0.0.1:8765。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Extract the port number from: listening on 127.0.0.1:8765."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "从 listening on 127.0.0.1:8765 提取port number。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "define-checksum",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "quick_qa",
+      "reviewer_complexity": "simple",
+      "protocol": "responses",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "用一句话解释校验和是什么。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "Explain what a checksum is in one sentence."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "用一句话解释 checksum。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "trim-field",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "coding",
+      "reviewer_complexity": "bounded",
+      "protocol": "messages",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "在现有表单提交函数中，对昵称调用trim，再沿用已有空值校验。补充首尾空格和全空格两种测试。"
+            }
+          ],
+          "max_tokens": 1024
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "In the existing form submit function, trim the nickname before the existing empty-value check. Add tests for surrounding spaces and spaces only."
+            }
+          ],
+          "max_tokens": 1024
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "在现有 submit 函数对 nickname 做trim，再用已有empty检查，补首尾空格和全空格tests。"
+            }
+          ],
+          "max_tokens": 1024
+        }
+      }
+    },
+    {
+      "id": "null-avatar",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "bounded",
+      "protocol": "chat",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "崩溃堆栈指向profile.avatar.url，已确认avatar可能为null。修复该处空值处理，使用已有默认头像并补测试。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "The crash points to profile.avatar.url; avatar is confirmed nullable. Handle null there, use the existing default avatar, and add a test."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "stack指向profile.avatar.url，已确认avatar可能null；该处用现有default avatar兜底并补test。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "sort-copy",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "coding",
+      "reviewer_complexity": "bounded",
+      "protocol": "responses",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "工具函数直接sort传入数组导致调用方数据变化。改为排序副本，保持比较器及返回值类型，并验证原数组不变。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "A utility sorts its input array in place and mutates caller data. Sort a copy, preserve the comparator and return type, and verify the input stays unchanged."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "utility直接sort输入array造成mutation；改排序copy，保留comparator和return type，test原数组不变。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "a11y-toggle",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "coding",
+      "reviewer_complexity": "bounded",
+      "protocol": "messages",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "现有密码显示按钮没有可访问名称。为显示和隐藏状态分别添加对应标签，并在现有组件测试中检查。"
+            }
+          ],
+          "max_tokens": 1024
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "The existing password visibility button has no accessible name. Add labels for show and hide states and check them in the existing component test."
+            }
+          ],
+          "max_tokens": 1024
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "password visibility button缺accessible name；show/hide分别加label，在已有component test检查。"
+            }
+          ],
+          "max_tokens": 1024
+        }
+      }
+    },
+    {
+      "id": "duration-edge",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "bounded",
+      "protocol": "chat",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "已定位倒计时在0秒仍显示负数：渲染函数缺下界。将显示值限制为至少0，保持计时器逻辑，补边界测试。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "The countdown displays a negative number after zero because the render function lacks a lower bound. Clamp display to zero without changing the timer, and test the boundary."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "已定位countdown render缺lower bound导致负数；显示clamp到0，timer不改，补boundary test。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "upload-trace",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "multi_step",
+      "protocol": "responses",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "上传后列表不更新。分别追踪上传组件事件、状态仓库更新和列表订阅，找出断点，修复并做集成验证。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "The list does not update after upload. Trace the upload component event, store update, and list subscription to find the break, fix it, and verify integration."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "upload后list不更新；追踪component event、store update和list subscription断点，修复并做integration验证。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "config-chain",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "multi_step",
+      "protocol": "messages",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "应用读取的代理端口与配置不一致。沿启动脚本、环境变量加载和运行时默认值追踪覆盖顺序，修复并验证重启。"
+            }
+          ],
+          "max_tokens": 1024
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "The application proxy port differs from configuration. Trace override order through the launch script, environment loading, and runtime defaults; fix it and verify restart."
+            }
+          ],
+          "max_tokens": 1024
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "proxy port与config不一致；沿launch script、env loading、runtime default追踪override顺序，修复并验证restart。"
+            }
+          ],
+          "max_tokens": 1024
+        }
+      }
+    },
+    {
+      "id": "cancel-flow",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "coding",
+      "reviewer_complexity": "multi_step",
+      "protocol": "chat",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "让搜索取消从页面传到服务层再到HTTP请求，协调加载状态与取消错误处理，验证取消后不会显示旧结果。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Propagate search cancellation from the page through the service layer to the HTTP request; coordinate loading state and cancellation errors, and verify stale results do not appear."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "search cancel从page经service传到HTTP，协调loading state和cancel error，验证不会显示旧result。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "export-map",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "multi_step",
+      "protocol": "responses",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "导出文件列顺序与界面不一致。追踪用户列配置、服务端字段投影与导出映射，统一顺序并添加跨层验证。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "Exported column order differs from the UI. Trace user column settings, server field projection, and export mapping; align the order and add cross-layer verification."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "export列顺序与UI不同；追踪column settings、server projection和export mapping，统一并加cross-layer验证。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "navigation-chain",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "multi_step",
+      "protocol": "messages",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "深链接进入详情后返回跳到了错误页面。追踪链接解析、登录拦截及导航栈构造，修复它们之间的状态交接并验证两种登录状态。"
+            }
+          ],
+          "max_tokens": 1024
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Back navigation after a deep link goes to the wrong page. Trace link parsing, the login gate, and stack construction; repair state handoffs and verify both login states."
+            }
+          ],
+          "max_tokens": 1024
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "deep link详情back到错页；追踪link parsing、login gate与navigation stack，修复state handoff，验证登录与未登录。"
+            }
+          ],
+          "max_tokens": 1024
+        }
+      }
+    },
+    {
+      "id": "lease-split",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "architecture",
+      "reviewer_complexity": "complex",
+      "protocol": "chat",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "网络分区时两个工作节点同时认为持有租约并写入。比较栅栏令牌和仲裁方案，设计防止过期持有者写入的协议，并验证故障恢复。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "During a network partition two workers both believe they hold a lease and write. Compare fencing and quorum approaches, design a protocol that rejects stale holders, and verify recovery."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "network partition时双worker同时持lease写入；比较fencing与quorum，设计拒绝stale holder协议并验证recovery。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "payment-retry",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "complex",
+      "protocol": "responses",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "支付超时重试后出现重复扣款，涉及客户端重试、网关幂等缓存和异步回调。根因不明，重建并发时序，设计修复并验证崩溃与重放。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "Payment timeouts and retries cause duplicate charges across client retries, gateway idempotency caching, and asynchronous callbacks. The cause is unknown; reconstruct concurrency, fix it, and verify crashes and replays."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "payment timeout retry重复扣款，跨client retry、gateway idempotency cache、async callback；根因未知，重建并发时序并验证crash/replay修复。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "dualwrite-migrate",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "architecture",
+      "reviewer_complexity": "complex",
+      "protocol": "messages",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "大表不停机迁移时双写和回填顺序可能覆盖新值。比较迁移策略，明确读写切换、版本冲突和回滚条件，验证不丢更新。"
+            }
+          ],
+          "max_tokens": 1024
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "During an online large-table migration, dual writes and backfill ordering may overwrite newer values. Compare strategies; define cutover, version conflicts, and rollback, and verify no updates are lost."
+            }
+          ],
+          "max_tokens": 1024
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "online大表migration的dual write/backfill可能覆盖新值；比较策略，定义cutover、version conflict、rollback，验证无lost update。"
+            }
+          ],
+          "max_tokens": 1024
+        }
+      }
+    },
+    {
+      "id": "cache-stampede",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "complex",
+      "protocol": "chat",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "集群缓存同时过期导致数据库雪崩，锁故障时又出现永久等待。分析过期、租约和重试的相互作用，比较修复方案并进行并发故障测试。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Simultaneous cache expiry overloads the database, while lock failures cause indefinite waits. Analyze interactions among expiry, leases, and retries; compare fixes and run concurrent fault tests."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "cluster cache同时expiry打垮DB，lock failure又永久wait；分析expiry/lease/retry交互，比较方案并做concurrent fault tests。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "replication-order",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "complex",
+      "protocol": "responses",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "主从切换后部分用户读到回退数据，涉及异步复制、会话一致性令牌和缓存。证据不完整，重建故障时序并验证修复的一致性边界。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "After failover some users read older data across asynchronous replication, session-consistency tokens, and caches. Evidence is incomplete; reconstruct the failure timeline and validate the consistency guarantees of a fix."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "failover后读到旧数据，跨async replication、session consistency token、cache；证据不全，重建timeline并验证修复consistency边界。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ledger-proof",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "architecture",
+      "reviewer_complexity": "exceptional",
+      "protocol": "messages",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "设计跨三个区域的账本协议，同时处理脑裂、乱序重复投递、区域恢复和密钥轮换。给出状态机与形式化证明，证明无双花且已提交交易不丢失，并明确可用性取舍。"
+            }
+          ],
+          "max_tokens": 1024
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Design a three-region ledger protocol handling split brain, reordered duplicate delivery, regional recovery, and key rotation. Provide state machines and formal proofs of no double spending and no lost committed transactions, with explicit availability tradeoffs."
+            }
+          ],
+          "max_tokens": 1024
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "设计three-region ledger，处理split brain、乱序duplicate delivery、region recovery、key rotation；给state machine与formal proof证明无double spend及committed transaction不丢，说明availability取舍。"
+            }
+          ],
+          "max_tokens": 1024
+        }
+      }
+    },
+    {
+      "id": "scheduler-invariants",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "architecture",
+      "reviewer_complexity": "exceptional",
+      "protocol": "chat",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "重构跨集群调度系统，在控制面分区、资源超卖、任务迁移和持久存储回退同时发生时保证单执行与资源守恒。推导联合状态机及活性和安全性证明，比较冲突约束下的方案。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Redesign a cross-cluster scheduler to preserve single execution and resource conservation under simultaneous control-plane partitions, overcommit, task migration, and storage rollback. Derive a joint state machine with liveness and safety proofs and compare conflicting constraints."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "重构cross-cluster scheduler，同时control-plane partition、overcommit、task migration、storage rollback仍保single execution与resource conservation；联合state machine、liveness/safety proof并比较冲突约束。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "distributed-gc",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "architecture",
+      "reviewer_complexity": "exceptional",
+      "protocol": "responses",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "设计跨存储系统的分布式垃圾回收，在复制延迟、快照回滚、租约失效和分区同时出现时证明不会删除可达对象。给出协议、形式化不变式、进展证明及恢复迁移方案。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "Design distributed garbage collection across storage systems; prove reachable objects cannot be deleted despite simultaneous replication lag, snapshot rollback, lease expiry, and partitions. Supply a protocol, formal invariants, progress proof, and recovery migration plan."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "input": [
+            {
+              "role": "user",
+              "content": "设计跨storage的distributed GC，在replication lag、snapshot rollback、lease expiry、partition并发时证明不删reachable object；给protocol、formal invariants、progress proof和recovery migration。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "rekey-consensus",
+      "source": "new-synthetic-frozen-after-policy-before-run",
+      "split": "holdout",
+      "expected_task": "architecture",
+      "reviewer_complexity": "exceptional",
+      "protocol": "messages",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "为跨区域共识存储设计在线加密密钥轮换，要求在领导者切换、成员变更、旧快照恢复和部分轮换并发时保持机密性与线性一致性。建立联合协议并证明安全性与活性，分析不可兼得条件。"
+            }
+          ],
+          "max_tokens": 1024
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Design online encryption-key rotation for cross-region consensus storage, preserving confidentiality and linearizability during concurrent leader changes, membership changes, old-snapshot recovery, and partial rotation. Establish the combined protocol, prove safety and liveness, and analyze incompatible conditions."
+            }
+          ],
+          "max_tokens": 1024
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "为cross-region consensus storage设计online key rotation，并发leader change、membership change、old snapshot recovery、partial rotation保持confidentiality与linearizability；联合protocol、安全活性证明及不可兼得分析。"
+            }
+          ],
+          "max_tokens": 1024
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "scope": "native Hermes PTY through gateway and real model",
+  "checks": [
+    {
+      "check": "initial_marker",
+      "passed": true
+    },
+    {
+      "check": "native_compress",
+      "passed": true,
+      "new_requests": 0
+    },
+    {
+      "check": "recall_after_compress",
+      "passed": true
+    },
+    {
+      "check": "multiple_native_tools",
+      "passed": false,
+      "tool_count": 2
+    },
+    {
+      "check": "native_child_session",
+      "passed": true,
+      "child_sessions": 1
+    },
+    {
+      "check": "native_cancel_process_alive",
+      "passed": true
+    },
+    {
+      "check": "resume_after_cancel",
+      "passed": true
+    }
+  ],
+  "gateway_candidate_tested": false,
+  "guard_and_models": "real regional services",
+  "region": "tokyo",
+  "request_count": 0,
+  "session_header_names": []
+}

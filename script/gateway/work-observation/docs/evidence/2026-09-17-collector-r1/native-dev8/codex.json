@@ -1,0 +1,70 @@
+{
+  "version": "observation-dev.8",
+  "native_checks": {
+    "initial_marker": true,
+    "native_compaction": true,
+    "recall_after_compaction": true,
+    "multiple_native_tools": true,
+    "native_subagent": true,
+    "native_fork": true,
+    "native_cancel": true,
+    "resume_after_cancel": true,
+    "native_image_forwarded": true
+  },
+  "native_passed": true,
+  "media": {
+    "native_image_payloads_seen": 1,
+    "attachment_metadata_records": 1,
+    "no_image_payload_at_rest": true,
+    "image_request_byte_identity": true,
+    "text_and_tool_markers_preserved": true,
+    "capture_has_no_gaps": true,
+    "passed": true
+  },
+  "capture": {
+    "scope": "native clients, synthetic loopback provider, actual collector",
+    "production_changed": false,
+    "events": 12,
+    "kinds": {
+      "http_exchange": 12
+    },
+    "outcomes": {
+      "completed": 11,
+      "canceled": 1
+    },
+    "clients": {
+      "codex": 12
+    },
+    "missing": {},
+    "status": {
+      "active_requests": 0,
+      "capture_enabled": false,
+      "captured": 12,
+      "complete_capture_claim": false,
+      "dropped": 0,
+      "older_loss_details_evicted": 0,
+      "projection_errors": 0,
+      "pruned": 0,
+      "queue_items": 0,
+      "queue_limit_bytes": 67108864,
+      "queued_bytes": 0,
+      "recent_losses": null,
+      "recovered_interrupted_requests": 0,
+      "started_at": "2026-09-17T11:47:06.955829Z",
+      "storage_limit_bytes": 1073741824,
+      "stored_bytes": 624015,
+      "truncated": 0,
+      "unavailable_bypassed_requests": 0,
+      "updated_at": "2026-09-17T11:47:07.869244Z",
+      "version": "observation-dev.8",
+      "write_errors": 0,
+      "written": 12
+    },
+    "all_record_checksums_valid": true,
+    "original_ua_observed": [
+      "Codex Desktop/0.154.0 (Mac OS 14.8.7; arm64) dumb (gateway_native_acceptance; 1.0)"
+    ],
+    "auth_headers_excluded": true
+  },
+  "private_evidence": "/private/tmp/gateway-codex-tools-observation-dev8-r2-194706"
+}

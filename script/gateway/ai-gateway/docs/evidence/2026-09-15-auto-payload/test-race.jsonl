@@ -1,0 +1,291 @@
+{"Time":"2026-09-15T02:49:50.335044154Z","Action":"start","Package":"local/auto-gateway"}
+{"Time":"2026-09-15T02:49:50.335276354Z","Action":"start","Package":"local/auto-gateway/cmd/auto-preview"}
+{"Time":"2026-09-15T02:49:50.335329095Z","Action":"output","Package":"local/auto-gateway/cmd/auto-preview","Output":"?   \tlocal/auto-gateway/cmd/auto-preview\t[no test files]\n"}
+{"Time":"2026-09-15T02:49:50.335348302Z","Action":"skip","Package":"local/auto-gateway/cmd/auto-preview","Elapsed":0}
+{"Time":"2026-09-15T02:49:50.345547745Z","Action":"run","Package":"local/auto-gateway","Test":"TestClassifierAndCapabilityFilter"}
+{"Time":"2026-09-15T02:49:50.345587894Z","Action":"output","Package":"local/auto-gateway","Test":"TestClassifierAndCapabilityFilter","Output":"=== RUN   TestClassifierAndCapabilityFilter\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:50.569888277Z","Action":"output","Package":"local/auto-gateway","Test":"TestClassifierAndCapabilityFilter","Output":"--- PASS: TestClassifierAndCapabilityFilter (0.22s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:50.569912397Z","Action":"pass","Package":"local/auto-gateway","Test":"TestClassifierAndCapabilityFilter","Elapsed":0.22}
+{"Time":"2026-09-15T02:49:50.56992735Z","Action":"run","Package":"local/auto-gateway","Test":"TestMultipleUpgradesAndTaskReset"}
+{"Time":"2026-09-15T02:49:50.56992996Z","Action":"output","Package":"local/auto-gateway","Test":"TestMultipleUpgradesAndTaskReset","Output":"=== RUN   TestMultipleUpgradesAndTaskReset\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:50.570081249Z","Action":"output","Package":"local/auto-gateway","Test":"TestMultipleUpgradesAndTaskReset","Output":"--- PASS: TestMultipleUpgradesAndTaskReset (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:50.570088016Z","Action":"pass","Package":"local/auto-gateway","Test":"TestMultipleUpgradesAndTaskReset","Elapsed":0}
+{"Time":"2026-09-15T02:49:50.570109052Z","Action":"run","Package":"local/auto-gateway","Test":"TestToolLoopLocksModel"}
+{"Time":"2026-09-15T02:49:50.570111631Z","Action":"output","Package":"local/auto-gateway","Test":"TestToolLoopLocksModel","Output":"=== RUN   TestToolLoopLocksModel\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:50.570192304Z","Action":"output","Package":"local/auto-gateway","Test":"TestToolLoopLocksModel","Output":"--- PASS: TestToolLoopLocksModel (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:50.570203889Z","Action":"pass","Package":"local/auto-gateway","Test":"TestToolLoopLocksModel","Elapsed":0}
+{"Time":"2026-09-15T02:49:50.570226004Z","Action":"run","Package":"local/auto-gateway","Test":"TestStreamingTurnCannotSwitchModelsMidResponse"}
+{"Time":"2026-09-15T02:49:50.570228844Z","Action":"output","Package":"local/auto-gateway","Test":"TestStreamingTurnCannotSwitchModelsMidResponse","Output":"=== RUN   TestStreamingTurnCannotSwitchModelsMidResponse\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:50.789610681Z","Action":"output","Package":"local/auto-gateway","Test":"TestStreamingTurnCannotSwitchModelsMidResponse","Output":"--- PASS: TestStreamingTurnCannotSwitchModelsMidResponse (0.22s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:50.78962696Z","Action":"pass","Package":"local/auto-gateway","Test":"TestStreamingTurnCannotSwitchModelsMidResponse","Elapsed":0.22}
+{"Time":"2026-09-15T02:49:50.789664941Z","Action":"run","Package":"local/auto-gateway","Test":"TestHardFailureFailsOverWithoutWaitingForHealthRefresh"}
+{"Time":"2026-09-15T02:49:50.789667831Z","Action":"output","Package":"local/auto-gateway","Test":"TestHardFailureFailsOverWithoutWaitingForHealthRefresh","Output":"=== RUN   TestHardFailureFailsOverWithoutWaitingForHealthRefresh\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:50.789763225Z","Action":"output","Package":"local/auto-gateway","Test":"TestHardFailureFailsOverWithoutWaitingForHealthRefresh","Output":"--- PASS: TestHardFailureFailsOverWithoutWaitingForHealthRefresh (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:50.789772112Z","Action":"pass","Package":"local/auto-gateway","Test":"TestHardFailureFailsOverWithoutWaitingForHealthRefresh","Elapsed":0}
+{"Time":"2026-09-15T02:49:50.78978614Z","Action":"run","Package":"local/auto-gateway","Test":"TestCacheNamespaceIsolation"}
+{"Time":"2026-09-15T02:49:50.789788438Z","Action":"output","Package":"local/auto-gateway","Test":"TestCacheNamespaceIsolation","Output":"=== RUN   TestCacheNamespaceIsolation\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:50.789922757Z","Action":"output","Package":"local/auto-gateway","Test":"TestCacheNamespaceIsolation","Output":"--- PASS: TestCacheNamespaceIsolation (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:50.789927844Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCacheNamespaceIsolation","Elapsed":0}
+{"Time":"2026-09-15T02:49:50.789950332Z","Action":"run","Package":"local/auto-gateway","Test":"TestReasoningEffortIsGeneratedFromFeatures"}
+{"Time":"2026-09-15T02:49:50.789953108Z","Action":"output","Package":"local/auto-gateway","Test":"TestReasoningEffortIsGeneratedFromFeatures","Output":"=== RUN   TestReasoningEffortIsGeneratedFromFeatures\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.194876709Z","Action":"output","Package":"local/auto-gateway","Test":"TestReasoningEffortIsGeneratedFromFeatures","Output":"--- PASS: TestReasoningEffortIsGeneratedFromFeatures (0.40s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.194918077Z","Action":"pass","Package":"local/auto-gateway","Test":"TestReasoningEffortIsGeneratedFromFeatures","Elapsed":0.4}
+{"Time":"2026-09-15T02:49:51.194928466Z","Action":"run","Package":"local/auto-gateway","Test":"TestProviderReasoningMapping"}
+{"Time":"2026-09-15T02:49:51.194943188Z","Action":"output","Package":"local/auto-gateway","Test":"TestProviderReasoningMapping","Output":"=== RUN   TestProviderReasoningMapping\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.194949082Z","Action":"output","Package":"local/auto-gateway","Test":"TestProviderReasoningMapping","Output":"--- PASS: TestProviderReasoningMapping (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.19496574Z","Action":"pass","Package":"local/auto-gateway","Test":"TestProviderReasoningMapping","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.194975823Z","Action":"run","Package":"local/auto-gateway","Test":"TestProviderParametersNeverForwardClientEffort"}
+{"Time":"2026-09-15T02:49:51.194978234Z","Action":"output","Package":"local/auto-gateway","Test":"TestProviderParametersNeverForwardClientEffort","Output":"=== RUN   TestProviderParametersNeverForwardClientEffort\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.195032934Z","Action":"output","Package":"local/auto-gateway","Test":"TestProviderParametersNeverForwardClientEffort","Output":"--- PASS: TestProviderParametersNeverForwardClientEffort (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.195044624Z","Action":"pass","Package":"local/auto-gateway","Test":"TestProviderParametersNeverForwardClientEffort","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.195049047Z","Action":"run","Package":"local/auto-gateway","Test":"TestUsageNormalization"}
+{"Time":"2026-09-15T02:49:51.195051376Z","Action":"output","Package":"local/auto-gateway","Test":"TestUsageNormalization","Output":"=== RUN   TestUsageNormalization\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.19509115Z","Action":"output","Package":"local/auto-gateway","Test":"TestUsageNormalization","Output":"--- PASS: TestUsageNormalization (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.195101245Z","Action":"pass","Package":"local/auto-gateway","Test":"TestUsageNormalization","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.195119226Z","Action":"run","Package":"local/auto-gateway","Test":"TestPublicModelIsAutoOnly"}
+{"Time":"2026-09-15T02:49:51.195122607Z","Action":"output","Package":"local/auto-gateway","Test":"TestPublicModelIsAutoOnly","Output":"=== RUN   TestPublicModelIsAutoOnly\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.195168062Z","Action":"output","Package":"local/auto-gateway","Test":"TestPublicModelIsAutoOnly","Output":"--- PASS: TestPublicModelIsAutoOnly (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.195181755Z","Action":"pass","Package":"local/auto-gateway","Test":"TestPublicModelIsAutoOnly","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.195186695Z","Action":"run","Package":"local/auto-gateway","Test":"TestResponseCacheKeySeparatesEffectiveModelEffortAndRequest"}
+{"Time":"2026-09-15T02:49:51.195189194Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCacheKeySeparatesEffectiveModelEffortAndRequest","Output":"=== RUN   TestResponseCacheKeySeparatesEffectiveModelEffortAndRequest\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.195621888Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCacheKeySeparatesEffectiveModelEffortAndRequest","Output":"--- PASS: TestResponseCacheKeySeparatesEffectiveModelEffortAndRequest (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.195628822Z","Action":"pass","Package":"local/auto-gateway","Test":"TestResponseCacheKeySeparatesEffectiveModelEffortAndRequest","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.195649474Z","Action":"run","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses"}
+{"Time":"2026-09-15T02:49:51.195652163Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses","Output":"=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.195692823Z","Action":"run","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/stream"}
+{"Time":"2026-09-15T02:49:51.195696885Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/stream","Output":"=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/stream\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.195745952Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/stream","Output":"--- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/stream (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.195766421Z","Action":"pass","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/stream","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.19577591Z","Action":"run","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/tools"}
+{"Time":"2026-09-15T02:49:51.19577829Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/tools","Output":"=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/tools\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.195817034Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/tools","Output":"--- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/tools (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.195839756Z","Action":"pass","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/tools","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.195843611Z","Action":"run","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/image"}
+{"Time":"2026-09-15T02:49:51.195845743Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/image","Output":"=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/image\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.195889512Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/image","Output":"--- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/image (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.195900706Z","Action":"pass","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/image","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.195920492Z","Action":"run","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/blocked"}
+{"Time":"2026-09-15T02:49:51.195932577Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/blocked","Output":"=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/blocked\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.195964123Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/blocked","Output":"--- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/blocked (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.195984409Z","Action":"pass","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/blocked","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.195993604Z","Action":"run","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/large"}
+{"Time":"2026-09-15T02:49:51.195995753Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/large","Output":"=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/large\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.196034938Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/large","Output":"--- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/large (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.196050409Z","Action":"pass","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/large","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.196076084Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses","Output":"--- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.196086078Z","Action":"pass","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.196095063Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineBillingOnResponseHit"}
+{"Time":"2026-09-15T02:49:51.19609752Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineBillingOnResponseHit","Output":"=== RUN   TestCachePipelineBillingOnResponseHit\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.197472307Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineBillingOnResponseHit","Output":"--- PASS: TestCachePipelineBillingOnResponseHit (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.197493092Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineBillingOnResponseHit","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.197523309Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize"}
+{"Time":"2026-09-15T02:49:51.197525837Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize","Output":"=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.197574713Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable"}
+{"Time":"2026-09-15T02:49:51.197577671Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable","Output":"=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.203057393Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable","Output":"--- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.203086133Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable","Elapsed":0.01}
+{"Time":"2026-09-15T02:49:51.203115533Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited"}
+{"Time":"2026-09-15T02:49:51.203118292Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited","Output":"=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.203935143Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited","Output":"--- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.203960124Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.203982918Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect"}
+{"Time":"2026-09-15T02:49:51.203985537Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect","Output":"=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.204784718Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect","Output":"--- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.204795066Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.204834275Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize"}
+{"Time":"2026-09-15T02:49:51.204836804Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize","Output":"=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.20561862Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize","Output":"--- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.205629884Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.205653967Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error"}
+{"Time":"2026-09-15T02:49:51.205656683Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error","Output":"=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.206404665Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error","Output":"--- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.206411427Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.206439801Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize","Output":"--- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.206452838Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize","Elapsed":0.01}
+{"Time":"2026-09-15T02:49:51.206473805Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache"}
+{"Time":"2026-09-15T02:49:51.206478218Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache","Output":"=== RUN   TestCachePipelineGuardBeforeCache\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.20650294Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/block"}
+{"Time":"2026-09-15T02:49:51.206505618Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/block","Output":"=== RUN   TestCachePipelineGuardBeforeCache/block\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.20656088Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/block","Output":"--- PASS: TestCachePipelineGuardBeforeCache/block (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.206571197Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/block","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.206585099Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/unavailable"}
+{"Time":"2026-09-15T02:49:51.206587598Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/unavailable","Output":"=== RUN   TestCachePipelineGuardBeforeCache/unavailable\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.206630308Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/unavailable","Output":"--- PASS: TestCachePipelineGuardBeforeCache/unavailable (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.206645086Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/unavailable","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.206669707Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/invalid"}
+{"Time":"2026-09-15T02:49:51.206672252Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/invalid","Output":"=== RUN   TestCachePipelineGuardBeforeCache/invalid\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.206710737Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/invalid","Output":"--- PASS: TestCachePipelineGuardBeforeCache/invalid (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.206720793Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/invalid","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.20675523Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache","Output":"--- PASS: TestCachePipelineGuardBeforeCache (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.206764393Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.206784538Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineProtocolIsolation"}
+{"Time":"2026-09-15T02:49:51.206786942Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineProtocolIsolation","Output":"=== RUN   TestCachePipelineProtocolIsolation\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.207866109Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineProtocolIsolation","Output":"--- PASS: TestCachePipelineProtocolIsolation (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.207876332Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineProtocolIsolation","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.207901654Z","Action":"run","Package":"local/auto-gateway","Test":"TestMemoryCacheDoesNotAliasUsage"}
+{"Time":"2026-09-15T02:49:51.207904131Z","Action":"output","Package":"local/auto-gateway","Test":"TestMemoryCacheDoesNotAliasUsage","Output":"=== RUN   TestMemoryCacheDoesNotAliasUsage\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.208135005Z","Action":"output","Package":"local/auto-gateway","Test":"TestMemoryCacheDoesNotAliasUsage","Output":"--- PASS: TestMemoryCacheDoesNotAliasUsage (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.208147086Z","Action":"pass","Package":"local/auto-gateway","Test":"TestMemoryCacheDoesNotAliasUsage","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.208167966Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation"}
+{"Time":"2026-09-15T02:49:51.208171168Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation","Output":"=== RUN   TestCachePipelineIdentityIsolation\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.208295225Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/region"}
+{"Time":"2026-09-15T02:49:51.208297752Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/region","Output":"=== RUN   TestCachePipelineIdentityIsolation/region\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.208415693Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/region","Output":"--- PASS: TestCachePipelineIdentityIsolation/region (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.208425628Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/region","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.208448318Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/api_key"}
+{"Time":"2026-09-15T02:49:51.208451011Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/api_key","Output":"=== RUN   TestCachePipelineIdentityIsolation/api_key\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.208571793Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/api_key","Output":"--- PASS: TestCachePipelineIdentityIsolation/api_key (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.208586119Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/api_key","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.208608531Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/revision"}
+{"Time":"2026-09-15T02:49:51.208611015Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/revision","Output":"=== RUN   TestCachePipelineIdentityIsolation/revision\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.208723892Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/revision","Output":"--- PASS: TestCachePipelineIdentityIsolation/revision (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.208728356Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/revision","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.208750324Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/client_key"}
+{"Time":"2026-09-15T02:49:51.208752797Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/client_key","Output":"=== RUN   TestCachePipelineIdentityIsolation/client_key\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.208869884Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/client_key","Output":"--- PASS: TestCachePipelineIdentityIsolation/client_key (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.208874634Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/client_key","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.208895868Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/model"}
+{"Time":"2026-09-15T02:49:51.20889834Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/model","Output":"=== RUN   TestCachePipelineIdentityIsolation/model\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.209006016Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/model","Output":"--- PASS: TestCachePipelineIdentityIsolation/model (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.209012435Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/model","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.209025056Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/effort"}
+{"Time":"2026-09-15T02:49:51.209027342Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/effort","Output":"=== RUN   TestCachePipelineIdentityIsolation/effort\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.209136164Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/effort","Output":"--- PASS: TestCachePipelineIdentityIsolation/effort (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.209149292Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/effort","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.209176029Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/protocol"}
+{"Time":"2026-09-15T02:49:51.209179067Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/protocol","Output":"=== RUN   TestCachePipelineIdentityIsolation/protocol\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.20927476Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/protocol","Output":"--- PASS: TestCachePipelineIdentityIsolation/protocol (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.20927908Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/protocol","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.209300655Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_region"}
+{"Time":"2026-09-15T02:49:51.209303145Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_region","Output":"=== RUN   TestCachePipelineIdentityIsolation/missing_region\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.209906287Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_region","Output":"--- PASS: TestCachePipelineIdentityIsolation/missing_region (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.209916432Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_region","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.209937965Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_api_key"}
+{"Time":"2026-09-15T02:49:51.209940573Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_api_key","Output":"=== RUN   TestCachePipelineIdentityIsolation/missing_api_key\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.210506936Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_api_key","Output":"--- PASS: TestCachePipelineIdentityIsolation/missing_api_key (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.210524597Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_api_key","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.210536921Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_revision"}
+{"Time":"2026-09-15T02:49:51.210539235Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_revision","Output":"=== RUN   TestCachePipelineIdentityIsolation/missing_revision\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.211154387Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_revision","Output":"--- PASS: TestCachePipelineIdentityIsolation/missing_revision (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.211171249Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_revision","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.211196299Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_secret"}
+{"Time":"2026-09-15T02:49:51.211199509Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_secret","Output":"=== RUN   TestCachePipelineIdentityIsolation/missing_secret\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.211818514Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_secret","Output":"--- PASS: TestCachePipelineIdentityIsolation/missing_secret (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.211828039Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_secret","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.211860714Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation","Output":"--- PASS: TestCachePipelineIdentityIsolation (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.211875438Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.211895039Z","Action":"run","Package":"local/auto-gateway","Test":"TestMemoryCacheConcurrentCopies"}
+{"Time":"2026-09-15T02:49:51.211897821Z","Action":"output","Package":"local/auto-gateway","Test":"TestMemoryCacheConcurrentCopies","Output":"=== RUN   TestMemoryCacheConcurrentCopies\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.264305764Z","Action":"output","Package":"local/auto-gateway","Test":"TestMemoryCacheConcurrentCopies","Output":"--- PASS: TestMemoryCacheConcurrentCopies (0.05s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.264319931Z","Action":"pass","Package":"local/auto-gateway","Test":"TestMemoryCacheConcurrentCopies","Elapsed":0.05}
+{"Time":"2026-09-15T02:49:51.264343804Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineInitialSelectionIsNotUpgrade"}
+{"Time":"2026-09-15T02:49:51.264346801Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineInitialSelectionIsNotUpgrade","Output":"=== RUN   TestCachePipelineInitialSelectionIsNotUpgrade\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.264926714Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineInitialSelectionIsNotUpgrade","Output":"--- PASS: TestCachePipelineInitialSelectionIsNotUpgrade (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.264938504Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineInitialSelectionIsNotUpgrade","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.264954833Z","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPModelsExposeAutoOnly"}
+{"Time":"2026-09-15T02:49:51.264957324Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPModelsExposeAutoOnly","Output":"=== RUN   TestHTTPModelsExposeAutoOnly\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.266868662Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPModelsExposeAutoOnly","Output":"--- PASS: TestHTTPModelsExposeAutoOnly (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.266894413Z","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPModelsExposeAutoOnly","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.266919483Z","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPRouteNormalizesProtocolAndIgnoresClientEffort"}
+{"Time":"2026-09-15T02:49:51.266922272Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteNormalizesProtocolAndIgnoresClientEffort","Output":"=== RUN   TestHTTPRouteNormalizesProtocolAndIgnoresClientEffort\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.269245931Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteNormalizesProtocolAndIgnoresClientEffort","Output":"--- PASS: TestHTTPRouteNormalizesProtocolAndIgnoresClientEffort (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.269280071Z","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPRouteNormalizesProtocolAndIgnoresClientEffort","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.269284636Z","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPRouteRejectsNonAutoModel"}
+{"Time":"2026-09-15T02:49:51.269286981Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteRejectsNonAutoModel","Output":"=== RUN   TestHTTPRouteRejectsNonAutoModel\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.270863055Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteRejectsNonAutoModel","Output":"--- PASS: TestHTTPRouteRejectsNonAutoModel (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.270878416Z","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPRouteRejectsNonAutoModel","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.270905046Z","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable"}
+{"Time":"2026-09-15T02:49:51.27090801Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable","Output":"=== RUN   TestHTTPRouteHonorsPreflightBlockAndUnavailable\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.270950826Z","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/block"}
+{"Time":"2026-09-15T02:49:51.270953645Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/block","Output":"=== RUN   TestHTTPRouteHonorsPreflightBlockAndUnavailable/block\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.27240377Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/block","Output":"--- PASS: TestHTTPRouteHonorsPreflightBlockAndUnavailable/block (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.272418333Z","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/block","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.272443518Z","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/unavailable"}
+{"Time":"2026-09-15T02:49:51.272446118Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/unavailable","Output":"=== RUN   TestHTTPRouteHonorsPreflightBlockAndUnavailable/unavailable\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.27357479Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/unavailable","Output":"--- PASS: TestHTTPRouteHonorsPreflightBlockAndUnavailable/unavailable (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.273596321Z","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/unavailable","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.273634617Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable","Output":"--- PASS: TestHTTPRouteHonorsPreflightBlockAndUnavailable (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.273647122Z","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.273671122Z","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPRouteKeepsModelWhenStreamIsActive"}
+{"Time":"2026-09-15T02:49:51.27367384Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteKeepsModelWhenStreamIsActive","Output":"=== RUN   TestHTTPRouteKeepsModelWhenStreamIsActive\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.276966681Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteKeepsModelWhenStreamIsActive","Output":"--- PASS: TestHTTPRouteKeepsModelWhenStreamIsActive (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.276977389Z","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPRouteKeepsModelWhenStreamIsActive","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.277012215Z","Action":"run","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable"}
+{"Time":"2026-09-15T02:49:51.277015697Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable","Output":"=== RUN   TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.277077962Z","Action":"run","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/block"}
+{"Time":"2026-09-15T02:49:51.277080582Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/block","Output":"=== RUN   TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/block\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.277137408Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/block","Output":"--- PASS: TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/block (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.277146683Z","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/block","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.277177764Z","Action":"run","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/unavailable"}
+{"Time":"2026-09-15T02:49:51.27718158Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/unavailable","Output":"=== RUN   TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/unavailable\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.277219633Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/unavailable","Output":"--- PASS: TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/unavailable (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.277229009Z","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/unavailable","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.277261962Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable","Output":"--- PASS: TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.277272033Z","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.277285722Z","Action":"run","Package":"local/auto-gateway","Test":"TestPipelineAllowMapsAutoDecisionAndCallsUpstreamOnce"}
+{"Time":"2026-09-15T02:49:51.27728823Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineAllowMapsAutoDecisionAndCallsUpstreamOnce","Output":"=== RUN   TestPipelineAllowMapsAutoDecisionAndCallsUpstreamOnce\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.27764197Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineAllowMapsAutoDecisionAndCallsUpstreamOnce","Output":"--- PASS: TestPipelineAllowMapsAutoDecisionAndCallsUpstreamOnce (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.277651602Z","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelineAllowMapsAutoDecisionAndCallsUpstreamOnce","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.277670714Z","Action":"run","Package":"local/auto-gateway","Test":"TestPipelinePropagatesUpstreamFailureWithoutRetry"}
+{"Time":"2026-09-15T02:49:51.277673187Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelinePropagatesUpstreamFailureWithoutRetry","Output":"=== RUN   TestPipelinePropagatesUpstreamFailureWithoutRetry\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.278000531Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelinePropagatesUpstreamFailureWithoutRetry","Output":"--- PASS: TestPipelinePropagatesUpstreamFailureWithoutRetry (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.278006797Z","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelinePropagatesUpstreamFailureWithoutRetry","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.278026044Z","Action":"run","Package":"local/auto-gateway","Test":"TestPipelineResponseCacheHitSkipsUpstreamAndRecordsUsage"}
+{"Time":"2026-09-15T02:49:51.278028627Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineResponseCacheHitSkipsUpstreamAndRecordsUsage","Output":"=== RUN   TestPipelineResponseCacheHitSkipsUpstreamAndRecordsUsage\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.278865455Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineResponseCacheHitSkipsUpstreamAndRecordsUsage","Output":"--- PASS: TestPipelineResponseCacheHitSkipsUpstreamAndRecordsUsage (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.278875526Z","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelineResponseCacheHitSkipsUpstreamAndRecordsUsage","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.278894768Z","Action":"run","Package":"local/auto-gateway","Test":"TestPipelineCacheExpiresAndUpstreamFailureIsNotStored"}
+{"Time":"2026-09-15T02:49:51.278897414Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineCacheExpiresAndUpstreamFailureIsNotStored","Output":"=== RUN   TestPipelineCacheExpiresAndUpstreamFailureIsNotStored\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.279969861Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineCacheExpiresAndUpstreamFailureIsNotStored","Output":"--- PASS: TestPipelineCacheExpiresAndUpstreamFailureIsNotStored (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.279980544Z","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelineCacheExpiresAndUpstreamFailureIsNotStored","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.279999271Z","Action":"run","Package":"local/auto-gateway","Test":"TestNormalizeChatCompletions"}
+{"Time":"2026-09-15T02:49:51.280001858Z","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeChatCompletions","Output":"=== RUN   TestNormalizeChatCompletions\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.28114741Z","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeChatCompletions","Output":"--- PASS: TestNormalizeChatCompletions (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.281160252Z","Action":"pass","Package":"local/auto-gateway","Test":"TestNormalizeChatCompletions","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.281171392Z","Action":"run","Package":"local/auto-gateway","Test":"TestNormalizeResponsesIgnoresClientReasoning"}
+{"Time":"2026-09-15T02:49:51.281174685Z","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeResponsesIgnoresClientReasoning","Output":"=== RUN   TestNormalizeResponsesIgnoresClientReasoning\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.28149815Z","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeResponsesIgnoresClientReasoning","Output":"--- PASS: TestNormalizeResponsesIgnoresClientReasoning (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.281512858Z","Action":"pass","Package":"local/auto-gateway","Test":"TestNormalizeResponsesIgnoresClientReasoning","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.281527575Z","Action":"run","Package":"local/auto-gateway","Test":"TestNormalizeAnthropicMessagesAndTools"}
+{"Time":"2026-09-15T02:49:51.281530258Z","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeAnthropicMessagesAndTools","Output":"=== RUN   TestNormalizeAnthropicMessagesAndTools\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.282786299Z","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeAnthropicMessagesAndTools","Output":"--- PASS: TestNormalizeAnthropicMessagesAndTools (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.28280071Z","Action":"pass","Package":"local/auto-gateway","Test":"TestNormalizeAnthropicMessagesAndTools","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.282823413Z","Action":"run","Package":"local/auto-gateway","Test":"TestNormalizeRejectsMalformedAndUnknownProtocol"}
+{"Time":"2026-09-15T02:49:51.282829148Z","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeRejectsMalformedAndUnknownProtocol","Output":"=== RUN   TestNormalizeRejectsMalformedAndUnknownProtocol\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.282928222Z","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeRejectsMalformedAndUnknownProtocol","Output":"--- PASS: TestNormalizeRejectsMalformedAndUnknownProtocol (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.28293262Z","Action":"pass","Package":"local/auto-gateway","Test":"TestNormalizeRejectsMalformedAndUnknownProtocol","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.282953729Z","Action":"run","Package":"local/auto-gateway","Test":"TestStreamCapabilityIsRequired"}
+{"Time":"2026-09-15T02:49:51.282956383Z","Action":"output","Package":"local/auto-gateway","Test":"TestStreamCapabilityIsRequired","Output":"=== RUN   TestStreamCapabilityIsRequired\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.28327089Z","Action":"output","Package":"local/auto-gateway","Test":"TestStreamCapabilityIsRequired","Output":"--- PASS: TestStreamCapabilityIsRequired (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.283275763Z","Action":"pass","Package":"local/auto-gateway","Test":"TestStreamCapabilityIsRequired","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.283297996Z","Action":"run","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters"}
+{"Time":"2026-09-15T02:49:51.283300707Z","Action":"output","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters","Output":"=== RUN   TestBuildProviderPayloadUsesGeneratedParameters\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.283337601Z","Action":"run","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/chat"}
+{"Time":"2026-09-15T02:49:51.283340282Z","Action":"output","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/chat","Output":"=== RUN   TestBuildProviderPayloadUsesGeneratedParameters/chat\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.283557249Z","Action":"output","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/chat","Output":"--- PASS: TestBuildProviderPayloadUsesGeneratedParameters/chat (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.283570787Z","Action":"pass","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/chat","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.283593163Z","Action":"run","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/responses"}
+{"Time":"2026-09-15T02:49:51.283600075Z","Action":"output","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/responses","Output":"=== RUN   TestBuildProviderPayloadUsesGeneratedParameters/responses\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.283790526Z","Action":"output","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/responses","Output":"--- PASS: TestBuildProviderPayloadUsesGeneratedParameters/responses (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.283800457Z","Action":"pass","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/responses","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.283814971Z","Action":"run","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/anthropic"}
+{"Time":"2026-09-15T02:49:51.283817509Z","Action":"output","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/anthropic","Output":"=== RUN   TestBuildProviderPayloadUsesGeneratedParameters/anthropic\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.283989588Z","Action":"output","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/anthropic","Output":"--- PASS: TestBuildProviderPayloadUsesGeneratedParameters/anthropic (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.283998369Z","Action":"pass","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/anthropic","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.284036486Z","Action":"output","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters","Output":"--- PASS: TestBuildProviderPayloadUsesGeneratedParameters (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.284045942Z","Action":"pass","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.284060027Z","Action":"run","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadPreservesRawPartsAndTools"}
+{"Time":"2026-09-15T02:49:51.284062529Z","Action":"output","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadPreservesRawPartsAndTools","Output":"=== RUN   TestBuildProviderPayloadPreservesRawPartsAndTools\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.284321023Z","Action":"output","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadPreservesRawPartsAndTools","Output":"--- PASS: TestBuildProviderPayloadPreservesRawPartsAndTools (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.284326111Z","Action":"pass","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadPreservesRawPartsAndTools","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.28433901Z","Action":"run","Package":"local/auto-gateway","Test":"TestBuildRouteAuditExplainsGeneratedEffort"}
+{"Time":"2026-09-15T02:49:51.284341405Z","Action":"output","Package":"local/auto-gateway","Test":"TestBuildRouteAuditExplainsGeneratedEffort","Output":"=== RUN   TestBuildRouteAuditExplainsGeneratedEffort\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.284748325Z","Action":"output","Package":"local/auto-gateway","Test":"TestBuildRouteAuditExplainsGeneratedEffort","Output":"--- PASS: TestBuildRouteAuditExplainsGeneratedEffort (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.284752516Z","Action":"pass","Package":"local/auto-gateway","Test":"TestBuildRouteAuditExplainsGeneratedEffort","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.284773496Z","Action":"run","Package":"local/auto-gateway","Test":"TestDailyUsageSeparatesModelReasoningRegionAndKey"}
+{"Time":"2026-09-15T02:49:51.284776455Z","Action":"output","Package":"local/auto-gateway","Test":"TestDailyUsageSeparatesModelReasoningRegionAndKey","Output":"=== RUN   TestDailyUsageSeparatesModelReasoningRegionAndKey\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.284844912Z","Action":"output","Package":"local/auto-gateway","Test":"TestDailyUsageSeparatesModelReasoningRegionAndKey","Output":"--- PASS: TestDailyUsageSeparatesModelReasoningRegionAndKey (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:51.284849008Z","Action":"pass","Package":"local/auto-gateway","Test":"TestDailyUsageSeparatesModelReasoningRegionAndKey","Elapsed":0}
+{"Time":"2026-09-15T02:49:51.284881214Z","Action":"output","Package":"local/auto-gateway","Output":"PASS\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:49:52.289130866Z","Action":"output","Package":"local/auto-gateway","Output":"ok  \tlocal/auto-gateway\t1.954s\n"}
+{"Time":"2026-09-15T02:49:52.289179748Z","Action":"pass","Package":"local/auto-gateway","Elapsed":1.954}

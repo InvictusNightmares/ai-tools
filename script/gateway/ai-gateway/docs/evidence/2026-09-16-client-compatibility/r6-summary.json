@@ -1,0 +1,16 @@
+{
+  "scope": "isolated_linux_offline",
+  "go_tests_including_subtests": {
+    "local/ai-gateway/cmd/auto-server": 7,
+    "local/ai-gateway/auto": 318,
+    "local/ai-gateway/guard": 50,
+    "local/ai-gateway/guard/model": 2
+  },
+  "total": 377,
+  "go_vet": "passed",
+  "static_linux_amd64_builds": 5,
+  "python_tests": 8,
+  "go_failures": 0,
+  "source_archive_sha256": "a625006d41e6faf8fd340df225b8f2a94456eea5f600cca16b1dd993a6aad142",
+  "scope_note": "Native client results are separate"
+}

@@ -1,0 +1,254 @@
+[
+  {
+    "region": "tokyo",
+    "at": "2026-09-16T07:28:21.471335604Z",
+    "request_id": "a23cafe79879455cac4d42eac9759ed5",
+    "stage": "upstream_failed",
+    "error_type": "upstream_failed",
+    "stream_termination": null,
+    "effective_model": "gpt-5.6-terra",
+    "response_model": "gpt-5.6-terra",
+    "http_status": 200,
+    "upstream_transport": "sse_relay",
+    "usage": {
+      "PromptTokens": 19254,
+      "CacheHitTokens": 0,
+      "CacheMissTokens": 19254,
+      "CompletionTokens": 77,
+      "CacheStatus": "miss",
+      "HasPromptTokens": true,
+      "HasCacheHitTokens": true
+    }
+  },
+  {
+    "region": "tokyo",
+    "at": "2026-09-16T07:42:44.820549651Z",
+    "request_id": "69a725f9f5590612b3234d99695636ce",
+    "stage": "upstream_failed",
+    "error_type": "upstream_failed",
+    "stream_termination": null,
+    "effective_model": "gpt-5.6-terra",
+    "response_model": "gpt-5.6-terra",
+    "http_status": 200,
+    "upstream_transport": "sse_relay",
+    "usage": {
+      "PromptTokens": 19254,
+      "CacheHitTokens": 0,
+      "CacheMissTokens": 19254,
+      "CompletionTokens": 77,
+      "CacheStatus": "miss",
+      "HasPromptTokens": true,
+      "HasCacheHitTokens": true
+    }
+  },
+  {
+    "region": "tokyo",
+    "at": "2026-09-16T07:55:20.158949077Z",
+    "request_id": "59975ed2b7f386bb2d04adc6512b96a4",
+    "stage": "upstream_failed",
+    "error_type": "upstream_failed",
+    "stream_termination": null,
+    "effective_model": "gpt-5.6-terra",
+    "response_model": "gpt-5.6-terra",
+    "http_status": 200,
+    "upstream_transport": "sse_relay",
+    "usage": {
+      "PromptTokens": 23732,
+      "CacheHitTokens": 0,
+      "CacheMissTokens": 23732,
+      "CompletionTokens": 276,
+      "CacheStatus": "miss",
+      "HasPromptTokens": true,
+      "HasCacheHitTokens": true
+    }
+  },
+  {
+    "region": "tokyo",
+    "at": "2026-09-16T08:16:10.882571322Z",
+    "request_id": "45fb1791b79b0502c5217181e027205b",
+    "stage": "upstream_failed",
+    "error_type": "upstream_failed",
+    "stream_termination": null,
+    "effective_model": "gpt-5.6-terra",
+    "response_model": "gpt-5.6-terra",
+    "http_status": 200,
+    "upstream_transport": "sse_relay",
+    "usage": {
+      "PromptTokens": 23871,
+      "CacheHitTokens": 0,
+      "CacheMissTokens": 23871,
+      "CompletionTokens": 315,
+      "CacheStatus": "miss",
+      "HasPromptTokens": true,
+      "HasCacheHitTokens": true
+    }
+  },
+  {
+    "region": "tokyo",
+    "at": "2026-09-16T08:17:26.336612156Z",
+    "request_id": "3a7b6d0e751ea7dbda3e32e89e1dce8f",
+    "stage": "upstream_failed",
+    "error_type": "upstream_failed",
+    "stream_termination": null,
+    "effective_model": "gpt-5.6-terra",
+    "response_model": "gpt-5.6-terra",
+    "http_status": 200,
+    "upstream_transport": "sse_relay",
+    "usage": {
+      "PromptTokens": 35901,
+      "CacheHitTokens": 32256,
+      "CacheMissTokens": 3645,
+      "CompletionTokens": 452,
+      "CacheStatus": "hit",
+      "HasPromptTokens": true,
+      "HasCacheHitTokens": true
+    }
+  },
+  {
+    "region": "tokyo",
+    "at": "2026-09-16T08:18:41.487843108Z",
+    "request_id": "93e0667e1d41f201e7f19abeffba654e",
+    "stage": "upstream_failed",
+    "error_type": "upstream_failed",
+    "stream_termination": null,
+    "effective_model": "gpt-5.6-terra",
+    "response_model": "gpt-5.6-terra",
+    "http_status": 200,
+    "upstream_transport": "sse_relay",
+    "usage": {
+      "PromptTokens": 42393,
+      "CacheHitTokens": 38400,
+      "CacheMissTokens": 3993,
+      "CompletionTokens": 1407,
+      "CacheStatus": "hit",
+      "HasPromptTokens": true,
+      "HasCacheHitTokens": true
+    }
+  },
+  {
+    "region": "tokyo",
+    "at": "2026-09-16T08:23:56.503708107Z",
+    "request_id": "dae26fa435e390c6a771b3e69f51f27d",
+    "stage": "upstream_failed",
+    "error_type": "upstream_failed",
+    "stream_termination": null,
+    "effective_model": "gpt-5.6-terra",
+    "response_model": "gpt-5.6-terra",
+    "http_status": 200,
+    "upstream_transport": "sse_relay",
+    "usage": {
+      "PromptTokens": 29993,
+      "CacheHitTokens": 16896,
+      "CacheMissTokens": 13097,
+      "CompletionTokens": 780,
+      "CacheStatus": "hit",
+      "HasPromptTokens": true,
+      "HasCacheHitTokens": true
+    }
+  },
+  {
+    "region": "tokyo",
+    "at": "2026-09-16T08:25:31.473006093Z",
+    "request_id": "5d08827df8421a99b077eabb08c97573",
+    "stage": "upstream_failed",
+    "error_type": "upstream_failed",
+    "stream_termination": null,
+    "effective_model": "gpt-5.6-terra",
+    "response_model": "gpt-5.6-terra",
+    "http_status": 200,
+    "upstream_transport": "sse_relay",
+    "usage": {
+      "PromptTokens": 34569,
+      "CacheHitTokens": 31232,
+      "CacheMissTokens": 3337,
+      "CompletionTokens": 350,
+      "CacheStatus": "hit",
+      "HasPromptTokens": true,
+      "HasCacheHitTokens": true
+    }
+  },
+  {
+    "region": "tokyo",
+    "at": "2026-09-16T09:47:15.880897855Z",
+    "request_id": "7f2ad1255aa06b5a051e0ae7294d91ac",
+    "stage": "upstream_failed",
+    "error_type": "upstream_failed",
+    "stream_termination": null,
+    "effective_model": "gpt-5.6-terra",
+    "response_model": "gpt-5.6-terra",
+    "http_status": 200,
+    "upstream_transport": "sse_relay",
+    "usage": {
+      "PromptTokens": 21107,
+      "CacheHitTokens": 0,
+      "CacheMissTokens": 21107,
+      "CompletionTokens": 246,
+      "CacheStatus": "miss",
+      "HasPromptTokens": true,
+      "HasCacheHitTokens": true
+    }
+  },
+  {
+    "region": "tokyo",
+    "at": "2026-09-16T09:47:38.719445702Z",
+    "request_id": "11a9d3ba896279f231fff428e4b549e1",
+    "stage": "upstream_failed",
+    "error_type": "upstream_failed",
+    "stream_termination": null,
+    "effective_model": "gpt-5.6-terra",
+    "response_model": "gpt-5.6-terra",
+    "http_status": 200,
+    "upstream_transport": "sse_relay",
+    "usage": {
+      "PromptTokens": 23812,
+      "CacheHitTokens": 0,
+      "CacheMissTokens": 23812,
+      "CompletionTokens": 393,
+      "CacheStatus": "miss",
+      "HasPromptTokens": true,
+      "HasCacheHitTokens": true
+    }
+  },
+  {
+    "region": "tokyo",
+    "at": "2026-09-16T09:50:56.585156302Z",
+    "request_id": "692de13d39f5590fae4ecd42e71057c0",
+    "stage": "upstream_failed",
+    "error_type": "upstream_failed",
+    "stream_termination": null,
+    "effective_model": "gpt-5.6-terra",
+    "response_model": "gpt-5.6-terra",
+    "http_status": 200,
+    "upstream_transport": "sse_relay",
+    "usage": {
+      "PromptTokens": 40588,
+      "CacheHitTokens": 39424,
+      "CacheMissTokens": 1164,
+      "CompletionTokens": 107,
+      "CacheStatus": "hit",
+      "HasPromptTokens": true,
+      "HasCacheHitTokens": true
+    }
+  },
+  {
+    "region": "tokyo",
+    "at": "2026-09-16T09:51:25.549516759Z",
+    "request_id": "6e46ed5ec56ca241de7cd11e4bdd84f8",
+    "stage": "upstream_failed",
+    "error_type": "upstream_failed",
+    "stream_termination": null,
+    "effective_model": "gpt-5.6-terra",
+    "response_model": "gpt-5.6-terra",
+    "http_status": 200,
+    "upstream_transport": "sse_relay",
+    "usage": {
+      "PromptTokens": 43691,
+      "CacheHitTokens": 40448,
+      "CacheMissTokens": 3243,
+      "CompletionTokens": 327,
+      "CacheStatus": "hit",
+      "HasPromptTokens": true,
+      "HasCacheHitTokens": true
+    }
+  }
+]

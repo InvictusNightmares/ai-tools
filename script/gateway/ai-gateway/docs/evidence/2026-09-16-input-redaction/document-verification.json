@@ -1,0 +1,43 @@
+[
+  {
+    "path": "doc/gateway/智能网关与Guard分阶段实施总计划.md",
+    "missing_links": 0,
+    "table_column_errors": 0,
+    "fences_balanced": true
+  },
+  {
+    "path": "script/gateway/README.md",
+    "missing_links": 0,
+    "table_column_errors": 0,
+    "fences_balanced": true
+  },
+  {
+    "path": "script/gateway/auto-gateway/README.md",
+    "missing_links": 0,
+    "table_column_errors": 0,
+    "fences_balanced": true
+  },
+  {
+    "path": "script/gateway/guard-gateway/README.md",
+    "missing_links": 0,
+    "table_column_errors": 0,
+    "fences_balanced": true
+  },
+  {
+    "path": "script/gateway/guard-gateway/guard-deployment/README.md",
+    "missing_links": 0,
+    "table_column_errors": 0,
+    "fences_balanced": true
+  },
+  {
+    "path": "doc/gateway/evidence/2026-09-16-input-redaction/README.md",
+    "missing_links": 0,
+    "table_column_errors": 0,
+    "fences_balanced": true
+  },
+  {
+    "execution_rows": 97,
+    "chronological": true,
+    "literal_test_key_absent": true
+  }
+]

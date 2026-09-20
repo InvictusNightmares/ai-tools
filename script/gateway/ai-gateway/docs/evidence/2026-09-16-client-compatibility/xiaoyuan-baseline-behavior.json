@@ -1,0 +1,12 @@
+{
+  "scope": "execute transpiled Navigation with synthetic persistent-store and navigation adapters; not HarmonyOS device UI",
+  "workspace": "/private/tmp/gateway-xiaoyuan-20260916/baseline",
+  "checks": {
+    "login_state_removed": false,
+    "user_approval_filter_removed": false,
+    "cleanup_before_navigation": false,
+    "other_routes_preserve_login": true,
+    "unrelated_preferences_preserved": true
+  },
+  "pass": false
+}

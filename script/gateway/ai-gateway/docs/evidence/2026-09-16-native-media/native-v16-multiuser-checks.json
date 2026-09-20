@@ -1,0 +1,404 @@
+[
+  {
+    "region": "tokyo",
+    "check": "test_key_identity_0",
+    "passed": true
+  },
+  {
+    "region": "tokyo",
+    "check": "test_key_identity_1",
+    "passed": true
+  },
+  {
+    "region": "tokyo",
+    "check": "key_0_business",
+    "passed": true,
+    "status": 200
+  },
+  {
+    "region": "tokyo",
+    "check": "key_1_business",
+    "passed": true,
+    "status": 200
+  },
+  {
+    "region": "tokyo",
+    "check": "warm_request",
+    "passed": true,
+    "status": 200
+  },
+  {
+    "region": "tokyo",
+    "check": "warm_request",
+    "passed": true,
+    "status": 200
+  },
+  {
+    "region": "tokyo",
+    "check": "classification_cache_observed",
+    "passed": true
+  },
+  {
+    "region": "tokyo",
+    "check": "owner_file_upload",
+    "passed": true,
+    "status": 200
+  },
+  {
+    "region": "tokyo",
+    "check": "owner_original_file_bytes",
+    "passed": true
+  },
+  {
+    "region": "tokyo",
+    "check": "other_key_file_content_denied",
+    "passed": true,
+    "status": 404
+  },
+  {
+    "region": "tokyo",
+    "check": "other_key_file_list_isolated",
+    "passed": true
+  },
+  {
+    "region": "tokyo",
+    "check": "other_key_file_delete_denied",
+    "passed": true,
+    "status": 404
+  },
+  {
+    "region": "tokyo",
+    "check": "other_region_file_isolated",
+    "passed": true,
+    "status": 404
+  },
+  {
+    "region": "tokyo",
+    "check": "foreign_region_key_rejected",
+    "passed": true,
+    "status": 401
+  },
+  {
+    "region": "tokyo",
+    "check": "provider_tool_call",
+    "passed": true,
+    "status": 200
+  },
+  {
+    "region": "tokyo",
+    "check": "other_key_tool_round_denied",
+    "passed": true,
+    "status": 503
+  },
+  {
+    "region": "tokyo",
+    "check": "other_region_tool_round_denied",
+    "passed": true,
+    "status": 503
+  },
+  {
+    "region": "tokyo",
+    "check": "owner_tool_round_continues",
+    "passed": true,
+    "status": 200
+  },
+  {
+    "region": "tokyo",
+    "check": "two_user_concurrent_requests",
+    "passed": true,
+    "requests": 12,
+    "workers": 4,
+    "p95_seconds": 6.501
+  },
+  {
+    "region": "tokyo",
+    "check": "revoked_denied_POST",
+    "passed": true,
+    "status": 401
+  },
+  {
+    "region": "tokyo",
+    "check": "revoked_rejected_before_guard_POST",
+    "passed": true
+  },
+  {
+    "region": "tokyo",
+    "check": "revoked_denied_GET",
+    "passed": true,
+    "status": 401
+  },
+  {
+    "region": "tokyo",
+    "check": "revoked_rejected_before_guard_GET",
+    "passed": true
+  },
+  {
+    "region": "tokyo",
+    "check": "revoked_restored",
+    "passed": true,
+    "status": 200
+  },
+  {
+    "region": "tokyo",
+    "check": "expired_denied_POST",
+    "passed": true,
+    "status": 403
+  },
+  {
+    "region": "tokyo",
+    "check": "expired_rejected_before_guard_POST",
+    "passed": true
+  },
+  {
+    "region": "tokyo",
+    "check": "expired_denied_GET",
+    "passed": true,
+    "status": 403
+  },
+  {
+    "region": "tokyo",
+    "check": "expired_rejected_before_guard_GET",
+    "passed": true
+  },
+  {
+    "region": "tokyo",
+    "check": "expired_restored",
+    "passed": true,
+    "status": 200
+  },
+  {
+    "region": "tokyo",
+    "check": "quota_denied_POST",
+    "passed": true,
+    "status": 429
+  },
+  {
+    "region": "tokyo",
+    "check": "quota_rejected_before_guard_POST",
+    "passed": true
+  },
+  {
+    "region": "tokyo",
+    "check": "quota_denied_GET",
+    "passed": true,
+    "status": 429
+  },
+  {
+    "region": "tokyo",
+    "check": "quota_rejected_before_guard_GET",
+    "passed": true
+  },
+  {
+    "region": "tokyo",
+    "check": "quota_restored",
+    "passed": true,
+    "status": 200
+  },
+  {
+    "region": "tokyo",
+    "check": "owner_file_cleanup",
+    "passed": true,
+    "status": 200
+  },
+  {
+    "region": "us",
+    "check": "test_key_identity_0",
+    "passed": true
+  },
+  {
+    "region": "us",
+    "check": "test_key_identity_1",
+    "passed": true
+  },
+  {
+    "region": "us",
+    "check": "key_0_business",
+    "passed": true,
+    "status": 200
+  },
+  {
+    "region": "us",
+    "check": "key_1_business",
+    "passed": true,
+    "status": 200
+  },
+  {
+    "region": "us",
+    "check": "warm_request",
+    "passed": true,
+    "status": 200
+  },
+  {
+    "region": "us",
+    "check": "warm_request",
+    "passed": true,
+    "status": 200
+  },
+  {
+    "region": "us",
+    "check": "classification_cache_observed",
+    "passed": true
+  },
+  {
+    "region": "us",
+    "check": "owner_file_upload",
+    "passed": true,
+    "status": 200
+  },
+  {
+    "region": "us",
+    "check": "owner_original_file_bytes",
+    "passed": true
+  },
+  {
+    "region": "us",
+    "check": "other_key_file_content_denied",
+    "passed": true,
+    "status": 404
+  },
+  {
+    "region": "us",
+    "check": "other_key_file_list_isolated",
+    "passed": true
+  },
+  {
+    "region": "us",
+    "check": "other_key_file_delete_denied",
+    "passed": true,
+    "status": 404
+  },
+  {
+    "region": "us",
+    "check": "other_region_file_isolated",
+    "passed": true,
+    "status": 404
+  },
+  {
+    "region": "us",
+    "check": "foreign_region_key_rejected",
+    "passed": true,
+    "status": 401
+  },
+  {
+    "region": "us",
+    "check": "provider_tool_call",
+    "passed": true,
+    "status": 200
+  },
+  {
+    "region": "us",
+    "check": "other_key_tool_round_denied",
+    "passed": true,
+    "status": 503
+  },
+  {
+    "region": "us",
+    "check": "other_region_tool_round_denied",
+    "passed": true,
+    "status": 503
+  },
+  {
+    "region": "us",
+    "check": "owner_tool_round_continues",
+    "passed": true,
+    "status": 200
+  },
+  {
+    "region": "us",
+    "check": "two_user_concurrent_requests",
+    "passed": true,
+    "requests": 12,
+    "workers": 4,
+    "p95_seconds": 9.465
+  },
+  {
+    "region": "us",
+    "check": "revoked_denied_POST",
+    "passed": true,
+    "status": 401
+  },
+  {
+    "region": "us",
+    "check": "revoked_rejected_before_guard_POST",
+    "passed": true
+  },
+  {
+    "region": "us",
+    "check": "revoked_denied_GET",
+    "passed": true,
+    "status": 401
+  },
+  {
+    "region": "us",
+    "check": "revoked_rejected_before_guard_GET",
+    "passed": true
+  },
+  {
+    "region": "us",
+    "check": "revoked_restored",
+    "passed": true,
+    "status": 200
+  },
+  {
+    "region": "us",
+    "check": "expired_denied_POST",
+    "passed": true,
+    "status": 403
+  },
+  {
+    "region": "us",
+    "check": "expired_rejected_before_guard_POST",
+    "passed": true
+  },
+  {
+    "region": "us",
+    "check": "expired_denied_GET",
+    "passed": true,
+    "status": 403
+  },
+  {
+    "region": "us",
+    "check": "expired_rejected_before_guard_GET",
+    "passed": true
+  },
+  {
+    "region": "us",
+    "check": "expired_restored",
+    "passed": true,
+    "status": 200
+  },
+  {
+    "region": "us",
+    "check": "quota_denied_POST",
+    "passed": true,
+    "status": 429
+  },
+  {
+    "region": "us",
+    "check": "quota_rejected_before_guard_POST",
+    "passed": true
+  },
+  {
+    "region": "us",
+    "check": "quota_denied_GET",
+    "passed": true,
+    "status": 429
+  },
+  {
+    "region": "us",
+    "check": "quota_rejected_before_guard_GET",
+    "passed": true
+  },
+  {
+    "region": "us",
+    "check": "quota_restored",
+    "passed": true,
+    "status": 200
+  },
+  {
+    "region": "us",
+    "check": "owner_file_cleanup",
+    "passed": true,
+    "status": 200
+  }
+]

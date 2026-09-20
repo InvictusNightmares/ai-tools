@@ -1,0 +1,13 @@
+{
+  "listen": "127.0.0.1:18400",
+  "upstream": "http://127.0.0.1:18480",
+  "region": "synthetic",
+  "ingress": "isolated-18400",
+  "store_dir": "/data/work-observation-lab/private-runtime",
+  "identity_salt_file": "/data/work-observation-lab/private-runtime/identity.salt",
+  "capture_enabled": false,
+  "queue_items": 4096,
+  "memory_bytes": 536870912,
+  "body_bytes": 33554432,
+  "storage_bytes": 214748364800
+}

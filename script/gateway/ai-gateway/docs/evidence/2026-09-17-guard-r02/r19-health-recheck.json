@@ -1,0 +1,38 @@
+[
+  {
+    "region": "tokyo",
+    "attempt": 0,
+    "status": 200,
+    "body_bytes": 16
+  },
+  {
+    "region": "tokyo",
+    "attempt": 1,
+    "status": 200,
+    "body_bytes": 16
+  },
+  {
+    "region": "tokyo",
+    "attempt": 2,
+    "status": 200,
+    "body_bytes": 16
+  },
+  {
+    "region": "us",
+    "attempt": 0,
+    "status": 200,
+    "body_bytes": 16
+  },
+  {
+    "region": "us",
+    "attempt": 1,
+    "status": 200,
+    "body_bytes": 16
+  },
+  {
+    "region": "us",
+    "attempt": 2,
+    "status": 200,
+    "body_bytes": 16
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "at": "2026-09-16T07:16:53.252927+00:00",
+  "client": "codex",
+  "exit_code": 1,
+  "elapsed_ms": 2846,
+  "has_final_text": false,
+  "error_event_types": [
+    "error",
+    "turn.failed"
+  ],
+  "stdout_bytes": 734,
+  "stderr_bytes": 3432,
+  "pass": false,
+  "cli_version": "codex-cli 0.154.0"
+}

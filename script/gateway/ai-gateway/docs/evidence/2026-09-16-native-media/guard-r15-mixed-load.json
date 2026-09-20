@@ -1,0 +1,22 @@
+{
+  "at": "2026-09-17T00:46:21.419223+00:00",
+  "release": "candidate-20260917-r15-native-v20",
+  "normal_duration_seconds": 1800.013438878581,
+  "normal_10rps": {
+    "requests": 18000,
+    "passed": 18000,
+    "p50_seconds": 0.09218773059546947,
+    "p95_seconds": 0.4828455522656441,
+    "max_seconds": 5.278575453907251
+  },
+  "long_60k_chars": {
+    "requests": 96,
+    "passed": 96,
+    "p50_seconds": 10.382118357345462,
+    "p95_seconds": 10.898586589843035,
+    "max_seconds": 15.483348781242967
+  },
+  "long_elapsed_s": 126.83936465345323,
+  "full_inputs_checked": true,
+  "business_upstream_called": false
+}

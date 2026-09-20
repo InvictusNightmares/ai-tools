@@ -1,0 +1,11 @@
+{
+  "at": "2026-09-16T09:47:06.088845+00:00",
+  "region": "us",
+  "port": 4005,
+  "client": "opencode",
+  "version": "1.18.4",
+  "session": "v6-native-hello-us-174656",
+  "exit_code": 0,
+  "elapsed_seconds": 9.17,
+  "raw_logs_retained_in_private_directory": "/private/tmp/gateway-v6-native-hello/us"
+}

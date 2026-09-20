@@ -1,0 +1,2006 @@
+{
+  "version": 2,
+  "status": "frozen_evaluation_fixture_not_quality_claim",
+  "label_basis": "author-assigned expected type and complexity before holdout runs; no independent human adjudication",
+  "cases": [
+    {
+      "id": "label",
+      "source": "synthetic",
+      "expected_task": "formatting",
+      "reviewer_complexity": "simple",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "把按钮文案“发送验证码”改成“获取验证码”，其他行为不变。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Change the button label from Send code to Get code; leave behavior unchanged."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "把 button label 从“发送验证码”改成“获取验证码”，其余行为不变。"
+            }
+          ]
+        }
+      },
+      "split": "development"
+    },
+    {
+      "id": "login-ui",
+      "source": "historical-reconstruction",
+      "expected_task": "coding",
+      "reviewer_complexity": "bounded",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "让鸿蒙登录页与安卓对齐，调整输入框内边距、图标和文字间距，让两条协议链接能分别点击跳转。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Align the HarmonyOS login page with Android: adjust input padding and icon-to-text spacing, and make the two agreement links navigate independently."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "让 HarmonyOS Login 与 Android 对齐：调整 TextInput padding、icon 间距，两个 agreement link 分别跳转。"
+            }
+          ]
+        }
+      },
+      "split": "development"
+    },
+    {
+      "id": "network",
+      "source": "historical-reconstruction",
+      "expected_task": "debugging",
+      "reviewer_complexity": "cross-layer",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "断网时没有错误提示。排查统一网络层，区分连接超时、传输异常和业务错误，并保留后台请求的静默开关。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Offline requests show no error message. Debug the shared network layer, distinguish connection timeouts, transport failures and business errors, and preserve quiet background requests."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "断网时没有 error toast。排查 HttpClient，区分 timeout、transport exception 和 BusinessError，保留后台请求静默开关。"
+            }
+          ]
+        }
+      },
+      "split": "development"
+    },
+    {
+      "id": "logout",
+      "source": "historical-reconstruction",
+      "expected_task": "debugging",
+      "reviewer_complexity": "cross-layer",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "退出登录后重启应用又回到主页面。请追踪登录信息写入、启动读取和所有跳转登录入口，统一清理用户状态并验证冷启动。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "After logout, restarting the app opens the main page again. Trace saved login data, startup reads and every navigation-to-login entry point; centralize session cleanup and verify cold starts."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "logout 后重启又进入 Main。追踪 Login 写入、Splash 读取和 Navigation 登录入口，统一清理 session 并验证 cold start。"
+            }
+          ]
+        }
+      },
+      "split": "development"
+    },
+    {
+      "id": "release",
+      "source": "historical-reconstruction",
+      "expected_task": "audit",
+      "reviewer_complexity": "cross-layer",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "审查上架前的应用发布包，核对签名证书层级、最终权限、第三方组件合并的权限以及相机实际调用链，区分本地检查和真机验收。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Audit the app release package: verify signing certificate levels, final permissions, permissions merged from dependencies and camera call paths; distinguish local checks from device acceptance."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "审查 release 包：certificate chain、最终 permissions、HAR 合并权限、camera 调用链，区分 local check 和 device acceptance。"
+            }
+          ]
+        }
+      },
+      "split": "development"
+    },
+    {
+      "id": "card",
+      "source": "historical-reconstruction",
+      "expected_task": "debugging",
+      "reviewer_complexity": "bounded",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "公司名称设置了单行和省略号仍然超出待办卡片，两个页面复用同一个卡片组件，请定位宽度约束并做最小修改。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "The company name has single-line ellipsis but still overflows a todo card. Two pages share the component; find the width constraint and make a minimal fix."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "company name 已设 maxLines 和 ellipsis 仍溢出 CardItem，两个页面复用，请定位 width constraint 做最小修改。"
+            }
+          ]
+        }
+      },
+      "split": "development"
+    },
+    {
+      "id": "environment",
+      "source": "historical-reconstruction",
+      "expected_task": "debugging",
+      "reviewer_complexity": "cross-layer",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "生产包登录页仍显示环境切换。沿打包命令、临时生成配置、环境锁定状态到页面渲染追踪原因，确保测试包仍能切换环境。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "The production login page still shows environment switching. Trace build arguments, generated configuration, the environment lock and rendering; keep switching available in test builds."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "PRO 包 Login 仍显示 env switch。追踪 build args、generated config、EnvConfig lock 和 render；FAT/UAT 仍可切换。"
+            }
+          ]
+        }
+      },
+      "split": "development"
+    },
+    {
+      "id": "short-hard",
+      "source": "synthetic",
+      "expected_task": "debugging",
+      "reviewer_complexity": "complex",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "退出与重新登录并发时，旧请求回包会覆盖新用户状态，如何证明修复在所有交错顺序下都正确？"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "When logout races with a new login, an old response overwrites the new user state. How can we prove a fix is correct for every interleaving?"
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "logout 与 re-login 并发，旧 response 覆盖新 session，如何证明所有 interleaving 都正确？"
+            }
+          ]
+        }
+      },
+      "split": "development"
+    },
+    {
+      "id": "term-only",
+      "source": "synthetic",
+      "expected_task": "explanation",
+      "reviewer_complexity": "simple",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "“架构”这个词是什么意思？用一句话解释。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "What does the word architecture mean? Explain in one sentence."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "architecture 这个词是什么意思？一句话解释。"
+            }
+          ]
+        }
+      },
+      "split": "development"
+    },
+    {
+      "id": "translation",
+      "source": "synthetic",
+      "expected_task": "translation",
+      "reviewer_complexity": "simple",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "把“网络异常，请检查网络连接”翻译成英文，只返回译文。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Translate the Chinese message 网络异常，请检查网络连接 into English. Return only the translation."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "把“网络异常，请检查网络连接” translate to English，只要译文。"
+            }
+          ]
+        }
+      },
+      "split": "development"
+    },
+    {
+      "id": "broad-design",
+      "source": "synthetic",
+      "expected_task": "architecture",
+      "reviewer_complexity": "complex",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "为移动应用设计跨端会话管理改造：覆盖退出、重登、旧请求晚到、多窗口、网页桥接与离线重试；明确一致性约束，比较两种方案，给出分阶段迁移、回滚条件和可验证的回归矩阵。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Design cross-platform session management for a mobile app: handle logout, re-login, late responses, multiple windows, web bridges and offline retries; define consistency constraints, compare two approaches, and specify migration stages, rollback conditions and a verifiable regression matrix."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "设计跨端 session management：logout、re-login、late response、multi-window、WebBridge、offline retry；明确 consistency，比较两种方案，给出 migration、rollback 和 regression matrix。"
+            }
+          ]
+        }
+      },
+      "split": "development"
+    },
+    {
+      "id": "tool-catalog",
+      "source": "synthetic",
+      "expected_task": "translation",
+      "reviewer_complexity": "simple",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "把“保存”翻译成英文。"
+            }
+          ],
+          "tools": [
+            {
+              "name": "read_file",
+              "schema": "{\"type\":\"object\",\"properties\":{\"path\":{\"type\":\"string\"}},\"required\":[\"path\"]}"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Translate 保存 into English."
+            }
+          ],
+          "tools": [
+            {
+              "name": "read_file",
+              "schema": "{\"type\":\"object\",\"properties\":{\"path\":{\"type\":\"string\"}},\"required\":[\"path\"]}"
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "把“保存” translate to English。"
+            }
+          ],
+          "tools": [
+            {
+              "name": "read_file",
+              "schema": "{\"type\":\"object\",\"properties\":{\"path\":{\"type\":\"string\"}},\"required\":[\"path\"]}"
+            }
+          ]
+        }
+      },
+      "split": "development"
+    },
+    {
+      "id": "http-term",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "quick_qa",
+      "reviewer_complexity": "simple",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "解释 HTTP 304 的含义，不需要改代码。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Explain what HTTP 304 means; no code changes are needed."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "解释 HTTP 304 的 meaning，不需要 code change。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "translate-stack",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "translation",
+      "reviewer_complexity": "simple",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "把“Null pointer exception while restoring session”翻译成中文，只翻译。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Translate “Null pointer exception while restoring session” into Chinese; translate only."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "把 Null pointer exception while restoring session 翻译成中文，只做 translation。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "csv-order",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "formatting",
+      "reviewer_complexity": "simple",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "将 a,3;b,1;c,2 按第二列升序排列，输出 CSV。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Sort a,3;b,1;c,2 by the second column ascending and output CSV."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "将 a,3;b,1;c,2 按 column 2 升序，输出 CSV。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "readonly-sql",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "coding",
+      "reviewer_complexity": "bounded",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "表 events 有 id 和 created_at。写一条 SQL 查最近十条，时间相同时按 id 倒序。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Table events has id and created_at. Write SQL selecting the latest ten rows, breaking time ties by descending id."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "events 表含 id、created_at，写 SQL 查 latest 10，时间一样按 id DESC。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "empty-view",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "coding",
+      "reviewer_complexity": "bounded",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "列表为空时显示“暂无记录”，加载中仍显示原来的进度条，已有数据的行为不变。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Show “No records” for an empty list; retain the existing loading spinner and populated-list behavior."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "list empty 时显示“暂无记录”，loading 保留 spinner，有数据的行为不变。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "trim-validation",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "coding",
+      "reviewer_complexity": "bounded",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "提交表单前去掉邮箱首尾空格，空字符串显示错误，保留原来的格式校验。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Trim surrounding email whitespace before submission, reject an empty result, and retain existing format validation."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "submit 前 trim email，两端去空白后 empty 报错，保留 format validation。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "debounce-test",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "coding",
+      "reviewer_complexity": "bounded",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "为已有 300 毫秒防抖函数补测试：连续三次调用只执行最后一次，取消后不执行。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Test an existing 300 ms debounce: three rapid calls execute only the last one, and cancellation prevents execution."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "给现有 300ms debounce 补 tests：三次 rapid calls 只执行最后一次，cancel 后不执行。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "null-crash",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "bounded",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "崩溃定位到 user.name.length，接口允许 user 为 null。修复这个分支并加空值测试。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "A crash is at user.name.length; the API permits null user. Fix this branch and add a null-case test."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "crash 在 user.name.length，API 允许 user=null，修复该 branch 并补 null test。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "theme-copy",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "formatting",
+      "reviewer_complexity": "simple",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "把设置页标题“主题设置”改成“外观”，不改其他内容。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Change the settings page title from “Theme settings” to “Appearance”; nothing else changes."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "把 settings title“主题设置”改成“外观”，其余不动。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "log-summary",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "formatting",
+      "reviewer_complexity": "simple",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "从这三行提取状态码并去重：GET /a 200；GET /b 502；GET /c 200。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Extract unique status codes from: GET /a 200; GET /b 502; GET /c 200."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "从 GET /a 200；GET /b 502；GET /c 200 提取 unique status codes。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "cache-definition",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "quick_qa",
+      "reviewer_complexity": "simple",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "用两句话解释缓存击穿和缓存穿透的区别，不提出改造方案。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Explain cache breakdown versus cache penetration in two sentences; do not propose a redesign."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "两句话解释 cache breakdown 和 cache penetration 的区别，不做 redesign。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "proof-word",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "translation",
+      "reviewer_complexity": "simple",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "将“证明分布式事务恢复后仍满足不变量”翻译成英文，不需要做证明。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Translate “证明分布式事务恢复后仍满足不变量” into English; do not perform the proof."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "把“证明分布式事务恢复后仍满足不变量”translate to English，不做 proof。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "login-lifecycle",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "multi_step",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "应用从后台恢复后登录页闪一下再跳首页。跟踪启动状态、登录缓存和导航守卫，找出重复跳转并加生命周期回归。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "The login page flashes before home when resuming the app. Trace startup state, cached login, and navigation guards; fix duplicate transitions and add lifecycle regression coverage."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "App resume 后 login 闪一下再到 home，跟踪 startup state、登录 cache 和 navigation guard，修复重复跳转并补 lifecycle regression。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pagination-race",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "complex",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "刷新和加载下一页同时完成时，列表有时混入旧筛选结果。取消请求没有解决，服务端可能先返回后发出的请求。找出状态覆盖的路径并证明修复不会丢新数据。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Refreshing and loading the next page concurrently sometimes mix in old filter results. Cancellation did not fix it and server responses can arrive out of order. Find the overwrite path and justify that the fix cannot discard newer data."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "refresh 和 next page 并行会混入旧 filter 数据，cancel 未解决，response 可乱序。定位 state overwrite，并证明不会丢 newer data。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "api-envelope",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "coding",
+      "reviewer_complexity": "multi_step",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "三个业务模块分别处理网络错误。改为统一错误对象，同时保留各模块的重试、静默请求和登录失效跳转，并补接口契约测试。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Three modules handle network errors separately. Introduce a shared error object while preserving retries, silent requests and expired-login navigation; add API contract tests."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "三个 module 的 network error 统一成 error object，保留 retry、silent request、登录失效跳转，并补 contract tests。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "schema-expand",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "architecture",
+      "reviewer_complexity": "complex",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "线上表字段必须从单值变成多值，旧客户端仍会写单值，新客户端已开始写多值。设计兼容读写、回填、校验和可逆回滚，不能停止写入。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "A live table field must change from scalar to multiple values. Old clients still write scalars and new clients already write lists. Design compatible reads and writes, backfill, validation and reversible rollback without stopping writes."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "线上 scalar 字段改 list，旧 client 仍写 scalar，新 client 已写 list。设计兼容读写、backfill、validation、可逆 rollback，不能停写。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "module-build",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "multi_step",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "本机能编译但持续集成找不到生成代码。核对生成任务、模块依赖、工作目录和缓存恢复顺序，修复后在干净工作区复现验证。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Local builds pass but CI cannot find generated code. Check generation tasks, module dependencies, working directory and cache restore order; verify in a clean workspace."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "local build 通过，CI 找不到 generated code。核对 generation task、module deps、cwd、cache restore order，在 clean workspace 验证。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "permission-flow",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "coding",
+      "reviewer_complexity": "multi_step",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "相机权限被永久拒绝时引导到设置页，返回应用后重新检查；普通拒绝保留重试，旋转屏幕后不重复弹窗。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Guide permanently denied camera permission to settings and recheck on app return; allow retry after ordinary denial and avoid duplicate dialogs after rotation."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "camera permission 永久拒绝跳 settings，resume 后 recheck；普通 denied 可 retry，rotation 后不重复 dialog。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "push-duplicate",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "complex",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "通知点击偶发打开两次详情，冷启动和热启动路径都能复现，消息重投与进程恢复会交错。现有去重只存内存。定位并设计跨进程恢复的消费语义和验证。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Tapping a notification sometimes opens details twice on both cold and warm starts. Redelivery and process restoration interleave, and deduplication is only in memory. Diagnose and define consumption semantics that survive process restoration, with verification."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "notification tap 偶发双开 detail，cold/warm start 都有，redelivery 与 process restore 交错，dedup 仅内存。定位并设计恢复后的消费语义和验证。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "spinner-state",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "bounded",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "一次请求失败后按钮一直转圈。代码只在成功回调清除 loading，请补齐失败和取消分支的清理测试。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "A button keeps spinning after a failed request. Loading is cleared only in the success callback; cover failure and cancellation cleanup with tests."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "request fail 后 button 一直 loading，当前只在 success callback 清理，补 failure/cancel cleanup tests。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "rtl-layout",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "coding",
+      "reviewer_complexity": "multi_step",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "设置页需要支持从右向左语言。检查图标方向、文本对齐、返回手势和混合数字排版，保留中文布局并做截图对比。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Add right-to-left language support to settings. Check icon direction, text alignment, back gestures and mixed-number layout; preserve Chinese layout and compare screenshots."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "settings 加 RTL，检查 icon direction、text alignment、back gesture、mixed numbers，保留中文布局并 screenshot compare。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "retry-loop",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "complex",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "网络恢复瞬间几百个任务同时重试，限流后重试又同步发生。已有指数退避，仍出现波峰。分析队列、超时和重试预算相互影响，设计验证不会饿死旧任务的方案。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Hundreds of tasks retry together when connectivity returns, then synchronize again after rate limits. Exponential backoff is already present. Analyze queue, timeout and retry-budget interactions and verify that older tasks cannot starve."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "network recovery 时几百 task 同时 retry，rate limit 后再次同步，已有 exponential backoff。分析 queue/timeout/retry budget，验证旧 task 不 starvation。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "json-schema",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "coding",
+      "reviewer_complexity": "bounded",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "给配置对象增加严格 JSON schema：port 为 1 到 65535 的整数，mode 只能是 dev 或 prod，未知字段报错。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Add a strict JSON schema: port is an integer from 1 to 65535, mode is dev or prod, and unknown properties are rejected."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "config 加 strict JSON schema：port integer 1..65535，mode=dev|prod，unknown fields 报错。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "state-name",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "quick_qa",
+      "reviewer_complexity": "simple",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "解释状态机中“终态”的含义，举一个下载任务的例子。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Explain a terminal state in a state machine using a download-task example."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "解释 state machine 的 terminal state，举 download task 例子。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "offline-merge",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "architecture",
+      "reviewer_complexity": "complex",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "离线编辑在两台设备上同时修改同一条记录，时间戳不可靠，删除后重连不能复活旧值。设计冲突合并和用户可理解的恢复流程，给出反例测试。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Two devices edit the same record offline. Timestamps are unreliable and reconnecting after deletion must not resurrect old values. Design conflict merging and an understandable recovery flow, with counterexample tests."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "两台 device offline edit 同一 record，timestamp 不可靠，delete 后 reconnect 不能 resurrect。设计 merge、可理解 recovery flow 与 counterexample tests。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "binary-size",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "audit",
+      "reviewer_complexity": "multi_step",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "应用包突然变大。对比资源、依赖、调试符号和各架构库的体积，找到增量来源，给出能用实际构建验证的优化项。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "The application package grew suddenly. Compare resources, dependencies, debug symbols and per-architecture libraries; locate the growth and propose optimizations validated by actual builds."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "App package 变大，对比 resources/deps/debug symbols/各 ABI libs，定位 size delta，优化项要 actual build 验证。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "date-range",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "coding",
+      "reviewer_complexity": "bounded",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "实现包含起点不含终点的日期范围判断，比较 UTC 时间，补跨月和边界测试。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Implement a start-inclusive, end-exclusive date range check using UTC, with month-crossing and boundary tests."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "实现 [start,end) date range，比较 UTC，补 cross-month 和 boundary tests。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "deadlock",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "complex",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "两个锁分别保护订阅表和连接表，偶发重连后所有回调停止。现有线程转储没有固定卡点，取消回调会再进入注销函数。定位锁顺序和重入交错，提供可重复测试。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Two locks protect subscriptions and connections. After occasional reconnects all callbacks stop; thread dumps have no fixed stall point and cancellation callbacks reenter unregistration. Diagnose lock ordering and reentrant interleavings and provide a reproducible test."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "两个 lock 保护 subscription/connection，偶发 reconnect 后 callbacks 全停，dump 无固定卡点，cancel callback 重入 unregister。定位 lock order 与 interleaving，补 reproducible test。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "readme-links",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "formatting",
+      "reviewer_complexity": "simple",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "把 README 中三个列表项改成编号列表，保留链接和内容：安装、运行、测试。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Convert the README list items Install, Run and Test to a numbered list, retaining links and content."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "README 的 Install/Run/Test 三项改 numbered list，保留 links/content。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "api-version",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "architecture",
+      "reviewer_complexity": "complex",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "API 要升级响应结构，移动端发布不同步，旧缓存可能持续一周。设计版本协商、缓存分区、兼容观察和失败回滚，说明如何判断可删除旧路径。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "An API response structure must change while mobile releases are unsynchronized and old caches can last a week. Design version negotiation, cache isolation, compatibility monitoring and rollback, with criteria for retiring the old path."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "API response structure 升级，mobile release 不同步，旧 cache 可留一周。设计 version negotiation/cache namespace/兼容观察/rollback，明确旧路径退役条件。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "list-key",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "bounded",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "列表使用数组下标作 key，删除中间行后输入内容跑到下一行。改为稳定 id 并补删除用例。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "A list uses array indexes as keys; deleting a middle row moves its input to the next row. Use stable IDs and test deletion."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "list 用 index as key，delete middle row 后 input 串行。改 stable id 并补 test。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "platform-share",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "coding",
+      "reviewer_complexity": "multi_step",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "同一个分享入口要支持安卓和鸿蒙，文件权限与 URI 生命周期不同。抽象公共流程，保留平台适配，覆盖取消、后台返回和目标应用不存在。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "A share entry point must support Android and HarmonyOS with different file permissions and URI lifetimes. Extract the common flow, retain platform adapters and cover cancellation, background return and missing targets."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "share 同时支持 Android/HarmonyOS，file permission 和 URI lifetime 不同，抽 common flow 保留 adapter，测 cancel/resume/no target。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "thread-simple",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "formatting",
+      "reviewer_complexity": "simple",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "只把“继续执行”改成英文“Continue”，不继续执行之前讨论的任何任务。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Only replace “继续执行” with the English word “Continue”; do not continue earlier tasks."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "只把“继续执行”改成 Continue，不 resume 之前的 tasks。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "search-index",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "architecture",
+      "reviewer_complexity": "complex",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "主库事务成功后搜索索引有时永久缺记录，增量同步和全量重建会同时写索引。设计带删除语义的恢复协议，防止旧重建结果覆盖新的增量。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "After successful database commits the search index sometimes permanently misses records. Incremental sync and full rebuilds both write it. Design a recovery protocol including deletions so stale rebuild output cannot overwrite newer increments."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "DB commit 后 search index 偶发永久缺数据，incremental sync/full rebuild 同时写。设计含 delete 的 recovery protocol，防止旧 rebuild 覆盖新 increment。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "export-memory",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "complex",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "导出大表时内存持续上涨，换成分页后又出现重复和漏行。导出期间允许新增和删除。确定一致性语义、分页快照和资源释放策略，用并发写入测试验证。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Large-table exports grow memory indefinitely; pagination introduces duplicates and missing rows while inserts and deletes continue. Define consistency, pagination snapshots and resource cleanup, then verify with concurrent-write tests."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "export large table 内存上涨，pagination 后重复漏行，期间可 insert/delete。明确 consistency、snapshot pagination、cleanup，并发写 tests 验证。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "feature-flag",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "coding",
+      "reviewer_complexity": "multi_step",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "新功能开关在远端控制，应用离线仍要使用最后一次有效值。增加过期策略、首次安装默认值、无效配置处理和测试。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "A remote feature flag must retain the last valid value offline. Add expiration, first-install defaults, invalid-config handling and tests."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "remote feature flag 离线用 last valid value，加 expiry、first-install default、invalid config handling 和 tests。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "timer-leak",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "bounded",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "组件卸载后定时器还会更新状态。卸载时清理 interval，并测试重复挂载不会增加定时器数量。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "A timer updates state after unmount. Clear the interval on unmount and test that repeated mounts do not increase timer count."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "component unmount 后 timer 仍 setState，清理 interval，test repeated mount 不增加 timers。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "incident-timeline",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "audit",
+      "reviewer_complexity": "multi_step",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "根据应用、反代和数据库的脱敏日志还原一次超时。各机器时钟有偏差，要关联请求 id，区分已证实事实与推测，列出缺失证据。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Reconstruct a timeout from redacted app, reverse-proxy and database logs with clock skew. Correlate request IDs, distinguish evidence from inference and identify missing evidence."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "用脱敏 app/proxy/DB logs 还原 timeout，各机器 clock skew，按 request id 关联，区分 facts/inference，列缺失 evidence。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "unicode",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "coding",
+      "reviewer_complexity": "bounded",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "统计字符串中的 Unicode 码点而不是 UTF-8 字节，补中文、emoji 和空字符串测试，并说明组合字符的边界。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Count Unicode code points rather than UTF-8 bytes; test Chinese, emoji and empty strings and explain the combining-character boundary."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "统计 Unicode code points 不是 UTF-8 bytes，补中文/emoji/empty tests，说明 combining character 边界。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "multiwriter-escrow",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "architecture",
+      "reviewer_complexity": "exceptional",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "三个断网节点都能占用有限库存额度，恢复后消息可能重复乱序，节点会从旧快照重启。既不能超卖也不能永久冻结释放的额度；节点退役后旧消息仍可到达。给出状态、协议和可检查的不变量，证明分配、释放、退役、快照恢复任意交错下的安全性，并定义分区期间不可同时满足的可用性条件。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Three disconnected nodes allocate a finite inventory quota. On reconnection messages duplicate or reorder and nodes may restart from old snapshots. Prevent both overselling and permanently frozen released quota; old messages may arrive after a node retires. Define state, protocol and checkable invariants; prove safety under arbitrary allocation, release, retirement and snapshot-recovery interleavings and identify availability conditions that partitions make incompatible."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "三个 disconnected nodes 分配有限 inventory quota，重连 messages duplicate/reorder，可能从 old snapshot restart；不能 oversell 或永久冻结 released quota，retired node 的旧消息仍到达。给出 state/protocol/checkable invariants，证明 allocate/release/retire/recovery 任意 interleaving 的 safety，明确 partition 下冲突的 availability 条件。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "shard-checkpoint",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "architecture",
+      "reviewer_complexity": "exceptional",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "流处理系统要在线迁移分片所有权，并允许升级失败后回滚。输入会重放，输出落在不支持事务的外部系统；检查点、租约过期和新旧二进制的状态格式变化可以交错。设计所有权转移与输出提交协议，明确所需外部幂等契约，证明双主、迟到确认、旧检查点恢复时不会重复提交或永久漏处理，并给出可执行状态模型。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "A stream processor must migrate shard ownership online and allow rollback after a failed upgrade. Inputs replay and outputs go to an external system without transactions; checkpoints, lease expiration and state-format changes across binaries interleave. Design ownership transfer and output commit protocols, specify required external idempotency contracts, prove no duplicate commits or permanently skipped work under split ownership, late acknowledgements and old-checkpoint recovery, and supply an executable state model."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "stream processor 在线迁移 shard ownership，upgrade fail 可 rollback；input replay，external sink 无事务，checkpoint/lease expiry/新旧 state format 交错。设计 ownership transfer/output commit，明确 external idempotency contract，证明 split owner/late ack/old checkpoint recovery 不重复提交或永久漏处理，给 executable state model。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "collab-gc",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "reasoning",
+      "reviewer_complexity": "exceptional",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "协同编辑支持离线分支、撤销和删除墓碑回收。副本可能离线数月后从旧快照恢复，回收后还要合并它的编辑；成员退役与重新加入不能复用旧身份。形式化说明在什么保留信息与成员假设下可以同时保证收敛、不复活删除内容和有限存储，若不能则给出反例与最小约束，再构造协议和性质测试。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Collaborative editing supports offline branches, undo and tombstone garbage collection. A replica may return months later from an old snapshot whose edits must merge, while retiring and rejoining members cannot reuse identities. Formalize what retained information and membership assumptions permit convergence, no resurrection and bounded storage together; otherwise give counterexamples and minimal constraints, then construct a protocol and property tests."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "collaborative editing 支持 offline branch/undo/tombstone GC；replica 数月后从 old snapshot 恢复仍要 merge，retire/rejoin 不能复用 identity。形式化 retained info/membership assumptions 下 convergence/no resurrection/bounded storage 能否共存；否则给 counterexample/minimal constraints，再写 protocol/property tests。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "scheduler-proof",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "architecture",
+      "reviewer_complexity": "exceptional",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "多区域任务调度要同时满足租户额度、任务取消和失败接管。区域失联时任务可继续运行，工作节点崩溃后会重放完成消息，额度释放可能先于旧执行结果到达。设计可恢复状态与协议，区分执行至少一次和结果提交一次，证明不会重复释放额度或提交已取消结果，并检验故障恢复与公平调度之间是否存在活锁。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "A multi-region scheduler must enforce tenant quotas, cancellation and failure takeover. Tasks may keep running during regional disconnection; crashed workers replay completions and quota release can precede stale results. Define recoverable state and a protocol, distinguish at-least-once execution from single result commitment, prove no double quota release or commitment of cancelled results, and check whether recovery and fair scheduling can livelock."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "multi-region scheduler 同时处理 tenant quota/cancel/failover；region disconnect 任务仍跑，worker crash 后 replay completion，quota release 可先于 stale result。设计 recoverable state/protocol，区分 at-least-once execution 与 single commit，证明不 double release 或提交 cancelled result，并检验 recovery/fairness 的 livelock。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "focus-test",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "coding",
+      "reviewer_complexity": "bounded",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "弹窗打开后把焦点放到输入框，关闭后恢复到原按钮，补键盘操作测试。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Focus the input when a dialog opens and restore focus to the original button when it closes; add keyboard interaction tests."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "dialog open focus input，close restore 到原 button，补 keyboard tests。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "plugin-cancel",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "multi_step",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "取消上传后进度回调仍更新旧页面。检查 UI、上传服务和事件订阅的生命周期，确保取消后的迟到事件被忽略，并覆盖页面重建。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "After cancelling an upload, progress callbacks still update the old screen. Check UI, upload-service and event-subscription lifetimes; ignore late events and cover screen recreation."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "upload cancel 后 progress callback 仍更新旧 screen，检查 UI/service/subscription lifecycle，忽略 late event 并覆盖 recreation。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "build-matrix",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "audit",
+      "reviewer_complexity": "multi_step",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "检查项目是否在三个支持的系统版本上都能构建，核对依赖最低版本、条件编译和测试排除规则，列出实际验证和未验证部分。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Check builds on all three supported OS versions, including dependency minimums, conditional compilation and excluded tests; separate verified and unverified results."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "检查三个 supported OS versions 的 build，核对 deps min version/conditional compile/test exclusions，列 verified/unverified。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "unit-convert",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "quick_qa",
+      "reviewer_complexity": "simple",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "2048 KiB 等于多少 MiB？只给结果。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "How many MiB is 2048 KiB? Give only the result."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "2048 KiB 是多少 MiB？only result。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "suspense",
+      "source": "synthetic-independent-holdout",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "complex",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "页面渲染中会读取缓存，后台更新触发新渲染后旧请求也能写回。去掉缓存后问题消失但性能不可接受。设计并发渲染下的版本与提交规则，说明取消、卸载和重新订阅交错时如何避免撕裂。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Rendering reads a cache and background refresh starts new renders while old requests can still write back. Removing caching fixes correctness but ruins performance. Define version and commit rules for concurrent rendering, explaining how cancellation, unmount and resubscription interleavings avoid tearing."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "render 读 cache，background refresh 启动 new render，old request 仍可 write back；去 cache 正确但性能不可接受。设计 concurrent render 的 version/commit rules，说明 cancel/unmount/resubscribe 交错如何避免 tearing。"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "split_policy": "12 development tasks and 48 independent holdout tasks; all language variants grouped by task"
+}

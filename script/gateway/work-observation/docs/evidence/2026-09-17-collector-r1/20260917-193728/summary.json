@@ -1,0 +1,141 @@
+{
+  "version": "observation-dev.7",
+  "cases": 18,
+  "measured_requests": 1440,
+  "body_correct": true,
+  "capture_complete": true,
+  "expected_captured": 672,
+  "expected_written": 11424,
+  "capture_counters": {
+    "dropped": 0,
+    "truncated": 0,
+    "projection_errors": 0,
+    "write_errors": 0,
+    "queued_bytes": 0,
+    "queue_items": 0,
+    "active_requests": 0,
+    "captured": 672,
+    "written": 11424,
+    "stored_bytes": 384338397
+  },
+  "every_round_within_5_percent": false,
+  "rounds": [
+    {
+      "mode": "ws",
+      "payload_bytes": 4184,
+      "round": 0,
+      "first_overhead_percent": -3.91802290536466,
+      "total_overhead_percent": -4.246365723029832,
+      "within_5_percent": true
+    },
+    {
+      "mode": "ws",
+      "payload_bytes": 4184,
+      "round": 1,
+      "first_overhead_percent": 4.680851063829783,
+      "total_overhead_percent": 8.173076923076938,
+      "within_5_percent": false
+    },
+    {
+      "mode": "ws",
+      "payload_bytes": 4184,
+      "round": 2,
+      "first_overhead_percent": -1.7459361830222675,
+      "total_overhead_percent": 2.6856240126382103,
+      "within_5_percent": true
+    },
+    {
+      "mode": "ws",
+      "payload_bytes": 65624,
+      "round": 0,
+      "first_overhead_percent": 4.398260028999523,
+      "total_overhead_percent": 23.13445816663766,
+      "within_5_percent": false
+    },
+    {
+      "mode": "ws",
+      "payload_bytes": 65624,
+      "round": 1,
+      "first_overhead_percent": 10.330188679245268,
+      "total_overhead_percent": 19.116892007530375,
+      "within_5_percent": false
+    },
+    {
+      "mode": "ws",
+      "payload_bytes": 65624,
+      "round": 2,
+      "first_overhead_percent": -3.074220465524824,
+      "total_overhead_percent": 10.13707363723302,
+      "within_5_percent": false
+    }
+  ],
+  "pooled": [
+    {
+      "mode": "ws",
+      "payload_bytes": 4184,
+      "routes": {
+        "off": {
+          "samples": 240,
+          "first_p95_ms": 1.661,
+          "total_p95_ms": 2.525,
+          "peak_rss_bytes": 30978048,
+          "cpu_s_including_warmup": 0.4099999999999999
+        },
+        "nginx": {
+          "samples": 240,
+          "first_p95_ms": 1.337,
+          "total_p95_ms": 1.924,
+          "peak_rss_bytes": 16248832,
+          "cpu_s_including_warmup": 0.10999999999999985
+        },
+        "on": {
+          "samples": 240,
+          "first_p95_ms": 1.673,
+          "total_p95_ms": 2.623,
+          "peak_rss_bytes": 58773504,
+          "cpu_s_including_warmup": 1.87
+        }
+      },
+      "first_capture_overhead_percent": 0.7224563515954241,
+      "first_whole_path_overhead_percent": 25.130890052356026,
+      "total_capture_overhead_percent": 3.8811881188118846,
+      "total_whole_path_overhead_percent": 36.33056133056134
+    },
+    {
+      "mode": "ws",
+      "payload_bytes": 65624,
+      "routes": {
+        "off": {
+          "samples": 240,
+          "first_p95_ms": 2.1479999999999997,
+          "total_p95_ms": 6.083,
+          "peak_rss_bytes": 30978048,
+          "cpu_s_including_warmup": 1.0200000000000002
+        },
+        "nginx": {
+          "samples": 240,
+          "first_p95_ms": 1.85,
+          "total_p95_ms": 5.677,
+          "peak_rss_bytes": 16248832,
+          "cpu_s_including_warmup": 0.43000000000000005
+        },
+        "on": {
+          "samples": 240,
+          "first_p95_ms": 2.246,
+          "total_p95_ms": 6.975,
+          "peak_rss_bytes": 126672896,
+          "cpu_s_including_warmup": 7.409999999999999
+        }
+      },
+      "first_capture_overhead_percent": 4.562383612662968,
+      "first_whole_path_overhead_percent": 21.40540540540541,
+      "total_capture_overhead_percent": 14.663817195462748,
+      "total_whole_path_overhead_percent": 22.86418883212964
+    }
+  ],
+  "percentile_method": "nearest_rank",
+  "limitations": [
+    "Only synthetic loopback workload; not production acceptance.",
+    "Whole-path overhead is reported separately from capture on/off."
+  ]
+}

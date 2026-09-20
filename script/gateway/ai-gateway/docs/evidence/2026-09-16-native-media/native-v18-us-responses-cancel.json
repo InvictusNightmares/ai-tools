@@ -1,0 +1,52 @@
+{
+  "scope": "actual HTTP transport cancellation after first visible business output, not native client coverage; provider bill must be reconciled separately",
+  "checks": 1,
+  "passed": 1,
+  "results": [
+    {
+      "region": "us",
+      "protocol": "responses",
+      "request_id": "af0b876befd9f362bbc4dc60528683c0",
+      "status": 200,
+      "first_visible_seconds": 7.98,
+      "read_bytes": 192652,
+      "read_sha256": "41b390400ba38d1ec72a83f40961da9f842b1a9c7b08826234a52e234ae753be",
+      "terminal_seen_before_cancel": false,
+      "error": null,
+      "checks": {
+        "http_stream_200": true,
+        "visible_business_output_before_cancel": true,
+        "gateway_request_id_observed": true,
+        "business_attempt_recorded": true,
+        "cancellation_or_delivery_failure_recorded": true,
+        "not_attributed_to_upstream_failure": true
+      },
+      "passed": true,
+      "terminal_audits": [
+        {
+          "stage": "request_canceled",
+          "error_type": "upstream_read:context_canceled",
+          "response_complete": false,
+          "upstream_http_status": null,
+          "upstream_request_id": "af0b876befd9f362bbc4dc60528683c0",
+          "upstream_client_request_id": "41e46fd2-db29-4414-ab7b-8833611cc6d2",
+          "stream_termination": "upstream_read:context_canceled"
+        }
+      ],
+      "business_usage": [
+        {
+          "purpose": "business",
+          "attempt": true,
+          "success": false,
+          "usage_reported": false,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "cache_hit_tokens": 0,
+          "upstream_client_request_id": "41e46fd2-db29-4414-ab7b-8833611cc6d2",
+          "upstream_request_id": "af0b876befd9f362bbc4dc60528683c0",
+          "error_type": null
+        }
+      ]
+    }
+  ]
+}

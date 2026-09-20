@@ -1,0 +1,254 @@
+{
+  "route-audit": [
+    {
+      "at": "2026-09-16T08:44:42.322552487Z",
+      "request_id": "47289388bc61da6bf191f9bb6349fec4",
+      "stage": "route_decided",
+      "session_hash": "c6ff59eb6f10a12710bb187d112b3d63febd5809181707dd88b9bff8671e1103",
+      "requested_model": "auto",
+      "effective_model": "gpt-5.6-terra",
+      "effective_reasoning_effort": "none",
+      "task_complexity": "simple",
+      "score": 5,
+      "confidence": 0.99,
+      "required_capabilities": [
+        "text",
+        "tools",
+        "stream",
+        "long_context"
+      ],
+      "reason": "initial_selection",
+      "stream": true,
+      "response_complete": false,
+      "classifier_trace": {
+        "primary_model": "gpt-5.6-sol",
+        "primary_valid": true,
+        "reviewed": false,
+        "decision_model": "gpt-5.6-sol",
+        "cache_hit": false
+      }
+    },
+    {
+      "at": "2026-09-16T08:44:42.32531046Z",
+      "request_id": "47289388bc61da6bf191f9bb6349fec4",
+      "stage": "upstream_started",
+      "session_hash": "c6ff59eb6f10a12710bb187d112b3d63febd5809181707dd88b9bff8671e1103",
+      "requested_model": "auto",
+      "effective_model": "gpt-5.6-terra",
+      "effective_reasoning_effort": "none",
+      "task_complexity": "simple",
+      "score": 5,
+      "confidence": 0.99,
+      "required_capabilities": [
+        "text",
+        "tools",
+        "stream",
+        "long_context"
+      ],
+      "reason": "initial_selection",
+      "stream": true,
+      "response_complete": false,
+      "classifier_trace": {
+        "primary_model": "gpt-5.6-sol",
+        "primary_valid": true,
+        "reviewed": false,
+        "decision_model": "gpt-5.6-sol",
+        "cache_hit": false
+      }
+    },
+    {
+      "at": "2026-09-16T08:44:44.021844663Z",
+      "request_id": "47289388bc61da6bf191f9bb6349fec4",
+      "stage": "upstream_completed",
+      "session_hash": "c6ff59eb6f10a12710bb187d112b3d63febd5809181707dd88b9bff8671e1103",
+      "requested_model": "auto",
+      "effective_model": "gpt-5.6-terra",
+      "effective_reasoning_effort": "none",
+      "task_complexity": "simple",
+      "score": 5,
+      "confidence": 0.99,
+      "required_capabilities": [
+        "text",
+        "tools",
+        "stream",
+        "long_context"
+      ],
+      "reason": "initial_selection",
+      "stream": true,
+      "http_status": 200,
+      "response_complete": true,
+      "classifier_trace": {
+        "primary_model": "gpt-5.6-sol",
+        "primary_valid": true,
+        "reviewed": false,
+        "decision_model": "gpt-5.6-sol",
+        "cache_hit": false
+      }
+    },
+    {
+      "at": "2026-09-16T08:45:24.140169357Z",
+      "request_id": "6e395601f2a22399063b32f4026d230c",
+      "stage": "route_decided",
+      "session_hash": "04669905a8d27996862714ac9cc18e4989e2b7b31eeca69b8526d18ddbfa6ee5",
+      "requested_model": "auto",
+      "effective_model": "gpt-5.6-terra",
+      "effective_reasoning_effort": "none",
+      "task_complexity": "simple",
+      "score": 5,
+      "confidence": 0.99,
+      "required_capabilities": [
+        "text",
+        "tools",
+        "stream",
+        "long_context"
+      ],
+      "reason": "initial_selection",
+      "stream": true,
+      "response_complete": false,
+      "classifier_trace": {
+        "primary_model": "gpt-5.6-sol",
+        "primary_valid": true,
+        "reviewed": false,
+        "decision_model": "gpt-5.6-sol",
+        "cache_hit": false
+      }
+    },
+    {
+      "at": "2026-09-16T08:45:24.142087251Z",
+      "request_id": "6e395601f2a22399063b32f4026d230c",
+      "stage": "upstream_started",
+      "session_hash": "04669905a8d27996862714ac9cc18e4989e2b7b31eeca69b8526d18ddbfa6ee5",
+      "requested_model": "auto",
+      "effective_model": "gpt-5.6-terra",
+      "effective_reasoning_effort": "none",
+      "task_complexity": "simple",
+      "score": 5,
+      "confidence": 0.99,
+      "required_capabilities": [
+        "text",
+        "tools",
+        "stream",
+        "long_context"
+      ],
+      "reason": "initial_selection",
+      "stream": true,
+      "response_complete": false,
+      "classifier_trace": {
+        "primary_model": "gpt-5.6-sol",
+        "primary_valid": true,
+        "reviewed": false,
+        "decision_model": "gpt-5.6-sol",
+        "cache_hit": false
+      }
+    },
+    {
+      "at": "2026-09-16T08:45:30.133324058Z",
+      "request_id": "6e395601f2a22399063b32f4026d230c",
+      "stage": "upstream_completed",
+      "session_hash": "04669905a8d27996862714ac9cc18e4989e2b7b31eeca69b8526d18ddbfa6ee5",
+      "requested_model": "auto",
+      "effective_model": "gpt-5.6-terra",
+      "effective_reasoning_effort": "none",
+      "task_complexity": "simple",
+      "score": 5,
+      "confidence": 0.99,
+      "required_capabilities": [
+        "text",
+        "tools",
+        "stream",
+        "long_context"
+      ],
+      "reason": "initial_selection",
+      "stream": true,
+      "http_status": 200,
+      "response_complete": true,
+      "classifier_trace": {
+        "primary_model": "gpt-5.6-sol",
+        "primary_valid": true,
+        "reviewed": false,
+        "decision_model": "gpt-5.6-sol",
+        "cache_hit": false
+      }
+    }
+  ],
+  "usage": [
+    {
+      "at": "2026-09-16T08:44:37.866908423Z",
+      "request_id": "47289388bc61da6bf191f9bb6349fec4",
+      "purpose": "classification",
+      "effective_model": "gpt-5.6-sol",
+      "effective_reasoning_effort": "none",
+      "success": true,
+      "http_status": 200,
+      "input_tokens": 15120,
+      "output_tokens": 82,
+      "cache_hit_tokens": 0,
+      "cache_miss_tokens": 0
+    },
+    {
+      "at": "2026-09-16T08:44:44.022281383Z",
+      "request_id": "47289388bc61da6bf191f9bb6349fec4",
+      "purpose": "business",
+      "effective_model": "gpt-5.6-terra",
+      "effective_reasoning_effort": "none",
+      "success": true,
+      "http_status": 200,
+      "input_tokens": 10945,
+      "output_tokens": 12,
+      "cache_hit_tokens": 0,
+      "cache_miss_tokens": 0
+    },
+    {
+      "at": "2026-09-16T08:45:20.408359051Z",
+      "request_id": "6e395601f2a22399063b32f4026d230c",
+      "purpose": "classification",
+      "effective_model": "gpt-5.6-sol",
+      "effective_reasoning_effort": "none",
+      "success": true,
+      "http_status": 200,
+      "input_tokens": 15151,
+      "output_tokens": 82,
+      "cache_hit_tokens": 0,
+      "cache_miss_tokens": 0
+    },
+    {
+      "at": "2026-09-16T08:45:30.133721702Z",
+      "request_id": "6e395601f2a22399063b32f4026d230c",
+      "purpose": "business",
+      "effective_model": "gpt-5.6-terra",
+      "effective_reasoning_effort": "none",
+      "success": true,
+      "http_status": 200,
+      "input_tokens": 10964,
+      "output_tokens": 6,
+      "cache_hit_tokens": 10752,
+      "cache_miss_tokens": 212
+    }
+  ],
+  "runtime_config": {
+    "AUTO_CLASSIFIER_MODEL": "gpt-5.6-sol",
+    "AUTO_GATEWAY_MODE": "regional",
+    "AUTO_CLASSIFIER_REVIEW_MODEL": "gpt-6-astra"
+  },
+  "checked_at": "2026-09-16T08:50:16.445347+00:00",
+  "opencode_confirmation": {
+    "native_session": "ses_f5703a1daffezPzfcWJptEk2cB",
+    "title": "Greeting",
+    "user_turns_local": [
+      "2026-09-16T16:44:34.695+08:00",
+      "2026-09-16T16:45:18.738+08:00"
+    ],
+    "both_user_messages_match_reported_two_character_greeting": true,
+    "both_assistants_finish": "stop",
+    "tool_calls_in_these_turns": 0,
+    "correlation": "time window, provider auto and exact business token totals match local SQLite with gateway usage; no request header capture"
+  },
+  "diagnosis": {
+    "classification": "Fixed Sol classified both requests as simple, score 5, confidence 0.99, no reviewer, cache misses.",
+    "business_selection": "classificationFromAssessment marks complete normalized request >=8000 UTF-8 bytes as long_context. DefaultCatalog excludes DeepSeek Flash and Luna for that capability, so Terra is the first eligible tier despite simple task.",
+    "confirmed_from": "live runtime environment, request audit/usage, native read-only SQLite and current code",
+    "status": "diagnosed_not_fixed",
+    "change_scope": "documentation and metadata only; no source, runtime or client configuration changes",
+    "remaining": "Replace coarse capability cutoff with verified per-model input budgets and independently evaluate classification overhead; do not remove tool/system context or weaken Guard."
+  }
+}

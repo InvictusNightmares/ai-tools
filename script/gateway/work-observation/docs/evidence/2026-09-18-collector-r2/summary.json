@@ -1,0 +1,48 @@
+{
+  "schema": "work-observation-performance-evidence-v1",
+  "date": "2026-09-18",
+  "release": "observation-dev.9",
+  "host": "qiyuan-gpu",
+  "workload": "synthetic-loopback",
+  "full_run": {
+    "output": "/data/work-observation-lab/full-capture-20260918-115300",
+    "cases": 63,
+    "measured_requests": 8820,
+    "body_correct": true,
+    "capture_complete": true,
+    "expected_captured": 3612,
+    "expected_written": 14364,
+    "capture_counters": {
+      "dropped": 0,
+      "truncated": 0,
+      "projection_errors": 0,
+      "write_errors": 0,
+      "queued_bytes": 0,
+      "queue_items": 0,
+      "active_requests": 0
+    },
+    "pooled_capture_overhead_percent": {
+      "json_1k_first": 5.1012,
+      "json_1k_total": 5.1613,
+      "json_1m_first": 0.4546,
+      "json_1m_total": 0.4462,
+      "json_8m_first": 2.7415,
+      "json_8m_total": 2.7408,
+      "sse_1m_first": 0.5779,
+      "sse_1m_total": 0.6673,
+      "sse_8m_first": 5.9456,
+      "sse_8m_total": 3.9162,
+      "ws_4k_first": 2.5974,
+      "ws_4k_total": -0.4824,
+      "ws_64k_first": 20.2892,
+      "ws_64k_total": 15.6546
+    },
+    "every_round_within_5_percent": false
+  },
+  "decision": "do_not_enable_formal_capture",
+  "limitations": [
+    "Synthetic loopback only",
+    "Shared GPU host load causes p95 variance",
+    "No employee content or production route was used"
+  ]
+}

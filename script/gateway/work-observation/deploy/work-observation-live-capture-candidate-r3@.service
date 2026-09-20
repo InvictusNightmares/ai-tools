@@ -1,0 +1,42 @@
+[Unit]
+Description=Work observation candidate-r3 live capture and rollback watchdog (%i)
+Wants=docker.service work-observation-collector-candidate-r3@%i.service
+After=docker.service work-observation-collector-candidate-r3@%i.service
+StartLimitIntervalSec=10min
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=root
+Group=root
+Environment=WO_ROOT=/opt/work-observation/candidate-r3
+Environment=WO_SIDECAR_SUFFIX=-candidate-r3
+Environment=WO_SIDECAR_UNIT_PREFIX=work-observation-collector-candidate-r3
+Environment=WO_STATE_DIR=/data/work-observation/cutover-live-candidate-r3
+# Do not turn one upstream 5xx into a full capture outage.  The watchdog
+# still rolls back on sidecar, capture, queue, disk, write, projection, or
+# loss-persistence failures.
+Environment=WO_MAX_5XX=-1
+Environment=WO_INTERVAL=5
+ExecStart=/opt/work-observation/candidate-r3/deploy/run-live-capture.sh %i
+Restart=on-failure
+RestartSec=30s
+RestartPreventExitStatus=1
+TimeoutStartSec=90s
+TimeoutStopSec=120s
+KillMode=control-group
+UMask=0077
+# Do not apply host-level NNP: wrapper recovery restarts the Docker sidecar,
+# which may require an SELinux/domain transition.  The container command
+# itself retains --security-opt=no-new-privileges.
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadOnlyPaths=/opt/work-observation/candidate-r3 /data/work-observation/tokyo /data/work-observation/us
+ReadWritePaths=/data/work-observation/cutover-live-candidate-r3 /data/tokyo-sub2api-proxy /data/us-sub2api-proxy
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,14 @@
+[
+  {
+    "region": "tokyo",
+    "competing_install_blocked": true,
+    "release_pointer_unchanged": true,
+    "passed": true
+  },
+  {
+    "region": "us",
+    "competing_install_blocked": true,
+    "release_pointer_unchanged": true,
+    "passed": true
+  }
+]

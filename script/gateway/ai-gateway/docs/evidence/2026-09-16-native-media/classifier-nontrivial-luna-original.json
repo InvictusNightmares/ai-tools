@@ -1,0 +1,198 @@
+{
+  "scope": "classifier_only_not_guard_auto_business_acceptance",
+  "label_authority": "implementer_assigned_not_independent_human_adjudication",
+  "consistency_definition": "same_complexity_and_target_effort_in_all_three_languages",
+  "fixture_sha256": "c1f1b9a9ad259f15cb469715f630197ce17a0499afa74ae52c319bcb5f2b00d1",
+  "trials": [
+    {
+      "file": "luna-original.jsonl",
+      "sha256": "bda75c6d60dfa01c011b41d9b8dfe19c04c629a7fc56d83ba20d03ae0387c26c",
+      "primary": "gpt-5.6-luna",
+      "reviewer": "gpt-5.6-sol",
+      "requests": 180,
+      "expected_requests": 180,
+      "complete": true,
+      "missing_samples": [],
+      "successes": 180,
+      "business_calls": 0,
+      "splits": {
+        "development": {
+          "groups": 12,
+          "consistent_groups": 12,
+          "consistency_percent": 100.0,
+          "differences": [],
+          "languages": {
+            "zh": {
+              "requests": 12,
+              "successes": 12,
+              "median_ms": 7329.5,
+              "p95_ms": 8216,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 9,
+              "assigned_complexity_matches": 8,
+              "task_boundary_checks": 0,
+              "task_boundary_matches": 0,
+              "efforts": {
+                "none": 4,
+                "low": 2,
+                "medium": 4,
+                "high": 2
+              }
+            },
+            "en": {
+              "requests": 12,
+              "successes": 12,
+              "median_ms": 7599.0,
+              "p95_ms": 11159,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 10,
+              "assigned_complexity_matches": 8,
+              "task_boundary_checks": 0,
+              "task_boundary_matches": 0,
+              "efforts": {
+                "none": 4,
+                "low": 2,
+                "medium": 4,
+                "high": 2
+              }
+            },
+            "mixed": {
+              "requests": 12,
+              "successes": 12,
+              "median_ms": 7545.0,
+              "p95_ms": 16291,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 9,
+              "assigned_complexity_matches": 8,
+              "task_boundary_checks": 0,
+              "task_boundary_matches": 0,
+              "efforts": {
+                "none": 4,
+                "low": 2,
+                "medium": 4,
+                "high": 2
+              }
+            }
+          },
+          "classifier_attempts": 60,
+          "input_tokens": 43278,
+          "output_tokens": 6604,
+          "prompt_cache_hit_tokens": 0
+        },
+        "holdout": {
+          "groups": 48,
+          "consistent_groups": 46,
+          "consistency_percent": 95.83,
+          "differences": [
+            {
+              "case_id": "login-lifecycle",
+              "variants": [
+                {
+                  "language": "en",
+                  "ok": true,
+                  "complexity": "multi_step",
+                  "effort": "medium"
+                },
+                {
+                  "language": "zh",
+                  "ok": true,
+                  "complexity": "multi_step",
+                  "effort": "medium"
+                },
+                {
+                  "language": "mixed",
+                  "ok": true,
+                  "complexity": "complex",
+                  "effort": "high"
+                }
+              ]
+            },
+            {
+              "case_id": "collab-gc",
+              "variants": [
+                {
+                  "language": "zh",
+                  "ok": true,
+                  "complexity": "exceptional",
+                  "effort": "xhigh"
+                },
+                {
+                  "language": "en",
+                  "ok": true,
+                  "complexity": "exceptional",
+                  "effort": "xhigh"
+                },
+                {
+                  "language": "mixed",
+                  "ok": true,
+                  "complexity": "complex",
+                  "effort": "high"
+                }
+              ]
+            }
+          ],
+          "languages": {
+            "zh": {
+              "requests": 48,
+              "successes": 48,
+              "median_ms": 7473.0,
+              "p95_ms": 12057,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 43,
+              "assigned_complexity_matches": 46,
+              "task_boundary_checks": 0,
+              "task_boundary_matches": 0,
+              "efforts": {
+                "none": 12,
+                "low": 11,
+                "medium": 10,
+                "high": 11,
+                "xhigh": 4
+              }
+            },
+            "en": {
+              "requests": 48,
+              "successes": 48,
+              "median_ms": 7612.5,
+              "p95_ms": 9809,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 42,
+              "assigned_complexity_matches": 46,
+              "task_boundary_checks": 0,
+              "task_boundary_matches": 0,
+              "efforts": {
+                "none": 12,
+                "low": 11,
+                "medium": 10,
+                "high": 11,
+                "xhigh": 4
+              }
+            },
+            "mixed": {
+              "requests": 48,
+              "successes": 48,
+              "median_ms": 7705.0,
+              "p95_ms": 14937,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 44,
+              "assigned_complexity_matches": 44,
+              "task_boundary_checks": 0,
+              "task_boundary_matches": 0,
+              "efforts": {
+                "none": 12,
+                "low": 11,
+                "high": 13,
+                "medium": 9,
+                "xhigh": 3
+              }
+            }
+          },
+          "classifier_attempts": 252,
+          "input_tokens": 182932,
+          "output_tokens": 28474,
+          "prompt_cache_hit_tokens": 0
+        }
+      }
+    }
+  ]
+}

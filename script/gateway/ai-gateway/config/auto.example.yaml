@@ -1,0 +1,43 @@
+# Reference only: auto-server reads environment variables, not this YAML.
+# No candidate is approved for production yet. Set models explicitly after eval.
+mode: pilot
+listen_addr: 127.0.0.1:8092
+region: tokyo
+identity:
+  mode: single_authorized_test_key
+  api_key_id: '141'
+  token_file_env: AUTO_GATEWAY_PILOT_TOKEN_FILE
+  auth_check_url: http://106.14.254.110:9881/v1/models
+  validate_before_every_cache_read: true
+  production_quota_authorization: not_implemented
+classifier:
+  url: http://106.14.254.110:9881/v1/chat/completions
+  model_env: AUTO_CLASSIFIER_MODEL
+  reviewer_model_env: AUTO_CLASSIFIER_REVIEW_MODEL
+  primary_effort_target: none
+  astra_primary_effort_applied: low
+  reviewer_effort: low
+  max_tokens: 2048
+  cache_ttl: 5m
+  cache_capacity: 1024
+  fail_closed: true
+guard:
+  # Must implement credential-redaction-v1; do not point at the old production Guard.
+  endpoint: http://127.0.0.1:8013/v1/preflight
+  fail_closed: true
+cache:
+  ttl: 24h
+  max_entry_bytes: 4194304
+  max_entries: 10000
+session_state:
+  path_env: AUTO_GATEWAY_SESSION_STATE_PATH
+usage_sink:
+  path_env: AUTO_GATEWAY_USAGE_SINK_PATH
+audit_sink:
+  path_env: AUTO_GATEWAY_AUDIT_SINK_PATH
+upstream:
+  chat: http://106.14.254.110:9881/v1/chat/completions
+  responses: http://106.14.254.110:9881/v1/responses
+  anthropic: http://106.14.254.110:9881/v1/messages
+  count_tokens: http://106.14.254.110:9881/v1/messages/count_tokens
+# US uses port 9880 throughout, and its own authorized key; never mix regions.

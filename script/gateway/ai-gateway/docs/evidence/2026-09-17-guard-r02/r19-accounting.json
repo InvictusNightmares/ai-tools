@@ -1,0 +1,76 @@
+{
+  "source_sha256": "1299de5ecb36c532ed5f9e42401b951a677dc3c14b30a75ed1674f97713eb189",
+  "results": [
+    {
+      "label": "deployed-v29-tokyo",
+      "attempts": 16,
+      "purpose_counts": {
+        "classification": 8,
+        "business": 8
+      },
+      "exact_matches": 16,
+      "token_mismatches": 0,
+      "known_success_missing": 0,
+      "known_usage_reconciled": true,
+      "costs": [
+        {
+          "purpose": "classification",
+          "model": "gpt-5.6-luna",
+          "total_cost": 0.0039718
+        },
+        {
+          "purpose": "business",
+          "model": "deepseek-flash",
+          "total_cost": 0.00378036
+        },
+        {
+          "purpose": "classification",
+          "model": "gpt-5.6-sol",
+          "total_cost": 0.009875
+        }
+      ],
+      "user_agents": [
+        "Python-urllib/3.13",
+        "opencode/1.18.4 ai-sdk/provider-utils/4.0.38 runtime/bun/1.3.14"
+      ]
+    },
+    {
+      "label": "deployed-v29-us",
+      "attempts": 17,
+      "purpose_counts": {
+        "classification": 8,
+        "business": 9
+      },
+      "exact_matches": 17,
+      "token_mismatches": 0,
+      "known_success_missing": 0,
+      "known_usage_reconciled": true,
+      "costs": [
+        {
+          "purpose": "classification",
+          "model": "gpt-5.6-luna",
+          "total_cost": 0.0040034
+        },
+        {
+          "purpose": "business",
+          "model": "deepseek-flash",
+          "total_cost": 0.003885824
+        },
+        {
+          "purpose": "classification",
+          "model": "gpt-5.6-sol",
+          "total_cost": 0.008975
+        },
+        {
+          "purpose": "business",
+          "model": "gpt-5.6-luna",
+          "total_cost": 0.0002058
+        }
+      ],
+      "user_agents": [
+        "Python-urllib/3.13",
+        "opencode/1.18.4 ai-sdk/provider-utils/4.0.38 runtime/bun/1.3.14"
+      ]
+    }
+  ]
+}

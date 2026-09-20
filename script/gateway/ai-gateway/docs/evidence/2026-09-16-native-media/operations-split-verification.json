@@ -1,0 +1,110 @@
+[
+  {
+    "region": "tokyo",
+    "passed": true,
+    "network_fault_detected": true,
+    "network_recovery": true,
+    "disk_fault_detected": true,
+    "post_rotation_files": [
+      {
+        "file": "auto/usage.jsonl",
+        "new_records": 18,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "auto/route-audit.jsonl",
+        "new_records": 33,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "guard/security-usage.jsonl",
+        "new_records": 29,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "guard/security-decisions.jsonl",
+        "new_records": 15,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "guard/guard-security.jsonl",
+        "new_records": 2,
+        "mode": "0o600",
+        "uid": 10001
+      }
+    ],
+    "timer_usage_sync": {
+      "status": "running",
+      "at": "2026-09-16T14:48:46.160585+00:00",
+      "last_completed_at": "2026-09-16T14:47:43.388607+00:00"
+    },
+    "retention_days": null
+  },
+  {
+    "region": "us",
+    "passed": true,
+    "network_fault_detected": true,
+    "network_recovery": true,
+    "disk_fault_detected": true,
+    "post_rotation_files": [
+      {
+        "file": "auto/usage.jsonl",
+        "new_records": 18,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "auto/route-audit.jsonl",
+        "new_records": 33,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "guard/security-usage.jsonl",
+        "new_records": 29,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "guard/security-decisions.jsonl",
+        "new_records": 15,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "guard/guard-security.jsonl",
+        "new_records": 2,
+        "mode": "0o600",
+        "uid": 10001
+      }
+    ],
+    "timer_usage_sync": {
+      "region": "us",
+      "imported": 0,
+      "exported": 0,
+      "remaining": 0,
+      "key_mappings": 87,
+      "partial_spools": 0,
+      "status": "completed",
+      "last_completed_at": "2026-09-16T14:48:57.564769+00:00",
+      "at": "2026-09-16T14:48:57.564784+00:00"
+    },
+    "retention_days": null
+  },
+  {
+    "scope": "synthetic metric/outbox fixture over local HTTP",
+    "passed": true,
+    "alert_codes": [
+      "guard_fail_closed",
+      "guard_p95_above_300ms",
+      "guard_queue_pressure",
+      "guard_queue_wait_high",
+      "model_key_failure_rate"
+    ],
+    "export_outage_and_recovery": true
+  }
+]

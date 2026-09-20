@@ -1,0 +1,96 @@
+{
+  "source_sha256": "54a4ad2d618d4c4762dd859e9407d53550a2c62907f00bc5f7ab6f137238b4a2",
+  "results": [
+    {
+      "label": "deployed-v30-tokyo",
+      "attempts": 40,
+      "purpose_counts": {
+        "business": 19,
+        "classification": 21
+      },
+      "exact_matches": 39,
+      "token_mismatches": 0,
+      "known_success_missing": 0,
+      "known_usage_reconciled": true,
+      "costs": [
+        {
+          "purpose": "business",
+          "model": "gpt-5.6-luna",
+          "total_cost": 0.021466440000000003
+        },
+        {
+          "purpose": "classification",
+          "model": "gpt-5.6-luna",
+          "total_cost": 0.016785199999999997
+        },
+        {
+          "purpose": "classification",
+          "model": "gpt-5.6-sol",
+          "total_cost": 0.11351499999999998
+        },
+        {
+          "purpose": "business",
+          "model": "gpt-5.6-sol",
+          "total_cost": 0.146445
+        },
+        {
+          "purpose": "business",
+          "model": "deepseek-flash",
+          "total_cost": 0.0015158
+        }
+      ],
+      "user_agents": [
+        "",
+        "Codex Desktop/0.154.0 (Mac OS 14.8.7; arm64) dumb (gateway_native_acceptance; 1.0)",
+        "Python-urllib/3.13",
+        "gateway-compaction-migration/1.0",
+        "gateway-routing-iteration/1.0"
+      ]
+    },
+    {
+      "label": "deployed-v30-us",
+      "attempts": 39,
+      "purpose_counts": {
+        "classification": 20,
+        "business": 19
+      },
+      "exact_matches": 39,
+      "token_mismatches": 0,
+      "known_success_missing": 0,
+      "known_usage_reconciled": true,
+      "costs": [
+        {
+          "purpose": "classification",
+          "model": "gpt-5.6-luna",
+          "total_cost": 0.019430399999999994
+        },
+        {
+          "purpose": "business",
+          "model": "gpt-5.6-luna",
+          "total_cost": 0.0198216
+        },
+        {
+          "purpose": "classification",
+          "model": "gpt-5.6-sol",
+          "total_cost": 0.037965
+        },
+        {
+          "purpose": "business",
+          "model": "gpt-5.6-sol",
+          "total_cost": 0.024075
+        },
+        {
+          "purpose": "business",
+          "model": "deepseek-flash",
+          "total_cost": 0.00130944
+        }
+      ],
+      "user_agents": [
+        "Codex Desktop/0.154.0 (Mac OS 14.8.7; arm64) dumb (gateway_native_acceptance; 1.0)",
+        "Python-urllib/3.13",
+        "gateway-compaction-migration/1.0",
+        "gateway-routing-iteration/1.0"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "guard": {
+    "request_timeout_seconds": 30,
+    "queue_timeout_seconds": 1,
+    "strict": true,
+    "fail_closed": true
+  },
+  "auto": {
+    "guard_transport_timeout_seconds": 35,
+    "mode": "regional"
+  },
+  "health": {
+    "4004_healthz": 200,
+    "8013_readyz": 200
+  },
+  "binaries": {
+    "auto-server": "2394ea339c9edf0d63b326f7f18dbe348dd6dfb813c1de6a819fc34da01128b6",
+    "preflight-api": "19f33884ea5682b34d34dcec1614e51cb7d328fde461dfd0b412e0c6e5cf9664"
+  },
+  "verification": "Live container configuration, direct readiness requests, and on-disk binary hashes"
+}

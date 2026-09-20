@@ -1,0 +1,56 @@
+[
+  {
+    "region": "tokyo",
+    "operation": "v2",
+    "phase": "after",
+    "at": "2026-09-17T06:27:46.425290+00:00",
+    "status": 200,
+    "request_id": "016d28bee9e976ab510619c63f51003c",
+    "response_model": "gpt-5.6-luna",
+    "output_types": [
+      "compaction"
+    ],
+    "opaque_state": true
+  },
+  {
+    "region": "tokyo",
+    "operation": "legacy",
+    "phase": "after",
+    "at": "2026-09-17T06:27:46.425441+00:00",
+    "status": 200,
+    "request_id": "04076f949c782a415dd110d7f357a1ad",
+    "response_model": null,
+    "output_types": [
+      null,
+      "compaction"
+    ],
+    "opaque_state": true
+  },
+  {
+    "region": "us",
+    "operation": "v2",
+    "phase": "after",
+    "at": "2026-09-17T06:27:46.424484+00:00",
+    "status": 200,
+    "request_id": "233831aa8303d7dfa91eaa22cd936688",
+    "response_model": "gpt-5.6-luna",
+    "output_types": [
+      "compaction"
+    ],
+    "opaque_state": true
+  },
+  {
+    "region": "us",
+    "operation": "legacy",
+    "phase": "after",
+    "at": "2026-09-17T06:27:46.425117+00:00",
+    "status": 200,
+    "request_id": "0b27f1fe752965bad38023f8eb1e8402",
+    "response_model": null,
+    "output_types": [
+      null,
+      "compaction"
+    ],
+    "opaque_state": true
+  }
+]

@@ -1,0 +1,204 @@
+[
+  {
+    "case": "health",
+    "status": 200,
+    "expected": 200,
+    "pass": true,
+    "elapsed_ms": 2,
+    "bytes": 16,
+    "body_sha256": "6489d6d7a33c5d40e18fc61eeb6c34c341279ee61816394dde5189aa4ad8fae5",
+    "request_id": null,
+    "content_type": "application/json"
+  },
+  {
+    "case": "website",
+    "status": 200,
+    "expected": 200,
+    "pass": true,
+    "elapsed_ms": 422,
+    "bytes": 3296,
+    "body_sha256": "e424e8b6df25cfc638d4483e8a20b6ba3b0ff84118e3e9c19a460025cb7375c5",
+    "request_id": null,
+    "content_type": "text/html; charset=utf-8"
+  },
+  {
+    "case": "account_settings",
+    "status": 200,
+    "expected": 200,
+    "pass": true,
+    "elapsed_ms": 377,
+    "bytes": 2518,
+    "body_sha256": "429795d856d4c2e6f3fecb837f8514269fb61d269d6002f377566be532b3a8c2",
+    "request_id": null,
+    "content_type": "application/json; charset=utf-8"
+  },
+  {
+    "case": "own_usage",
+    "status": 200,
+    "expected": 200,
+    "pass": true,
+    "elapsed_ms": 242,
+    "bytes": 5798,
+    "body_sha256": "da0edd5f75af6e81950fc67ff617a3dc62e79cc7635849e93196aae8e7747342",
+    "request_id": null,
+    "content_type": "application/json; charset=utf-8"
+  },
+  {
+    "case": "own_billing",
+    "status": 200,
+    "expected": 200,
+    "pass": true,
+    "elapsed_ms": 195,
+    "bytes": 233,
+    "body_sha256": "75508c06feae6a4ea7e5b5f3e11d6921c1221d87b75b2afc523d56308ce3248a",
+    "request_id": null,
+    "content_type": "application/json; charset=utf-8"
+  },
+  {
+    "case": "missing_key",
+    "status": 401,
+    "expected": 401,
+    "pass": true,
+    "elapsed_ms": 1,
+    "bytes": 25,
+    "body_sha256": "3341bff062d83e3afeb943f83bbb079f5b45cc050e796ec282dde50b5906cb31",
+    "request_id": "f169461cb292801dbd6240dab6f3c01f",
+    "content_type": "application/json"
+  },
+  {
+    "case": "invalid_key",
+    "status": 401,
+    "expected": 401,
+    "pass": true,
+    "elapsed_ms": 214,
+    "bytes": 25,
+    "body_sha256": "3341bff062d83e3afeb943f83bbb079f5b45cc050e796ec282dde50b5906cb31",
+    "request_id": "a6bdd09eab150bede491fa230e4e3b42",
+    "content_type": "application/json"
+  },
+  {
+    "case": "conflicting_headers",
+    "status": 401,
+    "expected": 401,
+    "pass": true,
+    "elapsed_ms": 1,
+    "bytes": 25,
+    "body_sha256": "3341bff062d83e3afeb943f83bbb079f5b45cc050e796ec282dde50b5906cb31",
+    "request_id": "5dc2a8fd4b400dc2242c4a62d54642a8",
+    "content_type": "application/json"
+  },
+  {
+    "case": "models_bearer",
+    "status": 200,
+    "expected": 200,
+    "pass": true,
+    "elapsed_ms": 209,
+    "bytes": 44064,
+    "body_sha256": "79765bb60bd785c521a97231a66847838fe5d7243b4361942d75337f4e3ada91",
+    "request_id": null,
+    "content_type": "application/json",
+    "models": [
+      "auto",
+      "codex-auto-review"
+    ]
+  },
+  {
+    "case": "models_x_api_key",
+    "status": 200,
+    "expected": 200,
+    "pass": true,
+    "elapsed_ms": 195,
+    "bytes": 44064,
+    "body_sha256": "79765bb60bd785c521a97231a66847838fe5d7243b4361942d75337f4e3ada91",
+    "request_id": null,
+    "content_type": "application/json",
+    "models": [
+      "auto",
+      "codex-auto-review"
+    ]
+  },
+  {
+    "case": "models_alias",
+    "status": 200,
+    "expected": 200,
+    "pass": true,
+    "elapsed_ms": 201,
+    "bytes": 44064,
+    "body_sha256": "79765bb60bd785c521a97231a66847838fe5d7243b4361942d75337f4e3ada91",
+    "request_id": null,
+    "content_type": "application/json",
+    "models": [
+      "auto",
+      "codex-auto-review"
+    ]
+  },
+  {
+    "case": "route_preview_hidden",
+    "status": 404,
+    "expected": 404,
+    "pass": true,
+    "elapsed_ms": 194,
+    "bytes": 22,
+    "body_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf",
+    "request_id": null,
+    "content_type": "application/json"
+  },
+  {
+    "case": "chat_chinese",
+    "status": 200,
+    "expected": 200,
+    "pass": true,
+    "elapsed_ms": 5441,
+    "bytes": 508,
+    "body_sha256": "e8da9f22ea3618229d18debcdca34f64a1374602c059e82905647df0e030cbd5",
+    "request_id": "1c6fb74c72544ccfc86664711b38baa8",
+    "content_type": "application/json"
+  },
+  {
+    "case": "responses_alias_sse",
+    "status": 200,
+    "expected": 200,
+    "pass": true,
+    "elapsed_ms": 6132,
+    "bytes": 75542,
+    "body_sha256": "4b52a23a30046fd674430715e868da6cf8d81a8abf462cdbaa291b0fd3e38e8b",
+    "request_id": "3ed8633d093fe2c8c8d96e2c4dbe5771",
+    "content_type": "text/event-stream"
+  },
+  {
+    "case": "messages_claude_sse",
+    "status": 200,
+    "expected": 200,
+    "pass": true,
+    "elapsed_ms": 8447,
+    "bytes": 12847,
+    "body_sha256": "08e3c63b8e13007db4e788c1d1dd6ff41022f1a99155c635bfbc035ed8232957",
+    "request_id": "501be6ef97918b3ea02b01dfd8bdf962",
+    "content_type": "text/event-stream"
+  },
+  {
+    "case": "count_tokens",
+    "status": 200,
+    "expected": 200,
+    "pass": true,
+    "elapsed_ms": 5006,
+    "bytes": 21,
+    "body_sha256": "0d47d619644fa7c1183b48c5cf945dcefc0a51f71e73b758ff14c6441df0c1db",
+    "request_id": "d4d2087eb9bb4cc7684c3d04cae80246",
+    "content_type": "application/json",
+    "input_tokens": 140,
+    "count_method": "utf8_bytes_estimate"
+  },
+  {
+    "case": "guard_blocks_credential_use",
+    "status": 403,
+    "expected": 403,
+    "pass": true,
+    "elapsed_ms": 199,
+    "bytes": 93,
+    "body_sha256": "5d0c87dbc28bb7d14ba49e20e8bcc62ab8c1d0225c417c65d29a1e882d87974d",
+    "request_id": "994117fb7dfe92f047122f1c2999445f",
+    "content_type": "application/json",
+    "error": "preflight_blocked"
+  }
+]

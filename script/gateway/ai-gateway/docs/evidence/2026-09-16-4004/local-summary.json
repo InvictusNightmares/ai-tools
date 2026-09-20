@@ -1,0 +1,16 @@
+{
+  "checked_at": "2026-09-16T06:30:18.335557+00:00",
+  "scope": "local_offline",
+  "race_tests_including_subtests": {
+    "auto": 317,
+    "cmd/auto-server": 7,
+    "guard": 31,
+    "guard/model": 2
+  },
+  "go_vet": "passed",
+  "linux_amd64_builds": 5,
+  "python_unittest": "passed",
+  "python_and_shell_syntax": "passed",
+  "live_upstream_tested": false,
+  "servers_modified": false
+}

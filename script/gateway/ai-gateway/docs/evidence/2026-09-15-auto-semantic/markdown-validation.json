@@ -1,0 +1,44 @@
+[
+  {
+    "file": "doc/gateway/智能网关与Guard分阶段实施总计划.md",
+    "tables": 5,
+    "table_rows_including_headers": [
+      80,
+      4,
+      3,
+      6,
+      4
+    ],
+    "orphan_table_rows": 0,
+    "missing_relative_links": 0,
+    "fences_balanced": true
+  },
+  {
+    "file": "script/gateway/auto-gateway/README.md",
+    "tables": 0,
+    "table_rows_including_headers": [],
+    "orphan_table_rows": 0,
+    "missing_relative_links": 0,
+    "fences_balanced": true
+  },
+  {
+    "file": "doc/gateway/evidence/2026-09-15-auto-semantic/README.md",
+    "tables": 1,
+    "table_rows_including_headers": [
+      5
+    ],
+    "orphan_table_rows": 0,
+    "missing_relative_links": 0,
+    "fences_balanced": true
+  },
+  {
+    "file": "doc/gateway/evidence/2026-09-15-auto-semantic/changed-files.md",
+    "tables": 1,
+    "table_rows_including_headers": [
+      46
+    ],
+    "orphan_table_rows": 0,
+    "missing_relative_links": 0,
+    "fences_balanced": true
+  }
+]

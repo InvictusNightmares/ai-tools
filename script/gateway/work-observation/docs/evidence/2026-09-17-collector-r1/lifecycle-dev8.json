@@ -1,0 +1,24 @@
+{
+  "scope": "synthetic_isolated_cli_lifecycle",
+  "events": 6,
+  "outcomes": {
+    "completed": 5,
+    "process_interrupted": 1
+  },
+  "clients": {
+    "codex": 3,
+    "opencode": 1,
+    "hermes": 1,
+    "claude": 1
+  },
+  "body_integrity": true,
+  "auth_headers_excluded": true,
+  "default_disabled": true,
+  "enable_disable": true,
+  "restart_gap_visible": true,
+  "plaintext_private_files": true,
+  "restart_switch_persisted_before_traffic": true,
+  "export_to_evidence_and_analysis": true,
+  "native_clients": false,
+  "production_changed": false
+}

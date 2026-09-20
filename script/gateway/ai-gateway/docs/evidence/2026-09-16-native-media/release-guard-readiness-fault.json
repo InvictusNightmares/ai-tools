@@ -1,0 +1,7 @@
+{
+  "scope": "actual loopback Guard connection failure before any deployment action",
+  "error": "readiness_failed",
+  "elapsed_ms": 20087,
+  "instance_unmodified": true,
+  "passed": true
+}

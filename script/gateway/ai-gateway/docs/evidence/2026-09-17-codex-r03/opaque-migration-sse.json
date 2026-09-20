@@ -1,0 +1,80 @@
+[
+  {
+    "region": "tokyo",
+    "requests": [
+      {
+        "phase": "original_sol",
+        "status": 200,
+        "request_id": null,
+        "model": "gpt-5.6-sol",
+        "output_types": [
+          "compaction"
+        ]
+      },
+      {
+        "phase": "compact_old_history",
+        "status": 200,
+        "request_id": "4f22968c24898380554efd1649db88f2",
+        "model": null,
+        "output_types": [
+          null,
+          "compaction"
+        ]
+      },
+      {
+        "phase": "resume_auto",
+        "status": 200,
+        "request_id": "0b02dc8e5340a8fdacd2a3a9065442ee",
+        "model": "gpt-5.6-luna",
+        "output_types": [
+          "message"
+        ]
+      }
+    ],
+    "source_actual_model": "gpt-5.6-sol",
+    "source_has_encrypted_state": true,
+    "compaction_present": true,
+    "continuity": true,
+    "answer_sha256": "0d1a7943e39813ad6ff70f8be981712425af570a6b70da2279f48efe450f3c25",
+    "passed": true
+  },
+  {
+    "region": "us",
+    "requests": [
+      {
+        "phase": "original_sol",
+        "status": 200,
+        "request_id": null,
+        "model": "gpt-6-sol",
+        "output_types": [
+          "compaction"
+        ]
+      },
+      {
+        "phase": "compact_old_history",
+        "status": 200,
+        "request_id": "393bd37c0b538ca40c097fcedbe6bdaf",
+        "model": null,
+        "output_types": [
+          null,
+          "compaction"
+        ]
+      },
+      {
+        "phase": "resume_auto",
+        "status": 200,
+        "request_id": "121b14ccda2781f7125b11f1496828e7",
+        "model": "gpt-5.6-luna",
+        "output_types": [
+          "message"
+        ]
+      }
+    ],
+    "source_actual_model": "gpt-6-sol",
+    "source_has_encrypted_state": true,
+    "compaction_present": true,
+    "continuity": true,
+    "answer_sha256": "0d1a7943e39813ad6ff70f8be981712425af570a6b70da2279f48efe450f3c25",
+    "passed": true
+  }
+]

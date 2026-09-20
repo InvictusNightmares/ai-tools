@@ -1,0 +1,60 @@
+{
+  "scope": "native client through actual v14 gateway with synthetic local identity Guard classifier and business models",
+  "gateway_candidate_tested": true,
+  "guard_and_models": "synthetic local fixtures",
+  "region": "fixture",
+  "checks": [
+    {
+      "check": "initial_marker",
+      "passed": true
+    },
+    {
+      "check": "native_compaction_and_recall",
+      "passed": true,
+      "compaction_part": true
+    },
+    {
+      "check": "multiple_native_tools",
+      "passed": true,
+      "completed_reads": 2
+    },
+    {
+      "check": "native_child_session",
+      "passed": true
+    },
+    {
+      "check": "native_fork_continuity",
+      "passed": true
+    },
+    {
+      "check": "native_cancel",
+      "passed": true
+    },
+    {
+      "check": "resume_after_cancel",
+      "passed": true
+    }
+  ],
+  "native_session_sha256": [
+    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  ],
+  "request_count": 12,
+  "gateway_binary_sha256": "bf97a6077ac101a6beefa22741b6ecd85214270411d5f55f339d76ca92f3f660",
+  "gateway_source_sha256": "4f2845d750f36cf654222d20ec2871b97e42e7b8f3a21acb40af286b7681880a",
+  "audit_stages": {
+    "route_decided": 12,
+    "upstream_started": 12,
+    "upstream_completed": 11,
+    "request_canceled": 1
+  },
+  "cancellation_audit": [
+    {
+      "stage": "request_canceled",
+      "error_type": "upstream_read:context_canceled",
+      "stream_termination": "upstream_read:context_canceled",
+      "response_complete": false,
+      "http_status": 200
+    }
+  ],
+  "completed_response_upstream_failures": 0
+}

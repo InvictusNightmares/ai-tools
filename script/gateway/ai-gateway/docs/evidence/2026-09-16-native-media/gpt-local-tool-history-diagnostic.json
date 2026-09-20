@@ -1,0 +1,34 @@
+[
+  {
+    "case": "luna",
+    "status": 200,
+    "model": "gpt-5.6-luna",
+    "reported_effort": "none",
+    "error": null,
+    "upstream_client_request_id": "3e7946f7-9d26-4c2b-adc7-cf800460b9b2"
+  },
+  {
+    "case": "terra",
+    "status": 200,
+    "model": "gpt-5.6-terra",
+    "reported_effort": "none",
+    "error": null,
+    "upstream_client_request_id": "9fef720a-d1ff-4ce5-a291-82d62fbb4d97"
+  },
+  {
+    "case": "sol",
+    "status": 200,
+    "model": "gpt-5.6-sol",
+    "reported_effort": "none",
+    "error": null,
+    "upstream_client_request_id": "42eac0dc-fbc4-4ba9-b2fc-d83b4debfe90"
+  },
+  {
+    "case": "astra",
+    "status": 200,
+    "model": "gpt-6-astra",
+    "reported_effort": "low",
+    "error": null,
+    "upstream_client_request_id": "70d61ae0-502e-4665-8f01-b9c7a6b6f4d8"
+  }
+]

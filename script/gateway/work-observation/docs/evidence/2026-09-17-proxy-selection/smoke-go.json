@@ -1,0 +1,53 @@
+[
+  {
+    "concurrency": 2,
+    "count": 16,
+    "delay_ms": 0,
+    "elapsed_s": 0.001540065,
+    "errors": {},
+    "first_p50_ms": 0.152,
+    "first_p95_ms": 0.316,
+    "mode": "json",
+    "ok": 16,
+    "payload_bytes": 4184,
+    "rps": 10389.17188560223,
+    "target": "http://127.0.0.1:18181",
+    "total_p50_ms": 0.155,
+    "total_p95_ms": 0.324,
+    "candidate": "go"
+  },
+  {
+    "concurrency": 2,
+    "count": 16,
+    "delay_ms": 0,
+    "elapsed_s": 0.147767526,
+    "errors": {},
+    "first_p50_ms": 0.185,
+    "first_p95_ms": 0.28,
+    "mode": "sse",
+    "ok": 16,
+    "payload_bytes": 4184,
+    "rps": 108.27818826715688,
+    "target": "http://127.0.0.1:18181",
+    "total_p50_ms": 18.432,
+    "total_p95_ms": 18.671,
+    "candidate": "go"
+  },
+  {
+    "concurrency": 2,
+    "count": 16,
+    "delay_ms": 0,
+    "elapsed_s": 0.009157015,
+    "errors": {},
+    "first_p50_ms": 0.353,
+    "first_p95_ms": 0.475,
+    "mode": "ws",
+    "ok": 16,
+    "payload_bytes": 4184,
+    "rps": 1747.294287494342,
+    "target": "http://127.0.0.1:18181",
+    "total_p50_ms": 1.125,
+    "total_p95_ms": 1.228,
+    "candidate": "go"
+  }
+]

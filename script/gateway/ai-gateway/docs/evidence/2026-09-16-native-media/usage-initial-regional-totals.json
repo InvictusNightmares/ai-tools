@@ -1,0 +1,43 @@
+{
+  "scope": "regional PostgreSQL versus GPU durable ledger; not upstream billing reconciliation",
+  "regions": [
+    {
+      "region": "tokyo",
+      "passed": true,
+      "remote": {
+        "events": 559,
+        "daily_events": 559,
+        "security_events": 0,
+        "unmapped_buckets": 0,
+        "keys": 141,
+        "inputs": 12570249,
+        "outputs": 84164
+      },
+      "local": {
+        "events": 559,
+        "inputs": 12570249,
+        "outputs": 84164,
+        "pending": 0
+      }
+    },
+    {
+      "region": "us",
+      "passed": true,
+      "remote": {
+        "events": 172,
+        "daily_events": 172,
+        "security_events": 0,
+        "unmapped_buckets": 0,
+        "keys": 87,
+        "inputs": 1566672,
+        "outputs": 19341
+      },
+      "local": {
+        "events": 172,
+        "inputs": 1566672,
+        "outputs": 19341,
+        "pending": 0
+      }
+    }
+  ]
+}

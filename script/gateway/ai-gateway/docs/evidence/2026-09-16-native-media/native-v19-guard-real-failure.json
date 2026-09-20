@@ -1,0 +1,108 @@
+{
+  "guard_sha256": "9cb767ff8e26016ae7f7a2910abd5a5d595877dfe66fca59fe6327fb57e79aed",
+  "rule_version": "preflight-r14",
+  "results": [
+    {
+      "case": "nested-tool-elvis-reference",
+      "status": 200,
+      "decision": "allow",
+      "reason_codes": null,
+      "expected": "allow",
+      "unchanged_payload": true,
+      "passed": true
+    },
+    {
+      "case": "kotlin-elvis-reference",
+      "status": 200,
+      "decision": "allow",
+      "reason_codes": null,
+      "expected": "allow",
+      "unchanged_payload": true,
+      "passed": true
+    },
+    {
+      "case": "literal-credential",
+      "status": 200,
+      "decision": "block",
+      "reason_codes": [
+        "secret_input_not_allowed"
+      ],
+      "expected": "block",
+      "unchanged_payload": false,
+      "passed": true
+    },
+    {
+      "case": "native-audit-1af58428b10f14b4ac19026a11ffc1a1",
+      "repeat": 0,
+      "decision": "allow",
+      "unchanged_payload": true,
+      "passed": true
+    },
+    {
+      "case": "native-audit-1af58428b10f14b4ac19026a11ffc1a1",
+      "repeat": 1,
+      "decision": "allow",
+      "unchanged_payload": true,
+      "passed": true
+    },
+    {
+      "case": "native-audit-1af58428b10f14b4ac19026a11ffc1a1",
+      "repeat": 2,
+      "decision": "allow",
+      "unchanged_payload": true,
+      "passed": true
+    },
+    {
+      "case": "native-audit-b6a5af4becc5014ec19117b2d7849ba3",
+      "repeat": 0,
+      "decision": "allow",
+      "unchanged_payload": true,
+      "passed": true
+    },
+    {
+      "case": "native-audit-b6a5af4becc5014ec19117b2d7849ba3",
+      "repeat": 1,
+      "decision": "allow",
+      "unchanged_payload": true,
+      "passed": true
+    },
+    {
+      "case": "native-audit-b6a5af4becc5014ec19117b2d7849ba3",
+      "repeat": 2,
+      "decision": "allow",
+      "unchanged_payload": true,
+      "passed": true
+    },
+    {
+      "case": "native-audit-669c6604e8e6576a491f1f507b6d3a43",
+      "repeat": 0,
+      "decision": "allow",
+      "unchanged_payload": true,
+      "passed": true
+    },
+    {
+      "case": "native-audit-669c6604e8e6576a491f1f507b6d3a43",
+      "repeat": 1,
+      "decision": "allow",
+      "unchanged_payload": true,
+      "passed": true
+    },
+    {
+      "case": "native-audit-669c6604e8e6576a491f1f507b6d3a43",
+      "repeat": 2,
+      "decision": "allow",
+      "unchanged_payload": true,
+      "passed": true
+    },
+    {
+      "case": "native-review-original-synthetic-request",
+      "decision": "block",
+      "reason_codes": [
+        "cyber_context_review"
+      ],
+      "unchanged_payload": false,
+      "passed": false
+    }
+  ],
+  "passed": false
+}

@@ -1,0 +1,12 @@
+{
+  "release_id": "candidate-20260917-r19-native-v29",
+  "region": "tokyo",
+  "backup": "/data/ai-gateway/acceptance-tokyo/backups/release-20260917-140219-091056",
+  "changed_services": [
+    "guard"
+  ],
+  "status": "updated",
+  "secret_preserved": true,
+  "state_preserved": true,
+  "protected_services_unchanged": true
+}

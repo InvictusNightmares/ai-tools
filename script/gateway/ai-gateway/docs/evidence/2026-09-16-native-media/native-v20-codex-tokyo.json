@@ -1,0 +1,17 @@
+{
+  "region": "tokyo",
+  "client": "Codex 0.154.0 app-server",
+  "scope": "native Codex real regional gateway",
+  "checks": {
+    "initial_marker": true,
+    "multiple_native_tools": true,
+    "native_subagent": true,
+    "native_fork": true,
+    "native_cancel": true,
+    "resume_after_cancel": true
+  },
+  "collaboration_item_types": [
+    "collabAgentToolCall"
+  ],
+  "passed": true
+}

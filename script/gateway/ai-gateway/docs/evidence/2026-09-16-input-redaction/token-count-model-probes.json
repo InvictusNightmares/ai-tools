@@ -1,0 +1,37 @@
+[
+  {
+    "model": "deepseek-flash",
+    "status": 404,
+    "input_tokens": null,
+    "error_type": "upstream_error",
+    "generic_upstream_error": true
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "status": 200,
+    "input_tokens": 9,
+    "error_type": null,
+    "generic_upstream_error": false
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "status": 200,
+    "input_tokens": 9,
+    "error_type": null,
+    "generic_upstream_error": false
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "status": 200,
+    "input_tokens": 9,
+    "error_type": null,
+    "generic_upstream_error": false
+  },
+  {
+    "model": "gpt-6-astra",
+    "status": 200,
+    "input_tokens": 9,
+    "error_type": null,
+    "generic_upstream_error": false
+  }
+]

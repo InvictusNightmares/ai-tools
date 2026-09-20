@@ -1,0 +1,35 @@
+{
+  "region": "fixture",
+  "client": "Codex 0.154.0 app-server",
+  "scope": "native client through actual v14 gateway with synthetic local identity Guard classifier and business models",
+  "checks": {
+    "initial_marker": true,
+    "multiple_native_tools": true,
+    "native_subagent": true,
+    "native_fork": true,
+    "native_cancel": true,
+    "resume_after_cancel": true
+  },
+  "collaboration_item_types": [
+    "collabAgentToolCall"
+  ],
+  "passed": true,
+  "gateway_binary_sha256": "bf97a6077ac101a6beefa22741b6ecd85214270411d5f55f339d76ca92f3f660",
+  "gateway_source_sha256": "4f2845d750f36cf654222d20ec2871b97e42e7b8f3a21acb40af286b7681880a",
+  "audit_stages": {
+    "route_decided": 9,
+    "upstream_started": 9,
+    "upstream_completed": 8,
+    "request_canceled": 1
+  },
+  "cancellation_audit": [
+    {
+      "stage": "request_canceled",
+      "error_type": "upstream_read:context_canceled",
+      "stream_termination": "upstream_read:context_canceled",
+      "response_complete": false,
+      "http_status": 200
+    }
+  ],
+  "completed_response_upstream_failures": 0
+}

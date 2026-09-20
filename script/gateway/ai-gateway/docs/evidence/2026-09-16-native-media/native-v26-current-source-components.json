@@ -1,0 +1,9 @@
+{
+  "scope": "current local Go component inputs versus deployed immutable release; docs and local model profile driver differ separately",
+  "release_id": "candidate-20260917-r17-native-v26",
+  "component_source_sha256": {
+    "auto-server": "29ae6b2d0147930168c5a8ba7e29dca69cc00f231a9e0ed08276b71820880d2d",
+    "preflight-api": "bd20e485017366dec7c70ac747d1ba123e2c8c8024e7a513a323eb7e12137345"
+  },
+  "matches_deployed_components": true
+}

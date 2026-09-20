@@ -1,0 +1,57 @@
+[
+  {
+    "client": "opencode",
+    "region": "us",
+    "run_id": "opencode-us-191111",
+    "exit_code": 0,
+    "seconds": 10.34,
+    "log_dir": "/private/tmp/gateway-native-clients/opencode-us-191111",
+    "all_three_colors_correct": true,
+    "gateway_version": "native media r10",
+    "attachment_mode": "native"
+  },
+  {
+    "client": "codex",
+    "region": "us",
+    "run_id": "codex-us-191111",
+    "exit_code": 0,
+    "seconds": 12.37,
+    "log_dir": "/private/tmp/gateway-native-clients/codex-us-191111",
+    "all_three_colors_correct": true,
+    "gateway_version": "native media r10",
+    "attachment_mode": "native"
+  },
+  {
+    "client": "claude",
+    "region": "us",
+    "run_id": "claude-us-191111",
+    "exit_code": 0,
+    "seconds": 9.74,
+    "log_dir": "/private/tmp/gateway-native-clients/claude-us-191111",
+    "all_three_colors_correct": true,
+    "gateway_version": "native media r10",
+    "attachment_mode": "native"
+  },
+  {
+    "client": "hermes",
+    "region": "us",
+    "run_id": "hermes-us-191121",
+    "exit_code": 0,
+    "seconds": 9.09,
+    "log_dir": "/private/tmp/gateway-native-clients/hermes-us-191121",
+    "all_three_colors_correct": true,
+    "gateway_version": "native media r10",
+    "attachment_mode": "native"
+  },
+  {
+    "client": "hermes-chat",
+    "region": "us",
+    "run_id": "hermes-chat-us-191122",
+    "exit_code": 0,
+    "seconds": 15.82,
+    "log_dir": "/private/tmp/gateway-native-clients/hermes-chat-us-191122",
+    "all_three_colors_correct": true,
+    "gateway_version": "native media r10",
+    "attachment_mode": "native"
+  }
+]

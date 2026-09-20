@@ -1,0 +1,46 @@
+[
+  {
+    "schema": "gateway-release-v1",
+    "release_id": "candidate-20260916-r11-native-v4",
+    "created_at": "2026-09-16T11:53:38.702699+00:00",
+    "platform": "linux/amd64",
+    "toolchain_image": "golang:1.27.1-bookworm",
+    "git_commit": null,
+    "dirty": true,
+    "candidate_only": true,
+    "source_sha256": "de7d593f4ba5ad8a1def345e490fc5793a5eed3c2e937efee24b75f8b3c8b9ed",
+    "config_schema": "gateway-config-v1",
+    "state_schema": "session-json-v1",
+    "compatible_state_schemas": [
+      "session-json-v1"
+    ],
+    "guard_contract": "credential-redaction-v1",
+    "guard_rule_version": "preflight-r11",
+    "guard_model_version": "qwen3guard-gen-8b",
+    "classifier_policy": "semantic-v7-native-media",
+    "business_revision": "guard-r11-semantic-v7-native-v4",
+    "binaries": {
+      "auto-server": "4d80f074a29700207970a9c0d006473e9746bff32af82bba269b1aac1335965e",
+      "preflight-api": "0f8ee09fb99651755dbe32353ea64286133d710387f252bcb5b13839e7d19561"
+    },
+    "tests_including_subtests": 452
+  },
+  {
+    "release_id": "candidate-20260916-r11-native-v4",
+    "region": "tokyo",
+    "backup": "/data/ai-gateway/acceptance-tokyo/backups/release-20260916-195446-071359",
+    "status": "updated",
+    "secret_preserved": true,
+    "state_preserved": true,
+    "protected_services_unchanged": true
+  },
+  {
+    "release_id": "candidate-20260916-r11-native-v4",
+    "region": "us",
+    "backup": "/data/ai-gateway/acceptance-us/backups/release-20260916-200016-458058",
+    "status": "updated",
+    "secret_preserved": true,
+    "state_preserved": true,
+    "protected_services_unchanged": true
+  }
+]

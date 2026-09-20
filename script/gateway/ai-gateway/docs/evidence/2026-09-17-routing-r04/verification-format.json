@@ -1,0 +1,22 @@
+[
+  {
+    "region": "tokyo",
+    "case": "verbosity",
+    "phase": "verification",
+    "status": 200,
+    "model": "deepseek-flash",
+    "request_id": "ade5f1317ec1de392f0a17ec72cd9e02",
+    "content_ok": true,
+    "seconds": 7.08
+  },
+  {
+    "region": "us",
+    "case": "verbosity",
+    "phase": "verification",
+    "status": 200,
+    "model": "deepseek-flash",
+    "request_id": "89213410bc11770eabe067d03253424b",
+    "content_ok": true,
+    "seconds": 6.29
+  }
+]

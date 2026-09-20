@@ -1,0 +1,27 @@
+{
+  "scope": "Linux offline regression with real local filesystem and typed stream transport errors",
+  "prior_revision": "candidate-20260916-r11-native-v10.1",
+  "candidate_binary": "candidate-20260916-r11-native-v11",
+  "old_file_tests_failed": true,
+  "old_client_delivery_circuit_test_failed": true,
+  "fixed_full_suite_passed": true,
+  "go_race_including_subtests": 494,
+  "files_scenarios": [
+    "lock_unavailable",
+    "metadata_corrupt",
+    "content_corrupt",
+    "quota_preserved",
+    "no_upstream_on_storage_failure"
+  ],
+  "stream_scenarios": [
+    "client_write_does_not_open_provider_circuit",
+    "upstream_read_still_opens_circuit",
+    "client_delivery_audit_separate",
+    "normal_complete_cancellation_still_success",
+    "unknown_tail_error_still_failure"
+  ],
+  "guard_only_rollback_old_test_failed": true,
+  "guard_only_rollback_fixed_python_suite": 35,
+  "live_model_verified": false,
+  "deployed": false
+}

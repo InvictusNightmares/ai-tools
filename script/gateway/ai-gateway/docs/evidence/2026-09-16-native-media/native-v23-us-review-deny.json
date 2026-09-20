@@ -1,0 +1,30 @@
+{
+  "region": "us",
+  "mode": "deny",
+  "scope": "native Codex approval with deterministic local business proposal; review through real regional gateway",
+  "checks": {
+    "native_review_decision": true,
+    "file_effect_matches_review": true,
+    "native_turn_completed": true,
+    "native_reviewer_request_seen": true,
+    "actual_reviewer_response_200": true,
+    "model_decision_fields_present": true
+  },
+  "reviews": [
+    {
+      "status": "denied",
+      "decision_source": "agent"
+    }
+  ],
+  "passed": true,
+  "typed_native_review": [
+    {
+      "status": "denied",
+      "risk_level": "low",
+      "user_authorization": "unknown",
+      "decision_source": "agent",
+      "rationale_sha256": "9c3b467b767f92198a04c954bfbf3b54cacc6266dd76ebffc459ab5197b0386c",
+      "rationale_error_present": false
+    }
+  ]
+}

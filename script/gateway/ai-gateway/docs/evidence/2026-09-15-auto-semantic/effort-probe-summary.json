@@ -1,0 +1,324 @@
+{
+  "scope": "regional_provider_parameter_acceptance_not_guard_auto_business_acceptance",
+  "generated_at": "2026-09-15T19:22:59.514641+08:00",
+  "text_models": [
+    {
+      "model": "deepseek-flash",
+      "requests": 36,
+      "http_200": 36,
+      "complete": 36,
+      "protocols": [
+        "chat",
+        "responses",
+        "anthropic"
+      ],
+      "languages": [
+        "zh",
+        "en",
+        "mixed"
+      ],
+      "sent_native_efforts": [
+        "high",
+        "low",
+        "max",
+        "none"
+      ],
+      "response_effort_mismatches": [
+        {
+          "request_id": "effort-1789469936433936000-zh",
+          "protocol": "responses",
+          "language": "zh",
+          "applied_effort": "max",
+          "response_reported_effort": "high"
+        },
+        {
+          "request_id": "effort-1789469936968223000-en",
+          "protocol": "responses",
+          "language": "en",
+          "applied_effort": "max",
+          "response_reported_effort": "high"
+        },
+        {
+          "request_id": "effort-1789469937573322000-mixed",
+          "protocol": "responses",
+          "language": "mixed",
+          "applied_effort": "max",
+          "response_reported_effort": "high"
+        }
+      ]
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "requests": 54,
+      "http_200": 54,
+      "complete": 54,
+      "protocols": [
+        "chat",
+        "responses",
+        "anthropic"
+      ],
+      "languages": [
+        "zh",
+        "en",
+        "mixed"
+      ],
+      "sent_native_efforts": [
+        "high",
+        "low",
+        "max",
+        "medium",
+        "none",
+        "xhigh"
+      ],
+      "response_effort_mismatches": [
+        {
+          "request_id": "effort-1789469960134139000-zh",
+          "protocol": "responses",
+          "language": "zh",
+          "applied_effort": "xhigh",
+          "response_reported_effort": "high"
+        },
+        {
+          "request_id": "effort-1789469961107414000-en",
+          "protocol": "responses",
+          "language": "en",
+          "applied_effort": "xhigh",
+          "response_reported_effort": "high"
+        },
+        {
+          "request_id": "effort-1789469962719573000-en",
+          "protocol": "responses",
+          "language": "en",
+          "applied_effort": "max",
+          "response_reported_effort": "high"
+        },
+        {
+          "request_id": "effort-1789469961986311000-zh",
+          "protocol": "responses",
+          "language": "zh",
+          "applied_effort": "max",
+          "response_reported_effort": "high"
+        },
+        {
+          "request_id": "effort-1789469964528544000-mixed",
+          "protocol": "responses",
+          "language": "mixed",
+          "applied_effort": "max",
+          "response_reported_effort": "high"
+        },
+        {
+          "request_id": "effort-1789469961290554000-mixed",
+          "protocol": "responses",
+          "language": "mixed",
+          "applied_effort": "xhigh",
+          "response_reported_effort": "high"
+        }
+      ]
+    },
+    {
+      "model": "gpt-5.6-terra",
+      "requests": 54,
+      "http_200": 54,
+      "complete": 54,
+      "protocols": [
+        "chat",
+        "responses",
+        "anthropic"
+      ],
+      "languages": [
+        "zh",
+        "en",
+        "mixed"
+      ],
+      "sent_native_efforts": [
+        "high",
+        "low",
+        "max",
+        "medium",
+        "none",
+        "xhigh"
+      ],
+      "response_effort_mismatches": [
+        {
+          "request_id": "effort-1789469986435427000-zh",
+          "protocol": "responses",
+          "language": "zh",
+          "applied_effort": "xhigh",
+          "response_reported_effort": "high"
+        },
+        {
+          "request_id": "effort-1789469986584422000-en",
+          "protocol": "responses",
+          "language": "en",
+          "applied_effort": "xhigh",
+          "response_reported_effort": "high"
+        },
+        {
+          "request_id": "effort-1789469987418901000-mixed",
+          "protocol": "responses",
+          "language": "mixed",
+          "applied_effort": "xhigh",
+          "response_reported_effort": "high"
+        },
+        {
+          "request_id": "effort-1789469988471652000-en",
+          "protocol": "responses",
+          "language": "en",
+          "applied_effort": "max",
+          "response_reported_effort": "high"
+        },
+        {
+          "request_id": "effort-1789469988382658000-zh",
+          "protocol": "responses",
+          "language": "zh",
+          "applied_effort": "max",
+          "response_reported_effort": "high"
+        },
+        {
+          "request_id": "effort-1789469989247258000-mixed",
+          "protocol": "responses",
+          "language": "mixed",
+          "applied_effort": "max",
+          "response_reported_effort": "high"
+        }
+      ]
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "requests": 54,
+      "http_200": 54,
+      "complete": 54,
+      "protocols": [
+        "chat",
+        "responses",
+        "anthropic"
+      ],
+      "languages": [
+        "zh",
+        "en",
+        "mixed"
+      ],
+      "sent_native_efforts": [
+        "high",
+        "low",
+        "max",
+        "medium",
+        "none",
+        "xhigh"
+      ],
+      "response_effort_mismatches": [
+        {
+          "request_id": "effort-1789470012443473000-zh",
+          "protocol": "responses",
+          "language": "zh",
+          "applied_effort": "xhigh",
+          "response_reported_effort": "high"
+        },
+        {
+          "request_id": "effort-1789470013169991000-en",
+          "protocol": "responses",
+          "language": "en",
+          "applied_effort": "xhigh",
+          "response_reported_effort": "high"
+        },
+        {
+          "request_id": "effort-1789470013451014000-mixed",
+          "protocol": "responses",
+          "language": "mixed",
+          "applied_effort": "xhigh",
+          "response_reported_effort": "high"
+        },
+        {
+          "request_id": "effort-1789470014518866000-zh",
+          "protocol": "responses",
+          "language": "zh",
+          "applied_effort": "max",
+          "response_reported_effort": "high"
+        },
+        {
+          "request_id": "effort-1789470015866550000-mixed",
+          "protocol": "responses",
+          "language": "mixed",
+          "applied_effort": "max",
+          "response_reported_effort": "high"
+        },
+        {
+          "request_id": "effort-1789470015786684000-en",
+          "protocol": "responses",
+          "language": "en",
+          "applied_effort": "max",
+          "response_reported_effort": "high"
+        }
+      ]
+    },
+    {
+      "model": "gpt-6-astra",
+      "requests": 45,
+      "http_200": 45,
+      "complete": 45,
+      "protocols": [
+        "chat",
+        "responses",
+        "anthropic"
+      ],
+      "languages": [
+        "zh",
+        "en",
+        "mixed"
+      ],
+      "sent_native_efforts": [
+        "high",
+        "low",
+        "max",
+        "medium",
+        "xhigh"
+      ],
+      "response_effort_mismatches": [
+        {
+          "request_id": "effort-1789470049627665000-en",
+          "protocol": "responses",
+          "language": "en",
+          "applied_effort": "xhigh",
+          "response_reported_effort": "high"
+        },
+        {
+          "request_id": "effort-1789470048347466000-zh",
+          "protocol": "responses",
+          "language": "zh",
+          "applied_effort": "xhigh",
+          "response_reported_effort": "high"
+        },
+        {
+          "request_id": "effort-1789470052987418000-en",
+          "protocol": "responses",
+          "language": "en",
+          "applied_effort": "max",
+          "response_reported_effort": "high"
+        },
+        {
+          "request_id": "effort-1789470050179347000-mixed",
+          "protocol": "responses",
+          "language": "mixed",
+          "applied_effort": "xhigh",
+          "response_reported_effort": "high"
+        },
+        {
+          "request_id": "effort-1789470052636959000-zh",
+          "protocol": "responses",
+          "language": "zh",
+          "applied_effort": "max",
+          "response_reported_effort": "high"
+        },
+        {
+          "request_id": "effort-1789470056012934000-mixed",
+          "protocol": "responses",
+          "language": "mixed",
+          "applied_effort": "max",
+          "response_reported_effort": "high"
+        }
+      ]
+    }
+  ],
+  "group_policy_evidence": "tokyo-test-effort-policy.json",
+  "claude_alias_count_probe": "claude-alias-count-probe.json"
+}

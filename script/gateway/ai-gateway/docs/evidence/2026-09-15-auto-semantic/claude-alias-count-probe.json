@@ -1,0 +1,122 @@
+[
+  {
+    "scope": "direct_provider_compatibility_not_guard_auto",
+    "request_id": "claude-compat-1789471096602705000",
+    "model": "claude-opus-5",
+    "path": "/v1/messages",
+    "http_status": 200,
+    "response_sha256": "33b7d6bbe81c42c8d25145c039564b67a189518c63b152e5f4a030f27b933775",
+    "upstream_request_id": "claude-compat-1789471096602705000",
+    "latency_ms": 1956,
+    "type": "message",
+    "id": "resp_0db6d718aff405f7016aa929798dcc87d0ab15facd6bc49f6e",
+    "stop_reason": "end_turn",
+    "usage": {
+      "input_tokens": 124,
+      "output_tokens": 5,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0
+    }
+  },
+  {
+    "scope": "direct_provider_compatibility_not_guard_auto",
+    "request_id": "claude-compat-1789471098559305000",
+    "model": "claude-opus-5",
+    "path": "/v1/messages/count_tokens",
+    "http_status": 200,
+    "response_sha256": "2760292747b197c18780f9d3beba4422e9ea852175d0a93c8b05ab2f090ec209",
+    "upstream_request_id": "claude-compat-1789471098559305000",
+    "latency_ms": 1099,
+    "input_tokens": 16
+  },
+  {
+    "scope": "direct_provider_compatibility_not_guard_auto",
+    "request_id": "claude-compat-1789471099658389000",
+    "model": "claude-sonnet-5",
+    "path": "/v1/messages",
+    "http_status": 200,
+    "response_sha256": "c01c6ea00ebcdd6f744d80007f75cb2b03f36743a6f386de5aeadb161ece9117",
+    "upstream_request_id": "claude-compat-1789471099658389000",
+    "latency_ms": 3486,
+    "type": "message",
+    "id": "resp_0f47cbe080648a52016aa9297cb2e087d0b7735203ad746517",
+    "stop_reason": "end_turn",
+    "usage": {
+      "input_tokens": 124,
+      "output_tokens": 5,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0
+    }
+  },
+  {
+    "scope": "direct_provider_compatibility_not_guard_auto",
+    "request_id": "claude-compat-1789471103144784000",
+    "model": "claude-sonnet-5",
+    "path": "/v1/messages/count_tokens",
+    "http_status": 200,
+    "response_sha256": "2760292747b197c18780f9d3beba4422e9ea852175d0a93c8b05ab2f090ec209",
+    "upstream_request_id": "claude-compat-1789471103144784000",
+    "latency_ms": 401,
+    "input_tokens": 16
+  },
+  {
+    "scope": "direct_provider_compatibility_not_guard_auto",
+    "request_id": "claude-compat-1789471103545877000",
+    "model": "claude-haiku-4-5-20251001",
+    "path": "/v1/messages",
+    "http_status": 200,
+    "response_sha256": "c7dede9204e55304589b0a45be4561b4094bd77796a1d8121e6f2c130e79714e",
+    "upstream_request_id": "claude-compat-1789471103545877000",
+    "latency_ms": 1427,
+    "type": "message",
+    "id": "resp_03ccc3325eb04445016aa929805e7087d09305022bd45634af",
+    "stop_reason": "end_turn",
+    "usage": {
+      "input_tokens": 124,
+      "output_tokens": 5,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0
+    }
+  },
+  {
+    "scope": "direct_provider_compatibility_not_guard_auto",
+    "request_id": "claude-compat-1789471104973394000",
+    "model": "claude-haiku-4-5-20251001",
+    "path": "/v1/messages/count_tokens",
+    "http_status": 200,
+    "response_sha256": "2760292747b197c18780f9d3beba4422e9ea852175d0a93c8b05ab2f090ec209",
+    "upstream_request_id": "claude-compat-1789471104973394000",
+    "latency_ms": 468,
+    "input_tokens": 16
+  },
+  {
+    "scope": "direct_provider_compatibility_not_guard_auto",
+    "request_id": "claude-compat-1789471105441076000",
+    "model": "claude-haiku-4",
+    "path": "/v1/messages",
+    "http_status": 200,
+    "response_sha256": "4b82aa484dcf62d95dd708c8d492f956ed52fa603130e2def027509ddbc978f4",
+    "upstream_request_id": "claude-compat-1789471105441076000",
+    "latency_ms": 1431,
+    "type": "message",
+    "id": "resp_09b4155dd5961122016aa92982505c87d084a345eb5ff29bb7",
+    "stop_reason": "end_turn",
+    "usage": {
+      "input_tokens": 124,
+      "output_tokens": 5,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0
+    }
+  },
+  {
+    "scope": "direct_provider_compatibility_not_guard_auto",
+    "request_id": "claude-compat-1789471106872442000",
+    "model": "claude-haiku-4",
+    "path": "/v1/messages/count_tokens",
+    "http_status": 200,
+    "response_sha256": "2760292747b197c18780f9d3beba4422e9ea852175d0a93c8b05ab2f090ec209",
+    "upstream_request_id": "claude-compat-1789471106872442000",
+    "latency_ms": 425,
+    "input_tokens": 16
+  }
+]

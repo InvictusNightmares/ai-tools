@@ -1,0 +1,144 @@
+{
+  "scope": "read-only exact client request ID and numeric Key reconciliation; unknown gateway usage stays unknown; confirmed cancellation prefixes are not final totals",
+  "source_path": "/tmp/gateway-v26-profile-final-reconciliation-20260917.json",
+  "source_sha256": "bb3cdeca77829c624b3a197ccffd81099671d14c07dea384d4225b0145d32a93",
+  "total_attempts": 165,
+  "total_exact_matches": 165,
+  "results": [
+    {
+      "label": "live-tokyo",
+      "region": "tokyo",
+      "since": "2026-09-17T01:47:00+00:00",
+      "events": 15,
+      "attempts": 15,
+      "purpose_counts": {
+        "classification": 9,
+        "business": 6
+      },
+      "response_cache_hits": 0,
+      "classification_cache_hits": 0,
+      "exact_matches": 15,
+      "token_mismatches": 0,
+      "confirmed_partial_usage_with_final_bill": 0,
+      "known_success_missing": 0,
+      "gateway_unknown_with_provider_bill": 0,
+      "duplicate_attempt_ids": [],
+      "known_usage_reconciled": true
+    },
+    {
+      "label": "live-us",
+      "region": "us",
+      "since": "2026-09-17T01:47:00+00:00",
+      "events": 16,
+      "attempts": 16,
+      "purpose_counts": {
+        "classification": 10,
+        "business": 6
+      },
+      "response_cache_hits": 0,
+      "classification_cache_hits": 0,
+      "exact_matches": 16,
+      "token_mismatches": 0,
+      "confirmed_partial_usage_with_final_bill": 0,
+      "known_success_missing": 0,
+      "gateway_unknown_with_provider_bill": 0,
+      "duplicate_attempt_ids": [],
+      "known_usage_reconciled": true
+    },
+    {
+      "label": "profile-deepseek-flash",
+      "region": "tokyo",
+      "since": "2026-09-17T01:47:00+00:00",
+      "events": 27,
+      "attempts": 27,
+      "purpose_counts": {
+        "business": 27
+      },
+      "response_cache_hits": 0,
+      "classification_cache_hits": 0,
+      "exact_matches": 27,
+      "token_mismatches": 0,
+      "confirmed_partial_usage_with_final_bill": 0,
+      "known_success_missing": 0,
+      "gateway_unknown_with_provider_bill": 0,
+      "duplicate_attempt_ids": [],
+      "known_usage_reconciled": true
+    },
+    {
+      "label": "profile-gpt-5.6-luna",
+      "region": "tokyo",
+      "since": "2026-09-17T01:47:00+00:00",
+      "events": 26,
+      "attempts": 26,
+      "purpose_counts": {
+        "business": 26
+      },
+      "response_cache_hits": 0,
+      "classification_cache_hits": 0,
+      "exact_matches": 26,
+      "token_mismatches": 0,
+      "confirmed_partial_usage_with_final_bill": 0,
+      "known_success_missing": 0,
+      "gateway_unknown_with_provider_bill": 0,
+      "duplicate_attempt_ids": [],
+      "known_usage_reconciled": true
+    },
+    {
+      "label": "profile-gpt-5.6-terra",
+      "region": "tokyo",
+      "since": "2026-09-17T01:47:00+00:00",
+      "events": 26,
+      "attempts": 26,
+      "purpose_counts": {
+        "business": 26
+      },
+      "response_cache_hits": 0,
+      "classification_cache_hits": 0,
+      "exact_matches": 26,
+      "token_mismatches": 0,
+      "confirmed_partial_usage_with_final_bill": 0,
+      "known_success_missing": 0,
+      "gateway_unknown_with_provider_bill": 0,
+      "duplicate_attempt_ids": [],
+      "known_usage_reconciled": true
+    },
+    {
+      "label": "profile-gpt-5.6-sol",
+      "region": "tokyo",
+      "since": "2026-09-17T01:47:00+00:00",
+      "events": 29,
+      "attempts": 29,
+      "purpose_counts": {
+        "business": 29
+      },
+      "response_cache_hits": 0,
+      "classification_cache_hits": 0,
+      "exact_matches": 29,
+      "token_mismatches": 0,
+      "confirmed_partial_usage_with_final_bill": 0,
+      "known_success_missing": 0,
+      "gateway_unknown_with_provider_bill": 0,
+      "duplicate_attempt_ids": [],
+      "known_usage_reconciled": true
+    },
+    {
+      "label": "profile-gpt-6-astra",
+      "region": "tokyo",
+      "since": "2026-09-17T01:47:00+00:00",
+      "events": 26,
+      "attempts": 26,
+      "purpose_counts": {
+        "business": 26
+      },
+      "response_cache_hits": 0,
+      "classification_cache_hits": 0,
+      "exact_matches": 26,
+      "token_mismatches": 0,
+      "confirmed_partial_usage_with_final_bill": 0,
+      "known_success_missing": 0,
+      "gateway_unknown_with_provider_bill": 0,
+      "duplicate_attempt_ids": [],
+      "known_usage_reconciled": true
+    }
+  ]
+}

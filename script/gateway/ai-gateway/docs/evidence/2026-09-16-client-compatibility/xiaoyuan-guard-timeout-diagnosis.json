@@ -1,0 +1,29 @@
+{
+  "request_id": "9e089070cd00af2d9ea611d3496effd4",
+  "ingress_status": 503,
+  "ingress_elapsed_s": 3.103,
+  "guard_reason": "classifier_error",
+  "guard_request_budget_seconds": 3,
+  "sanitized_input_chars": 131942,
+  "qwen_chunk_chars": [
+    20000,
+    20000,
+    20000,
+    20000,
+    20000,
+    20000,
+    11942
+  ],
+  "isolated_warm_replay_chunk_ms": [
+    113,
+    106,
+    99,
+    98,
+    98,
+    272,
+    205
+  ],
+  "isolated_warm_replay_total_ms": 992,
+  "all_chunks_safe": true,
+  "limitation": "Warm isolated replay does not measure cold-prefix or concurrent throughput; supports deadline diagnosis with ingress timing."
+}

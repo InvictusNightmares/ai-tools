@@ -1,0 +1,461 @@
+{
+  "scope": "fixed candidate coding capability profile; source review plus executed build/JVM, not device UI or natural Auto routing",
+  "source_commit": "6532369b3d55c31728484e628443ba9196d85c6b",
+  "initial_file_count": 149,
+  "identical_initial_sha256": "359c8c9f71e4bbb4f91558eb8c2eea8315ee4ea347fd67059fad96dee1198a3a",
+  "frozen_rubric_sha256": "815b5f3f1cc5b6c9a19ced7435808766f12de9f164771b955552f0c07bb5c855",
+  "per_candidate_budget": {
+    "model_turns": 24,
+    "active_seconds": 1800
+  },
+  "parent_modified_candidate_artifacts": false,
+  "models_received_additional_repair_hints": false,
+  "raw_prompts_responses_or_source_archived": false,
+  "not_executed": [
+    "Android device/AVD WebView",
+    "actual car VIN callback",
+    "device startup visuals"
+  ],
+  "results": [
+    {
+      "candidate": "deepseek-flash",
+      "model_finished": false,
+      "failure": "turn_limit",
+      "active_seconds": 211.475,
+      "successful_turns": 24,
+      "build_checks": [
+        {
+          "argv": [
+            "./gradlew",
+            "--offline",
+            ":app:assembleFatDebug",
+            ":app:testFatDebugUnitTest",
+            "--console=plain"
+          ],
+          "exit_code": 0,
+          "seconds": 2.999,
+          "log_sha256": "fbc80c65c969724f75a02b8b1f6861d3f83f47f65828731644a64e23787d4acb"
+        }
+      ],
+      "existing_jvm_tests": {
+        "passed": 21,
+        "total": 21
+      },
+      "changed_files": [],
+      "task_completed": false,
+      "reason": "24-turn budget exhausted without edits. Baseline 21 JVM tests and APK build pass; these do not exercise the missing fix.",
+      "requirements": [
+        {
+          "requirement": "Android 12 bundled asset URLs use valid asset handling instead of HTTP URL connection",
+          "status": "fail",
+          "evidence": "WebViewManager shouldInterceptRequest still treats /android_asset/index.html as File; no assets.open path handling added."
+        },
+        {
+          "requirement": "bundled path and MIME remain correct",
+          "status": "partial",
+          "evidence": "Existing https asset handler kept, but file:///android_asset path is unresolved by filesystem branch."
+        },
+        {
+          "requirement": "local VIN is trimmed; absent or whitespace VIN cannot enter online business page",
+          "status": "fail",
+          "evidence": "Splash onCarVinNumber rejects blank values but saves nonblank VIN without trim; stale saved VIN may remain when a blank callback arrives."
+        },
+        {
+          "requirement": "nonempty VIN follows online route with proper encoding",
+          "status": "partial",
+          "evidence": "Main getTabUrl selects remote versus local by BuildConfig.DEBUG, not the nonempty VIN requirement; no new route encoding work."
+        },
+        {
+          "requirement": "app update remains in Splash; remote H5 update begins after Main and is asynchronous",
+          "status": "pass_source_review",
+          "evidence": "Existing Splash app update and Main background H5 gate remain."
+        },
+        {
+          "requirement": "optional update cancellation continues startup",
+          "status": "pass_source_review",
+          "evidence": "Existing non-forced update onCancel invokes navigate."
+        },
+        {
+          "requirement": "overlapping native VIN/update callbacks cannot navigate twice",
+          "status": "partial",
+          "evidence": "Main navigation has hasNavigatedToMain, but unauthenticated login branch has no shared one-shot navigation guard."
+        },
+        {
+          "requirement": "weak-network and offline fallback remain",
+          "status": "partial",
+          "evidence": "Local package fallback exists; blank/missing VIN timeout stays at retry dialog."
+        },
+        {
+          "requirement": "debug build and 21 existing JVM tests pass",
+          "status": "pass_executed",
+          "evidence": "Final offline debug APK build succeeded; all 21 original JVM cases passed."
+        }
+      ],
+      "all_requirements_passed": false
+    },
+    {
+      "candidate": "gpt-5.6-luna",
+      "model_finished": false,
+      "failure": "turn_limit",
+      "active_seconds": 625.794,
+      "successful_turns": 24,
+      "build_checks": [
+        {
+          "argv": [
+            "./gradlew",
+            "--offline",
+            ":app:assembleFatDebug",
+            ":app:testFatDebugUnitTest",
+            "--console=plain"
+          ],
+          "exit_code": 0,
+          "seconds": 27.306,
+          "log_sha256": "e70cfbbf72f357fdd50c4292584a0aed7a320c62fbb1dd0e2b8eab55bd3d1ae9"
+        }
+      ],
+      "existing_jvm_tests": {
+        "passed": 21,
+        "total": 21
+      },
+      "changed_files": [
+        {
+          "path": "app/src/main/java/com/qyxdl/onboard/ecube/ui/activity/SplashActivity.kt",
+          "before_sha256": "4982a00d9c6eecf1f5a9f71127f5cbf55816363c9d404cbc52491dc588b91d9f",
+          "after_sha256": "f4d49d1797216ac22a610c9bf51fc52b362e0130e7deab8e740d20aecd3c61d5"
+        },
+        {
+          "path": "app/src/main/java/com/qyxdl/onboard/ecube/ui/activity/web/WebViewManager.kt",
+          "before_sha256": "5a4328ff0db11d72621e75fff4d6e60fcb9046483f4ecd0111889cbc74dcf67c",
+          "after_sha256": "7d269d29005f1763dd7a8f4062d52cafbf11183af7f5071abf0daafd50c79aac"
+        },
+        {
+          "path": "app/src/main/java/com/qyxdl/onboard/ecube/utils/H5ResourceManager.kt",
+          "before_sha256": "7e48a296ad0524edf5953192dc14d0b54ca45261d65f74077a3277296fc2e612",
+          "after_sha256": "65dce71d46e7ef8eafc097678304e36898a36730c7407416e9b193a5dd92e537"
+        }
+      ],
+      "task_completed": false,
+      "reason": "24-turn limit with three modified files; build passes but source review finds incorrect offline H5 path and missing VIN work. No parent repairs.",
+      "requirements": [
+        {
+          "requirement": "Android 12 bundled asset URLs use valid asset handling instead of HTTP URL connection",
+          "status": "fail",
+          "evidence": "HTTPS asset origin replaces file handling, but returned URL includes H5_DIR_NAME while the handler is already rooted at getH5Dir; path resolution repeats the H5 directory. The previous APK /assets/ handler and direct file access were removed."
+        },
+        {
+          "requirement": "bundled path and MIME remain correct",
+          "status": "fail",
+          "evidence": "getH5IndexPath emits https://domain/<H5_DIR_NAME>/index.html; root path handler appends the entire relative path to <files>/<H5_DIR_NAME>, resolving <files>/<H5_DIR_NAME>/<H5_DIR_NAME>/index.html. MIME table exists but the bundled entry path is incorrect."
+        },
+        {
+          "requirement": "local VIN is trimmed; absent or whitespace VIN cannot enter online business page",
+          "status": "fail",
+          "evidence": "onCarVinNumber still does not trim VIN; Main routing unchanged."
+        },
+        {
+          "requirement": "nonempty VIN follows online route with proper encoding",
+          "status": "partial",
+          "evidence": "Main getTabUrl remains keyed to BuildConfig.DEBUG rather than VIN, and online HTML injection branch was removed."
+        },
+        {
+          "requirement": "app update remains in Splash; remote H5 update begins after Main and is asynchronous",
+          "status": "pass_source_review",
+          "evidence": "Existing Splash app update and Main asynchronous H5 gate kept."
+        },
+        {
+          "requirement": "optional update cancellation continues startup",
+          "status": "pass_source_review",
+          "evidence": "Existing optional-update cancel still calls navigate."
+        },
+        {
+          "requirement": "overlapping native VIN/update callbacks cannot navigate twice",
+          "status": "partial",
+          "evidence": "appUpdateCheckStarted and updateDialogShown reduce repeat work, but new hasNavigatedToLogin is unused; unauthenticated navigate branch has no guard."
+        },
+        {
+          "requirement": "weak-network and offline fallback remain",
+          "status": "fail",
+          "evidence": "Incorrect local H5 path and removed APK assets handler break the intended offline fallback; build cannot detect it."
+        },
+        {
+          "requirement": "debug build and 21 existing JVM tests pass",
+          "status": "pass_executed",
+          "evidence": "Final offline assembleFatDebug plus all 21 unchanged JVM cases passed."
+        }
+      ],
+      "all_requirements_passed": false
+    },
+    {
+      "candidate": "gpt-5.6-terra",
+      "model_finished": true,
+      "failure": null,
+      "active_seconds": 483.846,
+      "successful_turns": 22,
+      "build_checks": [
+        {
+          "argv": [
+            "./gradlew",
+            "--offline",
+            ":app:assembleFatDebug",
+            ":app:testFatDebugUnitTest",
+            "--console=plain"
+          ],
+          "exit_code": 0,
+          "seconds": 3.3,
+          "log_sha256": "849a6d2f5eef31d381268a819599102d82b982bdfe8a1b6e6000d74e0dc6fc4a"
+        }
+      ],
+      "existing_jvm_tests": {
+        "passed": 21,
+        "total": 21
+      },
+      "changed_files": [
+        {
+          "path": "app/src/main/java/com/qyxdl/onboard/ecube/ui/activity/SplashActivity.kt",
+          "before_sha256": "4982a00d9c6eecf1f5a9f71127f5cbf55816363c9d404cbc52491dc588b91d9f",
+          "after_sha256": "1c8735b5154295cdcb1cff10fdc91d46456883ee4471145503c7565e951543c8"
+        },
+        {
+          "path": "app/src/main/java/com/qyxdl/onboard/ecube/ui/activity/web/WebViewManager.kt",
+          "before_sha256": "5a4328ff0db11d72621e75fff4d6e60fcb9046483f4ecd0111889cbc74dcf67c",
+          "after_sha256": "ac520eb79751b79064c0046b4bfd31850a9ba3d4ee6b6302d3317ac8292d858d"
+        },
+        {
+          "path": "app/src/main/java/com/qyxdl/onboard/ecube/utils/H5ResourceManager.kt",
+          "before_sha256": "7e48a296ad0524edf5953192dc14d0b54ca45261d65f74077a3277296fc2e612",
+          "after_sha256": "983e922947de1e94f8976e1348462cdadd7a15c8a3134cef63e628aad9ce8eaf"
+        }
+      ],
+      "task_completed": true,
+      "all_requirements_passed": false,
+      "reason": "Model finished within 22 turns with three edited files. Source review still finds incomplete VIN routing; build success is not full behavioral acceptance.",
+      "requirements": [
+        {
+          "requirement": "Android 12 bundled asset URLs use valid asset handling instead of HTTP URL connection",
+          "status": "pass_source_review",
+          "evidence": "Routes installed H5 through internal HTTPS WebViewAssetLoader instead of passing asset URLs to HTTP."
+        },
+        {
+          "requirement": "bundled path and MIME remain correct",
+          "status": "partial",
+          "evidence": "/h5/index.html maps to the installed H5 root with framework MIME handling. The original /assets/ APK handler was removed; no Kotlin caller of that route was found, but bundled web content/device behavior is unverified."
+        },
+        {
+          "requirement": "local VIN is trimmed; absent or whitespace VIN cannot enter online business page",
+          "status": "partial",
+          "evidence": "Incoming nonempty VIN is trimmed and tryNavigateToMain trims persisted VIN. A blank callback returns without clearing previously saved VIN."
+        },
+        {
+          "requirement": "nonempty VIN follows online route with proper encoding",
+          "status": "partial",
+          "evidence": "Main getTabUrl remains keyed to BuildConfig.DEBUG rather than presence of VIN; no route-encoding change."
+        },
+        {
+          "requirement": "app update remains in Splash; remote H5 update begins after Main and is asynchronous",
+          "status": "pass_source_review",
+          "evidence": "Existing Splash app update and Main asynchronous H5 gate retained."
+        },
+        {
+          "requirement": "optional update cancellation continues startup",
+          "status": "pass_source_review",
+          "evidence": "Optional update cancellation retains navigate."
+        },
+        {
+          "requirement": "overlapping native VIN/update callbacks cannot navigate twice",
+          "status": "pass_source_review",
+          "evidence": "One shared hasNavigated guard protects login and Main navigation; VIN callback routes on UI thread. Device callback ordering not executed."
+        },
+        {
+          "requirement": "weak-network and offline fallback remain",
+          "status": "partial",
+          "evidence": "Correct installed local H5 route supports offline content; missing VIN remains retry-dialog behavior and removed asset handler requires device review."
+        },
+        {
+          "requirement": "debug build and 21 existing JVM tests pass",
+          "status": "pass_executed",
+          "evidence": "Debug APK and all 21 original JVM tests pass; tests do not exercise every requested startup behavior."
+        }
+      ]
+    },
+    {
+      "candidate": "gpt-5.6-sol",
+      "model_finished": false,
+      "failure": "turn_limit",
+      "active_seconds": 868.162,
+      "successful_turns": 24,
+      "build_checks": [
+        {
+          "argv": [
+            "./gradlew",
+            "--offline",
+            ":app:assembleFatDebug",
+            ":app:testFatDebugUnitTest",
+            "--console=plain"
+          ],
+          "exit_code": 0,
+          "seconds": 2.176,
+          "log_sha256": "fbc80c65c969724f75a02b8b1f6861d3f83f47f65828731644a64e23787d4acb"
+        }
+      ],
+      "existing_jvm_tests": {
+        "passed": 21,
+        "total": 21
+      },
+      "changed_files": [
+        {
+          "path": "app/src/main/java/com/qyxdl/onboard/ecube/ui/activity/SplashActivity.kt",
+          "before_sha256": "4982a00d9c6eecf1f5a9f71127f5cbf55816363c9d404cbc52491dc588b91d9f",
+          "after_sha256": "c4582373c70cbe852057f68f33814c11b1c9fa3b855b790f729758f5c236b030"
+        },
+        {
+          "path": "app/src/main/java/com/qyxdl/onboard/ecube/ui/activity/web/WebViewManager.kt",
+          "before_sha256": "5a4328ff0db11d72621e75fff4d6e60fcb9046483f4ecd0111889cbc74dcf67c",
+          "after_sha256": "9fdd3204eaa61ae9fcb6096683bebd447d60a6e22b37a40d287417e911b69a06"
+        }
+      ],
+      "task_completed": false,
+      "all_requirements_passed": false,
+      "reason": "24-turn limit with two edited files; Main VIN route requirement still incomplete. No parent repairs.",
+      "requirements": [
+        {
+          "requirement": "Android 12 bundled asset URLs use valid asset handling instead of HTTP URL connection",
+          "status": "pass_source_review",
+          "evidence": "URLUtil.isAssetUrl returns to native WebView handling before File/HTTP; only genuine HTTP(S) uses the network client."
+        },
+        {
+          "requirement": "bundled path and MIME remain correct",
+          "status": "pass_source_review",
+          "evidence": "Existing /assets/ loader preserved; only installed /index.html is intercepted, other files retain native MIME/path behavior."
+        },
+        {
+          "requirement": "local VIN is trimmed; absent or whitespace VIN cannot enter online business page",
+          "status": "pass_source_review",
+          "evidence": "A fresh localVin is trimmed on callback, persisted including empty strings, and checked before Main. Does not rely on stale persisted VIN."
+        },
+        {
+          "requirement": "nonempty VIN follows online route with proper encoding",
+          "status": "partial",
+          "evidence": "Main getTabUrl still switches only on BuildConfig.DEBUG; nonempty VIN does not determine online route, no encoding change."
+        },
+        {
+          "requirement": "app update remains in Splash; remote H5 update begins after Main and is asynchronous",
+          "status": "pass_source_review",
+          "evidence": "Existing Splash app update and Main H5 background gate retained."
+        },
+        {
+          "requirement": "optional update cancellation continues startup",
+          "status": "pass_source_review",
+          "evidence": "Optional update cancellation still invokes navigate."
+        },
+        {
+          "requirement": "overlapping native VIN/update callbacks cannot navigate twice",
+          "status": "pass_source_review",
+          "evidence": "Shared hasNavigated protects both login and Main; Main transition clears waiting and timeout."
+        },
+        {
+          "requirement": "weak-network and offline fallback remain",
+          "status": "partial",
+          "evidence": "Local files and packaged assets fallback preserved. Missing VIN remains timeout/retry dialog; no device/weak-network runtime acceptance."
+        },
+        {
+          "requirement": "debug build and 21 existing JVM tests pass",
+          "status": "pass_executed",
+          "evidence": "Final debug APK build and all 21 baseline JVM tests pass."
+        }
+      ]
+    },
+    {
+      "candidate": "gpt-6-astra",
+      "model_finished": false,
+      "failure": "turn_limit",
+      "active_seconds": 253.733,
+      "successful_turns": 24,
+      "build_checks": [
+        {
+          "argv": [
+            "./gradlew",
+            "--offline",
+            ":app:assembleFatDebug",
+            ":app:testFatDebugUnitTest",
+            "--console=plain"
+          ],
+          "exit_code": 0,
+          "seconds": 1.79,
+          "log_sha256": "6d81caed8927a71bb0060903eee4f6a404e5163a785249ca816cace62e64bcbc"
+        }
+      ],
+      "existing_jvm_tests": {
+        "passed": 21,
+        "total": 21
+      },
+      "changed_files": [
+        {
+          "path": "app/src/main/java/com/qyxdl/onboard/ecube/ui/activity/SplashActivity.kt",
+          "before_sha256": "4982a00d9c6eecf1f5a9f71127f5cbf55816363c9d404cbc52491dc588b91d9f",
+          "after_sha256": "0df91a9e0b4f355f96f904924bb88d8ff7c1777deee0fddd97ab3b9d1a3f3fe5"
+        },
+        {
+          "path": "app/src/main/java/com/qyxdl/onboard/ecube/ui/activity/web/WebViewManager.kt",
+          "before_sha256": "5a4328ff0db11d72621e75fff4d6e60fcb9046483f4ecd0111889cbc74dcf67c",
+          "after_sha256": "3623f4cffa26b6eb23cb36d32b0bae03bcf0e1aafbb2a5b6c7d9bff20f9a2b84"
+        }
+      ],
+      "task_completed": false,
+      "all_requirements_passed": false,
+      "reason": "Original Guard403 at turn18 was repaired in infrastructure; same transcript resumed for remaining six turns without hints or parent edits. Total24-turn limit; VIN routing remains incomplete.",
+      "requirements": [
+        {
+          "requirement": "Android 12 bundled asset URLs use valid asset handling instead of HTTP URL connection",
+          "status": "pass_source_review",
+          "evidence": "file:///android_asset uses AndroidX AssetsPathHandler before filesystem or HTTP branches; HTTP branch restricted to http/https."
+        },
+        {
+          "requirement": "bundled path and MIME remain correct",
+          "status": "pass_source_review",
+          "evidence": "Complete asset-relative path and AndroidX MIME retained; HTML injected separately, installed file index uses parsed URL path."
+        },
+        {
+          "requirement": "local VIN is trimmed; absent or whitespace VIN cannot enter online business page",
+          "status": "partial",
+          "evidence": "Trims stored VIN and directs absent VIN to login. Blank native callbacks are ignored, so an old persisted VIN may survive."
+        },
+        {
+          "requirement": "nonempty VIN follows online route with proper encoding",
+          "status": "partial",
+          "evidence": "Main remains unchanged: route is selected by BuildConfig.DEBUG rather than nonempty VIN, and no URL encoding correction is added."
+        },
+        {
+          "requirement": "app update remains in Splash; remote H5 update begins after Main and is asynchronous",
+          "status": "pass_source_review",
+          "evidence": "Splash still owns app update; remote H5 remains existing Main background gate. Guards late initialization/update callbacks."
+        },
+        {
+          "requirement": "optional update cancellation continues startup",
+          "status": "pass_source_review",
+          "evidence": "Optional update cancellation still calls navigate."
+        },
+        {
+          "requirement": "overlapping native VIN/update callbacks cannot navigate twice",
+          "status": "pass_source_review",
+          "evidence": "Shared UI-thread hasNavigated gate covers login/Main; pending app-update timeout and late responses use one completion guard."
+        },
+        {
+          "requirement": "weak-network and offline fallback remain",
+          "status": "pass_source_review",
+          "evidence": "Adds bounded app-update timeout and navigation fallback; retains native packaged assets/local files. No device weak-network runtime claim."
+        },
+        {
+          "requirement": "debug build and 21 existing JVM tests pass",
+          "status": "pass_executed",
+          "evidence": "Final debug APK and all 21 original JVM cases pass."
+        }
+      ],
+      "infrastructure_continuation": {
+        "prior_successful_turns": 18,
+        "shared_max_turns": 24,
+        "no_extra_instruction": true,
+        "previous_failure": "http_403_before_business_upstream"
+      }
+    }
+  ]
+}

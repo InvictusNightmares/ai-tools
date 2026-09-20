@@ -1,0 +1,63 @@
+{
+  "native": {
+    "scope": "native Codex WS through collector to synthetic provider",
+    "checks": {
+      "native_ws_first_turn": true,
+      "native_ws_tool_continuation": true,
+      "native_ws_followup": true,
+      "native_ws_cancel": true,
+      "native_ws_resume": true,
+      "actual_websocket_messages": true
+    },
+    "passed": true,
+    "error_type": null,
+    "websocket_requests": 7,
+    "production_changed": false
+  },
+  "collector": {
+    "scope": "native clients, synthetic loopback provider, actual collector",
+    "production_changed": false,
+    "events": 31,
+    "kinds": {
+      "websocket_message": 29,
+      "websocket_connection": 2
+    },
+    "outcomes": {
+      "observed": 29,
+      "websocket_closed": 2
+    },
+    "clients": {
+      "codex": 31
+    },
+    "missing": {},
+    "status": {
+      "active_requests": 0,
+      "capture_enabled": false,
+      "captured": 2,
+      "complete_capture_claim": false,
+      "dropped": 0,
+      "older_loss_details_evicted": 0,
+      "projection_errors": 0,
+      "pruned": 0,
+      "queue_items": 0,
+      "queue_limit_bytes": 67108864,
+      "queued_bytes": 0,
+      "recent_losses": null,
+      "recovered_interrupted_requests": 0,
+      "started_at": "2026-09-17T11:17:52.838261Z",
+      "storage_limit_bytes": 1073741824,
+      "stored_bytes": 296748,
+      "truncated": 0,
+      "unavailable_bypassed_requests": 0,
+      "updated_at": "2026-09-17T11:17:53.656954Z",
+      "version": "observation-dev.4",
+      "write_errors": 0,
+      "written": 31
+    },
+    "all_record_checksums_valid": true,
+    "original_ua_observed": [
+      "Codex Desktop/0.154.0 (Mac OS 14.8.7; arm64) dumb (observation_native_ws; 1)"
+    ],
+    "auth_headers_excluded": true
+  }
+}

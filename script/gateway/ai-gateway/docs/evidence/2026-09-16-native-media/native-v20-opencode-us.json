@@ -1,0 +1,40 @@
+{
+  "scope": "native OpenCode through regional gateway and real model",
+  "gateway_candidate_tested": false,
+  "guard_and_models": "real regional services",
+  "region": "us",
+  "checks": [
+    {
+      "check": "initial_marker",
+      "passed": true
+    },
+    {
+      "check": "native_compaction_and_recall",
+      "passed": true,
+      "compaction_part": true
+    },
+    {
+      "check": "multiple_native_tools",
+      "passed": true,
+      "completed_reads": 2
+    },
+    {
+      "check": "native_child_session",
+      "passed": true
+    },
+    {
+      "check": "native_fork_continuity",
+      "passed": true
+    },
+    {
+      "check": "native_cancel",
+      "passed": true
+    },
+    {
+      "check": "resume_after_cancel",
+      "passed": true
+    }
+  ],
+  "native_session_sha256": [],
+  "request_count": 0
+}

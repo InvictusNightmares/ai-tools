@@ -1,0 +1,21 @@
+{
+  "region": "tokyo",
+  "checks": {
+    "native_compaction": true,
+    "native_state_continuity": true,
+    "billing_correlation": true
+  },
+  "compaction_status": 200,
+  "model": "gpt-5.6-luna",
+  "usage_log": "/tmp/gateway-native-v9-isolated-tokyo/logs/usage.jsonl",
+  "continuation_status": 200,
+  "continuation_model": "gpt-5.6-luna",
+  "opaque_sha256": "c9d795195653f64e9111048f2e87387d2edddf7b2296ec0c84135d5cb1b9d567",
+  "opaque_bytes": 1764,
+  "usage": {
+    "events": 3,
+    "classification": 1,
+    "all_successful_attempts_have_billing_ids": true
+  },
+  "passed": true
+}

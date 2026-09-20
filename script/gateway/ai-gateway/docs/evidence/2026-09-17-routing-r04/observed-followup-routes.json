@@ -1,0 +1,395 @@
+[
+  {
+    "at": "2026-09-17T06:41:30.830513402Z",
+    "api_key_id": "key-hmac-v1:176d4c03909ef365acb91db59ce0055e09f4dd43c0ccc14a40988fa6d1b71814",
+    "request_id": "f87d0d650e6f27b52c67c85263b3f34f",
+    "effective_model": "gpt-5.6-luna",
+    "reason": "initial_selection",
+    "task_type": "extraction",
+    "output_format": null,
+    "required_capabilities": [
+      "text",
+      "structured",
+      "stream"
+    ],
+    "classifier_trace": {
+      "primary_model": "gpt-5.6-luna",
+      "primary_valid": true,
+      "reviewed": false,
+      "decision_model": "gpt-5.6-luna",
+      "cache_hit": false
+    },
+    "task_assessment": {
+      "task_labels": [
+        "extraction"
+      ],
+      "stage": "understand",
+      "constraint_count": 5,
+      "reasoning_dependencies": 0,
+      "failed_attempts": 0,
+      "task_type": "extraction",
+      "complexity": "simple",
+      "scope": "local",
+      "uncertainty": "low",
+      "verification": "none",
+      "continuation": false,
+      "new_task": true,
+      "needs_tools": false,
+      "confidence": 0.99
+    }
+  },
+  {
+    "at": "2026-09-17T06:41:37.744950429Z",
+    "api_key_id": "key-hmac-v1:176d4c03909ef365acb91db59ce0055e09f4dd43c0ccc14a40988fa6d1b71814",
+    "request_id": "9592b17aaeadc1cc1e887cec2681e1e8",
+    "effective_model": "gpt-5.6-terra",
+    "reason": "initial_selection",
+    "task_type": "audit",
+    "output_format": null,
+    "required_capabilities": [
+      "text",
+      "code",
+      "tools",
+      "stream"
+    ],
+    "classifier_trace": {
+      "primary_model": "gpt-5.6-luna",
+      "primary_valid": true,
+      "reviewer_model": "gpt-5.6-sol",
+      "reviewed": true,
+      "decision_model": "gpt-5.6-sol",
+      "cache_hit": false
+    },
+    "task_assessment": {
+      "task_labels": [
+        "audit",
+        "extraction"
+      ],
+      "stage": "understand",
+      "constraint_count": 3,
+      "reasoning_dependencies": 4,
+      "failed_attempts": 0,
+      "task_type": "audit",
+      "complexity": "multi_step",
+      "scope": "cross_module",
+      "uncertainty": "medium",
+      "verification": "inspection",
+      "continuation": false,
+      "new_task": true,
+      "needs_tools": true,
+      "confidence": 0.94
+    }
+  },
+  {
+    "at": "2026-09-17T06:41:59.610896954Z",
+    "api_key_id": "key-hmac-v1:176d4c03909ef365acb91db59ce0055e09f4dd43c0ccc14a40988fa6d1b71814",
+    "request_id": "35b300a16a7d8abd94bb2c5c32b1c5a8",
+    "effective_model": "gpt-5.6-terra",
+    "reason": "tool_loop_locked",
+    "task_type": "audit",
+    "output_format": null,
+    "required_capabilities": [
+      "text",
+      "code",
+      "tools",
+      "stream"
+    ],
+    "classifier_trace": {
+      "tool_binding_reused": true,
+      "primary_valid": false,
+      "reviewed": false,
+      "cache_hit": false
+    },
+    "task_assessment": {
+      "task_labels": [
+        "audit",
+        "extraction"
+      ],
+      "stage": "understand",
+      "constraint_count": 3,
+      "reasoning_dependencies": 4,
+      "failed_attempts": 0,
+      "task_type": "audit",
+      "complexity": "multi_step",
+      "scope": "cross_module",
+      "uncertainty": "medium",
+      "verification": "inspection",
+      "continuation": true,
+      "new_task": false,
+      "needs_tools": true,
+      "confidence": 0.94
+    }
+  },
+  {
+    "at": "2026-09-17T06:42:22.992213857Z",
+    "api_key_id": "key-hmac-v1:176d4c03909ef365acb91db59ce0055e09f4dd43c0ccc14a40988fa6d1b71814",
+    "request_id": "ac2946de401876eac36bc2b167128793",
+    "effective_model": "gpt-5.6-terra",
+    "reason": "tool_loop_locked",
+    "task_type": "audit",
+    "output_format": null,
+    "required_capabilities": [
+      "text",
+      "code",
+      "tools",
+      "stream"
+    ],
+    "classifier_trace": {
+      "tool_binding_reused": true,
+      "primary_valid": false,
+      "reviewed": false,
+      "cache_hit": false
+    },
+    "task_assessment": {
+      "task_labels": [
+        "audit",
+        "extraction"
+      ],
+      "stage": "understand",
+      "constraint_count": 3,
+      "reasoning_dependencies": 4,
+      "failed_attempts": 0,
+      "task_type": "audit",
+      "complexity": "multi_step",
+      "scope": "cross_module",
+      "uncertainty": "medium",
+      "verification": "inspection",
+      "continuation": true,
+      "new_task": false,
+      "needs_tools": true,
+      "confidence": 0.94
+    }
+  },
+  {
+    "at": "2026-09-17T06:42:44.399859814Z",
+    "api_key_id": "key-hmac-v1:176d4c03909ef365acb91db59ce0055e09f4dd43c0ccc14a40988fa6d1b71814",
+    "request_id": "e0815374c88f4130bcc226418636a103",
+    "effective_model": "gpt-5.6-terra",
+    "reason": "tool_loop_locked",
+    "task_type": "audit",
+    "output_format": null,
+    "required_capabilities": [
+      "text",
+      "code",
+      "tools",
+      "stream"
+    ],
+    "classifier_trace": {
+      "tool_binding_reused": true,
+      "primary_valid": false,
+      "reviewed": false,
+      "cache_hit": false
+    },
+    "task_assessment": {
+      "task_labels": [
+        "audit",
+        "extraction"
+      ],
+      "stage": "understand",
+      "constraint_count": 3,
+      "reasoning_dependencies": 4,
+      "failed_attempts": 0,
+      "task_type": "audit",
+      "complexity": "multi_step",
+      "scope": "cross_module",
+      "uncertainty": "medium",
+      "verification": "inspection",
+      "continuation": true,
+      "new_task": false,
+      "needs_tools": true,
+      "confidence": 0.94
+    }
+  },
+  {
+    "at": "2026-09-17T06:45:00.061342323Z",
+    "api_key_id": "key-hmac-v1:176d4c03909ef365acb91db59ce0055e09f4dd43c0ccc14a40988fa6d1b71814",
+    "request_id": "e6c135fc91911e0e2b5069b28e421274",
+    "effective_model": "gpt-5.6-luna",
+    "reason": "initial_selection",
+    "task_type": "formatting",
+    "output_format": null,
+    "required_capabilities": [
+      "text",
+      "structured",
+      "stream"
+    ],
+    "classifier_trace": {
+      "primary_model": "gpt-5.6-luna",
+      "primary_valid": true,
+      "reviewed": false,
+      "decision_model": "gpt-5.6-luna",
+      "cache_hit": false
+    },
+    "task_assessment": {
+      "task_labels": [
+        "formatting"
+      ],
+      "stage": "understand",
+      "constraint_count": 8,
+      "reasoning_dependencies": 0,
+      "failed_attempts": 0,
+      "task_type": "formatting",
+      "complexity": "simple",
+      "scope": "local",
+      "uncertainty": "low",
+      "verification": "none",
+      "continuation": false,
+      "new_task": true,
+      "needs_tools": false,
+      "confidence": 0.99
+    }
+  },
+  {
+    "at": "2026-09-17T06:45:07.957380404Z",
+    "api_key_id": "key-hmac-v1:176d4c03909ef365acb91db59ce0055e09f4dd43c0ccc14a40988fa6d1b71814",
+    "request_id": "d2a1824f2f3aabee89139acf4bfcc736",
+    "effective_model": "deepseek-flash",
+    "reason": "initial_selection",
+    "task_type": "quick_qa",
+    "output_format": null,
+    "required_capabilities": [
+      "text",
+      "tools",
+      "stream"
+    ],
+    "classifier_trace": {
+      "primary_model": "gpt-5.6-luna",
+      "primary_valid": true,
+      "reviewed": false,
+      "decision_model": "gpt-5.6-luna",
+      "cache_hit": false
+    },
+    "task_assessment": {
+      "task_labels": [
+        "quick_qa"
+      ],
+      "stage": "understand",
+      "constraint_count": 0,
+      "reasoning_dependencies": 0,
+      "failed_attempts": 0,
+      "task_type": "quick_qa",
+      "complexity": "simple",
+      "scope": "local",
+      "uncertainty": "high",
+      "verification": "none",
+      "continuation": false,
+      "new_task": true,
+      "needs_tools": true,
+      "confidence": 0.99
+    }
+  },
+  {
+    "at": "2026-09-17T06:45:20.545318881Z",
+    "api_key_id": "key-hmac-v1:176d4c03909ef365acb91db59ce0055e09f4dd43c0ccc14a40988fa6d1b71814",
+    "request_id": "6bb151db30d78c67a82527a8c208961f",
+    "effective_model": "deepseek-flash",
+    "reason": "tool_loop_locked",
+    "task_type": "quick_qa",
+    "output_format": null,
+    "required_capabilities": [
+      "text",
+      "tools",
+      "stream"
+    ],
+    "classifier_trace": {
+      "tool_binding_reused": true,
+      "primary_valid": false,
+      "reviewed": false,
+      "cache_hit": false
+    },
+    "task_assessment": {
+      "task_labels": [
+        "quick_qa"
+      ],
+      "stage": "understand",
+      "constraint_count": 0,
+      "reasoning_dependencies": 0,
+      "failed_attempts": 0,
+      "task_type": "quick_qa",
+      "complexity": "simple",
+      "scope": "local",
+      "uncertainty": "high",
+      "verification": "none",
+      "continuation": true,
+      "new_task": false,
+      "needs_tools": true,
+      "confidence": 0.99
+    }
+  },
+  {
+    "at": "2026-09-17T06:45:32.647429903Z",
+    "api_key_id": "key-hmac-v1:176d4c03909ef365acb91db59ce0055e09f4dd43c0ccc14a40988fa6d1b71814",
+    "request_id": "325b13fc9cc39edd3c6be5b3bb251bcb",
+    "effective_model": "deepseek-flash",
+    "reason": "tool_loop_locked",
+    "task_type": "quick_qa",
+    "output_format": null,
+    "required_capabilities": [
+      "text",
+      "tools",
+      "stream"
+    ],
+    "classifier_trace": {
+      "tool_binding_reused": true,
+      "primary_valid": false,
+      "reviewed": false,
+      "cache_hit": false
+    },
+    "task_assessment": {
+      "task_labels": [
+        "quick_qa"
+      ],
+      "stage": "understand",
+      "constraint_count": 0,
+      "reasoning_dependencies": 0,
+      "failed_attempts": 0,
+      "task_type": "quick_qa",
+      "complexity": "simple",
+      "scope": "local",
+      "uncertainty": "high",
+      "verification": "none",
+      "continuation": true,
+      "new_task": false,
+      "needs_tools": true,
+      "confidence": 0.99
+    }
+  },
+  {
+    "at": "2026-09-17T06:45:46.14382468Z",
+    "api_key_id": "key-hmac-v1:176d4c03909ef365acb91db59ce0055e09f4dd43c0ccc14a40988fa6d1b71814",
+    "request_id": "6fd67864e1dd66ef6e8b88d85db96630",
+    "effective_model": "deepseek-flash",
+    "reason": "tool_loop_locked",
+    "task_type": "quick_qa",
+    "output_format": null,
+    "required_capabilities": [
+      "text",
+      "tools",
+      "stream"
+    ],
+    "classifier_trace": {
+      "tool_binding_reused": true,
+      "primary_valid": false,
+      "reviewed": false,
+      "cache_hit": false
+    },
+    "task_assessment": {
+      "task_labels": [
+        "quick_qa"
+      ],
+      "stage": "understand",
+      "constraint_count": 0,
+      "reasoning_dependencies": 0,
+      "failed_attempts": 0,
+      "task_type": "quick_qa",
+      "complexity": "simple",
+      "scope": "local",
+      "uncertainty": "high",
+      "verification": "none",
+      "continuation": true,
+      "new_task": false,
+      "needs_tools": true,
+      "confidence": 0.99
+    }
+  }
+]

@@ -1,0 +1,139 @@
+{
+  "cases": 36,
+  "requests": 7020,
+  "successes": 7020,
+  "quantile": "nearest rank ceil(N*0.95), pooled per-request samples across 3 rounds",
+  "scenarios": [
+    {
+      "mode": "json",
+      "payload_bytes": 1112,
+      "pooled_p95_ms": {
+        "nginx": {
+          "first_ms": 1.145,
+          "total_ms": 1.15
+        },
+        "on": {
+          "first_ms": 1.273,
+          "total_ms": 1.276
+        },
+        "off": {
+          "first_ms": 1.2349999999999999,
+          "total_ms": 1.239
+        }
+      },
+      "capture_increase_percent": {
+        "first_ms": 3.076923076923088,
+        "total_ms": 2.986279257465685
+      },
+      "added_path_percent": {
+        "first_ms": 11.179039301310034,
+        "total_ms": 10.956521739130443
+      },
+      "all_rounds_capture_pass": false
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1048664,
+      "pooled_p95_ms": {
+        "nginx": {
+          "first_ms": 24.121000000000002,
+          "total_ms": 24.124000000000002
+        },
+        "off": {
+          "first_ms": 24.037,
+          "total_ms": 24.043
+        },
+        "on": {
+          "first_ms": 24.266,
+          "total_ms": 24.270999999999997
+        }
+      },
+      "capture_increase_percent": {
+        "first_ms": 0.9526979240337852,
+        "total_ms": 0.948300960778603
+      },
+      "added_path_percent": {
+        "first_ms": 0.6011359396376426,
+        "total_ms": 0.609351682971293
+      },
+      "all_rounds_capture_pass": true
+    },
+    {
+      "mode": "sse",
+      "payload_bytes": 1048664,
+      "pooled_p95_ms": {
+        "nginx": {
+          "first_ms": 24.147,
+          "total_ms": 42.671
+        },
+        "off": {
+          "first_ms": 24.02,
+          "total_ms": 42.481
+        },
+        "on": {
+          "first_ms": 24.388,
+          "total_ms": 42.823
+        }
+      },
+      "capture_increase_percent": {
+        "first_ms": 1.5320566194837681,
+        "total_ms": 0.8050657941197192
+      },
+      "added_path_percent": {
+        "first_ms": 0.9980535884374975,
+        "total_ms": 0.3562138220337019
+      },
+      "all_rounds_capture_pass": true
+    },
+    {
+      "mode": "ws",
+      "payload_bytes": 4184,
+      "pooled_p95_ms": {
+        "off": {
+          "first_ms": 1.687,
+          "total_ms": 2.665
+        },
+        "nginx": {
+          "first_ms": 1.353,
+          "total_ms": 2.041
+        },
+        "on": {
+          "first_ms": 1.72,
+          "total_ms": 2.79
+        }
+      },
+      "capture_increase_percent": {
+        "first_ms": 1.956135151155891,
+        "total_ms": 4.690431519699811
+      },
+      "added_path_percent": {
+        "first_ms": 27.12490761271249,
+        "total_ms": 36.69769720725136
+      },
+      "all_rounds_capture_pass": false
+    }
+  ],
+  "final_capture_status": {
+    "active_requests": 0,
+    "capture_enabled": false,
+    "captured": 2724,
+    "complete_capture_claim": false,
+    "dropped": 0,
+    "older_loss_details_evicted": 0,
+    "projection_errors": 0,
+    "pruned": 0,
+    "queue_items": 0,
+    "queue_limit_bytes": 134217728,
+    "queued_bytes": 0,
+    "recent_losses": null,
+    "recovered_interrupted_requests": 0,
+    "started_at": "2026-09-17T10:28:15.413393294Z",
+    "storage_limit_bytes": 8589934592,
+    "stored_bytes": 1492283421,
+    "truncated": 0,
+    "updated_at": "2026-09-17T10:31:19.591021576Z",
+    "version": "observation-dev.2",
+    "write_errors": 0,
+    "written": 8100
+  }
+}

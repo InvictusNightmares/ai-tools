@@ -1,0 +1,44 @@
+[
+  {
+    "region": "tokyo",
+    "pointer": {
+      "release_id": "candidate-20260917-r19-native-v29",
+      "path": "/data/ai-gateway/releases/candidate-20260917-r19-native-v29",
+      "state_schema": "session-json-v1",
+      "backup": "/data/ai-gateway/acceptance-tokyo/backups/release-20260917-140219-091056"
+    },
+    "result": {
+      "release_id": "candidate-20260917-r19-native-v29",
+      "region": "tokyo",
+      "backup": "/data/ai-gateway/acceptance-tokyo/backups/release-20260917-140219-091056",
+      "changed_services": [
+        "guard"
+      ],
+      "status": "updated",
+      "secret_preserved": true,
+      "state_preserved": true,
+      "protected_services_unchanged": true
+    }
+  },
+  {
+    "region": "us",
+    "pointer": {
+      "release_id": "candidate-20260917-r19-native-v29",
+      "path": "/data/ai-gateway/releases/candidate-20260917-r19-native-v29",
+      "state_schema": "session-json-v1",
+      "backup": "/data/ai-gateway/acceptance-us/backups/release-20260917-140318-953044"
+    },
+    "result": {
+      "release_id": "candidate-20260917-r19-native-v29",
+      "region": "us",
+      "backup": "/data/ai-gateway/acceptance-us/backups/release-20260917-140318-953044",
+      "changed_services": [
+        "guard"
+      ],
+      "status": "updated",
+      "secret_preserved": true,
+      "state_preserved": true,
+      "protected_services_unchanged": true
+    }
+  }
+]

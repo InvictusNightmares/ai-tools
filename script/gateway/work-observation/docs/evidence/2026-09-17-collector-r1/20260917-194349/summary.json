@@ -1,0 +1,416 @@
+{
+  "version": "observation-dev.8",
+  "cases": 63,
+  "measured_requests": 8820,
+  "body_correct": true,
+  "capture_complete": true,
+  "expected_captured": 3612,
+  "expected_written": 14364,
+  "capture_counters": {
+    "dropped": 0,
+    "truncated": 0,
+    "projection_errors": 0,
+    "write_errors": 0,
+    "queued_bytes": 0,
+    "queue_items": 0,
+    "active_requests": 0,
+    "captured": 3612,
+    "written": 14364,
+    "stored_bytes": 6481505116
+  },
+  "every_round_within_5_percent": false,
+  "rounds": [
+    {
+      "mode": "json",
+      "payload_bytes": 1112,
+      "round": 0,
+      "first_overhead_percent": 1.3610888710968938,
+      "total_overhead_percent": 1.3545816733067761,
+      "within_5_percent": true
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1112,
+      "round": 1,
+      "first_overhead_percent": 3.712671509281673,
+      "total_overhead_percent": 3.7781350482315013,
+      "within_5_percent": true
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1112,
+      "round": 2,
+      "first_overhead_percent": 4.8881524440762325,
+      "total_overhead_percent": 4.950495049504955,
+      "within_5_percent": true
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1048664,
+      "round": 0,
+      "first_overhead_percent": 0.061957868649331616,
+      "total_overhead_percent": 0.06608020484861754,
+      "within_5_percent": true
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1048664,
+      "round": 1,
+      "first_overhead_percent": 0.3964037597057546,
+      "total_overhead_percent": 0.3963227783452483,
+      "within_5_percent": true
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1048664,
+      "round": 2,
+      "first_overhead_percent": 0.8326190767723896,
+      "total_overhead_percent": 0.8529219719229708,
+      "within_5_percent": true
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 8388696,
+      "round": 0,
+      "first_overhead_percent": 8.819752050952733,
+      "total_overhead_percent": 8.82553325297415,
+      "within_5_percent": false
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 8388696,
+      "round": 1,
+      "first_overhead_percent": 2.943258824719308,
+      "total_overhead_percent": 2.97307546454304,
+      "within_5_percent": true
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 8388696,
+      "round": 2,
+      "first_overhead_percent": 5.759229043442771,
+      "total_overhead_percent": 5.764034059042467,
+      "within_5_percent": false
+    },
+    {
+      "mode": "sse",
+      "payload_bytes": 1048664,
+      "round": 0,
+      "first_overhead_percent": 1.5495134277241807,
+      "total_overhead_percent": 1.2422360248447228,
+      "within_5_percent": true
+    },
+    {
+      "mode": "sse",
+      "payload_bytes": 1048664,
+      "round": 1,
+      "first_overhead_percent": -0.19571067438637346,
+      "total_overhead_percent": -0.06042717363516914,
+      "within_5_percent": true
+    },
+    {
+      "mode": "sse",
+      "payload_bytes": 1048664,
+      "round": 2,
+      "first_overhead_percent": 1.547364964702025,
+      "total_overhead_percent": 1.3521403049905345,
+      "within_5_percent": true
+    },
+    {
+      "mode": "sse",
+      "payload_bytes": 8388696,
+      "round": 0,
+      "first_overhead_percent": 0.642447418738068,
+      "total_overhead_percent": 0.6799881741187175,
+      "within_5_percent": true
+    },
+    {
+      "mode": "sse",
+      "payload_bytes": 8388696,
+      "round": 1,
+      "first_overhead_percent": -0.6484483557202436,
+      "total_overhead_percent": -0.33592861516927863,
+      "within_5_percent": true
+    },
+    {
+      "mode": "sse",
+      "payload_bytes": 8388696,
+      "round": 2,
+      "first_overhead_percent": 8.64936255087465,
+      "total_overhead_percent": 5.654455927709545,
+      "within_5_percent": false
+    },
+    {
+      "mode": "ws",
+      "payload_bytes": 4184,
+      "round": 0,
+      "first_overhead_percent": 9.797917942437229,
+      "total_overhead_percent": 12.43305279265494,
+      "within_5_percent": false
+    },
+    {
+      "mode": "ws",
+      "payload_bytes": 4184,
+      "round": 1,
+      "first_overhead_percent": -0.726392251815966,
+      "total_overhead_percent": -1.6153268219383787,
+      "within_5_percent": true
+    },
+    {
+      "mode": "ws",
+      "payload_bytes": 4184,
+      "round": 2,
+      "first_overhead_percent": 1.85185185185186,
+      "total_overhead_percent": 1.919458035378252,
+      "within_5_percent": true
+    },
+    {
+      "mode": "ws",
+      "payload_bytes": 65624,
+      "round": 0,
+      "first_overhead_percent": 14.559561843906899,
+      "total_overhead_percent": 19.70583583741896,
+      "within_5_percent": false
+    },
+    {
+      "mode": "ws",
+      "payload_bytes": 65624,
+      "round": 1,
+      "first_overhead_percent": 11.456400742115047,
+      "total_overhead_percent": 10.399014019411501,
+      "within_5_percent": false
+    },
+    {
+      "mode": "ws",
+      "payload_bytes": 65624,
+      "round": 2,
+      "first_overhead_percent": 10.88435374149661,
+      "total_overhead_percent": 14.639047766269897,
+      "within_5_percent": false
+    }
+  ],
+  "pooled": [
+    {
+      "mode": "json",
+      "payload_bytes": 1112,
+      "routes": {
+        "nginx": {
+          "samples": 900,
+          "first_p95_ms": 1.156,
+          "total_p95_ms": 1.162,
+          "peak_rss_bytes": 16027648,
+          "cpu_s_including_warmup": 0.029999999999999576
+        },
+        "on": {
+          "samples": 900,
+          "first_p95_ms": 1.2730000000000001,
+          "total_p95_ms": 1.279,
+          "peak_rss_bytes": 42401792,
+          "cpu_s_including_warmup": 0.6199999999999997
+        },
+        "off": {
+          "samples": 900,
+          "first_p95_ms": 1.2409999999999999,
+          "total_p95_ms": 1.2469999999999999,
+          "peak_rss_bytes": 31756288,
+          "cpu_s_including_warmup": 0.26999999999999946
+        }
+      },
+      "first_capture_overhead_percent": 2.5785656728444906,
+      "first_whole_path_overhead_percent": 10.121107266436002,
+      "total_capture_overhead_percent": 2.566158781074579,
+      "total_whole_path_overhead_percent": 10.068846815834775
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1048664,
+      "routes": {
+        "nginx": {
+          "samples": 600,
+          "first_p95_ms": 24.241,
+          "total_p95_ms": 24.243,
+          "peak_rss_bytes": 16060416,
+          "cpu_s_including_warmup": 0.589999999999999
+        },
+        "off": {
+          "samples": 600,
+          "first_p95_ms": 24.396,
+          "total_p95_ms": 24.4,
+          "peak_rss_bytes": 31756288,
+          "cpu_s_including_warmup": 1.52
+        },
+        "on": {
+          "samples": 600,
+          "first_p95_ms": 24.56,
+          "total_p95_ms": 24.565,
+          "peak_rss_bytes": 52580352,
+          "cpu_s_including_warmup": 11.400000000000004
+        }
+      },
+      "first_capture_overhead_percent": 0.6722413510411362,
+      "first_whole_path_overhead_percent": 1.315952312198343,
+      "total_capture_overhead_percent": 0.676229508196724,
+      "total_whole_path_overhead_percent": 1.3282184548117026
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 8388696,
+      "routes": {
+        "off": {
+          "samples": 180,
+          "first_p95_ms": 39.323,
+          "total_p95_ms": 39.328,
+          "peak_rss_bytes": 31637504,
+          "cpu_s_including_warmup": 3.41
+        },
+        "nginx": {
+          "samples": 180,
+          "first_p95_ms": 38.991,
+          "total_p95_ms": 39.003,
+          "peak_rss_bytes": 16027648,
+          "cpu_s_including_warmup": 1.4299999999999997
+        },
+        "on": {
+          "samples": 180,
+          "first_p95_ms": 41.518,
+          "total_p95_ms": 41.53,
+          "peak_rss_bytes": 505303040,
+          "cpu_s_including_warmup": 24.50999999999999
+        }
+      },
+      "first_capture_overhead_percent": 5.581974925616051,
+      "first_whole_path_overhead_percent": 6.480982790900458,
+      "total_capture_overhead_percent": 5.599064279902355,
+      "total_whole_path_overhead_percent": 6.478988795733653
+    },
+    {
+      "mode": "sse",
+      "payload_bytes": 1048664,
+      "routes": {
+        "nginx": {
+          "samples": 600,
+          "first_p95_ms": 24.051,
+          "total_p95_ms": 42.639,
+          "peak_rss_bytes": 16093184,
+          "cpu_s_including_warmup": 0.7400000000000002
+        },
+        "off": {
+          "samples": 600,
+          "first_p95_ms": 24.405,
+          "total_p95_ms": 42.9,
+          "peak_rss_bytes": 31821824,
+          "cpu_s_including_warmup": 1.8900000000000006
+        },
+        "on": {
+          "samples": 600,
+          "first_p95_ms": 24.583,
+          "total_p95_ms": 43.117,
+          "peak_rss_bytes": 55218176,
+          "cpu_s_including_warmup": 12.030000000000001
+        }
+      },
+      "first_capture_overhead_percent": 0.7293587379635147,
+      "first_whole_path_overhead_percent": 2.211966238410046,
+      "total_capture_overhead_percent": 0.5058275058275052,
+      "total_whole_path_overhead_percent": 1.1210394240014798
+    },
+    {
+      "mode": "sse",
+      "payload_bytes": 8388696,
+      "routes": {
+        "off": {
+          "samples": 180,
+          "first_p95_ms": 38.762,
+          "total_p95_ms": 57.153999999999996,
+          "peak_rss_bytes": 31756288,
+          "cpu_s_including_warmup": 3.5600000000000005
+        },
+        "nginx": {
+          "samples": 180,
+          "first_p95_ms": 38.441,
+          "total_p95_ms": 56.78,
+          "peak_rss_bytes": 16027648,
+          "cpu_s_including_warmup": 1.5599999999999996
+        },
+        "on": {
+          "samples": 180,
+          "first_p95_ms": 39.501999999999995,
+          "total_p95_ms": 57.928,
+          "peak_rss_bytes": 387883008,
+          "cpu_s_including_warmup": 26.380000000000006
+        }
+      },
+      "first_capture_overhead_percent": 1.9090862184613755,
+      "first_whole_path_overhead_percent": 2.7600738794516078,
+      "total_capture_overhead_percent": 1.3542359239948176,
+      "total_whole_path_overhead_percent": 2.021838675589982
+    },
+    {
+      "mode": "ws",
+      "payload_bytes": 4184,
+      "routes": {
+        "off": {
+          "samples": 240,
+          "first_p95_ms": 1.652,
+          "total_p95_ms": 2.65,
+          "peak_rss_bytes": 31760384,
+          "cpu_s_including_warmup": 0.35999999999999677
+        },
+        "nginx": {
+          "samples": 240,
+          "first_p95_ms": 1.364,
+          "total_p95_ms": 2.08,
+          "peak_rss_bytes": 16031744,
+          "cpu_s_including_warmup": 0.11999999999999922
+        },
+        "on": {
+          "samples": 240,
+          "first_p95_ms": 1.725,
+          "total_p95_ms": 2.719,
+          "peak_rss_bytes": 61005824,
+          "cpu_s_including_warmup": 1.9200000000000017
+        }
+      },
+      "first_capture_overhead_percent": 4.418886198547223,
+      "first_whole_path_overhead_percent": 26.466275659824046,
+      "total_capture_overhead_percent": 2.6037735849056665,
+      "total_whole_path_overhead_percent": 30.721153846153836
+    },
+    {
+      "mode": "ws",
+      "payload_bytes": 65624,
+      "routes": {
+        "off": {
+          "samples": 240,
+          "first_p95_ms": 2.1109999999999998,
+          "total_p95_ms": 6.476,
+          "peak_rss_bytes": 31756288,
+          "cpu_s_including_warmup": 1.08
+        },
+        "nginx": {
+          "samples": 240,
+          "first_p95_ms": 1.92,
+          "total_p95_ms": 6.0969999999999995,
+          "peak_rss_bytes": 16027648,
+          "cpu_s_including_warmup": 0.5199999999999996
+        },
+        "on": {
+          "samples": 240,
+          "first_p95_ms": 2.414,
+          "total_p95_ms": 7.481,
+          "peak_rss_bytes": 137924608,
+          "cpu_s_including_warmup": 8.240000000000002
+        }
+      },
+      "first_capture_overhead_percent": 14.353387020369524,
+      "first_whole_path_overhead_percent": 25.72916666666667,
+      "total_capture_overhead_percent": 15.518838789376165,
+      "total_whole_path_overhead_percent": 22.69968837133016
+    }
+  ],
+  "percentile_method": "nearest_rank",
+  "limitations": [
+    "Only synthetic loopback workload; not production acceptance.",
+    "Whole-path overhead is reported separately from capture on/off."
+  ]
+}

@@ -1,0 +1,40 @@
+--- FAIL: TestKnownClientModelsRemainAutomaticAfterMigration (0.00s)
+    --- FAIL: TestKnownClientModelsRemainAutomaticAfterMigration/deepseek-flash/v1/responses (0.00s)
+        migration_routing_test.go:33: migration failed: status=404 guard=0 upstream=0
+    --- FAIL: TestKnownClientModelsRemainAutomaticAfterMigration/deepseek-flash/v1/responses/compact (0.00s)
+        migration_routing_test.go:33: migration failed: status=404 guard=0 upstream=0
+    --- FAIL: TestKnownClientModelsRemainAutomaticAfterMigration/gpt-5.6-luna/v1/responses (0.00s)
+        migration_routing_test.go:33: migration failed: status=404 guard=0 upstream=0
+    --- FAIL: TestKnownClientModelsRemainAutomaticAfterMigration/gpt-5.6-luna/v1/responses/compact (0.00s)
+        migration_routing_test.go:33: migration failed: status=404 guard=0 upstream=0
+    --- FAIL: TestKnownClientModelsRemainAutomaticAfterMigration/gpt-5.6-terra/v1/responses (0.00s)
+        migration_routing_test.go:33: migration failed: status=404 guard=0 upstream=0
+    --- FAIL: TestKnownClientModelsRemainAutomaticAfterMigration/gpt-5.6-terra/v1/responses/compact (0.00s)
+        migration_routing_test.go:33: migration failed: status=404 guard=0 upstream=0
+    --- FAIL: TestKnownClientModelsRemainAutomaticAfterMigration/gpt-5.6-sol/v1/responses (0.00s)
+        migration_routing_test.go:33: migration failed: status=404 guard=0 upstream=0
+    --- FAIL: TestKnownClientModelsRemainAutomaticAfterMigration/gpt-5.6-sol/v1/responses/compact (0.00s)
+        migration_routing_test.go:33: migration failed: status=404 guard=0 upstream=0
+    --- FAIL: TestKnownClientModelsRemainAutomaticAfterMigration/gpt-6-astra/v1/responses (0.00s)
+        migration_routing_test.go:33: migration failed: status=404 guard=0 upstream=0
+    --- FAIL: TestKnownClientModelsRemainAutomaticAfterMigration/gpt-6-astra/v1/responses/compact (0.00s)
+        migration_routing_test.go:33: migration failed: status=404 guard=0 upstream=0
+--- FAIL: TestRoutinePhaseCanDownshiftAfterComplexWork (0.00s)
+    --- FAIL: TestRoutinePhaseCanDownshiftAfterComplexWork/summary (0.00s)
+        migration_routing_test.go:61: locked=false got {State:{SessionTTL:1h0m0s UpgradeCooldownTurns:3 DowngradeMargin:0.2 RouteEpoch:0 Turn:8 CurrentModel:gpt-5.6-terra CurrentTier:2 CurrentReasoningEffort:medium HasCurrent:true LastSwitchTurn:7 LastActivityAt:2026-09-17 06:21:11.642886329 +0000 UTC m=+0.007062787 ToolLoopLocked:false ToolRoundID: ToolTaskDigest: ToolAssessment:<nil> ToolClassifierPolicy:} SelectedModel:0xd97cf8 Action:keep Switched:false Reason:sticky_quality_floor ReasoningEffort:medium}
+    --- FAIL: TestRoutinePhaseCanDownshiftAfterComplexWork/extraction (0.00s)
+        migration_routing_test.go:61: locked=false got {State:{SessionTTL:1h0m0s UpgradeCooldownTurns:3 DowngradeMargin:0.2 RouteEpoch:0 Turn:8 CurrentModel:gpt-5.6-terra CurrentTier:2 CurrentReasoningEffort:medium HasCurrent:true LastSwitchTurn:7 LastActivityAt:2026-09-17 06:21:11.643007477 +0000 UTC m=+0.007183935 ToolLoopLocked:false ToolRoundID: ToolTaskDigest: ToolAssessment:<nil> ToolClassifierPolicy:} SelectedModel:0xd97cf8 Action:keep Switched:false Reason:sticky_quality_floor ReasoningEffort:medium}
+    --- FAIL: TestRoutinePhaseCanDownshiftAfterComplexWork/translation (0.00s)
+        migration_routing_test.go:61: locked=false got {State:{SessionTTL:1h0m0s UpgradeCooldownTurns:3 DowngradeMargin:0.2 RouteEpoch:0 Turn:8 CurrentModel:gpt-5.6-terra CurrentTier:2 CurrentReasoningEffort:medium HasCurrent:true LastSwitchTurn:7 LastActivityAt:2026-09-17 06:21:11.643050274 +0000 UTC m=+0.007226732 ToolLoopLocked:false ToolRoundID: ToolTaskDigest: ToolAssessment:<nil> ToolClassifierPolicy:} SelectedModel:0xd97cf8 Action:keep Switched:false Reason:sticky_quality_floor ReasoningEffort:medium}
+    --- FAIL: TestRoutinePhaseCanDownshiftAfterComplexWork/formatting (0.00s)
+        migration_routing_test.go:61: locked=false got {State:{SessionTTL:1h0m0s UpgradeCooldownTurns:3 DowngradeMargin:0.2 RouteEpoch:0 Turn:8 CurrentModel:gpt-5.6-terra CurrentTier:2 CurrentReasoningEffort:medium HasCurrent:true LastSwitchTurn:7 LastActivityAt:2026-09-17 06:21:11.643091838 +0000 UTC m=+0.007268296 ToolLoopLocked:false ToolRoundID: ToolTaskDigest: ToolAssessment:<nil> ToolClassifierPolicy:} SelectedModel:0xd97cf8 Action:keep Switched:false Reason:sticky_quality_floor ReasoningEffort:medium}
+    --- FAIL: TestRoutinePhaseCanDownshiftAfterComplexWork/quick_qa (0.00s)
+        migration_routing_test.go:61: locked=false got {State:{SessionTTL:1h0m0s UpgradeCooldownTurns:3 DowngradeMargin:0.2 RouteEpoch:0 Turn:8 CurrentModel:gpt-5.6-terra CurrentTier:2 CurrentReasoningEffort:medium HasCurrent:true LastSwitchTurn:7 LastActivityAt:2026-09-17 06:21:11.64313101 +0000 UTC m=+0.007307475 ToolLoopLocked:false ToolRoundID: ToolTaskDigest: ToolAssessment:<nil> ToolClassifierPolicy:} SelectedModel:0xd97cf8 Action:keep Switched:false Reason:sticky_quality_floor ReasoningEffort:medium}
+--- FAIL: TestRoutineDownshiftRetainsUnresolvedWorkAndNativeCapabilities (0.00s)
+    --- FAIL: TestRoutineDownshiftRetainsUnresolvedWorkAndNativeCapabilities/native_state (0.00s)
+        migration_routing_test.go:96: unsafe downshift: {State:{SessionTTL:1h0m0s UpgradeCooldownTurns:3 DowngradeMargin:0.2 RouteEpoch:0 Turn:8 CurrentModel:gpt-5.6-terra CurrentTier:2 CurrentReasoningEffort:medium HasCurrent:true LastSwitchTurn:-1 LastActivityAt:2026-09-17 06:21:11.643483352 +0000 UTC m=+0.007659811 ToolLoopLocked:false ToolRoundID: ToolTaskDigest: ToolAssessment:<nil> ToolClassifierPolicy:} SelectedModel:0xd97cf8 Action:keep Switched:false Reason:sticky_quality_floor ReasoningEffort:medium}
+--- FAIL: TestRejectedModelAuditDistinguishesCompactionWithoutRawInput (0.00s)
+    migration_routing_test.go:116: missing diagnostic metadata: {"context_budget":{"input_estimate_tokens":0,"output_limit_tokens":0,"method":""},"usage":{"PromptTokens":0,"CacheHitTokens":0,"CacheMissTokens":0,"CompletionTokens":0,"CacheStatus":"","HasPromptTokens":false,"HasCacheHitTokens":false},"request_id":"7a49883afecb69315ac69ea4637c2468","stage":"request_rejected","classifier_trace":{"primary_valid":false,"reviewed":false,"cache_hit":false},"http_status":404,"response_complete":false,"upstream_called":false,"error_type":"model_not_found","at":"2026-09-17T06:21:11.643812761Z","requested_model":"","effective_model":"","effective_reasoning_effort":"","effort_requested":"","effort_applied":"","effort_status":"","effort_parameter":"","action":"","reason":"","score":0,"confidence":0,"required_capabilities":null,"stream":false,"preflight_decision":""}
+FAIL
+FAIL	local/ai-gateway/auto	0.018s
+FAIL

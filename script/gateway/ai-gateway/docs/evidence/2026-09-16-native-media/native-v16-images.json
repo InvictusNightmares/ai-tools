@@ -1,0 +1,60 @@
+{
+  "scope": "actual4004/4005 Auto16 Guard8; no raw model text retained",
+  "checks": [
+    {
+      "region": "tokyo",
+      "case": "image_sse",
+      "request_id": "e1a9caea3c8fc8bc18d22a05db297bb6",
+      "status": 200,
+      "image_sha256": "ca1a08748324722f14fc1046a9b574b50db6004bd23f3a0e637825bb657cc068",
+      "png_signature_valid": true,
+      "visual_checked": false
+    },
+    {
+      "region": "tokyo",
+      "case": "image_tool",
+      "request_id": "ae6346b74d803c34789b69b78cb5a885",
+      "status": 200,
+      "image_sha256": "7a0ae049245f0ec44ec9650f5918b7aa92bc1fb8b3d78caa4a9551cf83bb5c0f",
+      "png_signature_valid": true,
+      "visual_checked": false
+    },
+    {
+      "region": "tokyo",
+      "case": "multipart_edit",
+      "request_id": "d8ef29d9c94d0abefeb5ea851b543e4d",
+      "status": 200,
+      "image_sha256": "f2df1ddf93bd179a3f693869fb11d38b30cbc5acfd696452e2822045edb0e872",
+      "png_signature_valid": true,
+      "visual_checked": true
+    },
+    {
+      "region": "us",
+      "case": "image_sse",
+      "request_id": "361c30833b9868ec5839a1a69da8a48c",
+      "status": 200,
+      "image_sha256": "50876bbd37919f6e9fb7793bc1e2f26d590ec6282d946f61ff0e08e3857bab95",
+      "png_signature_valid": true,
+      "visual_checked": false
+    },
+    {
+      "region": "us",
+      "case": "image_tool",
+      "request_id": "6a06c0bffd8ecf6179c8f1a7712d4acd",
+      "status": 200,
+      "image_sha256": "ec6bcdfb7a286de01ebf42a8e99865dff2951c7fe4aa510d83510a7f216ce92f",
+      "png_signature_valid": true,
+      "visual_checked": true
+    },
+    {
+      "region": "us",
+      "case": "multipart_edit",
+      "request_id": "ad514bc2542f3a41ab5711a419ff7bb1",
+      "status": 200,
+      "image_sha256": "23f7c5c4112ac2c035d5bc166eff79c40f34e7a5edeea931164c2eebba94c5db",
+      "png_signature_valid": true,
+      "visual_checked": false
+    }
+  ],
+  "visual_findings": "Tokyo edit preserves red and blue with yellow middle; US Responses tool output is green circle on white."
+}

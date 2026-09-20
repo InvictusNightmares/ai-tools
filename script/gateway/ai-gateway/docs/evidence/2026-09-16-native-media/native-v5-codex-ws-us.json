@@ -1,0 +1,10 @@
+{
+  "client": "codex",
+  "region": "us",
+  "run_id": "codex-ws-us-203811",
+  "exit_code": 0,
+  "seconds": 14.21,
+  "http_fallback": false,
+  "model_catalog_warning": true,
+  "answer_correct": true
+}

@@ -1,0 +1,22 @@
+{
+  "rows": [
+    {
+      "name": "gateway-native-v22-isolated-tokyo",
+      "container_id": "3d36391eb9973b9f2449f5454929600e751c80caa513bf987f16794da94a16fa",
+      "stopped_and_removed": true,
+      "host_evidence_preserved": true
+    },
+    {
+      "name": "gateway-native-v23-isolated-tokyo",
+      "container_id": "2932eff1f42bb82e34711a5f7d4658774738ca25fe54a70aa705b78e27caa13f",
+      "stopped_and_removed": true,
+      "host_evidence_preserved": true
+    },
+    {
+      "name": "gateway-native-v23-isolated-us",
+      "container_id": "b059bcb1ac15815ebffce4a53c6d2d336d1bb5d54a7a12de9f0739904d6b2f0c",
+      "stopped_and_removed": true,
+      "host_evidence_preserved": true
+    }
+  ]
+}

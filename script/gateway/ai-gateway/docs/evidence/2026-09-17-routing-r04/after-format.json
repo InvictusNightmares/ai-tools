@@ -1,0 +1,82 @@
+[
+  {
+    "region": "tokyo",
+    "case": "chat_text",
+    "phase": "after",
+    "status": 200,
+    "model": "deepseek-flash",
+    "request_id": "660220f25a5dd106d0beaabfaeb8b6d0",
+    "content_ok": true,
+    "seconds": 7.1
+  },
+  {
+    "region": "tokyo",
+    "case": "verbosity",
+    "phase": "after",
+    "status": 200,
+    "model": "deepseek-flash",
+    "request_id": "7e5d9cdfc72b9a4643ca6c053caabf72",
+    "content_ok": false,
+    "seconds": 7.14
+  },
+  {
+    "region": "tokyo",
+    "case": "responses_schema",
+    "phase": "after",
+    "status": 200,
+    "model": "gpt-5.6-luna",
+    "request_id": "1bf51b70d05270c81d06755dcf4cb17c",
+    "content_ok": true,
+    "seconds": 11.92
+  },
+  {
+    "region": "tokyo",
+    "case": "messages_schema",
+    "phase": "after",
+    "status": 200,
+    "model": "gpt-5.6-luna",
+    "request_id": "10a49c5f801b90fcb99b03146a9b370f",
+    "content_ok": true,
+    "seconds": 11.24
+  },
+  {
+    "region": "us",
+    "case": "chat_text",
+    "phase": "after",
+    "status": 200,
+    "model": "deepseek-flash",
+    "request_id": "74838f493baf847d18ed51ba82e127ae",
+    "content_ok": true,
+    "seconds": 4.1
+  },
+  {
+    "region": "us",
+    "case": "verbosity",
+    "phase": "after",
+    "status": 200,
+    "model": "deepseek-flash",
+    "request_id": "47171dec6d2634624889a19a9b682182",
+    "content_ok": false,
+    "seconds": 5.93
+  },
+  {
+    "region": "us",
+    "case": "responses_schema",
+    "phase": "after",
+    "status": 200,
+    "model": "gpt-5.6-luna",
+    "request_id": "0bd5783ad1b1f4189aaa521a1e3ee103",
+    "content_ok": true,
+    "seconds": 5.6
+  },
+  {
+    "region": "us",
+    "case": "messages_schema",
+    "phase": "after",
+    "status": 200,
+    "model": "gpt-5.6-luna",
+    "request_id": "d24bb3180aff826207b87b9df3e8369c",
+    "content_ok": true,
+    "seconds": 4.86
+  }
+]

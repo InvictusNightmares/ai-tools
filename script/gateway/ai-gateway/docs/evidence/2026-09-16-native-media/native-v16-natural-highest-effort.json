@@ -1,0 +1,83 @@
+{
+  "scope": "real Guard and natural Auto; requested client effort none; no group mapping change",
+  "stop_rule": "first complete internal xhigh per region, at most four pre-existing holdout tasks",
+  "cases_sha256": "c1f1b9a9ad259f15cb469715f630197ce17a0499afa74ae52c319bcb5f2b00d1",
+  "results": [
+    {
+      "region": "tokyo",
+      "api_key_id": 143,
+      "case_id": "multiwriter-escrow",
+      "request_id": "3704dc2c214280f3b7d79ba0ab2cbc59",
+      "client_probe_id": "natural-effort-d1def34ee8124ee48495c9854ae710d7",
+      "status": 200,
+      "error_type": null,
+      "seconds": 310.323,
+      "client_effort": "none",
+      "request_sha256": "a864ac2500088c71fad4c7e35b06ada2ab781be9138126b6f2bd0aec3464a427",
+      "response_sha256": "fbbe5f73f097c116bd0b26d06205e7b34637b1a0c7c1a5aaa8da720f984ad2c8",
+      "stage": "upstream_completed",
+      "preflight_decision": "allow",
+      "effective_model": "gpt-6-astra",
+      "task_complexity": "exceptional",
+      "effort_requested": "xhigh",
+      "effort_applied": "xhigh",
+      "upstream_reported_effort": "xhigh",
+      "effort_mismatch": null,
+      "response_complete": true,
+      "response_model": "gpt-6-astra",
+      "upstream_client_request_id": "2ebddc32-95a5-4817-8693-9bc478eb1462",
+      "usage": {
+        "PromptTokens": 4217,
+        "CacheHitTokens": 3968,
+        "CacheMissTokens": 249,
+        "CompletionTokens": 9962,
+        "CacheStatus": "hit",
+        "HasPromptTokens": true,
+        "HasCacheHitTokens": true
+      },
+      "natural_xhigh_complete": true,
+      "provider_reports_xhigh": true
+    },
+    {
+      "region": "us",
+      "api_key_id": 89,
+      "case_id": "multiwriter-escrow",
+      "request_id": "6906337573f9dc94b4cfde7b115af4eb",
+      "client_probe_id": "natural-effort-e064db0f1af84d77baec3b2066743f45",
+      "status": 200,
+      "error_type": null,
+      "seconds": 354.886,
+      "client_effort": "none",
+      "request_sha256": "a864ac2500088c71fad4c7e35b06ada2ab781be9138126b6f2bd0aec3464a427",
+      "response_sha256": "27ba334f4ce8f762be4e71c289f052a1c92d546f93cc6ba716c0185e79793059",
+      "stage": "upstream_completed",
+      "preflight_decision": "allow",
+      "effective_model": "gpt-6-astra",
+      "task_complexity": "exceptional",
+      "effort_requested": "xhigh",
+      "effort_applied": "xhigh",
+      "upstream_reported_effort": "xhigh",
+      "effort_mismatch": null,
+      "response_complete": true,
+      "response_model": "gpt-6-astra",
+      "upstream_client_request_id": "faba9318-f57d-4092-ba2f-2cc0a26a6bd6",
+      "usage": {
+        "PromptTokens": 4217,
+        "CacheHitTokens": 3968,
+        "CacheMissTokens": 249,
+        "CompletionTokens": 11497,
+        "CacheStatus": "hit",
+        "HasPromptTokens": true,
+        "HasCacheHitTokens": true
+      },
+      "natural_xhigh_complete": true,
+      "provider_reports_xhigh": true
+    }
+  ],
+  "regions": {
+    "tokyo": true,
+    "us": true
+  },
+  "all_regions_natural_xhigh": true,
+  "provider_bill_reconciliation_pending": true
+}

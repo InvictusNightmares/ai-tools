@@ -1,0 +1,42 @@
+[
+  {
+    "region": "tokyo",
+    "case": "chat_text",
+    "phase": "before",
+    "status": 200,
+    "model": "gpt-5.6-luna",
+    "request_id": "1be2fdbf518039ea6e7a3e95490083b2",
+    "content_ok": true,
+    "seconds": 12.68
+  },
+  {
+    "region": "tokyo",
+    "case": "verbosity",
+    "phase": "before",
+    "status": 200,
+    "model": "gpt-5.6-luna",
+    "request_id": "baf430246ff6051f11bb7db20c2a5e3b",
+    "content_ok": true,
+    "seconds": 8.1
+  },
+  {
+    "region": "us",
+    "case": "chat_text",
+    "phase": "before",
+    "status": 200,
+    "model": "gpt-5.6-luna",
+    "request_id": "0c1117ccee836041bb0f340f67e95dd5",
+    "content_ok": true,
+    "seconds": 5.63
+  },
+  {
+    "region": "us",
+    "case": "verbosity",
+    "phase": "before",
+    "status": 200,
+    "model": "gpt-5.6-luna",
+    "request_id": "0462f0035e31b683fe74c82892b7651a",
+    "content_ok": true,
+    "seconds": 5.7
+  }
+]

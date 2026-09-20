@@ -1,0 +1,11 @@
+{
+  "at": "2026-09-16T09:46:11.585065+00:00",
+  "region": "tokyo",
+  "port": 4004,
+  "client": "opencode",
+  "version": "1.18.4",
+  "session": "v6-native-hello-tokyo-174601",
+  "exit_code": 0,
+  "elapsed_seconds": 9.73,
+  "raw_logs_retained_in_private_directory": "/private/tmp/gateway-v6-native-hello/tokyo"
+}

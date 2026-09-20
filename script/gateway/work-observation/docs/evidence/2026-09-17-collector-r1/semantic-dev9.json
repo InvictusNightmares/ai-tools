@@ -1,0 +1,23 @@
+{
+  "schema": "work-observation-semantic-smoke-v1",
+  "plane": "offline_analysis",
+  "collector_version": "observation-dev.9",
+  "synthetic_only": true,
+  "cases": [
+    {"name": "allow_and_route", "guard": "allow", "auto": "deepseek-v4-pro", "state": "complete"},
+    {"name": "guard_block_and_route_block", "guard": "block", "auto": "blocked", "state": "complete"},
+    {"name": "local_services_unavailable", "guard": "unavailable", "auto": "unavailable", "state": "pending_retry"}
+  ],
+  "assertions": {
+    "request_and_visible_response_sent_to_local_replay": true,
+    "semantic_results_store_body": false,
+    "public_endpoint_rejected": true,
+    "stale_running_claim_requeued": true,
+    "semantic_retention_thirty_days": true,
+    "auth_file_header_only": true,
+    "online_route_or_guard_state_changed": false,
+    "production_tools_executed": false
+  },
+  "python_tests": 52,
+  "note": "Synthetic HTTP callbacks are mocked in tests because the local sandbox disallows listening sockets. No employee event or external endpoint was used."
+}

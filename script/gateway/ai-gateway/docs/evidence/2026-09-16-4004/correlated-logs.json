@@ -1,0 +1,347 @@
+{
+  "at": "2026-09-16T06:44:46.470075+00:00",
+  "route": [
+    {
+      "request_id": "0af19d282c4ffee5359ce101c0434036",
+      "stage": "identity_rejected",
+      "http_status": 401,
+      "error_type": "unauthorized",
+      "effective_model": "",
+      "effort_applied": "",
+      "upstream_called": false,
+      "preflight_decision": ""
+    },
+    {
+      "request_id": "8e6a41be5b403a72be07193b2aff23de",
+      "stage": "identity_rejected",
+      "http_status": 401,
+      "error_type": "unauthorized",
+      "effective_model": "",
+      "effort_applied": "",
+      "upstream_called": false,
+      "preflight_decision": ""
+    },
+    {
+      "request_id": "dcb7e3d9ded538e7b26d733b2edd6f39",
+      "stage": "identity_rejected",
+      "http_status": 401,
+      "error_type": "unauthorized",
+      "effective_model": "",
+      "effort_applied": "",
+      "upstream_called": false,
+      "preflight_decision": ""
+    },
+    {
+      "request_id": "a1e9e87a6cae84f5c52590af4e7470ba",
+      "stage": "route_decided",
+      "effective_model": "deepseek-flash",
+      "effort_applied": "none",
+      "upstream_called": false,
+      "preflight_decision": "allow"
+    },
+    {
+      "request_id": "a1e9e87a6cae84f5c52590af4e7470ba",
+      "stage": "upstream_started",
+      "effective_model": "deepseek-flash",
+      "effort_applied": "none",
+      "upstream_called": true,
+      "preflight_decision": "allow"
+    },
+    {
+      "request_id": "a1e9e87a6cae84f5c52590af4e7470ba",
+      "stage": "upstream_completed",
+      "http_status": 200,
+      "effective_model": "deepseek-flash",
+      "effort_applied": "none",
+      "upstream_called": true,
+      "preflight_decision": "allow"
+    },
+    {
+      "request_id": "93484ea506be3b95958faf7c887b8d15",
+      "stage": "route_decided",
+      "effective_model": "deepseek-flash",
+      "effort_applied": "none",
+      "upstream_called": false,
+      "preflight_decision": "allow"
+    },
+    {
+      "request_id": "93484ea506be3b95958faf7c887b8d15",
+      "stage": "upstream_started",
+      "effective_model": "deepseek-flash",
+      "effort_applied": "none",
+      "upstream_called": true,
+      "preflight_decision": "allow"
+    },
+    {
+      "request_id": "93484ea506be3b95958faf7c887b8d15",
+      "stage": "upstream_completed",
+      "http_status": 200,
+      "effective_model": "deepseek-flash",
+      "effort_applied": "none",
+      "upstream_called": true,
+      "preflight_decision": "allow"
+    },
+    {
+      "request_id": "b852ef0f5641b271ef15a2fe6aff45cf",
+      "stage": "route_decided",
+      "effective_model": "deepseek-flash",
+      "effort_applied": "none",
+      "upstream_called": false,
+      "preflight_decision": "allow"
+    },
+    {
+      "request_id": "b852ef0f5641b271ef15a2fe6aff45cf",
+      "stage": "upstream_started",
+      "effective_model": "deepseek-flash",
+      "effort_applied": "none",
+      "upstream_called": true,
+      "preflight_decision": "allow"
+    },
+    {
+      "request_id": "b852ef0f5641b271ef15a2fe6aff45cf",
+      "stage": "upstream_completed",
+      "http_status": 200,
+      "effective_model": "deepseek-flash",
+      "effort_applied": "none",
+      "upstream_called": true,
+      "preflight_decision": "allow"
+    },
+    {
+      "request_id": "779567b90bb34a3bc134d0452dba5d8d",
+      "stage": "token_count_started",
+      "effective_model": "deepseek-flash",
+      "effort_applied": "none",
+      "upstream_called": false,
+      "preflight_decision": "allow"
+    },
+    {
+      "request_id": "779567b90bb34a3bc134d0452dba5d8d",
+      "stage": "token_count_completed",
+      "http_status": 200,
+      "effective_model": "deepseek-flash",
+      "effort_applied": "none",
+      "upstream_called": false,
+      "preflight_decision": "allow"
+    },
+    {
+      "request_id": "a8c74551c0c9ee60466c116114ef4e31",
+      "stage": "preflight_blocked",
+      "effective_model": "",
+      "effort_applied": "",
+      "upstream_called": false,
+      "preflight_decision": "block",
+      "preflight_reason_codes": [
+        "secret_input_not_allowed"
+      ]
+    },
+    {
+      "request_id": "848ae61450238caed23116f2218415de",
+      "stage": "preflight_unavailable",
+      "effective_model": "",
+      "effort_applied": "",
+      "upstream_called": false,
+      "preflight_decision": "unavailable",
+      "preflight_reason_codes": [
+        "guard_transport_error"
+      ]
+    },
+    {
+      "request_id": "c2ad832795564170d2359125b162e6f6",
+      "stage": "route_decided",
+      "effective_model": "deepseek-flash",
+      "effort_applied": "none",
+      "upstream_called": false,
+      "preflight_decision": "allow"
+    },
+    {
+      "request_id": "c2ad832795564170d2359125b162e6f6",
+      "stage": "upstream_started",
+      "effective_model": "deepseek-flash",
+      "effort_applied": "none",
+      "upstream_called": true,
+      "preflight_decision": "allow"
+    },
+    {
+      "request_id": "c2ad832795564170d2359125b162e6f6",
+      "stage": "upstream_completed",
+      "http_status": 200,
+      "effective_model": "deepseek-flash",
+      "effort_applied": "none",
+      "upstream_called": true,
+      "preflight_decision": "allow"
+    }
+  ],
+  "usage": [
+    {
+      "request_id": "a1e9e87a6cae84f5c52590af4e7470ba",
+      "purpose": "classification",
+      "effective_model": "gpt-5.6-sol",
+      "attempt": true,
+      "input_tokens": 711,
+      "cache_hit_tokens": 0,
+      "cache_miss_tokens": 0,
+      "output_tokens": 77,
+      "success": true
+    },
+    {
+      "request_id": "a1e9e87a6cae84f5c52590af4e7470ba",
+      "purpose": "business",
+      "effective_model": "deepseek-flash",
+      "attempt": true,
+      "input_tokens": 22,
+      "cache_hit_tokens": 0,
+      "cache_miss_tokens": 0,
+      "output_tokens": 64,
+      "success": true
+    },
+    {
+      "request_id": "93484ea506be3b95958faf7c887b8d15",
+      "purpose": "classification",
+      "effective_model": "gpt-5.6-sol",
+      "attempt": true,
+      "input_tokens": 710,
+      "cache_hit_tokens": 0,
+      "cache_miss_tokens": 0,
+      "output_tokens": 77,
+      "success": true
+    },
+    {
+      "request_id": "93484ea506be3b95958faf7c887b8d15",
+      "purpose": "business",
+      "effective_model": "deepseek-flash",
+      "attempt": true,
+      "input_tokens": 51,
+      "cache_hit_tokens": 0,
+      "cache_miss_tokens": 51,
+      "output_tokens": 275,
+      "success": true
+    },
+    {
+      "request_id": "b852ef0f5641b271ef15a2fe6aff45cf",
+      "purpose": "classification",
+      "effective_model": "gpt-5.6-sol",
+      "attempt": true,
+      "input_tokens": 705,
+      "cache_hit_tokens": 0,
+      "cache_miss_tokens": 0,
+      "output_tokens": 77,
+      "success": true
+    },
+    {
+      "request_id": "b852ef0f5641b271ef15a2fe6aff45cf",
+      "purpose": "business",
+      "effective_model": "deepseek-flash",
+      "attempt": true,
+      "input_tokens": 17,
+      "cache_hit_tokens": 0,
+      "cache_miss_tokens": 17,
+      "output_tokens": 269,
+      "success": true
+    },
+    {
+      "request_id": "779567b90bb34a3bc134d0452dba5d8d",
+      "purpose": "classification",
+      "effective_model": "gpt-5.6-sol",
+      "attempt": true,
+      "input_tokens": 694,
+      "cache_hit_tokens": 0,
+      "cache_miss_tokens": 0,
+      "output_tokens": 82,
+      "success": true
+    },
+    {
+      "request_id": "c2ad832795564170d2359125b162e6f6",
+      "purpose": "classification",
+      "effective_model": "gpt-5.6-sol",
+      "attempt": true,
+      "input_tokens": 711,
+      "cache_hit_tokens": 0,
+      "cache_miss_tokens": 0,
+      "output_tokens": 77,
+      "success": true
+    },
+    {
+      "request_id": "c2ad832795564170d2359125b162e6f6",
+      "purpose": "business",
+      "effective_model": "deepseek-flash",
+      "attempt": true,
+      "input_tokens": 22,
+      "cache_hit_tokens": 0,
+      "cache_miss_tokens": 0,
+      "output_tokens": 88,
+      "success": true
+    }
+  ],
+  "ingress": [
+    {
+      "request_id": "0af19d282c4ffee5359ce101c0434036",
+      "status": 401,
+      "upstream_status": "401",
+      "elapsed_s": 0.001,
+      "path": "/v1/models"
+    },
+    {
+      "request_id": "8e6a41be5b403a72be07193b2aff23de",
+      "status": 401,
+      "upstream_status": "401",
+      "elapsed_s": 0.106,
+      "path": "/v1/models"
+    },
+    {
+      "request_id": "dcb7e3d9ded538e7b26d733b2edd6f39",
+      "status": 401,
+      "upstream_status": "401",
+      "elapsed_s": 0.001,
+      "path": "/v1/models"
+    },
+    {
+      "request_id": "a1e9e87a6cae84f5c52590af4e7470ba",
+      "status": 200,
+      "upstream_status": "200",
+      "elapsed_s": 4.033,
+      "path": "/v1/chat/completions"
+    },
+    {
+      "request_id": "93484ea506be3b95958faf7c887b8d15",
+      "status": 200,
+      "upstream_status": "200",
+      "elapsed_s": 5.526,
+      "path": "/v1/responses"
+    },
+    {
+      "request_id": "b852ef0f5641b271ef15a2fe6aff45cf",
+      "status": 200,
+      "upstream_status": "200",
+      "elapsed_s": 6.906,
+      "path": "/v1/messages"
+    },
+    {
+      "request_id": "779567b90bb34a3bc134d0452dba5d8d",
+      "status": 200,
+      "upstream_status": "200",
+      "elapsed_s": 4.079,
+      "path": "/v1/messages/count_tokens"
+    },
+    {
+      "request_id": "a8c74551c0c9ee60466c116114ef4e31",
+      "status": 403,
+      "upstream_status": "403",
+      "elapsed_s": 0.33,
+      "path": "/v1/chat/completions"
+    },
+    {
+      "request_id": "848ae61450238caed23116f2218415de",
+      "status": 503,
+      "upstream_status": "503",
+      "elapsed_s": 0.205,
+      "path": "/v1/chat/completions"
+    },
+    {
+      "request_id": "c2ad832795564170d2359125b162e6f6",
+      "status": 200,
+      "upstream_status": "200",
+      "elapsed_s": 5.23,
+      "path": "/v1/chat/completions"
+    }
+  ]
+}

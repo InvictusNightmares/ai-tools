@@ -1,0 +1,10 @@
+{
+  "go_tests_with_subtests": 407,
+  "python_tests": 10,
+  "go_failures": 0,
+  "vet": "passed",
+  "gofmt": "passed",
+  "static_binaries": 5,
+  "build_directory": "/tmp/gateway-linux-verify.VEfyaL",
+  "source_manifest": "source-manifest.json"
+}

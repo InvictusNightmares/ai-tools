@@ -1,0 +1,18 @@
+{
+  "region": "us",
+  "client": "Codex 0.154.0 app-server",
+  "checks": {
+    "first_turn": true,
+    "compact_completed": true,
+    "continuity_after_compaction": true,
+    "native_cancel": true,
+    "resume_after_cancel": true
+  },
+  "thread_hash": "626d31ea0a4df6f7df5004e0ca8472670bfe640643b9c269c1b2ff1e915b777e",
+  "compact_items": [
+    "contextCompaction"
+  ],
+  "passed": true,
+  "release_id": "candidate-20260916-r11-native-v8",
+  "scope": "native local compaction/cancellation; not proof of WebSocket transport"
+}

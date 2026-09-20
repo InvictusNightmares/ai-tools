@@ -1,0 +1,42 @@
+{
+  "scope": "actual artifact validation on private mutated copies",
+  "cases": [
+    {
+      "case": "wrong_platform",
+      "rejected": true,
+      "error": "unsupported release schema or platform"
+    },
+    {
+      "case": "wrong_guard_contract",
+      "rejected": true,
+      "error": "incompatible Guard contract or rollback state schema"
+    },
+    {
+      "case": "wrong_state",
+      "rejected": true,
+      "error": "unsupported configuration or state schema"
+    },
+    {
+      "case": "rollback_state_incompatible",
+      "rejected": true,
+      "error": "incompatible Guard contract or rollback state schema"
+    },
+    {
+      "case": "binary_mutation",
+      "rejected": true,
+      "error": "release checksum mismatch: bin/auto-server"
+    },
+    {
+      "case": "unlisted_file",
+      "rejected": true,
+      "error": "release contains unlisted or missing files"
+    },
+    {
+      "case": "checksum_path_escape",
+      "rejected": true,
+      "error": "invalid checksum path"
+    }
+  ],
+  "original_artifact_valid": true,
+  "passed": true
+}

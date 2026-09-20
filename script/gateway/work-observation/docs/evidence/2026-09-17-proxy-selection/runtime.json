@@ -1,0 +1,40 @@
+{
+  "origin": {
+    "image_id": "sha256:29958228b8eac13e193f057abbc30b42ed1bacea2ead149fe4a4252470cccbd8",
+    "pid": 1285259,
+    "memory_limit": 2147483648,
+    "nano_cpus": 2000000000
+  },
+  "go-off": {
+    "image_id": "sha256:29958228b8eac13e193f057abbc30b42ed1bacea2ead149fe4a4252470cccbd8",
+    "pid": 1285313,
+    "memory_limit": 2147483648,
+    "nano_cpus": 2000000000
+  },
+  "go-on": {
+    "image_id": "sha256:29958228b8eac13e193f057abbc30b42ed1bacea2ead149fe4a4252470cccbd8",
+    "pid": 1285367,
+    "memory_limit": 2147483648,
+    "nano_cpus": 2000000000
+  },
+  "rust-off": {
+    "image_id": "sha256:ef460ef3675d3011ccfbd2bfd1c9239f04c044eee0cc0a3de6aecfd9f390bf26",
+    "pid": 1285423,
+    "memory_limit": 2147483648,
+    "nano_cpus": 2000000000
+  },
+  "rust-on": {
+    "image_id": "sha256:ef460ef3675d3011ccfbd2bfd1c9239f04c044eee0cc0a3de6aecfd9f390bf26",
+    "pid": 1285481,
+    "memory_limit": 2147483648,
+    "nano_cpus": 2000000000
+  },
+  "nginx": {
+    "image_id": "sha256:f787d2269bb599297ef6e2fc50d690813821fa348870b62abfc6fa99112ad7d2",
+    "pid": 1285540,
+    "memory_limit": 2147483648,
+    "nano_cpus": 2000000000
+  },
+  "rust_version": "rustc 1.98.1 (48a229cea 2026-09-01)",
+  "go_version": "go version go1.27.1 linux/amd64"
+}

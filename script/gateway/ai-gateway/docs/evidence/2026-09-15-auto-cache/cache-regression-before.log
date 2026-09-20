@@ -1,0 +1,37 @@
+=== RUN   TestCachePipelineBillingOnResponseHit
+    cache_regression_test.go:57: response replay must not bill old provider tokens again: {Key:{Date:2026-09-15 Region:tokyo EffectiveModel:deepseek-flash ReasoningEffort:none APIKeyID:key-1} Requests:2 Attempts:1 InputTokens:20 CacheHitTokens:12 CacheMissTokens:8 OutputTokens:4 Successes:2 Failures:0 Upgrades:0 Downgrades:0}
+--- FAIL: TestCachePipelineBillingOnResponseHit (0.00s)
+=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize
+=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable
+    cache_regression_test.go:71: non-reusable response was cached: {Preflight:{Decision:allow ReasonCodes:[]} Decision:{State:{SessionTTL:1h0m0s UpgradeCooldownTurns:3 DowngradeMargin:0.2 RouteEpoch:0 CurrentModel:deepseek-flash CurrentTier:0 CurrentReasoningEffort:none HasCurrent:true LastSwitchTurn:1 LastActivityAt:2026-09-15 02:07:47.096676845 +0000 UTC m=+0.001229414 ToolLoopLocked:false} SelectedModel:0x1c19ea79dd48 Action:keep Switched:false Reason:cooldown_or_same_tier ReasoningEffort:none} Classification:quick_qa score=1 confidence=0.90 Audit:{At:2026-09-15 02:07:47.096676845 +0000 UTC m=+0.001229414 RequestedModel:auto EffectiveModel:deepseek-flash EffectiveReasoning:none EffortApplied:none EffortStatus:applied EffortParameter:reasoning_effort Action:keep Reason:cooldown_or_same_tier Score:1 Confidence:0.9 RequiredCapabilities:[text] Stream:false} CacheEligible:true CacheReason:eligible CacheKey:f14f89105a81a7b75216411d03966c0fbdfb3e28987052e00e17bf1c05461074 CacheHit:true UpstreamCalled:false Upstream:{StatusCode:503 ResponseBytes:16 Usage:map[completion_tokens:2 prompt_cache_hit_tokens:6 prompt_cache_miss_tokens:4 prompt_tokens:10]}}
+=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited
+    cache_regression_test.go:71: non-reusable response was cached: {Preflight:{Decision:allow ReasonCodes:[]} Decision:{State:{SessionTTL:1h0m0s UpgradeCooldownTurns:3 DowngradeMargin:0.2 RouteEpoch:0 CurrentModel:deepseek-flash CurrentTier:0 CurrentReasoningEffort:none HasCurrent:true LastSwitchTurn:1 LastActivityAt:2026-09-15 02:07:47.09680702 +0000 UTC m=+0.001359590 ToolLoopLocked:false} SelectedModel:0x1c19ea806d88 Action:keep Switched:false Reason:cooldown_or_same_tier ReasoningEffort:none} Classification:quick_qa score=1 confidence=0.90 Audit:{At:2026-09-15 02:07:47.09680702 +0000 UTC m=+0.001359590 RequestedModel:auto EffectiveModel:deepseek-flash EffectiveReasoning:none EffortApplied:none EffortStatus:applied EffortParameter:reasoning_effort Action:keep Reason:cooldown_or_same_tier Score:1 Confidence:0.9 RequiredCapabilities:[text] Stream:false} CacheEligible:true CacheReason:eligible CacheKey:f14f89105a81a7b75216411d03966c0fbdfb3e28987052e00e17bf1c05461074 CacheHit:true UpstreamCalled:false Upstream:{StatusCode:429 ResponseBytes:16 Usage:map[completion_tokens:2 prompt_cache_hit_tokens:6 prompt_cache_miss_tokens:4 prompt_tokens:10]}}
+=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect
+    cache_regression_test.go:71: non-reusable response was cached: {Preflight:{Decision:allow ReasonCodes:[]} Decision:{State:{SessionTTL:1h0m0s UpgradeCooldownTurns:3 DowngradeMargin:0.2 RouteEpoch:0 CurrentModel:deepseek-flash CurrentTier:0 CurrentReasoningEffort:none HasCurrent:true LastSwitchTurn:1 LastActivityAt:2026-09-15 02:07:47.096870564 +0000 UTC m=+0.001423134 ToolLoopLocked:false} SelectedModel:0x1c19ea807d48 Action:keep Switched:false Reason:cooldown_or_same_tier ReasoningEffort:none} Classification:quick_qa score=1 confidence=0.90 Audit:{At:2026-09-15 02:07:47.096870564 +0000 UTC m=+0.001423134 RequestedModel:auto EffectiveModel:deepseek-flash EffectiveReasoning:none EffortApplied:none EffortStatus:applied EffortParameter:reasoning_effort Action:keep Reason:cooldown_or_same_tier Score:1 Confidence:0.9 RequiredCapabilities:[text] Stream:false} CacheEligible:true CacheReason:eligible CacheKey:f14f89105a81a7b75216411d03966c0fbdfb3e28987052e00e17bf1c05461074 CacheHit:true UpstreamCalled:false Upstream:{StatusCode:302 ResponseBytes:16 Usage:map[completion_tokens:2 prompt_cache_hit_tokens:6 prompt_cache_miss_tokens:4 prompt_tokens:10]}}
+=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize
+=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error
+--- FAIL: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize (0.00s)
+    --- FAIL: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable (0.00s)
+    --- FAIL: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited (0.00s)
+    --- FAIL: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect (0.00s)
+    --- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize (0.00s)
+    --- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error (0.00s)
+=== RUN   TestCachePipelineGuardBeforeCache
+=== RUN   TestCachePipelineGuardBeforeCache/block
+=== RUN   TestCachePipelineGuardBeforeCache/unavailable
+=== RUN   TestCachePipelineGuardBeforeCache/invalid
+    cache_regression_test.go:87: error=<nil>
+--- FAIL: TestCachePipelineGuardBeforeCache (0.00s)
+    --- PASS: TestCachePipelineGuardBeforeCache/block (0.00s)
+    --- PASS: TestCachePipelineGuardBeforeCache/unavailable (0.00s)
+    --- FAIL: TestCachePipelineGuardBeforeCache/invalid (0.00s)
+=== RUN   TestCachePipelineProtocolIsolation
+    cache_regression_test.go:99: cross-protocol replay: {Preflight:{Decision:allow ReasonCodes:[]} Decision:{State:{SessionTTL:1h0m0s UpgradeCooldownTurns:3 DowngradeMargin:0.2 RouteEpoch:0 CurrentModel:deepseek-flash CurrentTier:0 CurrentReasoningEffort:none HasCurrent:true LastSwitchTurn:1 LastActivityAt:2026-09-15 02:07:47.097111397 +0000 UTC m=+0.001663967 ToolLoopLocked:false} SelectedModel:0x1c19ea8158c8 Action:keep Switched:false Reason:cooldown_or_same_tier ReasoningEffort:none} Classification:quick_qa score=1 confidence=0.90 Audit:{At:2026-09-15 02:07:47.097111397 +0000 UTC m=+0.001663967 RequestedModel:auto EffectiveModel:deepseek-flash EffectiveReasoning:none EffortApplied:none EffortStatus:applied EffortParameter:reasoning.effort Action:keep Reason:cooldown_or_same_tier Score:1 Confidence:0.9 RequiredCapabilities:[text] Stream:false} CacheEligible:true CacheReason:eligible CacheKey:f14f89105a81a7b75216411d03966c0fbdfb3e28987052e00e17bf1c05461074 CacheHit:true UpstreamCalled:false Upstream:{StatusCode:200 ResponseBytes:16 Usage:map[completion_tokens:2 prompt_cache_hit_tokens:6 prompt_cache_miss_tokens:4 prompt_tokens:10]}} calls=1 err=<nil>
+--- FAIL: TestCachePipelineProtocolIsolation (0.00s)
+=== RUN   TestMemoryCacheDoesNotAliasUsage
+    cache_regression_test.go:108: write alias={StatusCode:200 ResponseBytes:0 Usage:map[prompt_tokens_details:map[cached_tokens:999]]}
+--- FAIL: TestMemoryCacheDoesNotAliasUsage (0.00s)
+FAIL
+FAIL	local/auto-gateway	0.005s
+?   	local/auto-gateway/cmd/auto-preview	[no test files]
+FAIL

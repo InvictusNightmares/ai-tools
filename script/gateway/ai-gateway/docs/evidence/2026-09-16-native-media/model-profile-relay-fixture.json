@@ -1,0 +1,67 @@
+{
+  "scope": "synthetic fixture over real SSH transport; scoped file read/write, fixed check, final validation; no external model",
+  "candidate": "synthetic-relay-only",
+  "task": "synthetic-relay",
+  "source_commit": null,
+  "completed": true,
+  "failure": null,
+  "seconds": 50.758,
+  "changed_files": [
+    "src/main.txt"
+  ],
+  "file_sha256": {
+    "src/main.txt": "f72c713b7b432dd18949ca10f1be6dbcf493479945653609d1c715b2d8d74356"
+  },
+  "checks": [
+    {
+      "argv": [
+        "/usr/bin/grep",
+        "-qx",
+        "AFTER",
+        "src/main.txt"
+      ],
+      "exit_code": 0,
+      "seconds": 0.009,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "requests": [
+    {
+      "turn": 0,
+      "response_model": "synthetic-relay-only",
+      "usage": {
+        "prompt_tokens": 10,
+        "completion_tokens": 10
+      },
+      "response_sha256": "ae49257bbf3ed738cfaa57f7144362dc0d6bab68855d9885a3e4571ee016af6c"
+    },
+    {
+      "turn": 1,
+      "response_model": "synthetic-relay-only",
+      "usage": {
+        "prompt_tokens": 10,
+        "completion_tokens": 10
+      },
+      "response_sha256": "285bd8ebab19ead9e50256d6ed279e320557a215b4d6e5b0dfa69c8d6549817b"
+    },
+    {
+      "turn": 2,
+      "response_model": "synthetic-relay-only",
+      "usage": {
+        "prompt_tokens": 10,
+        "completion_tokens": 10
+      },
+      "response_sha256": "b24e0c9bb6ce1e2a2fddc8ccbdd9dd79bf66f28bc620c853652154915a650b7b"
+    },
+    {
+      "turn": 3,
+      "response_model": "synthetic-relay-only",
+      "usage": {
+        "prompt_tokens": 10,
+        "completion_tokens": 10
+      },
+      "response_sha256": "c172f1207339a9adc86ef128f8cd431c89c4a77e055448cd3de2c63373c38ce0"
+    }
+  ],
+  "quality_review_pending": true
+}

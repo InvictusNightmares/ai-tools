@@ -1,0 +1,18 @@
+{
+  "codex": {
+    "source_driver": "gateway-codex-tools-advanced.py",
+    "source_sha256": "45917a8d47da3f5200493dcde5c83365f47e42dda92e16099bdc8fd44c172e38"
+  },
+  "opencode": {
+    "source_driver": "gateway-opencode-advanced.py",
+    "source_sha256": "75ece66f2b93de16ec774ff1583974d658a132ad281375a362892a6c51944891"
+  },
+  "claude": {
+    "source_driver": "gateway-claude-advanced.py",
+    "source_sha256": "70eab98e893c10887d29237b333935261e30400ddd7ec7d24556052c1f90bd7e"
+  },
+  "hermes": {
+    "source_driver": "gateway-hermes-advanced-v4.py",
+    "source_sha256": "a427c54664452132becbe14c7a888d6ec2e0a9654652974735356756809ed33a"
+  }
+}

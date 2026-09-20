@@ -1,0 +1,20 @@
+[
+  {
+    "release_id": "candidate-20260916-r11-native-v9.1",
+    "region": "us",
+    "backup": "/data/ai-gateway/acceptance-us/backups/release-20260916-224825-493470",
+    "changed_services": [],
+    "status": "updated",
+    "secret_preserved": true,
+    "state_preserved": true,
+    "protected_services_unchanged": true
+  },
+  {
+    "region": "us",
+    "status": "installed",
+    "release_id": "candidate-20260916-r11-native-v9.1",
+    "backup": "/data/ai-gateway/acceptance-us/backups/operations-20260916-224826-372479",
+    "retention_days": null,
+    "python": "/data/miniforge/bin/python3"
+  }
+]

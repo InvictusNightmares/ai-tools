@@ -1,0 +1,17 @@
+{
+  "region": "us",
+  "client": "Codex 0.154.0 app-server native remote compaction v2",
+  "log_dir": "/private/tmp/gateway-codex-advanced-us-075140",
+  "checks": {
+    "first_turn": true,
+    "compact_completed": true,
+    "continuity_after_compaction": true,
+    "native_cancel": true,
+    "resume_after_cancel": true
+  },
+  "thread_hash": "da46138228eb3d786ab933df2cd5383948c42d115257dda4daa0da1b251cd46c",
+  "compact_items": [
+    "contextCompaction"
+  ],
+  "passed": true
+}

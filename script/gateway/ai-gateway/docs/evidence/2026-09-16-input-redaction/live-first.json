@@ -1,0 +1,316 @@
+{
+  "results": [
+    {
+      "kind": "guard",
+      "case": "password",
+      "status": 200,
+      "decision": "allow",
+      "latency_ms": 88,
+      "pass": true
+    },
+    {
+      "kind": "guard",
+      "case": "private_key",
+      "status": 200,
+      "decision": "allow",
+      "latency_ms": 87,
+      "pass": true
+    },
+    {
+      "kind": "guard",
+      "case": "db",
+      "status": 200,
+      "decision": "allow",
+      "latency_ms": 86,
+      "pass": true
+    },
+    {
+      "kind": "guard",
+      "case": "cookie",
+      "status": 200,
+      "decision": "allow",
+      "latency_ms": 87,
+      "pass": true
+    },
+    {
+      "kind": "guard",
+      "case": "refresh",
+      "status": 200,
+      "decision": "allow",
+      "latency_ms": 87,
+      "pass": true
+    },
+    {
+      "kind": "auto",
+      "protocol": "chat",
+      "stream": false,
+      "status": 200,
+      "elapsed_s": 10.938,
+      "request_id": "f27b9d5194eaa560c2f44c4be8b19d49",
+      "complete": true,
+      "pass": true
+    },
+    {
+      "kind": "auto",
+      "protocol": "chat",
+      "stream": true,
+      "status": 200,
+      "elapsed_s": 11.412,
+      "request_id": "24962779e1234d09a9fababeb296b3c3",
+      "complete": true,
+      "pass": true
+    },
+    {
+      "kind": "auto",
+      "protocol": "responses",
+      "stream": false,
+      "status": 200,
+      "elapsed_s": 7.428,
+      "request_id": "9d4e0ac7aa088cb86ec8bb100806525f",
+      "complete": true,
+      "pass": true
+    },
+    {
+      "kind": "auto",
+      "protocol": "responses",
+      "stream": true,
+      "status": 200,
+      "elapsed_s": 12.75,
+      "request_id": "1d110db0b212f31569b4316699946989",
+      "complete": true,
+      "pass": true
+    },
+    {
+      "kind": "auto",
+      "protocol": "anthropic",
+      "stream": false,
+      "status": 200,
+      "elapsed_s": 12.871,
+      "request_id": "37f67da048f8a19617ad580e0e04e609",
+      "complete": true,
+      "pass": true
+    },
+    {
+      "kind": "auto",
+      "protocol": "anthropic",
+      "stream": true,
+      "status": 200,
+      "elapsed_s": 13.55,
+      "request_id": "2fa1fc99903b71ddd3358afa22195f7a",
+      "complete": true,
+      "pass": true
+    },
+    {
+      "kind": "count",
+      "status": 503,
+      "pass": false
+    }
+  ],
+  "egress": [
+    {
+      "path": "/v1/models",
+      "method": "GET",
+      "canary_present": false,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200
+    },
+    {
+      "path": "/v1/chat/completions",
+      "method": "POST",
+      "canary_present": false,
+      "body_sha256": "e8d34166c89ee15127cb5d96f93fb35e36269ceb683e5df7c2d9dc88d475bd21",
+      "model": "gpt-5.6-sol",
+      "stream": false,
+      "redacted": true,
+      "effort": "none",
+      "status": 200
+    },
+    {
+      "path": "/v1/chat/completions",
+      "method": "POST",
+      "canary_present": false,
+      "body_sha256": "b6668332d61fa03e71feee8303c54e4afb1df5d665ee1d5ff12ff58c6ba2dde6",
+      "model": "deepseek-flash",
+      "stream": false,
+      "redacted": true,
+      "effort": "none",
+      "status": 200
+    },
+    {
+      "path": "/v1/models",
+      "method": "GET",
+      "canary_present": false,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200
+    },
+    {
+      "path": "/v1/chat/completions",
+      "method": "POST",
+      "canary_present": false,
+      "body_sha256": "e8d34166c89ee15127cb5d96f93fb35e36269ceb683e5df7c2d9dc88d475bd21",
+      "model": "gpt-5.6-sol",
+      "stream": false,
+      "redacted": true,
+      "effort": "none",
+      "status": 200
+    },
+    {
+      "path": "/v1/chat/completions",
+      "method": "POST",
+      "canary_present": false,
+      "body_sha256": "4863c0575c7b95d1301519e2ab80b0938c455b1dd64bdb553bb9e5821b5c34b1",
+      "model": "deepseek-flash",
+      "stream": true,
+      "redacted": true,
+      "effort": "none",
+      "status": 200
+    },
+    {
+      "path": "/v1/models",
+      "method": "GET",
+      "canary_present": false,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200
+    },
+    {
+      "path": "/v1/chat/completions",
+      "method": "POST",
+      "canary_present": false,
+      "body_sha256": "cf7b1579b12c6910f9d9ab217388e944c26dc9613b10eb4faf3827f5214f7b05",
+      "model": "gpt-5.6-sol",
+      "stream": false,
+      "redacted": true,
+      "effort": "none",
+      "status": 200
+    },
+    {
+      "path": "/v1/responses",
+      "method": "POST",
+      "canary_present": false,
+      "body_sha256": "a831550160a82f5b0fd782b910901314c817ae9cdfb35c63a3ea8b1490c0ce0e",
+      "model": "deepseek-flash",
+      "stream": false,
+      "redacted": true,
+      "effort": "none",
+      "status": 200
+    },
+    {
+      "path": "/v1/models",
+      "method": "GET",
+      "canary_present": false,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200
+    },
+    {
+      "path": "/v1/chat/completions",
+      "method": "POST",
+      "canary_present": false,
+      "body_sha256": "cf7b1579b12c6910f9d9ab217388e944c26dc9613b10eb4faf3827f5214f7b05",
+      "model": "gpt-5.6-sol",
+      "stream": false,
+      "redacted": true,
+      "effort": "none",
+      "status": 200
+    },
+    {
+      "path": "/v1/responses",
+      "method": "POST",
+      "canary_present": false,
+      "body_sha256": "95e432819d556dd43e6683f9abf6153ca5d2428f0c35ffc7cd6ca893c536fe45",
+      "model": "deepseek-flash",
+      "stream": true,
+      "redacted": true,
+      "effort": "none",
+      "status": 200
+    },
+    {
+      "path": "/v1/models",
+      "method": "GET",
+      "canary_present": false,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200
+    },
+    {
+      "path": "/v1/chat/completions",
+      "method": "POST",
+      "canary_present": false,
+      "body_sha256": "24dc95f7a552d4afb26377fbb789a4b7cf5630dfb93bfd10e101e44a6a4bf25a",
+      "model": "gpt-5.6-sol",
+      "stream": false,
+      "redacted": true,
+      "effort": "none",
+      "status": 200
+    },
+    {
+      "path": "/v1/messages",
+      "method": "POST",
+      "canary_present": false,
+      "body_sha256": "4f03603c25d5e833665a2bbf63681371fb1487f6039d1f0e225550adb292a8d3",
+      "model": "deepseek-flash",
+      "stream": false,
+      "redacted": true,
+      "effort": "none",
+      "status": 200
+    },
+    {
+      "path": "/v1/models",
+      "method": "GET",
+      "canary_present": false,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200
+    },
+    {
+      "path": "/v1/chat/completions",
+      "method": "POST",
+      "canary_present": false,
+      "body_sha256": "24dc95f7a552d4afb26377fbb789a4b7cf5630dfb93bfd10e101e44a6a4bf25a",
+      "model": "gpt-5.6-sol",
+      "stream": false,
+      "redacted": true,
+      "effort": "none",
+      "status": 200
+    },
+    {
+      "path": "/v1/messages",
+      "method": "POST",
+      "canary_present": false,
+      "body_sha256": "2fe7e76c08420811665da3918fbb2a3eb67bac818323059e85816106485f8468",
+      "model": "deepseek-flash",
+      "stream": true,
+      "redacted": true,
+      "effort": "none",
+      "status": 200
+    },
+    {
+      "path": "/v1/models",
+      "method": "GET",
+      "canary_present": false,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200
+    },
+    {
+      "path": "/v1/chat/completions",
+      "method": "POST",
+      "canary_present": false,
+      "body_sha256": "6d14a03de8235de59eeb19dc9adfe8d7659cdc011cd28669295f2e79b5dd1d82",
+      "model": "gpt-5.6-sol",
+      "stream": false,
+      "redacted": true,
+      "effort": "none",
+      "status": 200
+    },
+    {
+      "path": "/v1/messages/count_tokens",
+      "method": "POST",
+      "canary_present": false,
+      "body_sha256": "4a41948aa334681b853a02f92106a3427931a54b11cceb3e820d56ab73b31900",
+      "model": "deepseek-flash",
+      "stream": false,
+      "redacted": true,
+      "effort": "none",
+      "status": 404
+    }
+  ],
+  "canary_egress_count": 0,
+  "production_ports_untouched": true
+}

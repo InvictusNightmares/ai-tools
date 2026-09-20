@@ -1,0 +1,85 @@
+{
+  "scope": "P14 release and operations acceptance; actual deployment exercises plus bounded offline fault injection, not formal traffic cutover",
+  "current_tools_releases": [
+    "candidate-20260916-r11-native-v10.2",
+    "candidate-20260916-r11-native-v9.2"
+  ],
+  "cases": [
+    {
+      "case": "regional instance installation and subsequent versioned upgrades",
+      "verification": "actual",
+      "evidence": [
+        "deploy-r9.jsonl",
+        "native-v5-tokyo-deploy.json",
+        "native-v5-us-deploy.json"
+      ]
+    },
+    {
+      "case": "binary activation failure restores old release",
+      "verification": "actual",
+      "evidence": [
+        "native-v5-us-rollback-drill.json"
+      ]
+    },
+    {
+      "case": "new operations activation failure preserves pointer/config/secret/state/containers",
+      "verification": "actual",
+      "evidence": [
+        "operations-final-rollback-drill.json"
+      ]
+    },
+    {
+      "case": "active SSE drains completely, new requests rejected during drain",
+      "verification": "actual",
+      "evidence": [
+        "shared-state-drain-completed.json"
+      ]
+    },
+    {
+      "case": "only changed component replaced; unchanged components preserved",
+      "verification": "actual",
+      "evidence": [
+        "native-v7-deploy-tokyo.json",
+        "native-v7-deploy-us.json",
+        "operations-final-deploy.json"
+      ]
+    },
+    {
+      "case": "parallel deployment refused",
+      "verification": "actual filesystem lock",
+      "evidence": [
+        "release-concurrency-verification.json"
+      ]
+    },
+    {
+      "case": "platform/contract/state/hash/extra-file/path-escape rejection",
+      "verification": "actual immutable artifact copies",
+      "evidence": [
+        "release-validation-matrix.json"
+      ]
+    },
+    {
+      "case": "Guard unavailable aborts before backup/drain/activation",
+      "verification": "actual loopback connection failure",
+      "evidence": [
+        "release-guard-readiness-fault.json"
+      ]
+    },
+    {
+      "case": "insufficient disk/missing secret fail before mutation",
+      "verification": "offline fault injection",
+      "test": "test_disk_and_missing_secret_fail_before_drain_or_docker"
+    },
+    {
+      "case": "rollback itself fails and ingress remains closed, user state preserved",
+      "verification": "offline fault injection",
+      "test": "test_activation_failure_distinguishes_restored_and_failed_rollback"
+    },
+    {
+      "case": "Guard-only rollback releases unchanged Auto drain before readiness",
+      "verification": "offline old-code failure then fixed pass",
+      "test": "test_guard_only_failed_upgrade_undrains_unchanged_auto_before_rollback_readiness"
+    }
+  ],
+  "remaining_business_release_gate": "Real regional model/client acceptance remains blocked by the existing 23:00-06:30 API availability policy. Release tooling acceptance does not waive that gate."
+}

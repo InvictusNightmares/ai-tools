@@ -1,0 +1,58 @@
+[
+  {
+    "region": "tokyo",
+    "operation": "v2",
+    "phase": "before",
+    "at": "2026-09-17T06:23:32.966087+00:00",
+    "status": 404,
+    "request_id": "15974040a2ed1df1ee551efaade1af73",
+    "error": {
+      "code": "model_not_found",
+      "message": "The requested model is not available. Use auto.",
+      "param": "model",
+      "type": "invalid_request_error"
+    }
+  },
+  {
+    "region": "tokyo",
+    "operation": "legacy",
+    "phase": "before",
+    "at": "2026-09-17T06:23:32.965957+00:00",
+    "status": 404,
+    "request_id": "ff62634726bceb1f34a16a451f2dfc74",
+    "error": {
+      "code": "model_not_found",
+      "message": "The requested model is not available. Use auto.",
+      "param": "model",
+      "type": "invalid_request_error"
+    }
+  },
+  {
+    "region": "us",
+    "operation": "v2",
+    "phase": "before",
+    "at": "2026-09-17T06:23:32.964655+00:00",
+    "status": 404,
+    "request_id": "b65e4d774be2a02161699525874e29ec",
+    "error": {
+      "code": "model_not_found",
+      "message": "The requested model is not available. Use auto.",
+      "param": "model",
+      "type": "invalid_request_error"
+    }
+  },
+  {
+    "region": "us",
+    "operation": "legacy",
+    "phase": "before",
+    "at": "2026-09-17T06:23:32.965790+00:00",
+    "status": 404,
+    "request_id": "2306c9b1c11a21377d29de1bc8120f7d",
+    "error": {
+      "code": "model_not_found",
+      "message": "The requested model is not available. Use auto.",
+      "param": "model",
+      "type": "invalid_request_error"
+    }
+  }
+]

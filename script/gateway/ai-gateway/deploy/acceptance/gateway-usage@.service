@@ -1,0 +1,19 @@
+[Unit]
+Description=Auto Guard durable regional usage export (%i)
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+UMask=0077
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=@GATEWAY_PYTHON@ /data/ai-gateway/operations/run-current.py %i usage
+TimeoutStartSec=600
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/data/ai-gateway/acceptance-%i/ops /data/ai-gateway/acceptance-%i/logs
+StandardOutput=journal
+StandardError=journal

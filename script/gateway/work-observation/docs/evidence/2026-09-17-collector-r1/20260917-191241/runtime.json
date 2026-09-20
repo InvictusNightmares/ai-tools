@@ -1,0 +1,22 @@
+{
+  "origin": {
+    "image": "sha256:29958228b8eac13e193f057abbc30b42ed1bacea2ead149fe4a4252470cccbd8",
+    "cpu_limit": 2000000000,
+    "memory_limit": 2147483648
+  },
+  "off": {
+    "image": "sha256:29958228b8eac13e193f057abbc30b42ed1bacea2ead149fe4a4252470cccbd8",
+    "cpu_limit": 2000000000,
+    "memory_limit": 2147483648
+  },
+  "on": {
+    "image": "sha256:29958228b8eac13e193f057abbc30b42ed1bacea2ead149fe4a4252470cccbd8",
+    "cpu_limit": 2000000000,
+    "memory_limit": 2147483648
+  },
+  "nginx": {
+    "image": "sha256:f787d2269bb599297ef6e2fc50d690813821fa348870b62abfc6fa99112ad7d2",
+    "cpu_limit": 2000000000,
+    "memory_limit": 2147483648
+  }
+}

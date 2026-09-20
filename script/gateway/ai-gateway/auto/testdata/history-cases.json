@@ -1,0 +1,2759 @@
+{
+  "provenance": "Reconstructed from read_thread user requests and reported evidence, with synthetic tool envelopes. Not original wire captures. English/mixed translations authored for this evaluation; labels assigned by implementer. No credentials or internal host addresses retained.",
+  "sources": [
+    {
+      "id": "logout",
+      "title": "修复退出登录状态未清除",
+      "thread_id": "019fcb9a-55e9-70b1-99d6-60912a1c9bab",
+      "protocol": "chat"
+    },
+    {
+      "id": "startup",
+      "title": "排查 Android 12 离线包白屏",
+      "thread_id": "019feffc-d21e-7302-b852-daa722944cb3",
+      "protocol": "responses"
+    },
+    {
+      "id": "release",
+      "title": "补齐两款App数据统计拉取",
+      "thread_id": "01a03335-a42a-7481-94a4-42461fddfb4f",
+      "protocol": "anthropic"
+    },
+    {
+      "id": "reminder",
+      "title": "更新故障提醒列表取值",
+      "thread_id": "01a08e38-b2dc-7393-bf2d-c53188d80fb7",
+      "protocol": "anthropic"
+    }
+  ],
+  "cases": [
+    {
+      "id": "logout-start",
+      "source": "history_reconstruction",
+      "source_thread_id": "019fcb9a-55e9-70b1-99d6-60912a1c9bab",
+      "phase": "start",
+      "protocol": "chat",
+      "split": "history_holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "multi_step",
+      "expected_new_task": false,
+      "expected_tool_continuation": false,
+      "expected_current": {
+        "zh": "退出登录后重启仍然是登录状态。请追踪持久化清理和启动恢复，修复并验证。",
+        "en": "After logout the app is still signed in on restart. Trace persistent cleanup and startup restoration, fix it and verify.",
+        "mixed": "退出登录后 restart 仍 signed in。追踪 persistent cleanup 与 startup restoration，修复并测试。"
+      },
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a development assistant. Preserve user scope."
+            },
+            {
+              "role": "user",
+              "content": "退出登录后重启仍然是登录状态。请追踪持久化清理和启动恢复，修复并验证。"
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "function": {
+                "name": "Read",
+                "description": "Read fixture source",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "path": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "path"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a development assistant. Preserve user scope."
+            },
+            {
+              "role": "user",
+              "content": "After logout the app is still signed in on restart. Trace persistent cleanup and startup restoration, fix it and verify."
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "function": {
+                "name": "Read",
+                "description": "Read fixture source",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "path": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "path"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a development assistant. Preserve user scope."
+            },
+            {
+              "role": "user",
+              "content": "退出登录后 restart 仍 signed in。追踪 persistent cleanup 与 startup restoration，修复并测试。"
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "function": {
+                "name": "Read",
+                "description": "Read fixture source",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "path": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "path"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "logout-tool_result",
+      "source": "history_reconstruction",
+      "source_thread_id": "019fcb9a-55e9-70b1-99d6-60912a1c9bab",
+      "phase": "tool_result",
+      "protocol": "chat",
+      "split": "history_holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "multi_step",
+      "expected_new_task": false,
+      "expected_tool_continuation": true,
+      "expected_current": {
+        "zh": "退出登录后重启仍然是登录状态。请追踪持久化清理和启动恢复，修复并验证。",
+        "en": "After logout the app is still signed in on restart. Trace persistent cleanup and startup restoration, fix it and verify.",
+        "mixed": "退出登录后 restart 仍 signed in。追踪 persistent cleanup 与 startup restoration，修复并测试。"
+      },
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a development assistant. Preserve user scope."
+            },
+            {
+              "role": "user",
+              "content": "退出登录后重启仍然是登录状态。请追踪持久化清理和启动恢复，修复并验证。"
+            },
+            {
+              "role": "assistant",
+              "content": null,
+              "tool_calls": [
+                {
+                  "id": "read-1",
+                  "type": "function",
+                  "function": {
+                    "name": "Read",
+                    "arguments": "{\"path\":\"fixture.txt\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "tool",
+              "tool_call_id": "read-1",
+              "content": "Profile only navigates to Login. Startup reads KEY_LOGIN_INFO. Preferences.delete awaits flush. Account removal and H5 login navigation use Navigation.resetTo."
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "function": {
+                "name": "Read",
+                "description": "Read fixture source",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "path": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "path"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a development assistant. Preserve user scope."
+            },
+            {
+              "role": "user",
+              "content": "After logout the app is still signed in on restart. Trace persistent cleanup and startup restoration, fix it and verify."
+            },
+            {
+              "role": "assistant",
+              "content": null,
+              "tool_calls": [
+                {
+                  "id": "read-1",
+                  "type": "function",
+                  "function": {
+                    "name": "Read",
+                    "arguments": "{\"path\":\"fixture.txt\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "tool",
+              "tool_call_id": "read-1",
+              "content": "Profile only navigates to Login. Startup reads KEY_LOGIN_INFO. Preferences.delete awaits flush. Account removal and H5 login navigation use Navigation.resetTo."
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "function": {
+                "name": "Read",
+                "description": "Read fixture source",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "path": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "path"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a development assistant. Preserve user scope."
+            },
+            {
+              "role": "user",
+              "content": "退出登录后 restart 仍 signed in。追踪 persistent cleanup 与 startup restoration，修复并测试。"
+            },
+            {
+              "role": "assistant",
+              "content": null,
+              "tool_calls": [
+                {
+                  "id": "read-1",
+                  "type": "function",
+                  "function": {
+                    "name": "Read",
+                    "arguments": "{\"path\":\"fixture.txt\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "tool",
+              "tool_call_id": "read-1",
+              "content": "Profile only navigates to Login. Startup reads KEY_LOGIN_INFO. Preferences.delete awaits flush. Account removal and H5 login navigation use Navigation.resetTo."
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "function": {
+                "name": "Read",
+                "description": "Read fixture source",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "path": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "path"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "logout-correction",
+      "source": "history_reconstruction",
+      "source_thread_id": "019fcb9a-55e9-70b1-99d6-60912a1c9bab",
+      "phase": "correction",
+      "protocol": "chat",
+      "split": "history_holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "multi_step",
+      "expected_new_task": false,
+      "expected_tool_continuation": true,
+      "expected_current": {
+        "zh": "不能只改个人中心；所有跳转 Login 的入口都要统一清理，并等待持久化完成。",
+        "en": "Do not fix only Profile; every navigation to Login must share cleanup and await persistence.",
+        "mixed": "不能只改 Profile；所有 Login entry points 统一 cleanup，并 await persistence。"
+      },
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a development assistant. Preserve user scope."
+            },
+            {
+              "role": "user",
+              "content": "退出登录后重启仍然是登录状态。请追踪持久化清理和启动恢复，修复并验证。"
+            },
+            {
+              "role": "assistant",
+              "content": null,
+              "tool_calls": [
+                {
+                  "id": "read-1",
+                  "type": "function",
+                  "function": {
+                    "name": "Read",
+                    "arguments": "{\"path\":\"fixture.txt\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "tool",
+              "tool_call_id": "read-1",
+              "content": "Profile only navigates to Login. Startup reads KEY_LOGIN_INFO. Preferences.delete awaits flush. Account removal and H5 login navigation use Navigation.resetTo."
+            },
+            {
+              "role": "user",
+              "content": "不能只改个人中心；所有跳转 Login 的入口都要统一清理，并等待持久化完成。"
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "function": {
+                "name": "Read",
+                "description": "Read fixture source",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "path": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "path"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a development assistant. Preserve user scope."
+            },
+            {
+              "role": "user",
+              "content": "After logout the app is still signed in on restart. Trace persistent cleanup and startup restoration, fix it and verify."
+            },
+            {
+              "role": "assistant",
+              "content": null,
+              "tool_calls": [
+                {
+                  "id": "read-1",
+                  "type": "function",
+                  "function": {
+                    "name": "Read",
+                    "arguments": "{\"path\":\"fixture.txt\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "tool",
+              "tool_call_id": "read-1",
+              "content": "Profile only navigates to Login. Startup reads KEY_LOGIN_INFO. Preferences.delete awaits flush. Account removal and H5 login navigation use Navigation.resetTo."
+            },
+            {
+              "role": "user",
+              "content": "Do not fix only Profile; every navigation to Login must share cleanup and await persistence."
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "function": {
+                "name": "Read",
+                "description": "Read fixture source",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "path": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "path"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a development assistant. Preserve user scope."
+            },
+            {
+              "role": "user",
+              "content": "退出登录后 restart 仍 signed in。追踪 persistent cleanup 与 startup restoration，修复并测试。"
+            },
+            {
+              "role": "assistant",
+              "content": null,
+              "tool_calls": [
+                {
+                  "id": "read-1",
+                  "type": "function",
+                  "function": {
+                    "name": "Read",
+                    "arguments": "{\"path\":\"fixture.txt\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "tool",
+              "tool_call_id": "read-1",
+              "content": "Profile only navigates to Login. Startup reads KEY_LOGIN_INFO. Preferences.delete awaits flush. Account removal and H5 login navigation use Navigation.resetTo."
+            },
+            {
+              "role": "user",
+              "content": "不能只改 Profile；所有 Login entry points 统一 cleanup，并 await persistence。"
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "function": {
+                "name": "Read",
+                "description": "Read fixture source",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "path": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "path"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "logout-new_task",
+      "source": "history_reconstruction",
+      "source_thread_id": "019fcb9a-55e9-70b1-99d6-60912a1c9bab",
+      "phase": "new_task",
+      "protocol": "chat",
+      "split": "history_holdout",
+      "expected_task": "translation",
+      "reviewer_complexity": "simple",
+      "expected_new_task": true,
+      "expected_tool_continuation": false,
+      "expected_current": {
+        "zh": "换个任务：把“构建通过，但尚未真机验收”翻译成英文。",
+        "en": "New task: translate “构建通过，但尚未真机验收” into English.",
+        "mixed": "换个 task：translate “构建通过，但尚未真机验收” into English."
+      },
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a development assistant. Preserve user scope."
+            },
+            {
+              "role": "user",
+              "content": "退出登录后重启仍然是登录状态。请追踪持久化清理和启动恢复，修复并验证。"
+            },
+            {
+              "role": "assistant",
+              "content": null,
+              "tool_calls": [
+                {
+                  "id": "read-1",
+                  "type": "function",
+                  "function": {
+                    "name": "Read",
+                    "arguments": "{\"path\":\"fixture.txt\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "tool",
+              "tool_call_id": "read-1",
+              "content": "Profile only navigates to Login. Startup reads KEY_LOGIN_INFO. Preferences.delete awaits flush. Account removal and H5 login navigation use Navigation.resetTo."
+            },
+            {
+              "role": "assistant",
+              "content": "The previous diagnosis is complete."
+            },
+            {
+              "role": "user",
+              "content": "换个任务：把“构建通过，但尚未真机验收”翻译成英文。"
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "function": {
+                "name": "Read",
+                "description": "Read fixture source",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "path": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "path"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a development assistant. Preserve user scope."
+            },
+            {
+              "role": "user",
+              "content": "After logout the app is still signed in on restart. Trace persistent cleanup and startup restoration, fix it and verify."
+            },
+            {
+              "role": "assistant",
+              "content": null,
+              "tool_calls": [
+                {
+                  "id": "read-1",
+                  "type": "function",
+                  "function": {
+                    "name": "Read",
+                    "arguments": "{\"path\":\"fixture.txt\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "tool",
+              "tool_call_id": "read-1",
+              "content": "Profile only navigates to Login. Startup reads KEY_LOGIN_INFO. Preferences.delete awaits flush. Account removal and H5 login navigation use Navigation.resetTo."
+            },
+            {
+              "role": "assistant",
+              "content": "The previous diagnosis is complete."
+            },
+            {
+              "role": "user",
+              "content": "New task: translate “构建通过，但尚未真机验收” into English."
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "function": {
+                "name": "Read",
+                "description": "Read fixture source",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "path": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "path"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a development assistant. Preserve user scope."
+            },
+            {
+              "role": "user",
+              "content": "退出登录后 restart 仍 signed in。追踪 persistent cleanup 与 startup restoration，修复并测试。"
+            },
+            {
+              "role": "assistant",
+              "content": null,
+              "tool_calls": [
+                {
+                  "id": "read-1",
+                  "type": "function",
+                  "function": {
+                    "name": "Read",
+                    "arguments": "{\"path\":\"fixture.txt\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "tool",
+              "tool_call_id": "read-1",
+              "content": "Profile only navigates to Login. Startup reads KEY_LOGIN_INFO. Preferences.delete awaits flush. Account removal and H5 login navigation use Navigation.resetTo."
+            },
+            {
+              "role": "assistant",
+              "content": "The previous diagnosis is complete."
+            },
+            {
+              "role": "user",
+              "content": "换个 task：translate “构建通过，但尚未真机验收” into English."
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "function": {
+                "name": "Read",
+                "description": "Read fixture source",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "path": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "path"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "startup-start",
+      "source": "history_reconstruction",
+      "source_thread_id": "019feffc-d21e-7302-b852-daa722944cb3",
+      "phase": "start",
+      "protocol": "responses",
+      "split": "history_holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "complex",
+      "expected_new_task": false,
+      "expected_tool_continuation": false,
+      "expected_current": {
+        "zh": "启动时读取在线 VIN；已登录且 VIN 与上次不一致时到登录页，一致则继续。内容去空白后非空即可。",
+        "en": "Read online VIN on startup; a signed-in user goes to Login if it changed, otherwise continues. Accept any nonempty trimmed content.",
+        "mixed": "启动读取 online VIN；signed-in 且 changed 时到 Login，相同继续。trim 后 nonempty 即可。"
+      },
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "instructions": "You are a development assistant. Preserve user scope.",
+          "input": [
+            {
+              "role": "user",
+              "content": "启动时读取在线 VIN；已登录且 VIN 与上次不一致时到登录页，一致则继续。内容去空白后非空即可。"
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "name": "Read",
+              "description": "Read fixture source",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "instructions": "You are a development assistant. Preserve user scope.",
+          "input": [
+            {
+              "role": "user",
+              "content": "Read online VIN on startup; a signed-in user goes to Login if it changed, otherwise continues. Accept any nonempty trimmed content."
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "name": "Read",
+              "description": "Read fixture source",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "instructions": "You are a development assistant. Preserve user scope.",
+          "input": [
+            {
+              "role": "user",
+              "content": "启动读取 online VIN；signed-in 且 changed 时到 Login，相同继续。trim 后 nonempty 即可。"
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "name": "Read",
+              "description": "Read fixture source",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "startup-tool_result",
+      "source": "history_reconstruction",
+      "source_thread_id": "019feffc-d21e-7302-b852-daa722944cb3",
+      "phase": "tool_result",
+      "protocol": "responses",
+      "split": "history_holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "complex",
+      "expected_new_task": false,
+      "expected_tool_continuation": true,
+      "expected_current": {
+        "zh": "启动时读取在线 VIN；已登录且 VIN 与上次不一致时到登录页，一致则继续。内容去空白后非空即可。",
+        "en": "Read online VIN on startup; a signed-in user goes to Login if it changed, otherwise continues. Accept any nonempty trimmed content.",
+        "mixed": "启动读取 online VIN；signed-in 且 changed 时到 Login，相同继续。trim 后 nonempty 即可。"
+      },
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "instructions": "You are a development assistant. Preserve user scope.",
+          "input": [
+            {
+              "role": "user",
+              "content": "启动时读取在线 VIN；已登录且 VIN 与上次不一致时到登录页，一致则继续。内容去空白后非空即可。"
+            },
+            {
+              "type": "function_call",
+              "call_id": "read-1",
+              "name": "Read",
+              "arguments": "{\"path\":\"fixture.txt\"}"
+            },
+            {
+              "type": "function_call_output",
+              "call_id": "read-1",
+              "output": "Trace: initH5 -> verifyVin -> checkUpdate -> navigate. Update dismiss and network completion can both call navigate. Existing Retrofit getHtmlContent returns the remote text."
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "name": "Read",
+              "description": "Read fixture source",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "instructions": "You are a development assistant. Preserve user scope.",
+          "input": [
+            {
+              "role": "user",
+              "content": "Read online VIN on startup; a signed-in user goes to Login if it changed, otherwise continues. Accept any nonempty trimmed content."
+            },
+            {
+              "type": "function_call",
+              "call_id": "read-1",
+              "name": "Read",
+              "arguments": "{\"path\":\"fixture.txt\"}"
+            },
+            {
+              "type": "function_call_output",
+              "call_id": "read-1",
+              "output": "Trace: initH5 -> verifyVin -> checkUpdate -> navigate. Update dismiss and network completion can both call navigate. Existing Retrofit getHtmlContent returns the remote text."
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "name": "Read",
+              "description": "Read fixture source",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "instructions": "You are a development assistant. Preserve user scope.",
+          "input": [
+            {
+              "role": "user",
+              "content": "启动读取 online VIN；signed-in 且 changed 时到 Login，相同继续。trim 后 nonempty 即可。"
+            },
+            {
+              "type": "function_call",
+              "call_id": "read-1",
+              "name": "Read",
+              "arguments": "{\"path\":\"fixture.txt\"}"
+            },
+            {
+              "type": "function_call_output",
+              "call_id": "read-1",
+              "output": "Trace: initH5 -> verifyVin -> checkUpdate -> navigate. Update dismiss and network completion can both call navigate. Existing Retrofit getHtmlContent returns the remote text."
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "name": "Read",
+              "description": "Read fixture source",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "startup-correction",
+      "source": "history_reconstruction",
+      "source_thread_id": "019feffc-d21e-7302-b852-daa722944cb3",
+      "phase": "correction",
+      "protocol": "responses",
+      "split": "history_holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "complex",
+      "expected_new_task": false,
+      "expected_tool_continuation": true,
+      "expected_current": {
+        "zh": "更新检查和 VIN 校验必须独立；取消非强更也要继续校验，避免两个回调重复导航。",
+        "en": "Keep update checks independent from VIN validation; cancelling an optional update must continue validation, without duplicate navigation from two callbacks.",
+        "mixed": "update check 和 VIN validation 独立；cancel optional update 继续校验，避免 callbacks 重复 navigate。"
+      },
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "instructions": "You are a development assistant. Preserve user scope.",
+          "input": [
+            {
+              "role": "user",
+              "content": "启动时读取在线 VIN；已登录且 VIN 与上次不一致时到登录页，一致则继续。内容去空白后非空即可。"
+            },
+            {
+              "type": "function_call",
+              "call_id": "read-1",
+              "name": "Read",
+              "arguments": "{\"path\":\"fixture.txt\"}"
+            },
+            {
+              "type": "function_call_output",
+              "call_id": "read-1",
+              "output": "Trace: initH5 -> verifyVin -> checkUpdate -> navigate. Update dismiss and network completion can both call navigate. Existing Retrofit getHtmlContent returns the remote text."
+            },
+            {
+              "role": "user",
+              "content": "更新检查和 VIN 校验必须独立；取消非强更也要继续校验，避免两个回调重复导航。"
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "name": "Read",
+              "description": "Read fixture source",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "instructions": "You are a development assistant. Preserve user scope.",
+          "input": [
+            {
+              "role": "user",
+              "content": "Read online VIN on startup; a signed-in user goes to Login if it changed, otherwise continues. Accept any nonempty trimmed content."
+            },
+            {
+              "type": "function_call",
+              "call_id": "read-1",
+              "name": "Read",
+              "arguments": "{\"path\":\"fixture.txt\"}"
+            },
+            {
+              "type": "function_call_output",
+              "call_id": "read-1",
+              "output": "Trace: initH5 -> verifyVin -> checkUpdate -> navigate. Update dismiss and network completion can both call navigate. Existing Retrofit getHtmlContent returns the remote text."
+            },
+            {
+              "role": "user",
+              "content": "Keep update checks independent from VIN validation; cancelling an optional update must continue validation, without duplicate navigation from two callbacks."
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "name": "Read",
+              "description": "Read fixture source",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "instructions": "You are a development assistant. Preserve user scope.",
+          "input": [
+            {
+              "role": "user",
+              "content": "启动读取 online VIN；signed-in 且 changed 时到 Login，相同继续。trim 后 nonempty 即可。"
+            },
+            {
+              "type": "function_call",
+              "call_id": "read-1",
+              "name": "Read",
+              "arguments": "{\"path\":\"fixture.txt\"}"
+            },
+            {
+              "type": "function_call_output",
+              "call_id": "read-1",
+              "output": "Trace: initH5 -> verifyVin -> checkUpdate -> navigate. Update dismiss and network completion can both call navigate. Existing Retrofit getHtmlContent returns the remote text."
+            },
+            {
+              "role": "user",
+              "content": "update check 和 VIN validation 独立；cancel optional update 继续校验，避免 callbacks 重复 navigate。"
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "name": "Read",
+              "description": "Read fixture source",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "startup-new_task",
+      "source": "history_reconstruction",
+      "source_thread_id": "019feffc-d21e-7302-b852-daa722944cb3",
+      "phase": "new_task",
+      "protocol": "responses",
+      "split": "history_holdout",
+      "expected_task": "translation",
+      "reviewer_complexity": "simple",
+      "expected_new_task": true,
+      "expected_tool_continuation": false,
+      "expected_current": {
+        "zh": "换个任务：把“构建通过，但尚未真机验收”翻译成英文。",
+        "en": "New task: translate “构建通过，但尚未真机验收” into English.",
+        "mixed": "换个 task：translate “构建通过，但尚未真机验收” into English."
+      },
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "instructions": "You are a development assistant. Preserve user scope.",
+          "input": [
+            {
+              "role": "user",
+              "content": "启动时读取在线 VIN；已登录且 VIN 与上次不一致时到登录页，一致则继续。内容去空白后非空即可。"
+            },
+            {
+              "type": "function_call",
+              "call_id": "read-1",
+              "name": "Read",
+              "arguments": "{\"path\":\"fixture.txt\"}"
+            },
+            {
+              "type": "function_call_output",
+              "call_id": "read-1",
+              "output": "Trace: initH5 -> verifyVin -> checkUpdate -> navigate. Update dismiss and network completion can both call navigate. Existing Retrofit getHtmlContent returns the remote text."
+            },
+            {
+              "role": "assistant",
+              "content": "The previous diagnosis is complete."
+            },
+            {
+              "role": "user",
+              "content": "换个任务：把“构建通过，但尚未真机验收”翻译成英文。"
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "name": "Read",
+              "description": "Read fixture source",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "instructions": "You are a development assistant. Preserve user scope.",
+          "input": [
+            {
+              "role": "user",
+              "content": "Read online VIN on startup; a signed-in user goes to Login if it changed, otherwise continues. Accept any nonempty trimmed content."
+            },
+            {
+              "type": "function_call",
+              "call_id": "read-1",
+              "name": "Read",
+              "arguments": "{\"path\":\"fixture.txt\"}"
+            },
+            {
+              "type": "function_call_output",
+              "call_id": "read-1",
+              "output": "Trace: initH5 -> verifyVin -> checkUpdate -> navigate. Update dismiss and network completion can both call navigate. Existing Retrofit getHtmlContent returns the remote text."
+            },
+            {
+              "role": "assistant",
+              "content": "The previous diagnosis is complete."
+            },
+            {
+              "role": "user",
+              "content": "New task: translate “构建通过，但尚未真机验收” into English."
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "name": "Read",
+              "description": "Read fixture source",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "instructions": "You are a development assistant. Preserve user scope.",
+          "input": [
+            {
+              "role": "user",
+              "content": "启动读取 online VIN；signed-in 且 changed 时到 Login，相同继续。trim 后 nonempty 即可。"
+            },
+            {
+              "type": "function_call",
+              "call_id": "read-1",
+              "name": "Read",
+              "arguments": "{\"path\":\"fixture.txt\"}"
+            },
+            {
+              "type": "function_call_output",
+              "call_id": "read-1",
+              "output": "Trace: initH5 -> verifyVin -> checkUpdate -> navigate. Update dismiss and network completion can both call navigate. Existing Retrofit getHtmlContent returns the remote text."
+            },
+            {
+              "role": "assistant",
+              "content": "The previous diagnosis is complete."
+            },
+            {
+              "role": "user",
+              "content": "换个 task：translate “构建通过，但尚未真机验收” into English."
+            }
+          ],
+          "tools": [
+            {
+              "type": "function",
+              "name": "Read",
+              "description": "Read fixture source",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "release-start",
+      "source": "history_reconstruction",
+      "source_thread_id": "01a03335-a42a-7481-94a4-42461fddfb4f",
+      "phase": "start",
+      "protocol": "anthropic",
+      "split": "history_holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "multi_step",
+      "expected_new_task": false,
+      "expected_tool_continuation": false,
+      "expected_current": {
+        "zh": "后台接口有数据，生产前端却显示零，Jenkins 显示发布成功。请只读核对标签、构建产物和部署目标，定位断点。",
+        "en": "The backend has data but production UI shows zero, while Jenkins says deployment succeeded. Read-only: reconcile tags, artifacts and deployment targets to locate the break.",
+        "mixed": "API 有数据但 production UI 为零，Jenkins success。只读 reconcile tags、artifacts 与 deploy targets，定位断点。"
+      },
+      "variants": {
+        "zh": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "后台接口有数据，生产前端却显示零，Jenkins 显示发布成功。请只读核对标签、构建产物和部署目标，定位断点。"
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "en": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "The backend has data but production UI shows zero, while Jenkins says deployment succeeded. Read-only: reconcile tags, artifacts and deployment targets to locate the break."
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "mixed": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "API 有数据但 production UI 为零，Jenkins success。只读 reconcile tags、artifacts 与 deploy targets，定位断点。"
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "release-tool_result",
+      "source": "history_reconstruction",
+      "source_thread_id": "01a03335-a42a-7481-94a4-42461fddfb4f",
+      "phase": "tool_result",
+      "protocol": "anthropic",
+      "split": "history_holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "multi_step",
+      "expected_new_task": false,
+      "expected_tool_continuation": true,
+      "expected_current": {
+        "zh": "后台接口有数据，生产前端却显示零，Jenkins 显示发布成功。请只读核对标签、构建产物和部署目标，定位断点。",
+        "en": "The backend has data but production UI shows zero, while Jenkins says deployment succeeded. Read-only: reconcile tags, artifacts and deployment targets to locate the break.",
+        "mixed": "API 有数据但 production UI 为零，Jenkins success。只读 reconcile tags、artifacts 与 deploy targets，定位断点。"
+      },
+      "variants": {
+        "zh": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "后台接口有数据，生产前端却显示零，Jenkins 显示发布成功。请只读核对标签、构建产物和部署目标，定位断点。"
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "tool_use",
+                  "id": "read-1",
+                  "name": "Read",
+                  "input": {
+                    "path": "fixture.txt"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "tool_result",
+                  "tool_use_id": "read-1",
+                  "content": "Tag contains client dashboard. Build generated client-dashboard-new.js. Served index.html refers to web-dashboard-old.js. Deploy log: // sh deploy_static.sh target-B; bash reports //: Is a directory; shell continues to other targets."
+                }
+              ]
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "en": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "The backend has data but production UI shows zero, while Jenkins says deployment succeeded. Read-only: reconcile tags, artifacts and deployment targets to locate the break."
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "tool_use",
+                  "id": "read-1",
+                  "name": "Read",
+                  "input": {
+                    "path": "fixture.txt"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "tool_result",
+                  "tool_use_id": "read-1",
+                  "content": "Tag contains client dashboard. Build generated client-dashboard-new.js. Served index.html refers to web-dashboard-old.js. Deploy log: // sh deploy_static.sh target-B; bash reports //: Is a directory; shell continues to other targets."
+                }
+              ]
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "mixed": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "API 有数据但 production UI 为零，Jenkins success。只读 reconcile tags、artifacts 与 deploy targets，定位断点。"
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "tool_use",
+                  "id": "read-1",
+                  "name": "Read",
+                  "input": {
+                    "path": "fixture.txt"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "tool_result",
+                  "tool_use_id": "read-1",
+                  "content": "Tag contains client dashboard. Build generated client-dashboard-new.js. Served index.html refers to web-dashboard-old.js. Deploy log: // sh deploy_static.sh target-B; bash reports //: Is a directory; shell continues to other targets."
+                }
+              ]
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "release-correction",
+      "source": "history_reconstruction",
+      "source_thread_id": "01a03335-a42a-7481-94a4-42461fddfb4f",
+      "phase": "correction",
+      "protocol": "anthropic",
+      "split": "history_holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "multi_step",
+      "expected_new_task": false,
+      "expected_tool_continuation": true,
+      "expected_current": {
+        "zh": "接口已有数据不能算前端成功；继续对照实际返回的 index.html 和构建产物，不要重新发布。",
+        "en": "Backend data does not prove frontend deployment. Compare served index.html with built artifacts; do not redeploy.",
+        "mixed": "API data 不代表 frontend deployed；比较 served index.html 与 build artifacts，先不要 redeploy。"
+      },
+      "variants": {
+        "zh": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "后台接口有数据，生产前端却显示零，Jenkins 显示发布成功。请只读核对标签、构建产物和部署目标，定位断点。"
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "tool_use",
+                  "id": "read-1",
+                  "name": "Read",
+                  "input": {
+                    "path": "fixture.txt"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "tool_result",
+                  "tool_use_id": "read-1",
+                  "content": "Tag contains client dashboard. Build generated client-dashboard-new.js. Served index.html refers to web-dashboard-old.js. Deploy log: // sh deploy_static.sh target-B; bash reports //: Is a directory; shell continues to other targets."
+                },
+                {
+                  "type": "text",
+                  "text": "接口已有数据不能算前端成功；继续对照实际返回的 index.html 和构建产物，不要重新发布。"
+                }
+              ]
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "en": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "The backend has data but production UI shows zero, while Jenkins says deployment succeeded. Read-only: reconcile tags, artifacts and deployment targets to locate the break."
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "tool_use",
+                  "id": "read-1",
+                  "name": "Read",
+                  "input": {
+                    "path": "fixture.txt"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "tool_result",
+                  "tool_use_id": "read-1",
+                  "content": "Tag contains client dashboard. Build generated client-dashboard-new.js. Served index.html refers to web-dashboard-old.js. Deploy log: // sh deploy_static.sh target-B; bash reports //: Is a directory; shell continues to other targets."
+                },
+                {
+                  "type": "text",
+                  "text": "Backend data does not prove frontend deployment. Compare served index.html with built artifacts; do not redeploy."
+                }
+              ]
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "mixed": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "API 有数据但 production UI 为零，Jenkins success。只读 reconcile tags、artifacts 与 deploy targets，定位断点。"
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "tool_use",
+                  "id": "read-1",
+                  "name": "Read",
+                  "input": {
+                    "path": "fixture.txt"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "tool_result",
+                  "tool_use_id": "read-1",
+                  "content": "Tag contains client dashboard. Build generated client-dashboard-new.js. Served index.html refers to web-dashboard-old.js. Deploy log: // sh deploy_static.sh target-B; bash reports //: Is a directory; shell continues to other targets."
+                },
+                {
+                  "type": "text",
+                  "text": "API data 不代表 frontend deployed；比较 served index.html 与 build artifacts，先不要 redeploy。"
+                }
+              ]
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "release-new_task",
+      "source": "history_reconstruction",
+      "source_thread_id": "01a03335-a42a-7481-94a4-42461fddfb4f",
+      "phase": "new_task",
+      "protocol": "anthropic",
+      "split": "history_holdout",
+      "expected_task": "translation",
+      "reviewer_complexity": "simple",
+      "expected_new_task": true,
+      "expected_tool_continuation": false,
+      "expected_current": {
+        "zh": "换个任务：把“构建通过，但尚未真机验收”翻译成英文。",
+        "en": "New task: translate “构建通过，但尚未真机验收” into English.",
+        "mixed": "换个 task：translate “构建通过，但尚未真机验收” into English."
+      },
+      "variants": {
+        "zh": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "后台接口有数据，生产前端却显示零，Jenkins 显示发布成功。请只读核对标签、构建产物和部署目标，定位断点。"
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "tool_use",
+                  "id": "read-1",
+                  "name": "Read",
+                  "input": {
+                    "path": "fixture.txt"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "tool_result",
+                  "tool_use_id": "read-1",
+                  "content": "Tag contains client dashboard. Build generated client-dashboard-new.js. Served index.html refers to web-dashboard-old.js. Deploy log: // sh deploy_static.sh target-B; bash reports //: Is a directory; shell continues to other targets."
+                }
+              ]
+            },
+            {
+              "role": "assistant",
+              "content": "The previous diagnosis is complete."
+            },
+            {
+              "role": "user",
+              "content": "换个任务：把“构建通过，但尚未真机验收”翻译成英文。"
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "en": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "The backend has data but production UI shows zero, while Jenkins says deployment succeeded. Read-only: reconcile tags, artifacts and deployment targets to locate the break."
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "tool_use",
+                  "id": "read-1",
+                  "name": "Read",
+                  "input": {
+                    "path": "fixture.txt"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "tool_result",
+                  "tool_use_id": "read-1",
+                  "content": "Tag contains client dashboard. Build generated client-dashboard-new.js. Served index.html refers to web-dashboard-old.js. Deploy log: // sh deploy_static.sh target-B; bash reports //: Is a directory; shell continues to other targets."
+                }
+              ]
+            },
+            {
+              "role": "assistant",
+              "content": "The previous diagnosis is complete."
+            },
+            {
+              "role": "user",
+              "content": "New task: translate “构建通过，但尚未真机验收” into English."
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "mixed": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "API 有数据但 production UI 为零，Jenkins success。只读 reconcile tags、artifacts 与 deploy targets，定位断点。"
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "tool_use",
+                  "id": "read-1",
+                  "name": "Read",
+                  "input": {
+                    "path": "fixture.txt"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "tool_result",
+                  "tool_use_id": "read-1",
+                  "content": "Tag contains client dashboard. Build generated client-dashboard-new.js. Served index.html refers to web-dashboard-old.js. Deploy log: // sh deploy_static.sh target-B; bash reports //: Is a directory; shell continues to other targets."
+                }
+              ]
+            },
+            {
+              "role": "assistant",
+              "content": "The previous diagnosis is complete."
+            },
+            {
+              "role": "user",
+              "content": "换个 task：translate “构建通过，但尚未真机验收” into English."
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "reminder-start",
+      "source": "history_reconstruction",
+      "source_thread_id": "01a08e38-b2dc-7393-bf2d-c53188d80fb7",
+      "phase": "start",
+      "protocol": "anthropic",
+      "split": "history_holdout",
+      "expected_task": "coding",
+      "reviewer_complexity": "bounded",
+      "expected_new_task": false,
+      "expected_tool_continuation": false,
+      "expected_current": {
+        "zh": "提醒列表首行显示电池编号与名称，名称为空隐藏竖线，箭头固定最右侧；展开区显示设备编号。",
+        "en": "Show battery code and name on the reminder row, hide the divider for empty names, keep the arrow right-aligned, and show device code in details.",
+        "mixed": "提醒 row 显示 battery code 与 name，empty name 隐藏 divider，arrow 固定 right，details 显示 device code。"
+      },
+      "variants": {
+        "zh": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "提醒列表首行显示电池编号与名称，名称为空隐藏竖线，箭头固定最右侧；展开区显示设备编号。"
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "en": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "Show battery code and name on the reminder row, hide the divider for empty names, keep the arrow right-aligned, and show device code in details."
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "mixed": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "提醒 row 显示 battery code 与 name，empty name 隐藏 divider，arrow 固定 right，details 显示 device code。"
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "reminder-tool_result",
+      "source": "history_reconstruction",
+      "source_thread_id": "01a08e38-b2dc-7393-bf2d-c53188d80fb7",
+      "phase": "tool_result",
+      "protocol": "anthropic",
+      "split": "history_holdout",
+      "expected_task": "coding",
+      "reviewer_complexity": "bounded",
+      "expected_new_task": false,
+      "expected_tool_continuation": true,
+      "expected_current": {
+        "zh": "提醒列表首行显示电池编号与名称，名称为空隐藏竖线，箭头固定最右侧；展开区显示设备编号。",
+        "en": "Show battery code and name on the reminder row, hide the divider for empty names, keep the arrow right-aligned, and show device code in details.",
+        "mixed": "提醒 row 显示 battery code 与 name，empty name 隐藏 divider，arrow 固定 right，details 显示 device code。"
+      },
+      "variants": {
+        "zh": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "提醒列表首行显示电池编号与名称，名称为空隐藏竖线，箭头固定最右侧；展开区显示设备编号。"
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "tool_use",
+                  "id": "read-1",
+                  "name": "Read",
+                  "input": {
+                    "path": "fixture.txt"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "tool_result",
+                  "tool_use_id": "read-1",
+                  "content": "DTO has batCode, deviceName, deviceCode. Adapter reads stationName. The row has name divider and trailing arrow. Existing instrumented tests assert visibility when the name is empty."
+                }
+              ]
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "en": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "Show battery code and name on the reminder row, hide the divider for empty names, keep the arrow right-aligned, and show device code in details."
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "tool_use",
+                  "id": "read-1",
+                  "name": "Read",
+                  "input": {
+                    "path": "fixture.txt"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "tool_result",
+                  "tool_use_id": "read-1",
+                  "content": "DTO has batCode, deviceName, deviceCode. Adapter reads stationName. The row has name divider and trailing arrow. Existing instrumented tests assert visibility when the name is empty."
+                }
+              ]
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "mixed": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "提醒 row 显示 battery code 与 name，empty name 隐藏 divider，arrow 固定 right，details 显示 device code。"
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "tool_use",
+                  "id": "read-1",
+                  "name": "Read",
+                  "input": {
+                    "path": "fixture.txt"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "tool_result",
+                  "tool_use_id": "read-1",
+                  "content": "DTO has batCode, deviceName, deviceCode. Adapter reads stationName. The row has name divider and trailing arrow. Existing instrumented tests assert visibility when the name is empty."
+                }
+              ]
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "reminder-correction",
+      "source": "history_reconstruction",
+      "source_thread_id": "01a08e38-b2dc-7393-bf2d-c53188d80fb7",
+      "phase": "correction",
+      "protocol": "anthropic",
+      "split": "history_holdout",
+      "expected_task": "coding",
+      "reviewer_complexity": "bounded",
+      "expected_new_task": false,
+      "expected_tool_continuation": true,
+      "expected_current": {
+        "zh": "字段改为 deviceName，不再取 stationName；保留竖线和右侧箭头，删除误加的 DTO 字段。",
+        "en": "Use deviceName rather than stationName; preserve divider and right arrow, and remove the mistakenly added DTO field.",
+        "mixed": "改用 deviceName instead of stationName；保留 divider 和 right arrow，清理误加 DTO field。"
+      },
+      "variants": {
+        "zh": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "提醒列表首行显示电池编号与名称，名称为空隐藏竖线，箭头固定最右侧；展开区显示设备编号。"
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "tool_use",
+                  "id": "read-1",
+                  "name": "Read",
+                  "input": {
+                    "path": "fixture.txt"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "tool_result",
+                  "tool_use_id": "read-1",
+                  "content": "DTO has batCode, deviceName, deviceCode. Adapter reads stationName. The row has name divider and trailing arrow. Existing instrumented tests assert visibility when the name is empty."
+                },
+                {
+                  "type": "text",
+                  "text": "字段改为 deviceName，不再取 stationName；保留竖线和右侧箭头，删除误加的 DTO 字段。"
+                }
+              ]
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "en": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "Show battery code and name on the reminder row, hide the divider for empty names, keep the arrow right-aligned, and show device code in details."
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "tool_use",
+                  "id": "read-1",
+                  "name": "Read",
+                  "input": {
+                    "path": "fixture.txt"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "tool_result",
+                  "tool_use_id": "read-1",
+                  "content": "DTO has batCode, deviceName, deviceCode. Adapter reads stationName. The row has name divider and trailing arrow. Existing instrumented tests assert visibility when the name is empty."
+                },
+                {
+                  "type": "text",
+                  "text": "Use deviceName rather than stationName; preserve divider and right arrow, and remove the mistakenly added DTO field."
+                }
+              ]
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "mixed": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "提醒 row 显示 battery code 与 name，empty name 隐藏 divider，arrow 固定 right，details 显示 device code。"
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "tool_use",
+                  "id": "read-1",
+                  "name": "Read",
+                  "input": {
+                    "path": "fixture.txt"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "tool_result",
+                  "tool_use_id": "read-1",
+                  "content": "DTO has batCode, deviceName, deviceCode. Adapter reads stationName. The row has name divider and trailing arrow. Existing instrumented tests assert visibility when the name is empty."
+                },
+                {
+                  "type": "text",
+                  "text": "改用 deviceName instead of stationName；保留 divider 和 right arrow，清理误加 DTO field。"
+                }
+              ]
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "reminder-new_task",
+      "source": "history_reconstruction",
+      "source_thread_id": "01a08e38-b2dc-7393-bf2d-c53188d80fb7",
+      "phase": "new_task",
+      "protocol": "anthropic",
+      "split": "history_holdout",
+      "expected_task": "translation",
+      "reviewer_complexity": "simple",
+      "expected_new_task": true,
+      "expected_tool_continuation": false,
+      "expected_current": {
+        "zh": "换个任务：把“构建通过，但尚未真机验收”翻译成英文。",
+        "en": "New task: translate “构建通过，但尚未真机验收” into English.",
+        "mixed": "换个 task：translate “构建通过，但尚未真机验收” into English."
+      },
+      "variants": {
+        "zh": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "提醒列表首行显示电池编号与名称，名称为空隐藏竖线，箭头固定最右侧；展开区显示设备编号。"
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "tool_use",
+                  "id": "read-1",
+                  "name": "Read",
+                  "input": {
+                    "path": "fixture.txt"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "tool_result",
+                  "tool_use_id": "read-1",
+                  "content": "DTO has batCode, deviceName, deviceCode. Adapter reads stationName. The row has name divider and trailing arrow. Existing instrumented tests assert visibility when the name is empty."
+                }
+              ]
+            },
+            {
+              "role": "assistant",
+              "content": "The previous diagnosis is complete."
+            },
+            {
+              "role": "user",
+              "content": "换个任务：把“构建通过，但尚未真机验收”翻译成英文。"
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "en": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "Show battery code and name on the reminder row, hide the divider for empty names, keep the arrow right-aligned, and show device code in details."
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "tool_use",
+                  "id": "read-1",
+                  "name": "Read",
+                  "input": {
+                    "path": "fixture.txt"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "tool_result",
+                  "tool_use_id": "read-1",
+                  "content": "DTO has batCode, deviceName, deviceCode. Adapter reads stationName. The row has name divider and trailing arrow. Existing instrumented tests assert visibility when the name is empty."
+                }
+              ]
+            },
+            {
+              "role": "assistant",
+              "content": "The previous diagnosis is complete."
+            },
+            {
+              "role": "user",
+              "content": "New task: translate “构建通过，但尚未真机验收” into English."
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        },
+        "mixed": {
+          "model": "claude-opus-5",
+          "max_tokens": 2048,
+          "system": [
+            {
+              "type": "text",
+              "text": "You are a development assistant. Preserve user scope.",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "提醒 row 显示 battery code 与 name，empty name 隐藏 divider，arrow 固定 right，details 显示 device code。"
+            },
+            {
+              "role": "assistant",
+              "content": [
+                {
+                  "type": "tool_use",
+                  "id": "read-1",
+                  "name": "Read",
+                  "input": {
+                    "path": "fixture.txt"
+                  }
+                }
+              ]
+            },
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "tool_result",
+                  "tool_use_id": "read-1",
+                  "content": "DTO has batCode, deviceName, deviceCode. Adapter reads stationName. The row has name divider and trailing arrow. Existing instrumented tests assert visibility when the name is empty."
+                }
+              ]
+            },
+            {
+              "role": "assistant",
+              "content": "The previous diagnosis is complete."
+            },
+            {
+              "role": "user",
+              "content": "换个 task：translate “构建通过，但尚未真机验收” into English."
+            }
+          ],
+          "tools": [
+            {
+              "name": "Read",
+              "description": "Read fixture source",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+[
+  {
+    "lang": "zh",
+    "request_id": "26a26a1612e84f2641f8a904c3c50bcb",
+    "status": 200,
+    "model": "deepseek-flash",
+    "response_id": "8857ad81-bf99-4961-9dc9-1498649975b4",
+    "stop_reason": "end_turn",
+    "content_types": [
+      "text"
+    ],
+    "usage": {
+      "input_tokens": 11,
+      "output_tokens": 26,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0
+    },
+    "latency_ms": 5176
+  },
+  {
+    "lang": "en",
+    "request_id": "67b8557ca81e325aab7905a3fe2e01da",
+    "status": 200,
+    "model": "deepseek-flash",
+    "response_id": "ee23f62d-d569-4852-87b0-8667fcdf534c",
+    "stop_reason": "end_turn",
+    "content_types": [
+      "text"
+    ],
+    "usage": {
+      "input_tokens": 12,
+      "output_tokens": 33,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0
+    },
+    "latency_ms": 4916
+  },
+  {
+    "lang": "mixed",
+    "request_id": "a8c614d2677f88b3d4f793e492169f61",
+    "status": 200,
+    "model": "deepseek-flash",
+    "response_id": "dc1862b6-32e2-4bf6-a25a-63b68dde258d",
+    "stop_reason": "end_turn",
+    "content_types": [
+      "text"
+    ],
+    "usage": {
+      "input_tokens": 13,
+      "output_tokens": 34,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0
+    },
+    "latency_ms": 6426
+  }
+]

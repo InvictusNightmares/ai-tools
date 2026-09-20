@@ -1,0 +1,47 @@
+{
+  "client": "claude",
+  "scope": "actual native client and actual v15 gateway; synthetic auth Guard classifiers and models; not real regional acceptance",
+  "source_sha256": "efc73780c1b690f3ea7199b9da2d4013f514192dfd727ab44845ee3f49798e89",
+  "binary_sha256": "2f745b054652c5b0489a6c3cc80e27822ceed0680fc5abb19de7ace8d4f3203c",
+  "checks": [
+    {
+      "check": "initial_marker",
+      "passed": true
+    },
+    {
+      "check": "native_compact_event",
+      "passed": true,
+      "new_requests": 1
+    },
+    {
+      "check": "recall_after_compact",
+      "passed": true
+    },
+    {
+      "check": "multiple_native_tools",
+      "passed": true,
+      "tool_count": 2
+    },
+    {
+      "check": "native_subagent",
+      "passed": true
+    },
+    {
+      "check": "native_interrupt",
+      "passed": true
+    },
+    {
+      "check": "resume_after_cancel",
+      "passed": true
+    }
+  ],
+  "stage_counts": {
+    "identity_rejected": 1,
+    "route_decided": 13,
+    "upstream_started": 13,
+    "upstream_completed": 12,
+    "request_canceled": 1
+  },
+  "complete_upstream_failed": 0,
+  "private_result_sha256": "d69da8ce406f83d18bb9ba5557e668a4249fa36cd0715f8874f99debd5f76efb"
+}

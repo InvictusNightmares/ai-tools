@@ -1,0 +1,13 @@
+{
+  "archive_sha256": "fcc3f7f9301dfae688e25332b5e8f28b6bc51b6792a9172182cb7a8b01d16940",
+  "test": "TestPhaseDOrderGuardThenAutoThenUpstream",
+  "allow_upstream_calls": 1,
+  "block_upstream_calls": 1,
+  "unavailable_upstream_calls": 1,
+  "gofmt": "pass",
+  "go_test": "pass",
+  "go_vet": "pass",
+  "go_test_race": "pass",
+  "static_build": "pass",
+  "production_changed": false
+}

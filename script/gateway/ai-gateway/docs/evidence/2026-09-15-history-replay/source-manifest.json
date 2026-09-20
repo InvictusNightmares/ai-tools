@@ -1,0 +1,554 @@
+{
+  "at": "2026-09-15T20:00:14.214554+08:00",
+  "scope": "local_only_not_deployed_no_cutover",
+  "semantic_policy_version": "semantic-v4",
+  "go": "go1.27.1",
+  "archive": {
+    "path": "/tmp/gateway-history-v4.tgz",
+    "bytes": 97137,
+    "sha256": "587a74158a1ab109eb6ce064bed13599e5611c322138cb022e45eb6db8bdc408"
+  },
+  "previous_auto_archive_sha256": "d0cd69505be78cc08c1dbdbe2d40e14f994f0e529a6b572aa9f11cb3722a8f3c",
+  "tests": {
+    "auto-gateway": {
+      "pass_tests_and_subtests": 258,
+      "fail": 0,
+      "race_log_sha256": "bcfcea00ea60c4300d6b28002d05858d89695ff7c2d246d88287e7d2c69190db"
+    },
+    "guard-gateway": {
+      "pass_tests_and_subtests": 16,
+      "fail": 0,
+      "race_log_sha256": "80b2295e4c0f5b96da39a120c43444085a337925d4d6f83b10d8b8768492dedb"
+    }
+  },
+  "auto_changes_from_v3": {
+    "new": 7,
+    "modified": 22,
+    "unchanged": 47
+  },
+  "fixture_sha256": "8f3321f791c85bd2fcb9e43b1783c308f8ee52ae20edcc2efef4c50fe619540c",
+  "programs": {
+    "auto-server": "970d05f76f2369365926ca9adc895e748338086ee9a3be2bee9e769f4e9ae876",
+    "semantic-eval": "341cdbf9b0fc6c390593755f5f730d810993025efb582185c4abb70918f7eab0",
+    "preflight-api": "acc209f0a3f029329677bd05ac4776179fcb6d3c1a8b98f52c668e8dc7150cac"
+  },
+  "files": [
+    {
+      "path": "auto-gateway/README.md",
+      "bytes": 8870,
+      "sha256": "76c0b496c88fca2b701f2231ea52ed1c81fbf696138e66b9e480428338e601b1",
+      "change_from_semantic_v3": "modified"
+    },
+    {
+      "path": "auto-gateway/analyze-evaluation.py",
+      "bytes": 3246,
+      "sha256": "e4ed45ddcf1d42070cbe4ddecd28ffcea881e046fe621b2b35894a7a42b5d455",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/audit_sink.go",
+      "bytes": 1348,
+      "sha256": "f96c07fe4927e007f00b60f22c2833015b4fd624dcc9fb0a2506241762866dc6",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/audit_sink_test.go",
+      "bytes": 621,
+      "sha256": "c3cc20319a4566257cc9831f75722d06b6186ea221fc0135a39aa623febba506",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/auto_gateway_test.go",
+      "bytes": 9568,
+      "sha256": "52854cdf1d1f64c8e03c344e7788db63a8d757cbc1fde1cad0f45bdaf3318b92",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/cache_coalescing_test.go",
+      "bytes": 3046,
+      "sha256": "fab26a066e00c65d25778b1c063985a4f895fac73000f09c6089e77bdf00e9c5",
+      "change_from_semantic_v3": "modified"
+    },
+    {
+      "path": "auto-gateway/cache_key.go",
+      "bytes": 1032,
+      "sha256": "7e3503c5bbdbe30f0abcf7d30119f12b04d23cd6473d77f954e62bf1f2fe984a",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/cache_key_test.go",
+      "bytes": 1121,
+      "sha256": "1f1d8c33bc86bd8f16f71fa0ac473fdc939dbe9e28963537fa4f40b5b493973d",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/cache_namespace.go",
+      "bytes": 906,
+      "sha256": "e366e3c6bbda63818915508a570ed3ea45f8a586a248bb22e9cc9527c9da32b8",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/cache_policy.go",
+      "bytes": 1376,
+      "sha256": "6a93f853adb98d11d7f0eff5f230d7b9eaaf7942ab46a0d1185bed99c5acec30",
+      "change_from_semantic_v3": "modified"
+    },
+    {
+      "path": "auto-gateway/cache_policy_test.go",
+      "bytes": 1278,
+      "sha256": "57d132b4de567c3f379b9eeef045182e8e5f0518518517d8fd3a46b199f6ee3e",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/cache_regression_test.go",
+      "bytes": 8061,
+      "sha256": "ce134239157c786be2cb4d4a626b179aa0bdc7f6e2d7e4e47aabdc476978103a",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/classifier.go",
+      "bytes": 7401,
+      "sha256": "ee7bfbb904e204934ec8450fcd89078030f169ad304bc3087371a2a064d82688",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/client_compatibility.go",
+      "bytes": 791,
+      "sha256": "b4439f13a51398decde98ccdf8e53a39895e8853888ccb13de043e8cd8f188c7",
+      "change_from_semantic_v3": "modified"
+    },
+    {
+      "path": "auto-gateway/client_compatibility_test.go",
+      "bytes": 2126,
+      "sha256": "35dcd1484220d67650ae693236437a2e874ead5f6dc41a323b877cb0ecaf1e11",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/client_session.go",
+      "bytes": 1884,
+      "sha256": "b48d7a1784fed04ca1fc048afb163cb859204138350614e99973201be1a69327",
+      "change_from_semantic_v3": "new"
+    },
+    {
+      "path": "auto-gateway/client_session_test.go",
+      "bytes": 1501,
+      "sha256": "c560f56936e0db196dd4274672dc57f5ed88b5d9b1cc553f4337156e110ffcb2",
+      "change_from_semantic_v3": "new"
+    },
+    {
+      "path": "auto-gateway/cmd/auto-preview/main.go",
+      "bytes": 498,
+      "sha256": "241f4aeb0c14f044de83ee08882596a3221b1ecafd3bc9a37795ecb595a2b1ac",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/cmd/auto-server/main.go",
+      "bytes": 5233,
+      "sha256": "9892185acfeb196dad8bd8c22c665c7cb86e972aa51f0553b233f8011443b12e",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/cmd/effort-probe/main.go",
+      "bytes": 6517,
+      "sha256": "168b82b25a5400b7c252eb3763ccaf79f6214fc45e85e5664adf8ad46d933145",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/cmd/semantic-eval/main.go",
+      "bytes": 5104,
+      "sha256": "c78258c500f8788902a6d759289109e19dfc43ba4fc92b75be0138e76151b856",
+      "change_from_semantic_v3": "modified"
+    },
+    {
+      "path": "auto-gateway/config.example.yaml",
+      "bytes": 1409,
+      "sha256": "58b778919f5899ddd9ce2371a11e538433f6f27c6591f221a32ab5f0572195fd",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/effort_matrix_test.go",
+      "bytes": 5471,
+      "sha256": "404d9c582498a4c8312439624859decf60bf487a6d6e4e2b6574399ca78f78d3",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/gateway.go",
+      "bytes": 2116,
+      "sha256": "b770e95724b93924e581bcb50388311174e817641d1dcc9cf4e9db211ec0dc96",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/go.mod",
+      "bytes": 35,
+      "sha256": "3b92aed50ae0beed4fe86fd1691de3dc10184f13a2bfe755d38b560bad706269",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/history_replay_regression_test.go",
+      "bytes": 4982,
+      "sha256": "7d7cc9f0cf7c53d42f7092335ec452294379b7d654fc10ba49c6235b27dca300",
+      "change_from_semantic_v3": "new"
+    },
+    {
+      "path": "auto-gateway/http.go",
+      "bytes": 17125,
+      "sha256": "23543b88a8c862d2fcf59a7568f9ec0ba2f043ec7bbc844662730ae808aa097f",
+      "change_from_semantic_v3": "modified"
+    },
+    {
+      "path": "auto-gateway/http_test.go",
+      "bytes": 7259,
+      "sha256": "eeaa683e98e5817f4c0792b7538ae6fa959a94d650692cbb9078913c84f9b56d",
+      "change_from_semantic_v3": "modified"
+    },
+    {
+      "path": "auto-gateway/models.go",
+      "bytes": 2932,
+      "sha256": "d83b9d099093762e7b00a97e8cb55aecb5bb32d03bf0e72ba2606aba5ef35675",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/phase_d_integration_test.go",
+      "bytes": 2855,
+      "sha256": "8fda3b446a7ceb3839cca2c7b9fbb2f3656321ebafabb3354c2804718cc26eb0",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/pilot_auth.go",
+      "bytes": 1959,
+      "sha256": "a037f346d4f849195da72dc424b617caecd8022e84dbb57f7c67ed533fa5272d",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/pipeline.go",
+      "bytes": 18126,
+      "sha256": "b6d01374467429e9a3a7388268478eff34b0422e5e34804cfdd4f315c97b346d",
+      "change_from_semantic_v3": "modified"
+    },
+    {
+      "path": "auto-gateway/pipeline_cache.go",
+      "bytes": 1920,
+      "sha256": "3c334961fdf005f9ab667eb5194541f1f4d11449647a301f92fbcc2ca0dc3821",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/pipeline_observability.go",
+      "bytes": 3050,
+      "sha256": "5d47c7f89116d981fc08c3574a9241f26dd269f92cb6f07714d1658463e9dcc9",
+      "change_from_semantic_v3": "modified"
+    },
+    {
+      "path": "auto-gateway/pipeline_test.go",
+      "bytes": 7310,
+      "sha256": "308123ee403d43ac9f23840fe2c8eb7a430a5a48c3f7c22b7996a336f45841b0",
+      "change_from_semantic_v3": "modified"
+    },
+    {
+      "path": "auto-gateway/preflight.go",
+      "bytes": 1238,
+      "sha256": "77095f17fc453e5af955e4125622fa90afbf79f0d3e003721bb4a2afe6b54df6",
+      "change_from_semantic_v3": "modified"
+    },
+    {
+      "path": "auto-gateway/preflight_http.go",
+      "bytes": 5252,
+      "sha256": "664718767fc908a9ae19020c47d7e6818310641c4bb37263b31ae3d16ea407b1",
+      "change_from_semantic_v3": "modified"
+    },
+    {
+      "path": "auto-gateway/preflight_http_test.go",
+      "bytes": 3044,
+      "sha256": "6bf35078b7f945eb14e3886fbef85a31ab509fae82faaea097dd476cf58e8b58",
+      "change_from_semantic_v3": "modified"
+    },
+    {
+      "path": "auto-gateway/preflight_required_test.go",
+      "bytes": 1076,
+      "sha256": "5c6232efd73cffd7353854c95ce790066a3c391595baad5e62e3ca3776624fd9",
+      "change_from_semantic_v3": "new"
+    },
+    {
+      "path": "auto-gateway/protocol.go",
+      "bytes": 8337,
+      "sha256": "7243dba4da30b100d1ce9c30018bafcab634d5f7e10ae6dbb22728fe7526a759",
+      "change_from_semantic_v3": "modified"
+    },
+    {
+      "path": "auto-gateway/protocol_test.go",
+      "bytes": 3020,
+      "sha256": "17c3375a103c94eb684646b55851079203541d75c4af003992669976c6fdb61f",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/provider_adapter.go",
+      "bytes": 1494,
+      "sha256": "d5b6de4df8b7c2da30df907b8c4ea884f43d93353e13d7d3a8b50635627f856d",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/provider_payload.go",
+      "bytes": 3986,
+      "sha256": "6f6efb63f38d1e393525cfbca43766e1759728d37dcfb76d0fbe1d7d82bd57a4",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/provider_payload_test.go",
+      "bytes": 2040,
+      "sha256": "62577f7cef42f0561a83071f4f5818bb4cd92c3cb4a3de22da6676c6b8e75c4c",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/reasoning.go",
+      "bytes": 3552,
+      "sha256": "7cf715caee1901c159c02b47ab822a0ed8031c45ecb2457f228d723d21e81040",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/response_cache.go",
+      "bytes": 2964,
+      "sha256": "dd5afeffeb813de0179a53c17ff83f9e2654658b43a2e3ae4dc5ae7660823bd0",
+      "change_from_semantic_v3": "modified"
+    },
+    {
+      "path": "auto-gateway/response_validation.go",
+      "bytes": 1064,
+      "sha256": "89c7a9e200a986e688cc8835ff6a31de8e8a8c72b8af80a62d4c979073bd00ce",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/route_audit.go",
+      "bytes": 3517,
+      "sha256": "60a5a2a988ef67effdab94c8a504d62417246b53384debdab5e21714b6b5855a",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/route_audit_test.go",
+      "bytes": 786,
+      "sha256": "8854aa45d37c45b4eab47826c4c605a9c493fdede079037ad0494edb090798eb",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/route_state.go",
+      "bytes": 6408,
+      "sha256": "d757cf0eaaf4ff13290f49bb61f2403e1643f59af9339c53867d9f308f0d5216",
+      "change_from_semantic_v3": "modified"
+    },
+    {
+      "path": "auto-gateway/run-pilot.sh",
+      "bytes": 1771,
+      "sha256": "c057d5c235a004c5931f4304c68f05cf951880e5a6490e84c066dc5bacedd6bd",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/semantic_cache.go",
+      "bytes": 2667,
+      "sha256": "9c7ee1c1124667d04239132399c522b6d7386054b7fa808c05efbe5eaf4d5f5b",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/semantic_classifier.go",
+      "bytes": 16051,
+      "sha256": "784a1a630bb806567829cce5e0a55dad618a8b58d186cdf24bcaa0564bbcfec6",
+      "change_from_semantic_v3": "modified"
+    },
+    {
+      "path": "auto-gateway/semantic_classifier_test.go",
+      "bytes": 8202,
+      "sha256": "407561ab25232ae3c8f98e6a2c350f4bcd3cbb310e1da38b8113a7780369db59",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/semantic_regression_test.go",
+      "bytes": 9362,
+      "sha256": "95cb322e811fcbefebbdd0990cbe6535c947b4063a25c14418ea5498ad0cb77e",
+      "change_from_semantic_v3": "modified"
+    },
+    {
+      "path": "auto-gateway/session_state.go",
+      "bytes": 4533,
+      "sha256": "06e30a43869fe3cc882980f10a398eb3ba78c5b822f8aad567c78adadeb1584c",
+      "change_from_semantic_v3": "modified"
+    },
+    {
+      "path": "auto-gateway/session_state_test.go",
+      "bytes": 4041,
+      "sha256": "b4ace7bbbc13aea276d23d12b479252b14cefe33d9e0328dda053fae005832fc",
+      "change_from_semantic_v3": "modified"
+    },
+    {
+      "path": "auto-gateway/stream_boundary.go",
+      "bytes": 1080,
+      "sha256": "f803f6be42f1a21aa05c3e6bcdcf032e7d043fca956ac37f47ea20b9515b7a4e",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/stream_observation.go",
+      "bytes": 4582,
+      "sha256": "c87f498d690afae0b093f7086a9a10d3fa6beac79b8503963209ed24be399dbb",
+      "change_from_semantic_v3": "modified"
+    },
+    {
+      "path": "auto-gateway/testdata/history-cases.json",
+      "bytes": 92649,
+      "sha256": "8f3321f791c85bd2fcb9e43b1783c308f8ee52ae20edcc2efef4c50fe619540c",
+      "change_from_semantic_v3": "new"
+    },
+    {
+      "path": "auto-gateway/token_count.go",
+      "bytes": 5878,
+      "sha256": "23840c1989e5d5a3c92a1487e404b39ef1b1e3b5005a9adef828350a55c1eeff",
+      "change_from_semantic_v3": "modified"
+    },
+    {
+      "path": "auto-gateway/token_count_test.go",
+      "bytes": 3022,
+      "sha256": "926a28ccf1d01e6f68ccdc1ade5230ba01a9418cebf6360edc7a16e01d371027",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/tool_rounds.go",
+      "bytes": 3905,
+      "sha256": "7288a4a74ddcc648870d98750ff4ca138f20bf02219fac90fa5fb85894ca25a5",
+      "change_from_semantic_v3": "new"
+    },
+    {
+      "path": "auto-gateway/tool_rounds_test.go",
+      "bytes": 6411,
+      "sha256": "9f4a406707cce2bba6efe6519a5873b83c834da4581312bbcb57f237f5603472",
+      "change_from_semantic_v3": "new"
+    },
+    {
+      "path": "auto-gateway/upstream_http.go",
+      "bytes": 5320,
+      "sha256": "78320ca19f34f5dbf461051ac4c0292a70423fb76c5f8f07aa5c318487a23ef6",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/upstream_http_test.go",
+      "bytes": 3665,
+      "sha256": "a5879b42ecc07feefa6172b795a69b1cba65732fd2cee452d552ff687230f388",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/upstream_stream.go",
+      "bytes": 3165,
+      "sha256": "04595d3af547fc7421bbe83dc23345b7ff1363222910f9625457ac9a76edc0fb",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/upstream_stream_test.go",
+      "bytes": 1219,
+      "sha256": "b595a7096fd43727cf0843dae58a6ac989c5d52b4b5c22520f34131361173076",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/usage.go",
+      "bytes": 3102,
+      "sha256": "e701fb727fce7d58c7c44e4e046bdc8a2c9aedd95257deae9a8524a54384ae70",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/usage_daily.go",
+      "bytes": 3938,
+      "sha256": "52e6dc242b5a2f6f4c10a114f53570047040c5c77be414863ecccffcbeb35ec1",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/usage_daily_test.go",
+      "bytes": 1189,
+      "sha256": "36b9fe71835e3422e5af9282b0b44d662570cb75f03809f67378876ed7181b6f",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/usage_sink.go",
+      "bytes": 1579,
+      "sha256": "2eb1f78ac707007c96b1a68af2bd2b2d99dc59f9f080075ce36756f59c532362",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/usage_sink_test.go",
+      "bytes": 723,
+      "sha256": "684ce4039c04a28d30042970c85863f87dcad4b32d708503b5b580b7d7640b02",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/verify-on-linux.sh",
+      "bytes": 725,
+      "sha256": "f2c1c698060630ed3c9ac970d3a5a0f10f875ed1a92675d884192a36e08449dc",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/websocket_relay.go",
+      "bytes": 1338,
+      "sha256": "33e9d03da4a747bfeda6505e5160299808ddc7740d0a93d79fb691b3f9bcf3be",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "auto-gateway/websocket_relay_test.go",
+      "bytes": 1262,
+      "sha256": "5f5fa25c840cd7a5312e2bd51f8dbd010fa56af278eb40c38b5e1848170ec02a",
+      "change_from_semantic_v3": "unchanged"
+    },
+    {
+      "path": "guard-gateway/README.md",
+      "bytes": 1203,
+      "sha256": "b051cf10540443720559cf6e0248c215051916c16d8425157e8856ca03a0db09"
+    },
+    {
+      "path": "guard-gateway/go-check/preflight.go",
+      "bytes": 18970,
+      "sha256": "56d372919757be6995c8765d3002ec73486cb4a7a6cad543d238d7dcc542399f"
+    },
+    {
+      "path": "guard-gateway/go-check/preflight_test.go",
+      "bytes": 9469,
+      "sha256": "0a5a645d8fbd66ed9157f8fde386cc1d46bed8065fdd7e34af74a0426d7880d6"
+    },
+    {
+      "path": "guard-gateway/go-check/request_correlation_test.go",
+      "bytes": 780,
+      "sha256": "037cf807093142cae780bf766e55327c392bd14e72b587464208818a19502417"
+    },
+    {
+      "path": "guard-gateway/go.mod",
+      "bytes": 36,
+      "sha256": "e07eeb0908ebfa311b0f4597ba4904c1ca3a38095a9f757c2631ff969f31bb99"
+    },
+    {
+      "path": "guard-gateway/guard-deployment/Dockerfile",
+      "bytes": 312,
+      "sha256": "84d4917b2b5f08f2e175658f3ddc5d792db9eceef804b9e36f9a1c8a9ee0c41a"
+    },
+    {
+      "path": "guard-gateway/guard-deployment/README.md",
+      "bytes": 1098,
+      "sha256": "f106281c0f9fc34fd7314141345c3fdf6a6b0556f4839167c7139f2db56d4059"
+    },
+    {
+      "path": "guard-gateway/guard-deployment/client.go",
+      "bytes": 7457,
+      "sha256": "7a070e13d6a3accf8973a8abdf966f0b2c77f924d3dd8de92e0099789d8537ab"
+    },
+    {
+      "path": "guard-gateway/guard-deployment/client_test.go",
+      "bytes": 2585,
+      "sha256": "e798820600f0cab9aafbecbf96987fb358616b5f81c9ec0d886ddccb30f597ec"
+    },
+    {
+      "path": "guard-gateway/guard-deployment/cmd/preflight-api/main.go",
+      "bytes": 8479,
+      "sha256": "7ae9a58d32e8ae4b5f04d5e9a75ae7029b26f1ed4ba2c187edfc07c634230dd1"
+    },
+    {
+      "path": "guard-gateway/guard-deployment/docker-compose.yaml",
+      "bytes": 1518,
+      "sha256": "93b8cb002d3d87e5c02409f6de61eb3bc8c5578ed9811f0147413e90010d9a2e"
+    }
+  ],
+  "external_requests_sent_this_round": 0,
+  "blockers": [
+    "GPU SSH and VPN Guard unavailable",
+    "historical fixture outbound approval pending",
+    "highest effort test group approval pending"
+  ]
+}

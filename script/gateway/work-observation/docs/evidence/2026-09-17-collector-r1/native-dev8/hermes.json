@@ -1,0 +1,100 @@
+{
+  "version": "observation-dev.8",
+  "native_checks": [
+    {
+      "check": "initial_marker",
+      "passed": true
+    },
+    {
+      "check": "native_compress",
+      "passed": true,
+      "new_requests": 2
+    },
+    {
+      "check": "recall_after_compress",
+      "passed": true
+    },
+    {
+      "check": "multiple_native_tools",
+      "passed": true,
+      "tool_count": 2
+    },
+    {
+      "check": "native_child_session",
+      "passed": true,
+      "child_sessions": 1
+    },
+    {
+      "check": "native_cancel_process_alive",
+      "passed": true
+    },
+    {
+      "check": "resume_after_cancel",
+      "passed": true
+    },
+    {
+      "check": "native_image_forwarded",
+      "passed": true
+    }
+  ],
+  "native_passed": true,
+  "media": {
+    "native_image_payloads_seen": 1,
+    "attachment_metadata_records": 1,
+    "no_image_payload_at_rest": true,
+    "image_request_byte_identity": true,
+    "text_and_tool_markers_preserved": true,
+    "capture_has_no_gaps": true,
+    "passed": true
+  },
+  "capture": {
+    "scope": "native clients, synthetic loopback provider, actual collector",
+    "production_changed": false,
+    "events": 29,
+    "kinds": {
+      "http_exchange": 29
+    },
+    "outcomes": {
+      "completed": 28,
+      "canceled": 1
+    },
+    "clients": {
+      "unknown": 28,
+      "hermes": 1
+    },
+    "missing": {},
+    "status": {
+      "active_requests": 0,
+      "capture_enabled": false,
+      "captured": 29,
+      "complete_capture_claim": false,
+      "dropped": 0,
+      "older_loss_details_evicted": 0,
+      "projection_errors": 0,
+      "pruned": 0,
+      "queue_items": 0,
+      "queue_limit_bytes": 67108864,
+      "queued_bytes": 0,
+      "recent_losses": null,
+      "recovered_interrupted_requests": 0,
+      "started_at": "2026-09-17T11:47:08.375576Z",
+      "storage_limit_bytes": 1073741824,
+      "stored_bytes": 1795228,
+      "truncated": 0,
+      "unavailable_bypassed_requests": 0,
+      "updated_at": "2026-09-17T11:47:55.192887Z",
+      "version": "observation-dev.8",
+      "write_errors": 0,
+      "written": 29
+    },
+    "all_record_checksums_valid": true,
+    "original_ua_observed": [
+      "OpenAI/Python 2.24.0",
+      "hermes-cli/0.21.0",
+      "python-httpx/0.28.1",
+      "python-requests/2.33.0"
+    ],
+    "auth_headers_excluded": true
+  },
+  "private_evidence": "/private/tmp/gateway-hermes-advanced-observation-dev8-r2-20260917-194708"
+}

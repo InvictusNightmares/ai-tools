@@ -1,0 +1,140 @@
+{
+  "scope": "Infrastructure aborts; no model quality score; raw transcripts private",
+  "rows": [
+    {
+      "scope": "fixed-model real coding task; not natural Auto selection or device UI",
+      "candidate": "deepseek-flash",
+      "task": "startup",
+      "source_commit": "6532369b3d55c31728484e628443ba9196d85c6b",
+      "completed": false,
+      "failure": "RuntimeError",
+      "seconds": 258.604,
+      "changed_files": [],
+      "file_sha256": {},
+      "checks": [
+        {
+          "argv": [
+            "./gradlew",
+            "--offline",
+            ":app:assembleFatDebug",
+            ":app:testFatDebugUnitTest",
+            "--console=plain"
+          ],
+          "exit_code": 0,
+          "seconds": 226.848,
+          "log_sha256": "1cabfcdee78ceb9daa77e0522a5e9da3f16d512a29139d8c517c3898dc37fe0c"
+        }
+      ],
+      "quality_review_pending": true,
+      "successful_model_turns": 2
+    },
+    {
+      "scope": "fixed-model real coding task; not natural Auto selection or device UI",
+      "candidate": "gpt-5.6-luna",
+      "task": "startup",
+      "source_commit": "6532369b3d55c31728484e628443ba9196d85c6b",
+      "completed": false,
+      "failure": "RuntimeError",
+      "seconds": 258.568,
+      "changed_files": [],
+      "file_sha256": {},
+      "checks": [
+        {
+          "argv": [
+            "./gradlew",
+            "--offline",
+            ":app:assembleFatDebug",
+            ":app:testFatDebugUnitTest",
+            "--console=plain"
+          ],
+          "exit_code": 0,
+          "seconds": 221.315,
+          "log_sha256": "40b180303baeba57e2b8d5c1ea7b994aa6b80bee689558ac8d1608b365567135"
+        }
+      ],
+      "quality_review_pending": true,
+      "successful_model_turns": 2
+    },
+    {
+      "scope": "fixed-model real coding task; not natural Auto selection or device UI",
+      "candidate": "gpt-5.6-sol",
+      "task": "startup",
+      "source_commit": "6532369b3d55c31728484e628443ba9196d85c6b",
+      "completed": false,
+      "failure": "RuntimeError",
+      "seconds": 162.684,
+      "changed_files": [],
+      "file_sha256": {},
+      "checks": [
+        {
+          "argv": [
+            "./gradlew",
+            "--offline",
+            ":app:assembleFatDebug",
+            ":app:testFatDebugUnitTest",
+            "--console=plain"
+          ],
+          "exit_code": 0,
+          "seconds": 32.665,
+          "log_sha256": "6bc3775065c53b25370f790b043d9833b69da05b4f73f8885778c8bc7543fcb0"
+        }
+      ],
+      "quality_review_pending": true,
+      "successful_model_turns": 5
+    },
+    {
+      "scope": "fixed-model real coding task; not natural Auto selection or device UI",
+      "candidate": "gpt-5.6-terra",
+      "task": "startup",
+      "source_commit": "6532369b3d55c31728484e628443ba9196d85c6b",
+      "completed": false,
+      "failure": "RuntimeError",
+      "seconds": 126.445,
+      "changed_files": [],
+      "file_sha256": {},
+      "checks": [
+        {
+          "argv": [
+            "./gradlew",
+            "--offline",
+            ":app:assembleFatDebug",
+            ":app:testFatDebugUnitTest",
+            "--console=plain"
+          ],
+          "exit_code": 0,
+          "seconds": 37.986,
+          "log_sha256": "4d6c7c8cbf5ead4e16534ffcee69a7e4c693a0a53eb69cd65ed65b54901eee59"
+        }
+      ],
+      "quality_review_pending": true,
+      "successful_model_turns": 4
+    },
+    {
+      "scope": "fixed-model real coding task; not natural Auto selection or device UI",
+      "candidate": "gpt-6-astra",
+      "task": "startup",
+      "source_commit": "6532369b3d55c31728484e628443ba9196d85c6b",
+      "completed": false,
+      "failure": "RuntimeError",
+      "seconds": 70.026,
+      "changed_files": [],
+      "file_sha256": {},
+      "checks": [
+        {
+          "argv": [
+            "./gradlew",
+            "--offline",
+            ":app:assembleFatDebug",
+            ":app:testFatDebugUnitTest",
+            "--console=plain"
+          ],
+          "exit_code": 0,
+          "seconds": 33.855,
+          "log_sha256": "088c840a85fcf34758dad38429c7565570229533258c1a09a18657aae57d1531"
+        }
+      ],
+      "quality_review_pending": true,
+      "successful_model_turns": 2
+    }
+  ]
+}

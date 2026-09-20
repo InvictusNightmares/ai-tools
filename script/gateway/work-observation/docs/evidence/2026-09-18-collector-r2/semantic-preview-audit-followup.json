@@ -1,0 +1,21 @@
+{
+  "schema": "work-observation-semantic-preview-audit-followup-v1",
+  "host": "qiyuan-gpu",
+  "scope": "bounded_metadata_only",
+  "regions": {
+    "tokyo": {
+      "successful_route_decisions": 3,
+      "classification_failure_events": 5,
+      "failure_shape": "primary gpt-5.6-luna returned HTTP 200; reviewer gpt-5.6-sol had success=false with no HTTP status on one request; later same-shape request completed",
+      "effective_model_on_success": "deepseek-flash"
+    },
+    "us": {
+      "successful_route_decisions": 1,
+      "classification_failure_events": 4,
+      "failure_shape": "bounded route audit excerpt only; usage excerpt showed successful primary/reviewer calls for the latest completed request",
+      "effective_model_on_success": "deepseek-flash"
+    }
+  },
+  "interpretation": "caller credential forwarding is proven on successful calls; intermittent transport failure remains separate from authentication",
+  "no_request_bodies_or_secrets": true
+}

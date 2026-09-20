@@ -1,0 +1,18 @@
+[
+  {
+    "at": "2026-09-16T09:23:25.844379+00:00",
+    "model": "deepseek-flash",
+    "status": 200,
+    "stream_complete": true,
+    "request_id": "ba1a67a4-c0fe-41de-bd3e-cd174a753002",
+    "bytes": 936
+  },
+  {
+    "at": "2026-09-16T09:23:27.058519+00:00",
+    "model": "gpt-5.6-sol",
+    "status": 200,
+    "stream_complete": true,
+    "request_id": "c808e815-f0de-4331-ad3b-9a5bf59bc3ba",
+    "bytes": 1235
+  }
+]

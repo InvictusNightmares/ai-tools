@@ -1,0 +1,14 @@
+[
+  {
+    "region": "tokyo",
+    "status": 200,
+    "request_id": "0b0cd5055419474f1af40db95fafbb41",
+    "has_answer": true
+  },
+  {
+    "region": "us",
+    "status": 200,
+    "request_id": "d75c9a692c3ed7bff04fcd0b4de406f8",
+    "has_answer": true
+  }
+]

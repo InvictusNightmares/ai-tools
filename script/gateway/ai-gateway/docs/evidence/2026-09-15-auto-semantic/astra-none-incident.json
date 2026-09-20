@@ -1,0 +1,31 @@
+{
+  "kind": "invalid_candidate_trial_excluded_from_model_comparison",
+  "reason": "Astra primary sent unsupported none; any successful classifications came from independent Sol/low fallback",
+  "rows_before_stop": 164,
+  "astra_attempts": 164,
+  "astra_successes": 0,
+  "server_evidence": {
+    "date": "2026-09-15",
+    "latest_error_times_local": [
+      "18:43:04",
+      "18:43:16"
+    ],
+    "http_status": 400,
+    "allowed_efforts": [
+      "low",
+      "medium",
+      "high",
+      "xhigh",
+      "max"
+    ],
+    "successful_usage_last_20": {
+      "model": "gpt-5.6-sol",
+      "effort": "Low",
+      "time_range_local": [
+        "18:43:20",
+        "18:43:48"
+      ]
+    }
+  },
+  "official_source": "https://developers.openai.com/api/docs/models/gpt-6-astra"
+}

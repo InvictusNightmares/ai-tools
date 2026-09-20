@@ -1,0 +1,59 @@
+{
+  "schema": "work-observation-semantic-gpu-smoke-v2",
+  "at": "2026-09-18T02:29:42Z",
+  "scope": "GPU isolated synthetic event only",
+  "services": {
+    "guard": [
+      {"endpoint": "127.0.0.1:8011/v1/preflight", "health_http": 200, "synthetic_probe_http": 200, "decision": "allow"},
+      {"endpoint": "127.0.0.1:8013/v1/preflight", "health_http": 200, "synthetic_probe_http": 200, "decision": "allow"},
+      {"endpoint": "127.0.0.1:8014/v1/preflight", "health_http": 200, "synthetic_probe_http": 200, "decision": "allow"}
+    ],
+    "auto_regional": [
+      {"endpoint": "127.0.0.1:8093/v1/route", "health_http": 200, "authenticated_route_preview_http": 404, "route_preview": "disabled_by_regional_service"},
+      {"endpoint": "127.0.0.1:8094/v1/route", "health_http": 200, "authenticated_route_preview_http": 404, "route_preview": "disabled_by_regional_service"}
+    ],
+    "auto_isolated_preview": [
+      {"endpoint": "127.0.0.1:8095/v1/route", "health_http": 200, "region": "tokyo", "temporary": true},
+      {"endpoint": "127.0.0.1:8096/v1/route", "health_http": 200, "region": "us", "temporary": true}
+    ]
+  },
+  "authenticated_reviews": [
+    {
+      "region": "tokyo",
+      "guard_endpoint": "127.0.0.1:8013/v1/preflight",
+      "auto_endpoint": "127.0.0.1:8095/v1/route",
+      "guard_http": 200,
+      "guard_decision": "allow",
+      "auto_http": 200,
+      "auto_state": "complete",
+      "auto_model": "deepseek-flash",
+      "review_state": "complete",
+      "queue_state": "complete",
+      "attempts": 1
+    },
+    {
+      "region": "us",
+      "guard_endpoint": "127.0.0.1:8014/v1/preflight",
+      "auto_endpoint": "127.0.0.1:8096/v1/route",
+      "guard_http": 200,
+      "guard_decision": "allow",
+      "auto_http": 200,
+      "auto_state": "complete",
+      "auto_model": "deepseek-flash",
+      "review_state": "complete",
+      "queue_state": "complete",
+      "attempts": 1
+    }
+  ],
+  "assertions": {
+    "employee_data_sent": false,
+    "body_copied_to_analysis_db": false,
+    "online_regional_route_or_guard_state_changed": false,
+    "formal_entry_enabled": false,
+    "dedicated_auth_files_used": true,
+    "dedicated_auth_file_mode": "0600",
+    "temporary_preview_stopped": true,
+    "isolated_state_and_sinks": true
+  },
+  "note": "The live regional Auto services intentionally return 404 for /v1/route because route preview is disabled there; this is distinct from missing authentication. The authenticated reviews used the same release in temporary loopback-only 8095/8096 processes with independent state/audit/usage files, then stopped them. Key values are not present in this evidence."
+}

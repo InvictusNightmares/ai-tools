@@ -1,0 +1,77 @@
+{
+  "at": "2026-09-16T15:40:11.004322+00:00",
+  "regions": [
+    {
+      "region": "tokyo",
+      "release": "candidate-20260916-r11-native-v10.2",
+      "public_health": {
+        "status": 200,
+        "body": {
+          "status": "ok"
+        }
+      },
+      "services": {
+        "ops": {
+          "Result": "success",
+          "ExecMainExitTimestamp": "Wed 2026-09-16 23:39:22 CST",
+          "ExecMainStatus": "0"
+        },
+        "usage": {
+          "Result": "success",
+          "ExecMainExitTimestamp": "Wed 2026-09-16 23:39:43 CST",
+          "ExecMainStatus": "0"
+        }
+      },
+      "ops_at": "2026-09-16T15:39:22.175097+00:00",
+      "ops_alerts": [],
+      "usage_status": {
+        "region": "tokyo",
+        "imported": 0,
+        "exported": 0,
+        "remaining": 0,
+        "key_mappings": 141,
+        "partial_spools": 0,
+        "status": "completed",
+        "last_completed_at": "2026-09-16T15:39:43.468247+00:00",
+        "at": "2026-09-16T15:39:43.468262+00:00"
+      },
+      "retention_days": null
+    },
+    {
+      "region": "us",
+      "release": "candidate-20260916-r11-native-v9.2",
+      "public_health": {
+        "status": 200,
+        "body": {
+          "status": "ok"
+        }
+      },
+      "services": {
+        "ops": {
+          "Result": "success",
+          "ExecMainExitTimestamp": "Wed 2026-09-16 23:39:30 CST",
+          "ExecMainStatus": "0"
+        },
+        "usage": {
+          "Result": "success",
+          "ExecMainExitTimestamp": "Wed 2026-09-16 23:39:33 CST",
+          "ExecMainStatus": "0"
+        }
+      },
+      "ops_at": "2026-09-16T15:39:30.173118+00:00",
+      "ops_alerts": [],
+      "usage_status": {
+        "region": "us",
+        "imported": 0,
+        "exported": 0,
+        "remaining": 0,
+        "key_mappings": 87,
+        "partial_spools": 0,
+        "status": "completed",
+        "last_completed_at": "2026-09-16T15:39:33.680242+00:00",
+        "at": "2026-09-16T15:39:33.680265+00:00"
+      },
+      "retention_days": null
+    }
+  ]
+}

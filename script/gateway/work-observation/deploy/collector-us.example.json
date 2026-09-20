@@ -1,0 +1,14 @@
+{
+  "listen": "127.0.0.1:18401",
+  "upstream": "http://106.14.254.110:9880",
+  "region": "us",
+  "ingress": "4001",
+  "store_dir": "/data/store",
+  "runtime_dir": "/data/store",
+  "identity_salt_file": "/data/store/identity.salt",
+  "capture_enabled": false,
+  "queue_items": 4096,
+  "memory_bytes": 536870912,
+  "body_bytes": 33554432,
+  "storage_bytes": 214748364800
+}

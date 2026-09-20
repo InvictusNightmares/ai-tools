@@ -1,0 +1,270 @@
+{
+  "tokyo": {
+    "code": 0,
+    "rows": [
+      [
+        {
+          "key_id": 141,
+          "group_id": 728,
+          "audio_route": null,
+          "fallback_group_id": null,
+          "require_oauth_only": false,
+          "model_routing_enabled": false
+        }
+      ],
+      [
+        {
+          "id": 28,
+          "type": "oauth",
+          "status": "active",
+          "platform": "openai",
+          "group_ids": [
+            728
+          ],
+          "updated_at": "2026-09-16T19:00:59.33526+08:00",
+          "audio_model": "gpt-4o-audio-preview",
+          "schedulable": true
+        },
+        {
+          "id": 22,
+          "type": "apikey",
+          "status": "active",
+          "platform": "openai",
+          "group_ids": [
+            594,
+            661,
+            728,
+            11,
+            200,
+            263,
+            393,
+            460,
+            74
+          ],
+          "updated_at": "2026-09-16T19:00:59.33526+08:00",
+          "audio_model": null,
+          "schedulable": true
+        },
+        {
+          "id": 20,
+          "type": "oauth",
+          "status": "active",
+          "platform": "openai",
+          "group_ids": [
+            200
+          ],
+          "updated_at": "2026-09-16T18:51:28.355227+08:00",
+          "audio_model": "gpt-4o-audio-preview",
+          "schedulable": true
+        },
+        {
+          "id": 27,
+          "type": "oauth",
+          "status": "active",
+          "platform": "openai",
+          "group_ids": [
+            661
+          ],
+          "updated_at": "2026-09-16T18:51:11.094223+08:00",
+          "audio_model": "gpt-4o-audio-preview",
+          "schedulable": true
+        },
+        {
+          "id": 26,
+          "type": "oauth",
+          "status": "active",
+          "platform": "openai",
+          "group_ids": [
+            594
+          ],
+          "updated_at": "2026-09-16T18:50:59.904545+08:00",
+          "audio_model": "gpt-4o-audio-preview",
+          "schedulable": true
+        },
+        {
+          "id": 25,
+          "type": "oauth",
+          "status": "active",
+          "platform": "openai",
+          "group_ids": [
+            460
+          ],
+          "updated_at": "2026-09-16T18:50:52.779108+08:00",
+          "audio_model": "gpt-4o-audio-preview",
+          "schedulable": true
+        },
+        {
+          "id": 24,
+          "type": "oauth",
+          "status": "active",
+          "platform": "openai",
+          "group_ids": [
+            393
+          ],
+          "updated_at": "2026-09-16T18:50:37.821476+08:00",
+          "audio_model": "gpt-4o-audio-preview",
+          "schedulable": true
+        },
+        {
+          "id": 16,
+          "type": "oauth",
+          "status": "active",
+          "platform": "openai",
+          "group_ids": [
+            74
+          ],
+          "updated_at": "2026-09-16T18:50:22.205198+08:00",
+          "audio_model": "gpt-4o-audio-preview",
+          "schedulable": true
+        },
+        {
+          "id": 8,
+          "type": "oauth",
+          "status": "active",
+          "platform": "openai",
+          "group_ids": [
+            11
+          ],
+          "updated_at": "2026-09-16T18:50:00.500926+08:00",
+          "audio_model": "gpt-4o-audio-preview",
+          "schedulable": true
+        }
+      ]
+    ],
+    "stderr": ""
+  },
+  "us": {
+    "code": 0,
+    "rows": [
+      [
+        {
+          "key_id": 4,
+          "group_id": 324,
+          "audio_route": null,
+          "fallback_group_id": null,
+          "require_oauth_only": false,
+          "model_routing_enabled": false
+        }
+      ],
+      [
+        {
+          "id": 73,
+          "type": "oauth",
+          "status": "active",
+          "platform": "openai",
+          "group_ids": [
+            135
+          ],
+          "updated_at": "2026-09-16T19:01:08.418835+08:00",
+          "audio_model": "gpt-4o-audio-preview",
+          "schedulable": true
+        },
+        {
+          "id": 51,
+          "type": "oauth",
+          "status": "active",
+          "platform": "openai",
+          "group_ids": [
+            198
+          ],
+          "updated_at": "2026-09-16T19:01:08.418835+08:00",
+          "audio_model": "gpt-4o-audio-preview",
+          "schedulable": true
+        },
+        {
+          "id": 54,
+          "type": "oauth",
+          "status": "active",
+          "platform": "openai",
+          "group_ids": [
+            324
+          ],
+          "updated_at": "2026-09-16T19:01:08.418835+08:00",
+          "audio_model": "gpt-4o-audio-preview",
+          "schedulable": true
+        },
+        {
+          "id": 67,
+          "type": "oauth",
+          "status": "active",
+          "platform": "openai",
+          "group_ids": [
+            387
+          ],
+          "updated_at": "2026-09-16T19:01:08.418835+08:00",
+          "audio_model": "gpt-4o-audio-preview",
+          "schedulable": true
+        },
+        {
+          "id": 60,
+          "type": "apikey",
+          "status": "active",
+          "platform": "openai",
+          "group_ids": [
+            261,
+            324,
+            198,
+            135,
+            639,
+            387,
+            72,
+            450,
+            9
+          ],
+          "updated_at": "2026-09-16T18:59:15.878354+08:00",
+          "audio_model": null,
+          "schedulable": true
+        },
+        {
+          "id": 47,
+          "type": "oauth",
+          "status": "active",
+          "platform": "openai",
+          "group_ids": [
+            72
+          ],
+          "updated_at": "2026-09-16T18:58:48.419045+08:00",
+          "audio_model": "gpt-4o-audio-preview",
+          "schedulable": true
+        },
+        {
+          "id": 53,
+          "type": "oauth",
+          "status": "active",
+          "platform": "openai",
+          "group_ids": [
+            261
+          ],
+          "updated_at": "2026-09-16T18:56:58.418401+08:00",
+          "audio_model": "gpt-4o-audio-preview",
+          "schedulable": true
+        },
+        {
+          "id": 68,
+          "type": "oauth",
+          "status": "active",
+          "platform": "openai",
+          "group_ids": [
+            450
+          ],
+          "updated_at": "2026-09-16T18:52:23.719645+08:00",
+          "audio_model": "gpt-4o-audio-preview",
+          "schedulable": true
+        },
+        {
+          "id": 42,
+          "type": "oauth",
+          "status": "active",
+          "platform": "openai",
+          "group_ids": [
+            9
+          ],
+          "updated_at": "2026-09-16T18:52:00.763151+08:00",
+          "audio_model": "gpt-4o-audio-preview",
+          "schedulable": false
+        }
+      ]
+    ],
+    "stderr": ""
+  }
+}

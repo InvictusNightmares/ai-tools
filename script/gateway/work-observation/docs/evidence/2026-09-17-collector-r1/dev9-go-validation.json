@@ -1,0 +1,25 @@
+{
+  "artifact": "observation-dev.9",
+  "scope": "isolated GPU toolchain validation",
+  "remote_dir": "/data/work-observation-lab/collector-r1",
+  "image": "golang:1.27.1-bookworm",
+  "go_version": "go1.27.1 linux/amd64",
+  "started_at": "2026-09-18T01:33:50Z",
+  "commands": {
+    "gofmt": "pass",
+    "go_test_race": "pass (source/capture, source/proxy, cmd/observe)",
+    "go_vet": "pass (source/capture, source/proxy, cmd/observe)",
+    "linux_static_build": "pass (CGO_ENABLED=0)"
+  },
+  "exit_marker": "__WO_EXIT__=0",
+  "source_sha256": {
+    "source/capture/types.go": "666b644cdd9e292c39db34f22dc4619ccbd99d3ceb252844733f189c189f87b2",
+    "source/capture/engine.go": "387d29a4ae70a805592d6a2f7dfa4619296eca7ea9442f9375db3cf676bedf78",
+    "source/capture/store.go": "7ca06b761b549ccc7b50b7974aee05a8ad28bcbebbf22b445c7bd99c90ff5816",
+    "source/capture/runtime_test.go": "bddfcfe22b08b4b5de8fba0f68b92d3d98506529aca750e122a5facc53444e37",
+    "cmd/observe/main.go": "3862988a8d2fd8831f4f80bdf83259118645272ea37fb59711000936d174f6b1"
+  },
+  "log": "dev9-go-validation.log",
+  "synthetic_only": true,
+  "formal_entry_enabled": false
+}

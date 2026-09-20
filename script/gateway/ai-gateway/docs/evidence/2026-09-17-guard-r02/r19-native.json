@@ -1,0 +1,127 @@
+[
+  {
+    "region": "tokyo",
+    "native_version": "1.18.4",
+    "started_unix": 1789625034.404716,
+    "finished_unix": 1789625057.926909,
+    "runtime": "user Mac native installation; isolated config; same synthetic Kotlin/Markdown fixture as r18 failure",
+    "phases": [
+      {
+        "region": "tokyo",
+        "phase": "initial",
+        "exit_code": 0,
+        "started_unix": 1789625034.404716,
+        "finished_unix": 1789625045.317087,
+        "seconds": 10.912,
+        "session_hash": "9fdb3fb1810f127dd46a10c3fa39a2a9cfc8a5517f351168a1787e43395beea6",
+        "answer_chars": 86,
+        "answer_sha256": "f3a79d3e2cd39401736985b19b267bfb565449f38278ad4efc3d28c4360cc5ba",
+        "tool_calls": 1,
+        "tool_errors": 0,
+        "errors": [],
+        "worktree_unchanged": true
+      },
+      {
+        "region": "tokyo",
+        "phase": "followup",
+        "exit_code": 0,
+        "started_unix": 1789625045.346868,
+        "finished_unix": 1789625057.926909,
+        "seconds": 12.58,
+        "session_hash": "9fdb3fb1810f127dd46a10c3fa39a2a9cfc8a5517f351168a1787e43395beea6",
+        "answer_chars": 615,
+        "answer_sha256": "0ecd0810e5ba9229b16628cb02cdc11f4695cdaff939e61b6950ec24021a05f6",
+        "tool_calls": 2,
+        "tool_errors": 0,
+        "errors": [],
+        "worktree_unchanged": true
+      }
+    ],
+    "tool_calls": 3,
+    "tool_errors": 0,
+    "errors": [],
+    "worktree_unchanged": true,
+    "read_kotlin_parameter_type": true,
+    "read_markdown_comparison": true,
+    "route_count": 5,
+    "models": {
+      "deepseek-flash": 5
+    },
+    "efforts": {
+      "none": 5
+    },
+    "tool_binding_reuses": 2,
+    "classifier_attempts": 3,
+    "guard_decisions_matched": 5,
+    "native_request_ids": [
+      "01dff999830769efa55573e2fe0eac63",
+      "57cb71d4f83556648d737bd79847cbcb",
+      "bc8a371fa7c76ffa402ac7b1446386e3",
+      "c2f8241c82ed4259b919d6805f437e5b",
+      "e39a12e5336c263f209446ec9daf859b"
+    ]
+  },
+  {
+    "region": "us",
+    "native_version": "1.18.4",
+    "started_unix": 1789625034.404618,
+    "finished_unix": 1789625060.1889129,
+    "runtime": "user Mac native installation; isolated config; same synthetic Kotlin/Markdown fixture as r18 failure",
+    "phases": [
+      {
+        "region": "us",
+        "phase": "initial",
+        "exit_code": 0,
+        "started_unix": 1789625034.404618,
+        "finished_unix": 1789625047.9764962,
+        "seconds": 13.572,
+        "session_hash": "a69a39440a778ff8c4c273d245537ef8bff1d38409b031d6d072b5a133de5965",
+        "answer_chars": 75,
+        "answer_sha256": "8a5a7b49b35e3520c6c762a8bf4b43a4839a2e922ba5610778cd984ed63d51f6",
+        "tool_calls": 2,
+        "tool_errors": 0,
+        "errors": [],
+        "worktree_unchanged": true
+      },
+      {
+        "region": "us",
+        "phase": "followup",
+        "exit_code": 0,
+        "started_unix": 1789625048.008877,
+        "finished_unix": 1789625060.1889129,
+        "seconds": 12.18,
+        "session_hash": "a69a39440a778ff8c4c273d245537ef8bff1d38409b031d6d072b5a133de5965",
+        "answer_chars": 314,
+        "answer_sha256": "8426c40e38242b83e945cb6f39c2a4b0581547a347a350cb3b4555f174fe1e95",
+        "tool_calls": 4,
+        "tool_errors": 0,
+        "errors": [],
+        "worktree_unchanged": true
+      }
+    ],
+    "tool_calls": 6,
+    "tool_errors": 0,
+    "errors": [],
+    "worktree_unchanged": true,
+    "read_kotlin_parameter_type": true,
+    "read_markdown_comparison": true,
+    "route_count": 6,
+    "models": {
+      "deepseek-flash": 6
+    },
+    "efforts": {
+      "none": 6
+    },
+    "tool_binding_reuses": 3,
+    "classifier_attempts": 3,
+    "guard_decisions_matched": 6,
+    "native_request_ids": [
+      "0520739a805bcc626776361da8861f93",
+      "088167d7b19fe210d298c67bfd5a2bb7",
+      "908d9b3336e94ff395cfb58ff3defedc",
+      "c6ff065f4b29b7cdadecdb19ac1e25d8",
+      "e4d3c274bc5bab067bd2b6bf60f2a969",
+      "fc7095586367aec87d5536718ad56638"
+    ]
+  }
+]

@@ -1,0 +1,53 @@
+{
+  "rows": [
+    {
+      "region": "tokyo",
+      "mode": "omitted",
+      "status": 200,
+      "request_id": "e2d63c94b4daff4744589de71d1d0032",
+      "stage": "upstream_completed",
+      "applied": "",
+      "reported": "medium",
+      "mismatch": false,
+      "response_complete": true,
+      "passed": true
+    },
+    {
+      "region": "tokyo",
+      "mode": "low",
+      "status": 200,
+      "request_id": "3159f08f4886f74a18959841a7463e2e",
+      "stage": "upstream_completed",
+      "applied": "low",
+      "reported": "low",
+      "mismatch": false,
+      "response_complete": true,
+      "passed": true
+    },
+    {
+      "region": "us",
+      "mode": "omitted",
+      "status": 200,
+      "request_id": "7579f3762e891ba1f7a551e0a272c072",
+      "stage": "upstream_completed",
+      "applied": "",
+      "reported": "medium",
+      "mismatch": false,
+      "response_complete": true,
+      "passed": true
+    },
+    {
+      "region": "us",
+      "mode": "low",
+      "status": 200,
+      "request_id": "9c2faaa3f6ded625e9a4f37ed34e7025",
+      "stage": "upstream_completed",
+      "applied": "low",
+      "reported": "low",
+      "mismatch": false,
+      "response_complete": true,
+      "passed": true
+    }
+  ],
+  "passed": true
+}

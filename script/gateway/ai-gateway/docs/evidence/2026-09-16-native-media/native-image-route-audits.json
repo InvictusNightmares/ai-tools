@@ -1,0 +1,490 @@
+{
+  "claude-tokyo-184417": [
+    {
+      "at": "2026-09-16T10:44:22.595294828Z",
+      "request_id": "85b545475007218f73b87d60f9505c62",
+      "stage": "route_decided",
+      "effective_model": "deepseek-flash",
+      "response_model": null,
+      "required_capabilities": [
+        "text",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": false,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    },
+    {
+      "at": "2026-09-16T10:44:22.596936834Z",
+      "request_id": "85b545475007218f73b87d60f9505c62",
+      "stage": "upstream_started",
+      "effective_model": "deepseek-flash",
+      "response_model": null,
+      "required_capabilities": [
+        "text",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": false,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    },
+    {
+      "at": "2026-09-16T10:44:23.509003958Z",
+      "request_id": "85b545475007218f73b87d60f9505c62",
+      "stage": "upstream_completed",
+      "effective_model": "deepseek-flash",
+      "response_model": "deepseek-flash",
+      "required_capabilities": [
+        "text",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": true,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    }
+  ],
+  "codex-tokyo-184416": [
+    {
+      "at": "2026-09-16T10:44:24.557809024Z",
+      "request_id": "e9203713089a1bbfa30db0b56d152418",
+      "stage": "route_decided",
+      "effective_model": "deepseek-flash",
+      "response_model": null,
+      "required_capabilities": [
+        "text",
+        "tools",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": false,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    },
+    {
+      "at": "2026-09-16T10:44:24.560496323Z",
+      "request_id": "e9203713089a1bbfa30db0b56d152418",
+      "stage": "upstream_started",
+      "effective_model": "deepseek-flash",
+      "response_model": null,
+      "required_capabilities": [
+        "text",
+        "tools",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": false,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    },
+    {
+      "at": "2026-09-16T10:44:26.58315623Z",
+      "request_id": "e9203713089a1bbfa30db0b56d152418",
+      "stage": "upstream_completed",
+      "effective_model": "deepseek-flash",
+      "response_model": "deepseek-flash",
+      "required_capabilities": [
+        "text",
+        "tools",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": true,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    }
+  ],
+  "opencode-tokyo-184632": [
+    {
+      "at": "2026-09-16T10:46:38.961862207Z",
+      "request_id": "84502baa1fcef0950a97c8077bde0773",
+      "stage": "route_decided",
+      "effective_model": "deepseek-flash",
+      "response_model": null,
+      "required_capabilities": [
+        "text",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": false,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    },
+    {
+      "at": "2026-09-16T10:46:38.963988929Z",
+      "request_id": "84502baa1fcef0950a97c8077bde0773",
+      "stage": "upstream_started",
+      "effective_model": "deepseek-flash",
+      "response_model": null,
+      "required_capabilities": [
+        "text",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": false,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    },
+    {
+      "at": "2026-09-16T10:46:39.599339501Z",
+      "request_id": "41709ccd289c7e4e55c43f379a2f4846",
+      "stage": "route_decided",
+      "effective_model": "deepseek-flash",
+      "response_model": null,
+      "required_capabilities": [
+        "text",
+        "tools",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": false,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    },
+    {
+      "at": "2026-09-16T10:46:39.601155903Z",
+      "request_id": "41709ccd289c7e4e55c43f379a2f4846",
+      "stage": "upstream_started",
+      "effective_model": "deepseek-flash",
+      "response_model": null,
+      "required_capabilities": [
+        "text",
+        "tools",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": false,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    },
+    {
+      "at": "2026-09-16T10:46:39.868472649Z",
+      "request_id": "84502baa1fcef0950a97c8077bde0773",
+      "stage": "upstream_completed",
+      "effective_model": "deepseek-flash",
+      "response_model": "deepseek-flash",
+      "required_capabilities": [
+        "text",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": true,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    },
+    {
+      "at": "2026-09-16T10:46:40.610731245Z",
+      "request_id": "41709ccd289c7e4e55c43f379a2f4846",
+      "stage": "upstream_completed",
+      "effective_model": "deepseek-flash",
+      "response_model": "deepseek-flash",
+      "required_capabilities": [
+        "text",
+        "tools",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": true,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    }
+  ],
+  "opencode-us-191111": [
+    {
+      "at": "2026-09-16T11:11:17.241747277Z",
+      "request_id": "23f285f2b10b2789a4fb5434cc081ab4",
+      "stage": "route_decided",
+      "effective_model": "deepseek-flash",
+      "response_model": null,
+      "required_capabilities": [
+        "text",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": false,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    },
+    {
+      "at": "2026-09-16T11:11:17.242557261Z",
+      "request_id": "23f285f2b10b2789a4fb5434cc081ab4",
+      "stage": "upstream_started",
+      "effective_model": "deepseek-flash",
+      "response_model": null,
+      "required_capabilities": [
+        "text",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": false,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    },
+    {
+      "at": "2026-09-16T11:11:18.198588788Z",
+      "request_id": "23f285f2b10b2789a4fb5434cc081ab4",
+      "stage": "upstream_completed",
+      "effective_model": "deepseek-flash",
+      "response_model": "deepseek-flash",
+      "required_capabilities": [
+        "text",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": true,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    },
+    {
+      "at": "2026-09-16T11:11:20.943707317Z",
+      "request_id": "00398c31cb241d6266955da0a5ba4e93",
+      "stage": "route_decided",
+      "effective_model": "deepseek-flash",
+      "response_model": null,
+      "required_capabilities": [
+        "text",
+        "tools",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": false,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    },
+    {
+      "at": "2026-09-16T11:11:20.944840866Z",
+      "request_id": "00398c31cb241d6266955da0a5ba4e93",
+      "stage": "upstream_started",
+      "effective_model": "deepseek-flash",
+      "response_model": null,
+      "required_capabilities": [
+        "text",
+        "tools",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": false,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    },
+    {
+      "at": "2026-09-16T11:11:22.429098693Z",
+      "request_id": "00398c31cb241d6266955da0a5ba4e93",
+      "stage": "upstream_completed",
+      "effective_model": "deepseek-flash",
+      "response_model": "deepseek-flash",
+      "required_capabilities": [
+        "text",
+        "tools",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": true,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    }
+  ],
+  "codex-us-191111": [
+    {
+      "at": "2026-09-16T11:11:21.142522231Z",
+      "request_id": "d493336cbb9a79424837ce3815772167",
+      "stage": "route_decided",
+      "effective_model": "deepseek-flash",
+      "response_model": null,
+      "required_capabilities": [
+        "text",
+        "tools",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": false,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    },
+    {
+      "at": "2026-09-16T11:11:21.144458767Z",
+      "request_id": "d493336cbb9a79424837ce3815772167",
+      "stage": "upstream_started",
+      "effective_model": "deepseek-flash",
+      "response_model": null,
+      "required_capabilities": [
+        "text",
+        "tools",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": false,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    },
+    {
+      "at": "2026-09-16T11:11:23.347382844Z",
+      "request_id": "d493336cbb9a79424837ce3815772167",
+      "stage": "upstream_completed",
+      "effective_model": "deepseek-flash",
+      "response_model": "deepseek-flash",
+      "required_capabilities": [
+        "text",
+        "tools",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": true,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    }
+  ],
+  "claude-us-191111": [
+    {
+      "at": "2026-09-16T11:11:20.515192046Z",
+      "request_id": "214814905774ff7107c0b295700fe275",
+      "stage": "route_decided",
+      "effective_model": "deepseek-flash",
+      "response_model": null,
+      "required_capabilities": [
+        "text",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": false,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    },
+    {
+      "at": "2026-09-16T11:11:20.515892626Z",
+      "request_id": "214814905774ff7107c0b295700fe275",
+      "stage": "upstream_started",
+      "effective_model": "deepseek-flash",
+      "response_model": null,
+      "required_capabilities": [
+        "text",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": false,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    },
+    {
+      "at": "2026-09-16T11:11:21.899917971Z",
+      "request_id": "214814905774ff7107c0b295700fe275",
+      "stage": "upstream_completed",
+      "effective_model": "deepseek-flash",
+      "response_model": "deepseek-flash",
+      "required_capabilities": [
+        "text",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": true,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    }
+  ],
+  "hermes-chat-us-191122": [
+    {
+      "at": "2026-09-16T11:11:36.066091087Z",
+      "request_id": "07f8a110e8954745fb6c84c632866d85",
+      "stage": "route_decided",
+      "effective_model": "deepseek-flash",
+      "response_model": null,
+      "required_capabilities": [
+        "text",
+        "tools",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": false,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    },
+    {
+      "at": "2026-09-16T11:11:36.067014234Z",
+      "request_id": "07f8a110e8954745fb6c84c632866d85",
+      "stage": "upstream_started",
+      "effective_model": "deepseek-flash",
+      "response_model": null,
+      "required_capabilities": [
+        "text",
+        "tools",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": false,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    },
+    {
+      "at": "2026-09-16T11:11:37.598429064Z",
+      "request_id": "07f8a110e8954745fb6c84c632866d85",
+      "stage": "upstream_completed",
+      "effective_model": "deepseek-flash",
+      "response_model": "deepseek-flash",
+      "required_capabilities": [
+        "text",
+        "tools",
+        "vision",
+        "stream"
+      ],
+      "guard_scope": "text_and_attachment_metadata_only",
+      "response_complete": true,
+      "upstream_http_status": null,
+      "error_type": null,
+      "preflight_decision": "allow"
+    }
+  ]
+}

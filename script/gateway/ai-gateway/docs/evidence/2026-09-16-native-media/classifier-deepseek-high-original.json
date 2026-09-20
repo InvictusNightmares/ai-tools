@@ -1,0 +1,244 @@
+{
+  "scope": "classifier_only_not_guard_auto_business_acceptance",
+  "label_authority": "implementer_assigned_not_independent_human_adjudication",
+  "consistency_definition": "same_complexity_and_target_effort_in_all_three_languages",
+  "fixture_sha256": "c1f1b9a9ad259f15cb469715f630197ce17a0499afa74ae52c319bcb5f2b00d1",
+  "trials": [
+    {
+      "file": "original.jsonl",
+      "sha256": "2848381f608c1e5fade5966186ca3e88a178f31538c60d23175c617801d2bfef",
+      "primary": "deepseek-flash",
+      "reviewer": "gpt-5.6-sol",
+      "requests": 180,
+      "expected_requests": 180,
+      "complete": true,
+      "missing_samples": [],
+      "successes": 180,
+      "business_calls": 0,
+      "splits": {
+        "development": {
+          "groups": 12,
+          "consistent_groups": 12,
+          "consistency_percent": 100.0,
+          "differences": [],
+          "languages": {
+            "zh": {
+              "requests": 12,
+              "successes": 12,
+              "median_ms": 14329.0,
+              "p95_ms": 16655,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 10,
+              "assigned_complexity_matches": 8,
+              "task_boundary_checks": 0,
+              "task_boundary_matches": 0,
+              "efforts": {
+                "none": 4,
+                "low": 2,
+                "medium": 4,
+                "high": 2
+              }
+            },
+            "en": {
+              "requests": 12,
+              "successes": 12,
+              "median_ms": 11038.0,
+              "p95_ms": 20721,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 10,
+              "assigned_complexity_matches": 8,
+              "task_boundary_checks": 0,
+              "task_boundary_matches": 0,
+              "efforts": {
+                "none": 4,
+                "low": 2,
+                "medium": 4,
+                "high": 2
+              }
+            },
+            "mixed": {
+              "requests": 12,
+              "successes": 12,
+              "median_ms": 9325.5,
+              "p95_ms": 15870,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 9,
+              "assigned_complexity_matches": 8,
+              "task_boundary_checks": 0,
+              "task_boundary_matches": 0,
+              "efforts": {
+                "none": 4,
+                "low": 2,
+                "medium": 4,
+                "high": 2
+              }
+            }
+          },
+          "classifier_attempts": 60,
+          "input_tokens": 44644,
+          "output_tokens": 46074,
+          "prompt_cache_hit_tokens": 17664
+        },
+        "holdout": {
+          "groups": 48,
+          "consistent_groups": 44,
+          "consistency_percent": 91.67,
+          "differences": [
+            {
+              "case_id": "binary-size",
+              "variants": [
+                {
+                  "language": "zh",
+                  "ok": true,
+                  "complexity": "multi_step",
+                  "effort": "medium"
+                },
+                {
+                  "language": "mixed",
+                  "ok": true,
+                  "complexity": "multi_step",
+                  "effort": "medium"
+                },
+                {
+                  "language": "en",
+                  "ok": true,
+                  "complexity": "complex",
+                  "effort": "high"
+                }
+              ]
+            },
+            {
+              "case_id": "api-version",
+              "variants": [
+                {
+                  "language": "zh",
+                  "ok": true,
+                  "complexity": "complex",
+                  "effort": "high"
+                },
+                {
+                  "language": "en",
+                  "ok": true,
+                  "complexity": "complex",
+                  "effort": "high"
+                },
+                {
+                  "language": "mixed",
+                  "ok": true,
+                  "complexity": "multi_step",
+                  "effort": "medium"
+                }
+              ]
+            },
+            {
+              "case_id": "feature-flag",
+              "variants": [
+                {
+                  "language": "en",
+                  "ok": true,
+                  "complexity": "multi_step",
+                  "effort": "medium"
+                },
+                {
+                  "language": "zh",
+                  "ok": true,
+                  "complexity": "multi_step",
+                  "effort": "medium"
+                },
+                {
+                  "language": "mixed",
+                  "ok": true,
+                  "complexity": "bounded",
+                  "effort": "low"
+                }
+              ]
+            },
+            {
+              "case_id": "incident-timeline",
+              "variants": [
+                {
+                  "language": "zh",
+                  "ok": true,
+                  "complexity": "multi_step",
+                  "effort": "medium"
+                },
+                {
+                  "language": "en",
+                  "ok": true,
+                  "complexity": "multi_step",
+                  "effort": "medium"
+                },
+                {
+                  "language": "mixed",
+                  "ok": true,
+                  "complexity": "complex",
+                  "effort": "high"
+                }
+              ]
+            }
+          ],
+          "languages": {
+            "zh": {
+              "requests": 48,
+              "successes": 48,
+              "median_ms": 12363.5,
+              "p95_ms": 18306,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 43,
+              "assigned_complexity_matches": 47,
+              "task_boundary_checks": 0,
+              "task_boundary_matches": 0,
+              "efforts": {
+                "none": 12,
+                "low": 11,
+                "medium": 11,
+                "high": 10,
+                "xhigh": 4
+              }
+            },
+            "en": {
+              "requests": 48,
+              "successes": 48,
+              "median_ms": 13158.5,
+              "p95_ms": 19668,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 44,
+              "assigned_complexity_matches": 46,
+              "task_boundary_checks": 0,
+              "task_boundary_matches": 0,
+              "efforts": {
+                "none": 12,
+                "low": 11,
+                "medium": 10,
+                "high": 11,
+                "xhigh": 4
+              }
+            },
+            "mixed": {
+              "requests": 48,
+              "successes": 48,
+              "median_ms": 14009.0,
+              "p95_ms": 18912,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 44,
+              "assigned_complexity_matches": 44,
+              "task_boundary_checks": 0,
+              "task_boundary_matches": 0,
+              "efforts": {
+                "none": 12,
+                "low": 12,
+                "medium": 10,
+                "high": 10,
+                "xhigh": 4
+              }
+            }
+          },
+          "classifier_attempts": 253,
+          "input_tokens": 189145,
+          "output_tokens": 221468,
+          "prompt_cache_hit_tokens": 76800
+        }
+      }
+    }
+  ]
+}

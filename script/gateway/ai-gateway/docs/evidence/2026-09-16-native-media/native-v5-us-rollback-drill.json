@@ -1,0 +1,8 @@
+{
+  "release_id": "candidate-20260916-r11-native-v5",
+  "region": "us",
+  "backup": "/data/ai-gateway/acceptance-us/backups/release-20260916-203227-751367",
+  "status": "failed",
+  "reason": "injected_post_activation_failure",
+  "rollback": "restored"
+}

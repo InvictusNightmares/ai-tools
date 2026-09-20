@@ -1,0 +1,271 @@
+{"Time":"2026-09-15T02:13:38.85183063Z","Action":"start","Package":"local/auto-gateway"}
+{"Time":"2026-09-15T02:13:38.852061311Z","Action":"start","Package":"local/auto-gateway/cmd/auto-preview"}
+{"Time":"2026-09-15T02:13:38.852119518Z","Action":"output","Package":"local/auto-gateway/cmd/auto-preview","Output":"?   \tlocal/auto-gateway/cmd/auto-preview\t[no test files]\n"}
+{"Time":"2026-09-15T02:13:38.852139865Z","Action":"skip","Package":"local/auto-gateway/cmd/auto-preview","Elapsed":0}
+{"Time":"2026-09-15T02:13:38.862022734Z","Action":"run","Package":"local/auto-gateway","Test":"TestClassifierAndCapabilityFilter"}
+{"Time":"2026-09-15T02:13:38.862071899Z","Action":"output","Package":"local/auto-gateway","Test":"TestClassifierAndCapabilityFilter","Output":"=== RUN   TestClassifierAndCapabilityFilter\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.084587573Z","Action":"output","Package":"local/auto-gateway","Test":"TestClassifierAndCapabilityFilter","Output":"--- PASS: TestClassifierAndCapabilityFilter (0.22s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.084622293Z","Action":"pass","Package":"local/auto-gateway","Test":"TestClassifierAndCapabilityFilter","Elapsed":0.22}
+{"Time":"2026-09-15T02:13:39.084629106Z","Action":"run","Package":"local/auto-gateway","Test":"TestMultipleUpgradesAndTaskReset"}
+{"Time":"2026-09-15T02:13:39.08463188Z","Action":"output","Package":"local/auto-gateway","Test":"TestMultipleUpgradesAndTaskReset","Output":"=== RUN   TestMultipleUpgradesAndTaskReset\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.084768841Z","Action":"output","Package":"local/auto-gateway","Test":"TestMultipleUpgradesAndTaskReset","Output":"--- PASS: TestMultipleUpgradesAndTaskReset (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.084779977Z","Action":"pass","Package":"local/auto-gateway","Test":"TestMultipleUpgradesAndTaskReset","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.084790176Z","Action":"run","Package":"local/auto-gateway","Test":"TestToolLoopLocksModel"}
+{"Time":"2026-09-15T02:13:39.084792373Z","Action":"output","Package":"local/auto-gateway","Test":"TestToolLoopLocksModel","Output":"=== RUN   TestToolLoopLocksModel\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.084870752Z","Action":"output","Package":"local/auto-gateway","Test":"TestToolLoopLocksModel","Output":"--- PASS: TestToolLoopLocksModel (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.084881588Z","Action":"pass","Package":"local/auto-gateway","Test":"TestToolLoopLocksModel","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.084907212Z","Action":"run","Package":"local/auto-gateway","Test":"TestStreamingTurnCannotSwitchModelsMidResponse"}
+{"Time":"2026-09-15T02:13:39.084910143Z","Action":"output","Package":"local/auto-gateway","Test":"TestStreamingTurnCannotSwitchModelsMidResponse","Output":"=== RUN   TestStreamingTurnCannotSwitchModelsMidResponse\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.303134509Z","Action":"output","Package":"local/auto-gateway","Test":"TestStreamingTurnCannotSwitchModelsMidResponse","Output":"--- PASS: TestStreamingTurnCannotSwitchModelsMidResponse (0.22s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.303148945Z","Action":"pass","Package":"local/auto-gateway","Test":"TestStreamingTurnCannotSwitchModelsMidResponse","Elapsed":0.22}
+{"Time":"2026-09-15T02:13:39.303162527Z","Action":"run","Package":"local/auto-gateway","Test":"TestHardFailureFailsOverWithoutWaitingForHealthRefresh"}
+{"Time":"2026-09-15T02:13:39.303165343Z","Action":"output","Package":"local/auto-gateway","Test":"TestHardFailureFailsOverWithoutWaitingForHealthRefresh","Output":"=== RUN   TestHardFailureFailsOverWithoutWaitingForHealthRefresh\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.303248436Z","Action":"output","Package":"local/auto-gateway","Test":"TestHardFailureFailsOverWithoutWaitingForHealthRefresh","Output":"--- PASS: TestHardFailureFailsOverWithoutWaitingForHealthRefresh (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.30325637Z","Action":"pass","Package":"local/auto-gateway","Test":"TestHardFailureFailsOverWithoutWaitingForHealthRefresh","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.303270838Z","Action":"run","Package":"local/auto-gateway","Test":"TestCacheNamespaceIsolation"}
+{"Time":"2026-09-15T02:13:39.303273073Z","Action":"output","Package":"local/auto-gateway","Test":"TestCacheNamespaceIsolation","Output":"=== RUN   TestCacheNamespaceIsolation\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.303405345Z","Action":"output","Package":"local/auto-gateway","Test":"TestCacheNamespaceIsolation","Output":"--- PASS: TestCacheNamespaceIsolation (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.303410054Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCacheNamespaceIsolation","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.303419701Z","Action":"run","Package":"local/auto-gateway","Test":"TestReasoningEffortIsGeneratedFromFeatures"}
+{"Time":"2026-09-15T02:13:39.303421875Z","Action":"output","Package":"local/auto-gateway","Test":"TestReasoningEffortIsGeneratedFromFeatures","Output":"=== RUN   TestReasoningEffortIsGeneratedFromFeatures\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.700668268Z","Action":"output","Package":"local/auto-gateway","Test":"TestReasoningEffortIsGeneratedFromFeatures","Output":"--- PASS: TestReasoningEffortIsGeneratedFromFeatures (0.40s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.700683528Z","Action":"pass","Package":"local/auto-gateway","Test":"TestReasoningEffortIsGeneratedFromFeatures","Elapsed":0.4}
+{"Time":"2026-09-15T02:13:39.700690421Z","Action":"run","Package":"local/auto-gateway","Test":"TestProviderReasoningMapping"}
+{"Time":"2026-09-15T02:13:39.700692697Z","Action":"output","Package":"local/auto-gateway","Test":"TestProviderReasoningMapping","Output":"=== RUN   TestProviderReasoningMapping\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.700752618Z","Action":"output","Package":"local/auto-gateway","Test":"TestProviderReasoningMapping","Output":"--- PASS: TestProviderReasoningMapping (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.700762995Z","Action":"pass","Package":"local/auto-gateway","Test":"TestProviderReasoningMapping","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.700778423Z","Action":"run","Package":"local/auto-gateway","Test":"TestProviderParametersNeverForwardClientEffort"}
+{"Time":"2026-09-15T02:13:39.700780933Z","Action":"output","Package":"local/auto-gateway","Test":"TestProviderParametersNeverForwardClientEffort","Output":"=== RUN   TestProviderParametersNeverForwardClientEffort\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.700834097Z","Action":"output","Package":"local/auto-gateway","Test":"TestProviderParametersNeverForwardClientEffort","Output":"--- PASS: TestProviderParametersNeverForwardClientEffort (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.700841644Z","Action":"pass","Package":"local/auto-gateway","Test":"TestProviderParametersNeverForwardClientEffort","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.700863087Z","Action":"run","Package":"local/auto-gateway","Test":"TestUsageNormalization"}
+{"Time":"2026-09-15T02:13:39.700865585Z","Action":"output","Package":"local/auto-gateway","Test":"TestUsageNormalization","Output":"=== RUN   TestUsageNormalization\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.700900499Z","Action":"output","Package":"local/auto-gateway","Test":"TestUsageNormalization","Output":"--- PASS: TestUsageNormalization (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.700910524Z","Action":"pass","Package":"local/auto-gateway","Test":"TestUsageNormalization","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.700931218Z","Action":"run","Package":"local/auto-gateway","Test":"TestPublicModelIsAutoOnly"}
+{"Time":"2026-09-15T02:13:39.700933702Z","Action":"output","Package":"local/auto-gateway","Test":"TestPublicModelIsAutoOnly","Output":"=== RUN   TestPublicModelIsAutoOnly\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.700970547Z","Action":"output","Package":"local/auto-gateway","Test":"TestPublicModelIsAutoOnly","Output":"--- PASS: TestPublicModelIsAutoOnly (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.700981642Z","Action":"pass","Package":"local/auto-gateway","Test":"TestPublicModelIsAutoOnly","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.701002226Z","Action":"run","Package":"local/auto-gateway","Test":"TestResponseCacheKeySeparatesEffectiveModelEffortAndRequest"}
+{"Time":"2026-09-15T02:13:39.701004975Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCacheKeySeparatesEffectiveModelEffortAndRequest","Output":"=== RUN   TestResponseCacheKeySeparatesEffectiveModelEffortAndRequest\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.701461115Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCacheKeySeparatesEffectiveModelEffortAndRequest","Output":"--- PASS: TestResponseCacheKeySeparatesEffectiveModelEffortAndRequest (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.701466947Z","Action":"pass","Package":"local/auto-gateway","Test":"TestResponseCacheKeySeparatesEffectiveModelEffortAndRequest","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.701488071Z","Action":"run","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses"}
+{"Time":"2026-09-15T02:13:39.701490716Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses","Output":"=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.701537501Z","Action":"run","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/stream"}
+{"Time":"2026-09-15T02:13:39.701541162Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/stream","Output":"=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/stream\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.701602068Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/stream","Output":"--- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/stream (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.701612157Z","Action":"pass","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/stream","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.701633463Z","Action":"run","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/tools"}
+{"Time":"2026-09-15T02:13:39.7016363Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/tools","Output":"=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/tools\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.701676384Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/tools","Output":"--- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/tools (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.701686289Z","Action":"pass","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/tools","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.701702706Z","Action":"run","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/image"}
+{"Time":"2026-09-15T02:13:39.701705269Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/image","Output":"=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/image\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.701742651Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/image","Output":"--- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/image (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.701750631Z","Action":"pass","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/image","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.701775128Z","Action":"run","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/blocked"}
+{"Time":"2026-09-15T02:13:39.701779899Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/blocked","Output":"=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/blocked\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.701812283Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/blocked","Output":"--- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/blocked (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.701821978Z","Action":"pass","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/blocked","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.701830716Z","Action":"run","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/large"}
+{"Time":"2026-09-15T02:13:39.701833377Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/large","Output":"=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/large\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.701876973Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/large","Output":"--- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/large (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.701881962Z","Action":"pass","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/large","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.701909353Z","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses","Output":"--- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.701915285Z","Action":"pass","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.701936575Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineBillingOnResponseHit"}
+{"Time":"2026-09-15T02:13:39.70193911Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineBillingOnResponseHit","Output":"=== RUN   TestCachePipelineBillingOnResponseHit\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.708574475Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineBillingOnResponseHit","Output":"--- PASS: TestCachePipelineBillingOnResponseHit (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.708587167Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineBillingOnResponseHit","Elapsed":0.01}
+{"Time":"2026-09-15T02:13:39.708612848Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize"}
+{"Time":"2026-09-15T02:13:39.708615712Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize","Output":"=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.708656158Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable"}
+{"Time":"2026-09-15T02:13:39.708659922Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable","Output":"=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.709449403Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable","Output":"--- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.709461379Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.709480476Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited"}
+{"Time":"2026-09-15T02:13:39.709483075Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited","Output":"=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.710251674Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited","Output":"--- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.710263576Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.710286623Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect"}
+{"Time":"2026-09-15T02:13:39.710289228Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect","Output":"=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.710981184Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect","Output":"--- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.71099138Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.711030741Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize"}
+{"Time":"2026-09-15T02:13:39.71103326Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize","Output":"=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.711791654Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize","Output":"--- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.71179681Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.711821031Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error"}
+{"Time":"2026-09-15T02:13:39.71182367Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error","Output":"=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.712513906Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error","Output":"--- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.71251938Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.712546907Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize","Output":"--- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.712556729Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.712574062Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache"}
+{"Time":"2026-09-15T02:13:39.712587106Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache","Output":"=== RUN   TestCachePipelineGuardBeforeCache\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.712603982Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/block"}
+{"Time":"2026-09-15T02:13:39.712606699Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/block","Output":"=== RUN   TestCachePipelineGuardBeforeCache/block\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.71266464Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/block","Output":"--- PASS: TestCachePipelineGuardBeforeCache/block (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.71267547Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/block","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.712698077Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/unavailable"}
+{"Time":"2026-09-15T02:13:39.712700748Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/unavailable","Output":"=== RUN   TestCachePipelineGuardBeforeCache/unavailable\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.712747077Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/unavailable","Output":"--- PASS: TestCachePipelineGuardBeforeCache/unavailable (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.712757534Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/unavailable","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.712766261Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/invalid"}
+{"Time":"2026-09-15T02:13:39.71276832Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/invalid","Output":"=== RUN   TestCachePipelineGuardBeforeCache/invalid\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.712824535Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/invalid","Output":"--- PASS: TestCachePipelineGuardBeforeCache/invalid (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.712834652Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/invalid","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.712867488Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache","Output":"--- PASS: TestCachePipelineGuardBeforeCache (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.7128893Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.712898715Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineProtocolIsolation"}
+{"Time":"2026-09-15T02:13:39.712900847Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineProtocolIsolation","Output":"=== RUN   TestCachePipelineProtocolIsolation\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.713838495Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineProtocolIsolation","Output":"--- PASS: TestCachePipelineProtocolIsolation (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.71384917Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineProtocolIsolation","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.713872447Z","Action":"run","Package":"local/auto-gateway","Test":"TestMemoryCacheDoesNotAliasUsage"}
+{"Time":"2026-09-15T02:13:39.713874843Z","Action":"output","Package":"local/auto-gateway","Test":"TestMemoryCacheDoesNotAliasUsage","Output":"=== RUN   TestMemoryCacheDoesNotAliasUsage\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.714082811Z","Action":"output","Package":"local/auto-gateway","Test":"TestMemoryCacheDoesNotAliasUsage","Output":"--- PASS: TestMemoryCacheDoesNotAliasUsage (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.714089332Z","Action":"pass","Package":"local/auto-gateway","Test":"TestMemoryCacheDoesNotAliasUsage","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.714105859Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation"}
+{"Time":"2026-09-15T02:13:39.71410816Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation","Output":"=== RUN   TestCachePipelineIdentityIsolation\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.71423999Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/region"}
+{"Time":"2026-09-15T02:13:39.71424313Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/region","Output":"=== RUN   TestCachePipelineIdentityIsolation/region\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.714372253Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/region","Output":"--- PASS: TestCachePipelineIdentityIsolation/region (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.714382699Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/region","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.714404853Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/api_key"}
+{"Time":"2026-09-15T02:13:39.714407354Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/api_key","Output":"=== RUN   TestCachePipelineIdentityIsolation/api_key\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.714520518Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/api_key","Output":"--- PASS: TestCachePipelineIdentityIsolation/api_key (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.714525997Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/api_key","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.714542109Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/revision"}
+{"Time":"2026-09-15T02:13:39.714544421Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/revision","Output":"=== RUN   TestCachePipelineIdentityIsolation/revision\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.714655939Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/revision","Output":"--- PASS: TestCachePipelineIdentityIsolation/revision (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.714660643Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/revision","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.714683717Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/client_key"}
+{"Time":"2026-09-15T02:13:39.714686182Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/client_key","Output":"=== RUN   TestCachePipelineIdentityIsolation/client_key\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.714793115Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/client_key","Output":"--- PASS: TestCachePipelineIdentityIsolation/client_key (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.71479777Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/client_key","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.714813375Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/model"}
+{"Time":"2026-09-15T02:13:39.714815777Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/model","Output":"=== RUN   TestCachePipelineIdentityIsolation/model\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.714922457Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/model","Output":"--- PASS: TestCachePipelineIdentityIsolation/model (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.714929432Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/model","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.714954165Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/effort"}
+{"Time":"2026-09-15T02:13:39.714956669Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/effort","Output":"=== RUN   TestCachePipelineIdentityIsolation/effort\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.715060858Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/effort","Output":"--- PASS: TestCachePipelineIdentityIsolation/effort (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.715065486Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/effort","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.715085975Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/protocol"}
+{"Time":"2026-09-15T02:13:39.715088491Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/protocol","Output":"=== RUN   TestCachePipelineIdentityIsolation/protocol\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.715206454Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/protocol","Output":"--- PASS: TestCachePipelineIdentityIsolation/protocol (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.715211605Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/protocol","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.715228179Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_region"}
+{"Time":"2026-09-15T02:13:39.715230533Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_region","Output":"=== RUN   TestCachePipelineIdentityIsolation/missing_region\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.715807073Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_region","Output":"--- PASS: TestCachePipelineIdentityIsolation/missing_region (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.715813752Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_region","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.715834717Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_api_key"}
+{"Time":"2026-09-15T02:13:39.715837235Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_api_key","Output":"=== RUN   TestCachePipelineIdentityIsolation/missing_api_key\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.71638357Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_api_key","Output":"--- PASS: TestCachePipelineIdentityIsolation/missing_api_key (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.716390932Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_api_key","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.716415487Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_revision"}
+{"Time":"2026-09-15T02:13:39.716418014Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_revision","Output":"=== RUN   TestCachePipelineIdentityIsolation/missing_revision\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.716957924Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_revision","Output":"--- PASS: TestCachePipelineIdentityIsolation/missing_revision (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.716969609Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_revision","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.716988461Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_secret"}
+{"Time":"2026-09-15T02:13:39.716990938Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_secret","Output":"=== RUN   TestCachePipelineIdentityIsolation/missing_secret\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.717488359Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_secret","Output":"--- PASS: TestCachePipelineIdentityIsolation/missing_secret (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.717493498Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_secret","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.717524155Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation","Output":"--- PASS: TestCachePipelineIdentityIsolation (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.717533566Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.717555484Z","Action":"run","Package":"local/auto-gateway","Test":"TestMemoryCacheConcurrentCopies"}
+{"Time":"2026-09-15T02:13:39.717558028Z","Action":"output","Package":"local/auto-gateway","Test":"TestMemoryCacheConcurrentCopies","Output":"=== RUN   TestMemoryCacheConcurrentCopies\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.768659Z","Action":"output","Package":"local/auto-gateway","Test":"TestMemoryCacheConcurrentCopies","Output":"--- PASS: TestMemoryCacheConcurrentCopies (0.05s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.768668361Z","Action":"pass","Package":"local/auto-gateway","Test":"TestMemoryCacheConcurrentCopies","Elapsed":0.05}
+{"Time":"2026-09-15T02:13:39.768695631Z","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineInitialSelectionIsNotUpgrade"}
+{"Time":"2026-09-15T02:13:39.768698375Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineInitialSelectionIsNotUpgrade","Output":"=== RUN   TestCachePipelineInitialSelectionIsNotUpgrade\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.76934223Z","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineInitialSelectionIsNotUpgrade","Output":"--- PASS: TestCachePipelineInitialSelectionIsNotUpgrade (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.769350111Z","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineInitialSelectionIsNotUpgrade","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.769372925Z","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPModelsExposeAutoOnly"}
+{"Time":"2026-09-15T02:13:39.76937539Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPModelsExposeAutoOnly","Output":"=== RUN   TestHTTPModelsExposeAutoOnly\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.771220349Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPModelsExposeAutoOnly","Output":"--- PASS: TestHTTPModelsExposeAutoOnly (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.771230851Z","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPModelsExposeAutoOnly","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.771256679Z","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPRouteNormalizesProtocolAndIgnoresClientEffort"}
+{"Time":"2026-09-15T02:13:39.771261448Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteNormalizesProtocolAndIgnoresClientEffort","Output":"=== RUN   TestHTTPRouteNormalizesProtocolAndIgnoresClientEffort\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.773463786Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteNormalizesProtocolAndIgnoresClientEffort","Output":"--- PASS: TestHTTPRouteNormalizesProtocolAndIgnoresClientEffort (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.773471689Z","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPRouteNormalizesProtocolAndIgnoresClientEffort","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.773502662Z","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPRouteRejectsNonAutoModel"}
+{"Time":"2026-09-15T02:13:39.773505091Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteRejectsNonAutoModel","Output":"=== RUN   TestHTTPRouteRejectsNonAutoModel\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.774411696Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteRejectsNonAutoModel","Output":"--- PASS: TestHTTPRouteRejectsNonAutoModel (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.774422573Z","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPRouteRejectsNonAutoModel","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.77444247Z","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable"}
+{"Time":"2026-09-15T02:13:39.774445047Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable","Output":"=== RUN   TestHTTPRouteHonorsPreflightBlockAndUnavailable\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.774471446Z","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/block"}
+{"Time":"2026-09-15T02:13:39.77447395Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/block","Output":"=== RUN   TestHTTPRouteHonorsPreflightBlockAndUnavailable/block\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.776353521Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/block","Output":"--- PASS: TestHTTPRouteHonorsPreflightBlockAndUnavailable/block (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.776363975Z","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/block","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.776411521Z","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/unavailable"}
+{"Time":"2026-09-15T02:13:39.7764141Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/unavailable","Output":"=== RUN   TestHTTPRouteHonorsPreflightBlockAndUnavailable/unavailable\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.777436761Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/unavailable","Output":"--- PASS: TestHTTPRouteHonorsPreflightBlockAndUnavailable/unavailable (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.777448033Z","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/unavailable","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.777474623Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable","Output":"--- PASS: TestHTTPRouteHonorsPreflightBlockAndUnavailable (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.777484212Z","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.77750614Z","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPRouteKeepsModelWhenStreamIsActive"}
+{"Time":"2026-09-15T02:13:39.777508689Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteKeepsModelWhenStreamIsActive","Output":"=== RUN   TestHTTPRouteKeepsModelWhenStreamIsActive\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.780490073Z","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteKeepsModelWhenStreamIsActive","Output":"--- PASS: TestHTTPRouteKeepsModelWhenStreamIsActive (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.78049522Z","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPRouteKeepsModelWhenStreamIsActive","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.780520412Z","Action":"run","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable"}
+{"Time":"2026-09-15T02:13:39.78052298Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable","Output":"=== RUN   TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.780576403Z","Action":"run","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/block"}
+{"Time":"2026-09-15T02:13:39.78057912Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/block","Output":"=== RUN   TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/block\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.780638642Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/block","Output":"--- PASS: TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/block (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.780648343Z","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/block","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.780673467Z","Action":"run","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/unavailable"}
+{"Time":"2026-09-15T02:13:39.780676033Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/unavailable","Output":"=== RUN   TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/unavailable\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.780708611Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/unavailable","Output":"--- PASS: TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/unavailable (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.780718409Z","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/unavailable","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.780742194Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable","Output":"--- PASS: TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.780751599Z","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.780768338Z","Action":"run","Package":"local/auto-gateway","Test":"TestPipelineAllowMapsAutoDecisionAndCallsUpstreamOnce"}
+{"Time":"2026-09-15T02:13:39.780770878Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineAllowMapsAutoDecisionAndCallsUpstreamOnce","Output":"=== RUN   TestPipelineAllowMapsAutoDecisionAndCallsUpstreamOnce\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.781017976Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineAllowMapsAutoDecisionAndCallsUpstreamOnce","Output":"--- PASS: TestPipelineAllowMapsAutoDecisionAndCallsUpstreamOnce (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.781022663Z","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelineAllowMapsAutoDecisionAndCallsUpstreamOnce","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.781038068Z","Action":"run","Package":"local/auto-gateway","Test":"TestPipelinePropagatesUpstreamFailureWithoutRetry"}
+{"Time":"2026-09-15T02:13:39.781040395Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelinePropagatesUpstreamFailureWithoutRetry","Output":"=== RUN   TestPipelinePropagatesUpstreamFailureWithoutRetry\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.781287467Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelinePropagatesUpstreamFailureWithoutRetry","Output":"--- PASS: TestPipelinePropagatesUpstreamFailureWithoutRetry (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.781294011Z","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelinePropagatesUpstreamFailureWithoutRetry","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.781303429Z","Action":"run","Package":"local/auto-gateway","Test":"TestPipelineResponseCacheHitSkipsUpstreamAndRecordsUsage"}
+{"Time":"2026-09-15T02:13:39.781305532Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineResponseCacheHitSkipsUpstreamAndRecordsUsage","Output":"=== RUN   TestPipelineResponseCacheHitSkipsUpstreamAndRecordsUsage\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.782045769Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineResponseCacheHitSkipsUpstreamAndRecordsUsage","Output":"--- PASS: TestPipelineResponseCacheHitSkipsUpstreamAndRecordsUsage (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.782050306Z","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelineResponseCacheHitSkipsUpstreamAndRecordsUsage","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.782071605Z","Action":"run","Package":"local/auto-gateway","Test":"TestPipelineCacheExpiresAndUpstreamFailureIsNotStored"}
+{"Time":"2026-09-15T02:13:39.782074154Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineCacheExpiresAndUpstreamFailureIsNotStored","Output":"=== RUN   TestPipelineCacheExpiresAndUpstreamFailureIsNotStored\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.783015786Z","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineCacheExpiresAndUpstreamFailureIsNotStored","Output":"--- PASS: TestPipelineCacheExpiresAndUpstreamFailureIsNotStored (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.783021146Z","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelineCacheExpiresAndUpstreamFailureIsNotStored","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.783045002Z","Action":"run","Package":"local/auto-gateway","Test":"TestNormalizeChatCompletions"}
+{"Time":"2026-09-15T02:13:39.783047513Z","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeChatCompletions","Output":"=== RUN   TestNormalizeChatCompletions\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.784184909Z","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeChatCompletions","Output":"--- PASS: TestNormalizeChatCompletions (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.784190362Z","Action":"pass","Package":"local/auto-gateway","Test":"TestNormalizeChatCompletions","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.784212683Z","Action":"run","Package":"local/auto-gateway","Test":"TestNormalizeResponsesIgnoresClientReasoning"}
+{"Time":"2026-09-15T02:13:39.78421528Z","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeResponsesIgnoresClientReasoning","Output":"=== RUN   TestNormalizeResponsesIgnoresClientReasoning\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.784517616Z","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeResponsesIgnoresClientReasoning","Output":"--- PASS: TestNormalizeResponsesIgnoresClientReasoning (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.784527705Z","Action":"pass","Package":"local/auto-gateway","Test":"TestNormalizeResponsesIgnoresClientReasoning","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.784543828Z","Action":"run","Package":"local/auto-gateway","Test":"TestNormalizeAnthropicMessagesAndTools"}
+{"Time":"2026-09-15T02:13:39.784546336Z","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeAnthropicMessagesAndTools","Output":"=== RUN   TestNormalizeAnthropicMessagesAndTools\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.78573516Z","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeAnthropicMessagesAndTools","Output":"--- PASS: TestNormalizeAnthropicMessagesAndTools (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.785740275Z","Action":"pass","Package":"local/auto-gateway","Test":"TestNormalizeAnthropicMessagesAndTools","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.785764217Z","Action":"run","Package":"local/auto-gateway","Test":"TestNormalizeRejectsMalformedAndUnknownProtocol"}
+{"Time":"2026-09-15T02:13:39.78576897Z","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeRejectsMalformedAndUnknownProtocol","Output":"=== RUN   TestNormalizeRejectsMalformedAndUnknownProtocol\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.785865618Z","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeRejectsMalformedAndUnknownProtocol","Output":"--- PASS: TestNormalizeRejectsMalformedAndUnknownProtocol (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.785871392Z","Action":"pass","Package":"local/auto-gateway","Test":"TestNormalizeRejectsMalformedAndUnknownProtocol","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.785880645Z","Action":"run","Package":"local/auto-gateway","Test":"TestStreamCapabilityIsRequired"}
+{"Time":"2026-09-15T02:13:39.785882662Z","Action":"output","Package":"local/auto-gateway","Test":"TestStreamCapabilityIsRequired","Output":"=== RUN   TestStreamCapabilityIsRequired\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.786167741Z","Action":"output","Package":"local/auto-gateway","Test":"TestStreamCapabilityIsRequired","Output":"--- PASS: TestStreamCapabilityIsRequired (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.786173555Z","Action":"pass","Package":"local/auto-gateway","Test":"TestStreamCapabilityIsRequired","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.786191033Z","Action":"run","Package":"local/auto-gateway","Test":"TestBuildRouteAuditExplainsGeneratedEffort"}
+{"Time":"2026-09-15T02:13:39.786193707Z","Action":"output","Package":"local/auto-gateway","Test":"TestBuildRouteAuditExplainsGeneratedEffort","Output":"=== RUN   TestBuildRouteAuditExplainsGeneratedEffort\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.786603852Z","Action":"output","Package":"local/auto-gateway","Test":"TestBuildRouteAuditExplainsGeneratedEffort","Output":"--- PASS: TestBuildRouteAuditExplainsGeneratedEffort (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.786610138Z","Action":"pass","Package":"local/auto-gateway","Test":"TestBuildRouteAuditExplainsGeneratedEffort","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.78663108Z","Action":"run","Package":"local/auto-gateway","Test":"TestDailyUsageSeparatesModelReasoningRegionAndKey"}
+{"Time":"2026-09-15T02:13:39.786636584Z","Action":"output","Package":"local/auto-gateway","Test":"TestDailyUsageSeparatesModelReasoningRegionAndKey","Output":"=== RUN   TestDailyUsageSeparatesModelReasoningRegionAndKey\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.786690358Z","Action":"output","Package":"local/auto-gateway","Test":"TestDailyUsageSeparatesModelReasoningRegionAndKey","Output":"--- PASS: TestDailyUsageSeparatesModelReasoningRegionAndKey (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:39.786695101Z","Action":"pass","Package":"local/auto-gateway","Test":"TestDailyUsageSeparatesModelReasoningRegionAndKey","Elapsed":0}
+{"Time":"2026-09-15T02:13:39.786724507Z","Action":"output","Package":"local/auto-gateway","Output":"PASS\n","OutputType":"frame"}
+{"Time":"2026-09-15T02:13:40.790672544Z","Action":"output","Package":"local/auto-gateway","Output":"ok  \tlocal/auto-gateway\t1.939s\n"}
+{"Time":"2026-09-15T02:13:40.79072204Z","Action":"pass","Package":"local/auto-gateway","Elapsed":1.939}

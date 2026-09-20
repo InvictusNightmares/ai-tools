@@ -1,0 +1,21 @@
+{
+  "matched": 17,
+  "attempts": 17,
+  "costs": [
+    {
+      "purpose": "classification",
+      "model": "gpt-5.6-luna",
+      "cost_usd": "0.0202800"
+    },
+    {
+      "purpose": "classification",
+      "model": "gpt-5.6-sol",
+      "cost_usd": "0.527130"
+    },
+    {
+      "purpose": "business",
+      "model": "gpt-5.6-terra",
+      "cost_usd": "0.2489548"
+    }
+  ]
+}

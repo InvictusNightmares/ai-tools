@@ -1,0 +1,82 @@
+{
+  "source_sha256": "5c04f08b12d37561f75c405324a9e5e254c8c8faed5389f0ece307e6793856c7",
+  "results": [
+    {
+      "label": "r04-v31-tokyo",
+      "attempts": 22,
+      "purpose_counts": {
+        "classification": 12,
+        "business": 10
+      },
+      "exact_matches": 22,
+      "token_mismatches": 0,
+      "known_success_missing": 0,
+      "known_usage_reconciled": true,
+      "costs": [
+        {
+          "purpose": "classification",
+          "model": "gpt-5.6-luna",
+          "total_cost": 0.0032592000000000003
+        },
+        {
+          "purpose": "business",
+          "model": "gpt-5.6-luna",
+          "total_cost": 0.0018312
+        },
+        {
+          "purpose": "business",
+          "model": "deepseek-flash",
+          "total_cost": 0.0008558
+        },
+        {
+          "purpose": "classification",
+          "model": "gpt-5.6-sol",
+          "total_cost": 0.009965
+        }
+      ],
+      "user_agents": [
+        "Python-urllib/3.13",
+        "gateway-r04-format/1.0"
+      ]
+    },
+    {
+      "label": "r04-v31-us",
+      "attempts": 24,
+      "purpose_counts": {
+        "classification": 13,
+        "business": 11
+      },
+      "exact_matches": 24,
+      "token_mismatches": 0,
+      "known_success_missing": 0,
+      "known_usage_reconciled": true,
+      "costs": [
+        {
+          "purpose": "classification",
+          "model": "gpt-5.6-luna",
+          "total_cost": 0.0035596000000000004
+        },
+        {
+          "purpose": "business",
+          "model": "gpt-5.6-luna",
+          "total_cost": 0.0018312
+        },
+        {
+          "purpose": "business",
+          "model": "deepseek-flash",
+          "total_cost": 0.00138248
+        },
+        {
+          "purpose": "classification",
+          "model": "gpt-5.6-sol",
+          "total_cost": 0.009215
+        }
+      ],
+      "user_agents": [
+        "Python-urllib/3.13",
+        "gateway-r04-format-diagnostic/1.0",
+        "gateway-r04-format/1.0"
+      ]
+    }
+  ]
+}

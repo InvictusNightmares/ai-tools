@@ -1,0 +1,40 @@
+=== RUN   TestPreflightDecisionCacheAvoidsRepeatedGuardCall
+--- PASS: TestPreflightDecisionCacheAvoidsRepeatedGuardCall (0.00s)
+=== RUN   TestPreflightRulesRunBeforeSanitizedDecisionCache
+--- PASS: TestPreflightRulesRunBeforeSanitizedDecisionCache (0.00s)
+=== RUN   TestPreflightAuditFailureFailsClosed
+--- PASS: TestPreflightAuditFailureFailsClosed (0.00s)
+=== RUN   TestPreflightAllowsBenignRequestThroughModel
+--- PASS: TestPreflightAllowsBenignRequestThroughModel (0.00s)
+=== RUN   TestPreflightBlocksHighConfidenceRuleBeforeModel
+--- PASS: TestPreflightBlocksHighConfidenceRuleBeforeModel (0.00s)
+=== RUN   TestPreflightFailClosedWhenModelUnavailable
+--- PASS: TestPreflightFailClosedWhenModelUnavailable (0.00s)
+=== RUN   TestPreflightRedactsSecretsBeforeModelAndAudit
+--- PASS: TestPreflightRedactsSecretsBeforeModelAndAudit (0.00s)
+=== RUN   TestPreflightDetectsQuotedJSONCredentialFields
+--- PASS: TestPreflightDetectsQuotedJSONCredentialFields (0.00s)
+=== RUN   TestPreflightScansMetadataAndToolSchemaForCredentials
+--- PASS: TestPreflightScansMetadataAndToolSchemaForCredentials (0.00s)
+=== RUN   TestPreflightBlocksRealSecretWhenRequestWantsToUseIt
+--- PASS: TestPreflightBlocksRealSecretWhenRequestWantsToUseIt (0.00s)
+=== RUN   TestPreflightStrictlyBlocksMediumModelVerdict
+--- PASS: TestPreflightStrictlyBlocksMediumModelVerdict (0.00s)
+=== RUN   TestPreflightRuleRiskCannotBeDowngradedByModel
+--- PASS: TestPreflightRuleRiskCannotBeDowngradedByModel (0.00s)
+=== RUN   TestUpstreamCyberQuarantinesAccountAfterThreshold
+--- PASS: TestUpstreamCyberQuarantinesAccountAfterThreshold (0.00s)
+=== RUN   TestRequestCorrelationDoesNotInvalidateSafetyCache
+--- PASS: TestRequestCorrelationDoesNotInvalidateSafetyCache (0.00s)
+PASS
+ok  	local/guard-gateway/go-check	0.005s
+=== RUN   TestHTTPModelClientSendsSanitizedInputOnly
+--- PASS: TestHTTPModelClientSendsSanitizedInputOnly (0.00s)
+=== RUN   TestHTTPModelClientChecksAllLongInputChunks
+--- PASS: TestHTTPModelClientChecksAllLongInputChunks (0.01s)
+PASS
+ok  	local/guard-gateway/guard-deployment	0.015s
+?   	local/guard-gateway/guard-deployment/cmd/preflight-api	[no test files]
+ok  	local/guard-gateway/go-check	1.035s
+ok  	local/guard-gateway/guard-deployment	1.141s
+?   	local/guard-gateway/guard-deployment/cmd/preflight-api	[no test files]

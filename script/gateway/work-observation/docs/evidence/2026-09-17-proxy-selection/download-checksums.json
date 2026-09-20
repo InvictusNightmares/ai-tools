@@ -1,0 +1,42 @@
+[
+  {
+    "name": "summary.json",
+    "sha256": "4278f268df8e7800033da436247ed8aa857584f2e23c4b134825658f6b052911",
+    "bytes": 28918
+  },
+  {
+    "name": "runtime.json",
+    "sha256": "24d8344d475595d8885d1ec3ece9dfb3d9566c69be2deb92d2e0a91f17daf3e9",
+    "bytes": 1251
+  },
+  {
+    "name": "binaries.sha256",
+    "sha256": "e521057404069398de58b7ee6d7ed3b3bf8620f021fa655098e6f74a4b7579f8",
+    "bytes": 268
+  },
+  {
+    "name": "go-on.log",
+    "sha256": "240258ae6577104568497cc6556d22bf5637cbbf960647ea4dae4bab5dff6da3",
+    "bytes": 8614
+  },
+  {
+    "name": "rust-on.log",
+    "sha256": "497f1497d5b55323130a6554eb3f16a9476e0c55aba5f5713ae434f7e6efa5ea",
+    "bytes": 8170
+  },
+  {
+    "name": "smoke-go.json",
+    "sha256": "22ae2eeed2430ce3ea6b6dc5bac212f297140f4f2bc065b3b046c58123a432e3",
+    "bytes": 1129
+  },
+  {
+    "name": "smoke-rust.json",
+    "sha256": "073ef85f4e66b7cbda0003cfd928304ae529ba73891c21003a96f0aebbba1bf1",
+    "bytes": 1198
+  },
+  {
+    "name": "results.jsonl",
+    "bytes": 642933,
+    "sha256": "18ad0f465a37ea302cedfe893f4a0d4ced51c9520f0555a901ae71695d14bf88"
+  }
+]

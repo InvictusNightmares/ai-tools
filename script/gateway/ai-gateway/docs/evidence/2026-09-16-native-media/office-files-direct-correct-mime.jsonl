@@ -1,0 +1,8 @@
+{"region": "tokyo", "extension": "txt", "status": 200, "seconds": 1.54, "content_correct": true, "error": null}
+{"region": "tokyo", "extension": "csv", "status": 200, "seconds": 3.82, "content_correct": true, "error": null}
+{"region": "tokyo", "extension": "docx", "status": 200, "seconds": 2.22, "content_correct": true, "error": null}
+{"region": "tokyo", "extension": "xlsx", "status": 200, "seconds": 3.77, "content_correct": true, "error": null}
+{"region": "us", "extension": "txt", "status": 200, "seconds": 4.53, "content_correct": true, "error": null}
+{"region": "us", "extension": "csv", "status": 200, "seconds": 3.2, "content_correct": true, "error": null}
+{"region": "us", "extension": "docx", "status": 200, "seconds": 4.2, "content_correct": true, "error": null}
+{"region": "us", "extension": "xlsx", "status": 200, "seconds": 12.36, "content_correct": true, "error": null}

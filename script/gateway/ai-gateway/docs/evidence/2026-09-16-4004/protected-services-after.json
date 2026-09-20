@@ -1,0 +1,60 @@
+{
+  "at": "2026-09-16T06:40:20.953834+00:00",
+  "containers": [
+    {
+      "name": "tokyo-sub2api-proxy",
+      "id": "4387a57cda82c40f86005cd261989f1ab2ad880ae2f48b353210d33084a2ae3a",
+      "image": "sha256:f787d2269bb599297ef6e2fc50d690813821fa348870b62abfc6fa99112ad7d2",
+      "started_at": "2026-06-14T04:16:23.917459712Z",
+      "running": true,
+      "configs": [
+        {
+          "path": "/data/tokyo-sub2api-proxy/nginx.conf",
+          "sha256": "fe9013286c40a65d6e6530d7999913c427f76475a4c496f71e59ab16723fe756"
+        }
+      ]
+    },
+    {
+      "name": "us-sub2api-proxy",
+      "id": "83e382cd1e5f6215d742c11bcca51c0fd4c47149d1df5bca8db6d624f3e2eed1",
+      "image": "sha256:f787d2269bb599297ef6e2fc50d690813821fa348870b62abfc6fa99112ad7d2",
+      "started_at": "2026-08-31T03:33:06.701832829Z",
+      "running": true,
+      "configs": [
+        {
+          "path": "/data/us-sub2api-proxy/nginx.conf",
+          "sha256": "7ed0ddff41a89da3e23938ccd9b76d8defe83a36c0a8c107e19c798442501237"
+        }
+      ]
+    },
+    {
+      "name": "us-sub2api-proxy-openresty",
+      "id": "d48662f2c3cfe5aadcec658f9231568d0ec408fefb001440fb7241021741c345",
+      "image": "sha256:b7a140900af338f4f940f64f7f62f409d834815d7d799524ab7cf22a600b113e",
+      "started_at": "2026-08-31T03:33:07.377203234Z",
+      "running": true,
+      "configs": [
+        {
+          "path": "/data/us-sub2api-proxy-20260819/nginx.conf",
+          "sha256": "03c7281b46911131d2417914de5669f8e686a675321fd9d9364d2faa1e650196"
+        }
+      ]
+    },
+    {
+      "name": "guard-preflight-api",
+      "id": "61e3d38bddc44ae2e0cf220638d5f753fd8da424ce4d63e001b3568611aa2de8",
+      "image": "sha256:7886162fb994067fe7358507b2f130e6e067041227bda9e9f2306358e247cde2",
+      "started_at": "2026-09-14T09:53:07.340747907Z",
+      "running": true,
+      "configs": []
+    },
+    {
+      "name": "qwen3guard-vllm",
+      "id": "48ae5787c0befc22e6994809ee8fc6c9da071d7163fbcb97ab90a43cc4fe7fd3",
+      "image": "sha256:22bea3378819e053d989c577bcea71ded9cc80b7e63c7abb359389d673787f18",
+      "started_at": "2026-09-14T08:14:06.075345626Z",
+      "running": true,
+      "configs": []
+    }
+  ]
+}

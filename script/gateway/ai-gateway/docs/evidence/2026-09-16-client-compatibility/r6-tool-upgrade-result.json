@@ -1,0 +1,15 @@
+{
+  "at": "2026-09-16T07:42:08.200323+00:00",
+  "status": "updated",
+  "scope": "4004_auto_only",
+  "backup": "/data/ai-gateway/acceptance-tokyo/backups/r6-tool-20260916-154206",
+  "source_manifest_sha256": "bacd6fc3662c8b73bb5773ae8e5a98df296f7b542a53107c2e09db4718a1cb76",
+  "binaries": {
+    "auto-server": "94167c924790113c3244144f0ca6eef3a342eb4156fc6c2a38f068b510e940a2",
+    "preflight-api": "e117fc9fc30942f857c4bddc9f50388a85c7d23a588cc8ba47175bc4268222f3"
+  },
+  "unrelated_containers_unchanged": true,
+  "internal_secret_unchanged": true,
+  "state_unchanged_before_reopen": true,
+  "ingress_config_restored": true
+}

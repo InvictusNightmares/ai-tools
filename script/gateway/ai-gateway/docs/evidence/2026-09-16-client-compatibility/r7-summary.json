@@ -1,0 +1,16 @@
+{
+  "scope": "isolated_linux_offline",
+  "go_tests_including_subtests": {
+    "local/ai-gateway/cmd/auto-server": 7,
+    "local/ai-gateway/auto": 319,
+    "local/ai-gateway/guard/model": 2,
+    "local/ai-gateway/guard": 52
+  },
+  "total": 380,
+  "go_vet": "passed",
+  "static_linux_amd64_builds": 5,
+  "python_tests": 8,
+  "go_failures": 0,
+  "source_archive_sha256": "9f96c539b3c02e3f4a05cbe837fdc19e3808a08534cbaf2c7260934f3e4bfe36",
+  "scope_note": "Native development workflow results are separate"
+}

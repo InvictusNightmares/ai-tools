@@ -1,0 +1,457 @@
+{"Time":"2026-09-15T18:39:04.179334+08:00","Action":"start","Package":"local/auto-gateway"}
+{"Time":"2026-09-15T18:39:04.180442+08:00","Action":"start","Package":"local/auto-gateway/cmd/auto-preview"}
+{"Time":"2026-09-15T18:39:04.18051+08:00","Action":"output","Package":"local/auto-gateway/cmd/auto-preview","Output":"?   \tlocal/auto-gateway/cmd/auto-preview\t[no test files]\n"}
+{"Time":"2026-09-15T18:39:04.180593+08:00","Action":"skip","Package":"local/auto-gateway/cmd/auto-preview","Elapsed":0}
+{"Time":"2026-09-15T18:39:04.180609+08:00","Action":"start","Package":"local/auto-gateway/cmd/auto-server"}
+{"Time":"2026-09-15T18:39:04.180675+08:00","Action":"output","Package":"local/auto-gateway/cmd/auto-server","Output":"?   \tlocal/auto-gateway/cmd/auto-server\t[no test files]\n"}
+{"Time":"2026-09-15T18:39:04.18069+08:00","Action":"skip","Package":"local/auto-gateway/cmd/auto-server","Elapsed":0}
+{"Time":"2026-09-15T18:39:04.180695+08:00","Action":"start","Package":"local/auto-gateway/cmd/semantic-eval"}
+{"Time":"2026-09-15T18:39:04.1807+08:00","Action":"output","Package":"local/auto-gateway/cmd/semantic-eval","Output":"?   \tlocal/auto-gateway/cmd/semantic-eval\t[no test files]\n"}
+{"Time":"2026-09-15T18:39:04.180705+08:00","Action":"skip","Package":"local/auto-gateway/cmd/semantic-eval","Elapsed":0}
+{"Time":"2026-09-15T18:39:04.718899+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestJSONLAuditSinkDoesNotPersistPrompt"}
+{"Time":"2026-09-15T18:39:04.719388+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestJSONLAuditSinkDoesNotPersistPrompt","Output":"=== RUN   TestJSONLAuditSinkDoesNotPersistPrompt\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:04.730087+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestJSONLAuditSinkDoesNotPersistPrompt","Output":"--- PASS: TestJSONLAuditSinkDoesNotPersistPrompt (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:04.730133+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestJSONLAuditSinkDoesNotPersistPrompt","Elapsed":0.01}
+{"Time":"2026-09-15T18:39:04.730437+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestClassifierAndCapabilityFilter"}
+{"Time":"2026-09-15T18:39:04.730446+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestClassifierAndCapabilityFilter","Output":"=== RUN   TestClassifierAndCapabilityFilter\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:04.924886+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestClassifierAndCapabilityFilter","Output":"--- PASS: TestClassifierAndCapabilityFilter (0.19s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:04.924928+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestClassifierAndCapabilityFilter","Elapsed":0.19}
+{"Time":"2026-09-15T18:39:04.924949+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestMultipleUpgradesAndTaskReset"}
+{"Time":"2026-09-15T18:39:04.924956+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestMultipleUpgradesAndTaskReset","Output":"=== RUN   TestMultipleUpgradesAndTaskReset\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:04.925031+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestMultipleUpgradesAndTaskReset","Output":"--- PASS: TestMultipleUpgradesAndTaskReset (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:04.925061+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestMultipleUpgradesAndTaskReset","Elapsed":0}
+{"Time":"2026-09-15T18:39:04.925088+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestToolLoopLocksModel"}
+{"Time":"2026-09-15T18:39:04.925094+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestToolLoopLocksModel","Output":"=== RUN   TestToolLoopLocksModel\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:04.925109+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestToolLoopLocksModel","Output":"--- PASS: TestToolLoopLocksModel (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:04.925125+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestToolLoopLocksModel","Elapsed":0}
+{"Time":"2026-09-15T18:39:04.925148+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestStreamingTurnCannotSwitchModelsMidResponse"}
+{"Time":"2026-09-15T18:39:04.925152+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestStreamingTurnCannotSwitchModelsMidResponse","Output":"=== RUN   TestStreamingTurnCannotSwitchModelsMidResponse\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.075272+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestStreamingTurnCannotSwitchModelsMidResponse","Output":"--- PASS: TestStreamingTurnCannotSwitchModelsMidResponse (0.15s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.075299+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestStreamingTurnCannotSwitchModelsMidResponse","Elapsed":0.15}
+{"Time":"2026-09-15T18:39:05.075321+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestHardFailureFailsOverWithoutWaitingForHealthRefresh"}
+{"Time":"2026-09-15T18:39:05.075325+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHardFailureFailsOverWithoutWaitingForHealthRefresh","Output":"=== RUN   TestHardFailureFailsOverWithoutWaitingForHealthRefresh\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.075348+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHardFailureFailsOverWithoutWaitingForHealthRefresh","Output":"--- PASS: TestHardFailureFailsOverWithoutWaitingForHealthRefresh (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.075353+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestHardFailureFailsOverWithoutWaitingForHealthRefresh","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.075356+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCacheNamespaceIsolation"}
+{"Time":"2026-09-15T18:39:05.075358+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCacheNamespaceIsolation","Output":"=== RUN   TestCacheNamespaceIsolation\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.075508+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCacheNamespaceIsolation","Output":"--- PASS: TestCacheNamespaceIsolation (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.075515+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCacheNamespaceIsolation","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.075518+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestReasoningEffortIsGeneratedFromFeatures"}
+{"Time":"2026-09-15T18:39:05.07552+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestReasoningEffortIsGeneratedFromFeatures","Output":"=== RUN   TestReasoningEffortIsGeneratedFromFeatures\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.352362+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestReasoningEffortIsGeneratedFromFeatures","Output":"--- PASS: TestReasoningEffortIsGeneratedFromFeatures (0.28s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.352386+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestReasoningEffortIsGeneratedFromFeatures","Elapsed":0.28}
+{"Time":"2026-09-15T18:39:05.352412+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestProviderReasoningMapping"}
+{"Time":"2026-09-15T18:39:05.35243+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestProviderReasoningMapping","Output":"=== RUN   TestProviderReasoningMapping\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.352439+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestProviderReasoningMapping","Output":"--- PASS: TestProviderReasoningMapping (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.352466+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestProviderReasoningMapping","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.35247+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestProviderParametersNeverForwardClientEffort"}
+{"Time":"2026-09-15T18:39:05.352473+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestProviderParametersNeverForwardClientEffort","Output":"=== RUN   TestProviderParametersNeverForwardClientEffort\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.352529+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestProviderParametersNeverForwardClientEffort","Output":"--- PASS: TestProviderParametersNeverForwardClientEffort (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.352536+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestProviderParametersNeverForwardClientEffort","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.35254+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestUsageNormalization"}
+{"Time":"2026-09-15T18:39:05.352543+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestUsageNormalization","Output":"=== RUN   TestUsageNormalization\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.352592+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestUsageNormalization","Output":"--- PASS: TestUsageNormalization (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.352607+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestUsageNormalization","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.352611+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestPublicModelIsAutoOnly"}
+{"Time":"2026-09-15T18:39:05.352626+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPublicModelIsAutoOnly","Output":"=== RUN   TestPublicModelIsAutoOnly\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.352631+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPublicModelIsAutoOnly","Output":"--- PASS: TestPublicModelIsAutoOnly (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.352635+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestPublicModelIsAutoOnly","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.352654+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestPipelineCoalescesConcurrentCacheMisses"}
+{"Time":"2026-09-15T18:39:05.352665+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineCoalescesConcurrentCacheMisses","Output":"=== RUN   TestPipelineCoalescesConcurrentCacheMisses\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.374631+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineCoalescesConcurrentCacheMisses","Output":"--- PASS: TestPipelineCoalescesConcurrentCacheMisses (0.02s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.374654+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelineCoalescesConcurrentCacheMisses","Elapsed":0.02}
+{"Time":"2026-09-15T18:39:05.374661+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestMemoryResponseCacheCapacityEvictsLeastRecentlyUsed"}
+{"Time":"2026-09-15T18:39:05.374664+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestMemoryResponseCacheCapacityEvictsLeastRecentlyUsed","Output":"=== RUN   TestMemoryResponseCacheCapacityEvictsLeastRecentlyUsed\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.374729+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestMemoryResponseCacheCapacityEvictsLeastRecentlyUsed","Output":"--- PASS: TestMemoryResponseCacheCapacityEvictsLeastRecentlyUsed (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.374735+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestMemoryResponseCacheCapacityEvictsLeastRecentlyUsed","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.37474+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestResponseCacheKeySeparatesEffectiveModelEffortAndRequest"}
+{"Time":"2026-09-15T18:39:05.374743+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCacheKeySeparatesEffectiveModelEffortAndRequest","Output":"=== RUN   TestResponseCacheKeySeparatesEffectiveModelEffortAndRequest\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.374967+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCacheKeySeparatesEffectiveModelEffortAndRequest","Output":"--- PASS: TestResponseCacheKeySeparatesEffectiveModelEffortAndRequest (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.375007+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestResponseCacheKeySeparatesEffectiveModelEffortAndRequest","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.375012+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses"}
+{"Time":"2026-09-15T18:39:05.375016+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses","Output":"=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.375021+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/stream"}
+{"Time":"2026-09-15T18:39:05.375024+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/stream","Output":"=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/stream\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.375028+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/stream","Output":"--- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/stream (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.375035+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/stream","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.375061+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/tools"}
+{"Time":"2026-09-15T18:39:05.375065+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/tools","Output":"=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/tools\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.37507+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/tools","Output":"--- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/tools (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.375088+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/tools","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.3751+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/image"}
+{"Time":"2026-09-15T18:39:05.375103+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/image","Output":"=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/image\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.37512+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/image","Output":"--- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/image (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.375135+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/image","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.375143+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/blocked"}
+{"Time":"2026-09-15T18:39:05.375146+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/blocked","Output":"=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/blocked\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.375188+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/blocked","Output":"--- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/blocked (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.375199+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/blocked","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.375222+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/large"}
+{"Time":"2026-09-15T18:39:05.375225+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/large","Output":"=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/large\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.37523+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/large","Output":"--- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/large (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.375233+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/large","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.375236+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses","Output":"--- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.37524+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestResponseCachePolicyKeepsOnlyReusableAllowedResponses","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.37525+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineBillingOnResponseHit"}
+{"Time":"2026-09-15T18:39:05.375253+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineBillingOnResponseHit","Output":"=== RUN   TestCachePipelineBillingOnResponseHit\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.376001+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineBillingOnResponseHit","Output":"--- PASS: TestCachePipelineBillingOnResponseHit (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.376007+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineBillingOnResponseHit","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.37601+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize"}
+{"Time":"2026-09-15T18:39:05.376013+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize","Output":"=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.376032+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable"}
+{"Time":"2026-09-15T18:39:05.376041+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable","Output":"=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.376742+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable","Output":"--- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.37675+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.376756+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited"}
+{"Time":"2026-09-15T18:39:05.376759+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited","Output":"=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.377352+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited","Output":"--- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.377407+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.377413+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect"}
+{"Time":"2026-09-15T18:39:05.377417+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect","Output":"=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.377899+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect","Output":"--- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.377906+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.37791+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize"}
+{"Time":"2026-09-15T18:39:05.377914+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize","Output":"=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.378444+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize","Output":"--- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.37847+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.378474+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error"}
+{"Time":"2026-09-15T18:39:05.378477+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error","Output":"=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.378946+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error","Output":"--- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.379009+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.379032+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize","Output":"--- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.379037+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineRejectsUnsuccessfulHTTPAndOversize","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.379042+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache"}
+{"Time":"2026-09-15T18:39:05.379045+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache","Output":"=== RUN   TestCachePipelineGuardBeforeCache\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.379049+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/block"}
+{"Time":"2026-09-15T18:39:05.379052+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/block","Output":"=== RUN   TestCachePipelineGuardBeforeCache/block\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.379065+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/block","Output":"--- PASS: TestCachePipelineGuardBeforeCache/block (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.379082+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/block","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.379104+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/unavailable"}
+{"Time":"2026-09-15T18:39:05.379107+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/unavailable","Output":"=== RUN   TestCachePipelineGuardBeforeCache/unavailable\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.379283+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/unavailable","Output":"--- PASS: TestCachePipelineGuardBeforeCache/unavailable (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.37929+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/unavailable","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.379295+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/invalid"}
+{"Time":"2026-09-15T18:39:05.379297+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/invalid","Output":"=== RUN   TestCachePipelineGuardBeforeCache/invalid\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.379355+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/invalid","Output":"--- PASS: TestCachePipelineGuardBeforeCache/invalid (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.379372+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache/invalid","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.379399+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache","Output":"--- PASS: TestCachePipelineGuardBeforeCache (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.379415+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineGuardBeforeCache","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.379432+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineProtocolIsolation"}
+{"Time":"2026-09-15T18:39:05.379438+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineProtocolIsolation","Output":"=== RUN   TestCachePipelineProtocolIsolation\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.380258+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineProtocolIsolation","Output":"--- PASS: TestCachePipelineProtocolIsolation (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.380264+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineProtocolIsolation","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.380269+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestMemoryCacheDoesNotAliasUsage"}
+{"Time":"2026-09-15T18:39:05.380272+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestMemoryCacheDoesNotAliasUsage","Output":"=== RUN   TestMemoryCacheDoesNotAliasUsage\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.380495+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestMemoryCacheDoesNotAliasUsage","Output":"--- PASS: TestMemoryCacheDoesNotAliasUsage (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.380518+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestMemoryCacheDoesNotAliasUsage","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.380524+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation"}
+{"Time":"2026-09-15T18:39:05.380527+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation","Output":"=== RUN   TestCachePipelineIdentityIsolation\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.380611+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/region"}
+{"Time":"2026-09-15T18:39:05.380626+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/region","Output":"=== RUN   TestCachePipelineIdentityIsolation/region\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.380693+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/region","Output":"--- PASS: TestCachePipelineIdentityIsolation/region (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.380698+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/region","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.380708+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/api_key"}
+{"Time":"2026-09-15T18:39:05.380711+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/api_key","Output":"=== RUN   TestCachePipelineIdentityIsolation/api_key\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.380779+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/api_key","Output":"--- PASS: TestCachePipelineIdentityIsolation/api_key (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.38079+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/api_key","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.380796+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/revision"}
+{"Time":"2026-09-15T18:39:05.380799+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/revision","Output":"=== RUN   TestCachePipelineIdentityIsolation/revision\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.380872+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/revision","Output":"--- PASS: TestCachePipelineIdentityIsolation/revision (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.380903+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/revision","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.380919+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/client_key"}
+{"Time":"2026-09-15T18:39:05.380923+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/client_key","Output":"=== RUN   TestCachePipelineIdentityIsolation/client_key\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.381047+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/client_key","Output":"--- PASS: TestCachePipelineIdentityIsolation/client_key (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.381054+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/client_key","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.381058+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/model"}
+{"Time":"2026-09-15T18:39:05.381061+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/model","Output":"=== RUN   TestCachePipelineIdentityIsolation/model\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.381135+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/model","Output":"--- PASS: TestCachePipelineIdentityIsolation/model (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.381141+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/model","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.381146+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/effort"}
+{"Time":"2026-09-15T18:39:05.381148+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/effort","Output":"=== RUN   TestCachePipelineIdentityIsolation/effort\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.381213+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/effort","Output":"--- PASS: TestCachePipelineIdentityIsolation/effort (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.381219+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/effort","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.381237+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/protocol"}
+{"Time":"2026-09-15T18:39:05.38124+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/protocol","Output":"=== RUN   TestCachePipelineIdentityIsolation/protocol\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.381309+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/protocol","Output":"--- PASS: TestCachePipelineIdentityIsolation/protocol (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.381313+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/protocol","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.381318+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_region"}
+{"Time":"2026-09-15T18:39:05.38132+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_region","Output":"=== RUN   TestCachePipelineIdentityIsolation/missing_region\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.381775+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_region","Output":"--- PASS: TestCachePipelineIdentityIsolation/missing_region (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.381783+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_region","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.381799+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_api_key"}
+{"Time":"2026-09-15T18:39:05.381802+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_api_key","Output":"=== RUN   TestCachePipelineIdentityIsolation/missing_api_key\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.382126+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_api_key","Output":"--- PASS: TestCachePipelineIdentityIsolation/missing_api_key (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.382132+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_api_key","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.382136+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_revision"}
+{"Time":"2026-09-15T18:39:05.382139+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_revision","Output":"=== RUN   TestCachePipelineIdentityIsolation/missing_revision\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.382494+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_revision","Output":"--- PASS: TestCachePipelineIdentityIsolation/missing_revision (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.3825+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_revision","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.382504+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_secret"}
+{"Time":"2026-09-15T18:39:05.382507+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_secret","Output":"=== RUN   TestCachePipelineIdentityIsolation/missing_secret\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.382879+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_secret","Output":"--- PASS: TestCachePipelineIdentityIsolation/missing_secret (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.382885+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation/missing_secret","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.382889+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation","Output":"--- PASS: TestCachePipelineIdentityIsolation (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.382894+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineIdentityIsolation","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.382898+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestMemoryCacheConcurrentCopies"}
+{"Time":"2026-09-15T18:39:05.3829+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestMemoryCacheConcurrentCopies","Output":"=== RUN   TestMemoryCacheConcurrentCopies\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.42102+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestMemoryCacheConcurrentCopies","Output":"--- PASS: TestMemoryCacheConcurrentCopies (0.04s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.421048+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestMemoryCacheConcurrentCopies","Elapsed":0.04}
+{"Time":"2026-09-15T18:39:05.421055+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestCachePipelineInitialSelectionIsNotUpgrade"}
+{"Time":"2026-09-15T18:39:05.421074+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineInitialSelectionIsNotUpgrade","Output":"=== RUN   TestCachePipelineInitialSelectionIsNotUpgrade\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.42177+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestCachePipelineInitialSelectionIsNotUpgrade","Output":"--- PASS: TestCachePipelineInitialSelectionIsNotUpgrade (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.421805+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestCachePipelineInitialSelectionIsNotUpgrade","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.421812+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPModelsExposeAutoOnly"}
+{"Time":"2026-09-15T18:39:05.421816+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPModelsExposeAutoOnly","Output":"=== RUN   TestHTTPModelsExposeAutoOnly\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.43795+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPModelsExposeAutoOnly","Output":"--- PASS: TestHTTPModelsExposeAutoOnly (0.02s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.437981+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPModelsExposeAutoOnly","Elapsed":0.02}
+{"Time":"2026-09-15T18:39:05.437995+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPRouteNormalizesProtocolAndIgnoresClientEffort"}
+{"Time":"2026-09-15T18:39:05.438+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteNormalizesProtocolAndIgnoresClientEffort","Output":"=== RUN   TestHTTPRouteNormalizesProtocolAndIgnoresClientEffort\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.468143+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteNormalizesProtocolAndIgnoresClientEffort","Output":"--- PASS: TestHTTPRouteNormalizesProtocolAndIgnoresClientEffort (0.03s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.468173+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPRouteNormalizesProtocolAndIgnoresClientEffort","Elapsed":0.03}
+{"Time":"2026-09-15T18:39:05.468184+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPRouteRejectsNonAutoModel"}
+{"Time":"2026-09-15T18:39:05.468191+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteRejectsNonAutoModel","Output":"=== RUN   TestHTTPRouteRejectsNonAutoModel\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.559775+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteRejectsNonAutoModel","Output":"--- PASS: TestHTTPRouteRejectsNonAutoModel (0.09s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.55983+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPRouteRejectsNonAutoModel","Elapsed":0.09}
+{"Time":"2026-09-15T18:39:05.559855+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable"}
+{"Time":"2026-09-15T18:39:05.55986+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable","Output":"=== RUN   TestHTTPRouteHonorsPreflightBlockAndUnavailable\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.559883+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/block"}
+{"Time":"2026-09-15T18:39:05.559887+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/block","Output":"=== RUN   TestHTTPRouteHonorsPreflightBlockAndUnavailable/block\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.574823+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/block","Output":"--- PASS: TestHTTPRouteHonorsPreflightBlockAndUnavailable/block (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.574859+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/block","Elapsed":0.01}
+{"Time":"2026-09-15T18:39:05.574869+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/unavailable"}
+{"Time":"2026-09-15T18:39:05.574874+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/unavailable","Output":"=== RUN   TestHTTPRouteHonorsPreflightBlockAndUnavailable/unavailable\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.598049+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/unavailable","Output":"--- PASS: TestHTTPRouteHonorsPreflightBlockAndUnavailable/unavailable (0.02s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.598074+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable/unavailable","Elapsed":0.02}
+{"Time":"2026-09-15T18:39:05.598093+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable","Output":"--- PASS: TestHTTPRouteHonorsPreflightBlockAndUnavailable (0.04s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.598098+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPRouteHonorsPreflightBlockAndUnavailable","Elapsed":0.04}
+{"Time":"2026-09-15T18:39:05.598102+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPRouteKeepsModelWhenStreamIsActive"}
+{"Time":"2026-09-15T18:39:05.598105+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteKeepsModelWhenStreamIsActive","Output":"=== RUN   TestHTTPRouteKeepsModelWhenStreamIsActive\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.643602+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPRouteKeepsModelWhenStreamIsActive","Output":"--- PASS: TestHTTPRouteKeepsModelWhenStreamIsActive (0.05s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.643644+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPRouteKeepsModelWhenStreamIsActive","Elapsed":0.05}
+{"Time":"2026-09-15T18:39:05.643652+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPCompletionForwardsBufferedResponse"}
+{"Time":"2026-09-15T18:39:05.643657+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPCompletionForwardsBufferedResponse","Output":"=== RUN   TestHTTPCompletionForwardsBufferedResponse\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.694909+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPCompletionForwardsBufferedResponse","Output":"--- PASS: TestHTTPCompletionForwardsBufferedResponse (0.05s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.695016+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPCompletionForwardsBufferedResponse","Elapsed":0.05}
+{"Time":"2026-09-15T18:39:05.695033+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPCompletionForwardsAllowlistedAuthOnStream"}
+{"Time":"2026-09-15T18:39:05.695043+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPCompletionForwardsAllowlistedAuthOnStream","Output":"=== RUN   TestHTTPCompletionForwardsAllowlistedAuthOnStream\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.732313+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPCompletionForwardsAllowlistedAuthOnStream","Output":"--- PASS: TestHTTPCompletionForwardsAllowlistedAuthOnStream (0.04s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.732394+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPCompletionForwardsAllowlistedAuthOnStream","Elapsed":0.04}
+{"Time":"2026-09-15T18:39:05.732419+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestPhaseDOrderGuardThenAutoThenUpstream"}
+{"Time":"2026-09-15T18:39:05.732429+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPhaseDOrderGuardThenAutoThenUpstream","Output":"=== RUN   TestPhaseDOrderGuardThenAutoThenUpstream\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.87842+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPhaseDOrderGuardThenAutoThenUpstream","Output":"--- PASS: TestPhaseDOrderGuardThenAutoThenUpstream (0.15s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.878447+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestPhaseDOrderGuardThenAutoThenUpstream","Elapsed":0.15}
+{"Time":"2026-09-15T18:39:05.878457+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable"}
+{"Time":"2026-09-15T18:39:05.87846+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable","Output":"=== RUN   TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.878465+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/block"}
+{"Time":"2026-09-15T18:39:05.878468+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/block","Output":"=== RUN   TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/block\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.878562+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/block","Output":"--- PASS: TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/block (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.878582+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/block","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.878588+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/unavailable"}
+{"Time":"2026-09-15T18:39:05.878591+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/unavailable","Output":"=== RUN   TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/unavailable\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.878597+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/unavailable","Output":"--- PASS: TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/unavailable (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.878617+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/unavailable","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.878648+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable","Output":"--- PASS: TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.878653+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.878656+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt"}
+{"Time":"2026-09-15T18:39:05.878659+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt","Output":"=== RUN   TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.879876+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt/block"}
+{"Time":"2026-09-15T18:39:05.879895+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt/block","Output":"=== RUN   TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt/block\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.884314+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt/block","Output":"--- PASS: TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt/block (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.884396+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt/block","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.884456+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt/unavailable"}
+{"Time":"2026-09-15T18:39:05.884478+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt/unavailable","Output":"=== RUN   TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt/unavailable\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.892903+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt/unavailable","Output":"--- PASS: TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt/unavailable (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.89293+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt/unavailable","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.893426+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt","Output":"--- PASS: TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.893451+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt","Elapsed":0.01}
+{"Time":"2026-09-15T18:39:05.893493+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestPipelineAllowMapsAutoDecisionAndCallsUpstreamOnce"}
+{"Time":"2026-09-15T18:39:05.8935+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineAllowMapsAutoDecisionAndCallsUpstreamOnce","Output":"=== RUN   TestPipelineAllowMapsAutoDecisionAndCallsUpstreamOnce\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.893777+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineAllowMapsAutoDecisionAndCallsUpstreamOnce","Output":"--- PASS: TestPipelineAllowMapsAutoDecisionAndCallsUpstreamOnce (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.893787+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelineAllowMapsAutoDecisionAndCallsUpstreamOnce","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.893794+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestPipelinePropagatesUpstreamFailureWithoutRetry"}
+{"Time":"2026-09-15T18:39:05.893806+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelinePropagatesUpstreamFailureWithoutRetry","Output":"=== RUN   TestPipelinePropagatesUpstreamFailureWithoutRetry\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.894051+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelinePropagatesUpstreamFailureWithoutRetry","Output":"--- PASS: TestPipelinePropagatesUpstreamFailureWithoutRetry (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.894058+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelinePropagatesUpstreamFailureWithoutRetry","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.894064+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestPipelineResponseCacheHitSkipsUpstreamAndRecordsUsage"}
+{"Time":"2026-09-15T18:39:05.894076+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineResponseCacheHitSkipsUpstreamAndRecordsUsage","Output":"=== RUN   TestPipelineResponseCacheHitSkipsUpstreamAndRecordsUsage\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.894587+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineResponseCacheHitSkipsUpstreamAndRecordsUsage","Output":"--- PASS: TestPipelineResponseCacheHitSkipsUpstreamAndRecordsUsage (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.894597+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelineResponseCacheHitSkipsUpstreamAndRecordsUsage","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.89461+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestPipelineCacheExpiresAndUpstreamFailureIsNotStored"}
+{"Time":"2026-09-15T18:39:05.894614+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineCacheExpiresAndUpstreamFailureIsNotStored","Output":"=== RUN   TestPipelineCacheExpiresAndUpstreamFailureIsNotStored\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.895793+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineCacheExpiresAndUpstreamFailureIsNotStored","Output":"--- PASS: TestPipelineCacheExpiresAndUpstreamFailureIsNotStored (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:05.895822+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelineCacheExpiresAndUpstreamFailureIsNotStored","Elapsed":0}
+{"Time":"2026-09-15T18:39:05.895829+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPPreflightCheckerSendsSanitizedShapeAndParsesAllow"}
+{"Time":"2026-09-15T18:39:05.895833+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPPreflightCheckerSendsSanitizedShapeAndParsesAllow","Output":"=== RUN   TestHTTPPreflightCheckerSendsSanitizedShapeAndParsesAllow\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.048119+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPPreflightCheckerSendsSanitizedShapeAndParsesAllow","Output":"--- PASS: TestHTTPPreflightCheckerSendsSanitizedShapeAndParsesAllow (0.15s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.048143+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPPreflightCheckerSendsSanitizedShapeAndParsesAllow","Elapsed":0.15}
+{"Time":"2026-09-15T18:39:06.048149+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPPreflightCheckerFailsClosedOnUnavailable"}
+{"Time":"2026-09-15T18:39:06.048153+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPPreflightCheckerFailsClosedOnUnavailable","Output":"=== RUN   TestHTTPPreflightCheckerFailsClosedOnUnavailable\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.061133+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPPreflightCheckerFailsClosedOnUnavailable","Output":"--- PASS: TestHTTPPreflightCheckerFailsClosedOnUnavailable (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.061156+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPPreflightCheckerFailsClosedOnUnavailable","Elapsed":0.01}
+{"Time":"2026-09-15T18:39:06.061176+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestNormalizeChatCompletions"}
+{"Time":"2026-09-15T18:39:06.061187+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeChatCompletions","Output":"=== RUN   TestNormalizeChatCompletions\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.0621+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeChatCompletions","Output":"--- PASS: TestNormalizeChatCompletions (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.062128+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestNormalizeChatCompletions","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.062168+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestNormalizeResponsesIgnoresClientReasoning"}
+{"Time":"2026-09-15T18:39:06.062173+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeResponsesIgnoresClientReasoning","Output":"=== RUN   TestNormalizeResponsesIgnoresClientReasoning\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.062408+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeResponsesIgnoresClientReasoning","Output":"--- PASS: TestNormalizeResponsesIgnoresClientReasoning (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.062421+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestNormalizeResponsesIgnoresClientReasoning","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.06243+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestNormalizeAnthropicMessagesAndTools"}
+{"Time":"2026-09-15T18:39:06.062434+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeAnthropicMessagesAndTools","Output":"=== RUN   TestNormalizeAnthropicMessagesAndTools\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.063346+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeAnthropicMessagesAndTools","Output":"--- PASS: TestNormalizeAnthropicMessagesAndTools (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.06337+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestNormalizeAnthropicMessagesAndTools","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.063376+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestNormalizeRejectsMalformedAndUnknownProtocol"}
+{"Time":"2026-09-15T18:39:06.06338+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeRejectsMalformedAndUnknownProtocol","Output":"=== RUN   TestNormalizeRejectsMalformedAndUnknownProtocol\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.063476+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestNormalizeRejectsMalformedAndUnknownProtocol","Output":"--- PASS: TestNormalizeRejectsMalformedAndUnknownProtocol (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.063485+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestNormalizeRejectsMalformedAndUnknownProtocol","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.06349+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestStreamCapabilityIsRequired"}
+{"Time":"2026-09-15T18:39:06.063493+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestStreamCapabilityIsRequired","Output":"=== RUN   TestStreamCapabilityIsRequired\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.063757+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestStreamCapabilityIsRequired","Output":"--- PASS: TestStreamCapabilityIsRequired (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.063763+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestStreamCapabilityIsRequired","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.063766+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters"}
+{"Time":"2026-09-15T18:39:06.063769+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters","Output":"=== RUN   TestBuildProviderPayloadUsesGeneratedParameters\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.063772+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/chat"}
+{"Time":"2026-09-15T18:39:06.063785+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/chat","Output":"=== RUN   TestBuildProviderPayloadUsesGeneratedParameters/chat\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.063917+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/chat","Output":"--- PASS: TestBuildProviderPayloadUsesGeneratedParameters/chat (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.063922+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/chat","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.06393+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/responses"}
+{"Time":"2026-09-15T18:39:06.063934+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/responses","Output":"=== RUN   TestBuildProviderPayloadUsesGeneratedParameters/responses\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.064063+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/responses","Output":"--- PASS: TestBuildProviderPayloadUsesGeneratedParameters/responses (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.064069+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/responses","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.064072+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/anthropic"}
+{"Time":"2026-09-15T18:39:06.064075+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/anthropic","Output":"=== RUN   TestBuildProviderPayloadUsesGeneratedParameters/anthropic\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.064157+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/anthropic","Output":"--- PASS: TestBuildProviderPayloadUsesGeneratedParameters/anthropic (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.064167+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters/anthropic","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.064173+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters","Output":"--- PASS: TestBuildProviderPayloadUsesGeneratedParameters (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.064185+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadUsesGeneratedParameters","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.064192+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadPreservesRawPartsAndTools"}
+{"Time":"2026-09-15T18:39:06.064196+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadPreservesRawPartsAndTools","Output":"=== RUN   TestBuildProviderPayloadPreservesRawPartsAndTools\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.064378+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadPreservesRawPartsAndTools","Output":"--- PASS: TestBuildProviderPayloadPreservesRawPartsAndTools (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.064384+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestBuildProviderPayloadPreservesRawPartsAndTools","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.064387+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestBuildRouteAuditExplainsGeneratedEffort"}
+{"Time":"2026-09-15T18:39:06.06439+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestBuildRouteAuditExplainsGeneratedEffort","Output":"=== RUN   TestBuildRouteAuditExplainsGeneratedEffort\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.064657+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestBuildRouteAuditExplainsGeneratedEffort","Output":"--- PASS: TestBuildRouteAuditExplainsGeneratedEffort (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.064662+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestBuildRouteAuditExplainsGeneratedEffort","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.064665+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestSemanticClassificationDoesNotUseLanguageOrLengthAsDifficulty"}
+{"Time":"2026-09-15T18:39:06.064668+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestSemanticClassificationDoesNotUseLanguageOrLengthAsDifficulty","Output":"=== RUN   TestSemanticClassificationDoesNotUseLanguageOrLengthAsDifficulty\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.064758+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestSemanticClassificationDoesNotUseLanguageOrLengthAsDifficulty","Output":"--- PASS: TestSemanticClassificationDoesNotUseLanguageOrLengthAsDifficulty (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.064765+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestSemanticClassificationDoesNotUseLanguageOrLengthAsDifficulty","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.064771+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestSemanticInputSeparatesRolesAndContinuation"}
+{"Time":"2026-09-15T18:39:06.064775+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestSemanticInputSeparatesRolesAndContinuation","Output":"=== RUN   TestSemanticInputSeparatesRolesAndContinuation\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.064789+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestSemanticInputSeparatesRolesAndContinuation","Output":"--- PASS: TestSemanticInputSeparatesRolesAndContinuation (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.064797+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestSemanticInputSeparatesRolesAndContinuation","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.064806+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestSemanticNormalizedPartsNotDuplicated"}
+{"Time":"2026-09-15T18:39:06.064811+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestSemanticNormalizedPartsNotDuplicated","Output":"=== RUN   TestSemanticNormalizedPartsNotDuplicated\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.064956+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestSemanticNormalizedPartsNotDuplicated","Output":"--- PASS: TestSemanticNormalizedPartsNotDuplicated (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.064962+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestSemanticNormalizedPartsNotDuplicated","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.064965+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestSemanticClassifierValidatedReviewAndSeparateUsage"}
+{"Time":"2026-09-15T18:39:06.064968+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestSemanticClassifierValidatedReviewAndSeparateUsage","Output":"=== RUN   TestSemanticClassifierValidatedReviewAndSeparateUsage\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.106956+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestSemanticClassifierValidatedReviewAndSeparateUsage","Output":"--- PASS: TestSemanticClassifierValidatedReviewAndSeparateUsage (0.04s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.106986+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestSemanticClassifierValidatedReviewAndSeparateUsage","Elapsed":0.04}
+{"Time":"2026-09-15T18:39:06.106993+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestSemanticClassifierFailsClosedOnBadResponse"}
+{"Time":"2026-09-15T18:39:06.106997+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestSemanticClassifierFailsClosedOnBadResponse","Output":"=== RUN   TestSemanticClassifierFailsClosedOnBadResponse\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.263166+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestSemanticClassifierFailsClosedOnBadResponse","Output":"--- PASS: TestSemanticClassifierFailsClosedOnBadResponse (0.16s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.263284+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestSemanticClassifierFailsClosedOnBadResponse","Elapsed":0.16}
+{"Time":"2026-09-15T18:39:06.2633+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestPipelineGuardPrecedesSemanticAndClassifierFailureHasNoUpstream"}
+{"Time":"2026-09-15T18:39:06.26331+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineGuardPrecedesSemanticAndClassifierFailureHasNoUpstream","Output":"=== RUN   TestPipelineGuardPrecedesSemanticAndClassifierFailureHasNoUpstream\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.285087+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPipelineGuardPrecedesSemanticAndClassifierFailureHasNoUpstream","Output":"--- PASS: TestPipelineGuardPrecedesSemanticAndClassifierFailureHasNoUpstream (0.02s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.285149+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestPipelineGuardPrecedesSemanticAndClassifierFailureHasNoUpstream","Elapsed":0.02}
+{"Time":"2026-09-15T18:39:06.285166+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestSemanticCacheContextIdentityExpiryAndNoRawText"}
+{"Time":"2026-09-15T18:39:06.285176+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestSemanticCacheContextIdentityExpiryAndNoRawText","Output":"=== RUN   TestSemanticCacheContextIdentityExpiryAndNoRawText\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.28586+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestSemanticCacheContextIdentityExpiryAndNoRawText","Output":"--- PASS: TestSemanticCacheContextIdentityExpiryAndNoRawText (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.285879+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestSemanticCacheContextIdentityExpiryAndNoRawText","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.285891+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestSemanticEscalationAndContinuation"}
+{"Time":"2026-09-15T18:39:06.285901+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestSemanticEscalationAndContinuation","Output":"=== RUN   TestSemanticEscalationAndContinuation\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.286125+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestSemanticEscalationAndContinuation","Output":"--- PASS: TestSemanticEscalationAndContinuation (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.286162+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestSemanticEscalationAndContinuation","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.286168+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestUsagePurposeIsolation"}
+{"Time":"2026-09-15T18:39:06.286172+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestUsagePurposeIsolation","Output":"=== RUN   TestUsagePurposeIsolation\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.286197+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestUsagePurposeIsolation","Output":"--- PASS: TestUsagePurposeIsolation (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.286214+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestUsagePurposeIsolation","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.286219+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPUpstreamRejectsNonJSON200"}
+{"Time":"2026-09-15T18:39:06.286222+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPUpstreamRejectsNonJSON200","Output":"=== RUN   TestHTTPUpstreamRejectsNonJSON200\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.354529+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPUpstreamRejectsNonJSON200","Output":"--- PASS: TestHTTPUpstreamRejectsNonJSON200 (0.07s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.354605+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPUpstreamRejectsNonJSON200","Elapsed":0.07}
+{"Time":"2026-09-15T18:39:06.354621+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestRawProtocolPreservesDevelopmentFieldsAndIgnoresClientEffort"}
+{"Time":"2026-09-15T18:39:06.354632+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestRawProtocolPreservesDevelopmentFieldsAndIgnoresClientEffort","Output":"=== RUN   TestRawProtocolPreservesDevelopmentFieldsAndIgnoresClientEffort\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.35811+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestRawProtocolPreservesDevelopmentFieldsAndIgnoresClientEffort","Output":"--- PASS: TestRawProtocolPreservesDevelopmentFieldsAndIgnoresClientEffort (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.358198+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestRawProtocolPreservesDevelopmentFieldsAndIgnoresClientEffort","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.358222+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestSemanticRejectsUnreadableImageAndProviderStoredHistory"}
+{"Time":"2026-09-15T18:39:06.358232+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestSemanticRejectsUnreadableImageAndProviderStoredHistory","Output":"=== RUN   TestSemanticRejectsUnreadableImageAndProviderStoredHistory\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.359224+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestSemanticRejectsUnreadableImageAndProviderStoredHistory","Output":"--- PASS: TestSemanticRejectsUnreadableImageAndProviderStoredHistory (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.359266+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestSemanticRejectsUnreadableImageAndProviderStoredHistory","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.359279+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestPilotIdentityRunsBeforeGuardAndRejectsForgedKeyID"}
+{"Time":"2026-09-15T18:39:06.359289+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPilotIdentityRunsBeforeGuardAndRejectsForgedKeyID","Output":"=== RUN   TestPilotIdentityRunsBeforeGuardAndRejectsForgedKeyID\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.431246+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestPilotIdentityRunsBeforeGuardAndRejectsForgedKeyID","Output":"--- PASS: TestPilotIdentityRunsBeforeGuardAndRejectsForgedKeyID (0.07s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.431275+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestPilotIdentityRunsBeforeGuardAndRejectsForgedKeyID","Elapsed":0.07}
+{"Time":"2026-09-15T18:39:06.431282+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestObservedStreamCompletionUsageAndFailure"}
+{"Time":"2026-09-15T18:39:06.431286+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestObservedStreamCompletionUsageAndFailure","Output":"=== RUN   TestObservedStreamCompletionUsageAndFailure\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.431556+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestObservedStreamCompletionUsageAndFailure","Output":"--- PASS: TestObservedStreamCompletionUsageAndFailure (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.431571+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestObservedStreamCompletionUsageAndFailure","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.431576+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestResultAuditRecordsActualResponseAndFailedAttempt"}
+{"Time":"2026-09-15T18:39:06.431579+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestResultAuditRecordsActualResponseAndFailedAttempt","Output":"=== RUN   TestResultAuditRecordsActualResponseAndFailedAttempt\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.467231+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestResultAuditRecordsActualResponseAndFailedAttempt","Output":"--- PASS: TestResultAuditRecordsActualResponseAndFailedAttempt (0.04s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.467259+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestResultAuditRecordsActualResponseAndFailedAttempt","Elapsed":0.04}
+{"Time":"2026-09-15T18:39:06.467267+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestClassifierUnavailableIsHTTP503"}
+{"Time":"2026-09-15T18:39:06.467284+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestClassifierUnavailableIsHTTP503","Output":"=== RUN   TestClassifierUnavailableIsHTTP503\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.467464+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestClassifierUnavailableIsHTTP503","Output":"--- PASS: TestClassifierUnavailableIsHTTP503 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.467484+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestClassifierUnavailableIsHTTP503","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.467489+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestAuditFailureDoesNotLeaveCoalescedCallPending"}
+{"Time":"2026-09-15T18:39:06.467492+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestAuditFailureDoesNotLeaveCoalescedCallPending","Output":"=== RUN   TestAuditFailureDoesNotLeaveCoalescedCallPending\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.468081+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestAuditFailureDoesNotLeaveCoalescedCallPending","Output":"--- PASS: TestAuditFailureDoesNotLeaveCoalescedCallPending (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.468092+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestAuditFailureDoesNotLeaveCoalescedCallPending","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.468107+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestFileSessionStateStorePersistsOnlyRouteState"}
+{"Time":"2026-09-15T18:39:06.468112+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestFileSessionStateStorePersistsOnlyRouteState","Output":"=== RUN   TestFileSessionStateStorePersistsOnlyRouteState\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.477848+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestFileSessionStateStorePersistsOnlyRouteState","Output":"--- PASS: TestFileSessionStateStorePersistsOnlyRouteState (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.477878+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestFileSessionStateStorePersistsOnlyRouteState","Elapsed":0.01}
+{"Time":"2026-09-15T18:39:06.477885+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestSessionStateStoreSeparatesSessionsAndKeepsOneSessionSticky"}
+{"Time":"2026-09-15T18:39:06.477888+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestSessionStateStoreSeparatesSessionsAndKeepsOneSessionSticky","Output":"=== RUN   TestSessionStateStoreSeparatesSessionsAndKeepsOneSessionSticky\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.478483+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestSessionStateStoreSeparatesSessionsAndKeepsOneSessionSticky","Output":"--- PASS: TestSessionStateStoreSeparatesSessionsAndKeepsOneSessionSticky (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.478535+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestSessionStateStoreSeparatesSessionsAndKeepsOneSessionSticky","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.478541+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestSessionStateStoreExpiresAndDoesNotUseSharedGatewayState"}
+{"Time":"2026-09-15T18:39:06.478545+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestSessionStateStoreExpiresAndDoesNotUseSharedGatewayState","Output":"=== RUN   TestSessionStateStoreExpiresAndDoesNotUseSharedGatewayState\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.478854+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestSessionStateStoreExpiresAndDoesNotUseSharedGatewayState","Output":"--- PASS: TestSessionStateStoreExpiresAndDoesNotUseSharedGatewayState (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.478867+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestSessionStateStoreExpiresAndDoesNotUseSharedGatewayState","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.478872+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestSessionStateStoreConcurrentSessions"}
+{"Time":"2026-09-15T18:39:06.478875+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestSessionStateStoreConcurrentSessions","Output":"=== RUN   TestSessionStateStoreConcurrentSessions\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.482107+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestSessionStateStoreConcurrentSessions","Output":"--- PASS: TestSessionStateStoreConcurrentSessions (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.482127+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestSessionStateStoreConcurrentSessions","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.482133+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPUpstreamClientBuildsGeneratedPayloadAndAuth"}
+{"Time":"2026-09-15T18:39:06.482137+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPUpstreamClientBuildsGeneratedPayloadAndAuth","Output":"=== RUN   TestHTTPUpstreamClientBuildsGeneratedPayloadAndAuth\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.526041+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPUpstreamClientBuildsGeneratedPayloadAndAuth","Output":"--- PASS: TestHTTPUpstreamClientBuildsGeneratedPayloadAndAuth (0.04s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.526066+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPUpstreamClientBuildsGeneratedPayloadAndAuth","Elapsed":0.04}
+{"Time":"2026-09-15T18:39:06.526132+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPUpstreamClientPropagatesStatusWithoutCachingContract"}
+{"Time":"2026-09-15T18:39:06.526146+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPUpstreamClientPropagatesStatusWithoutCachingContract","Output":"=== RUN   TestHTTPUpstreamClientPropagatesStatusWithoutCachingContract\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.574027+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPUpstreamClientPropagatesStatusWithoutCachingContract","Output":"--- PASS: TestHTTPUpstreamClientPropagatesStatusWithoutCachingContract (0.05s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.574061+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPUpstreamClientPropagatesStatusWithoutCachingContract","Elapsed":0.05}
+{"Time":"2026-09-15T18:39:06.574068+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPUpstreamClientRejectsStreamingComplete"}
+{"Time":"2026-09-15T18:39:06.574072+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPUpstreamClientRejectsStreamingComplete","Output":"=== RUN   TestHTTPUpstreamClientRejectsStreamingComplete\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.574079+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPUpstreamClientRejectsStreamingComplete","Output":"--- PASS: TestHTTPUpstreamClientRejectsStreamingComplete (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.574083+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPUpstreamClientRejectsStreamingComplete","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.574087+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPUpstreamClientEnforcesResponseLimit"}
+{"Time":"2026-09-15T18:39:06.574091+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPUpstreamClientEnforcesResponseLimit","Output":"=== RUN   TestHTTPUpstreamClientEnforcesResponseLimit\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.587098+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPUpstreamClientEnforcesResponseLimit","Output":"--- PASS: TestHTTPUpstreamClientEnforcesResponseLimit (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.587123+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPUpstreamClientEnforcesResponseLimit","Elapsed":0.01}
+{"Time":"2026-09-15T18:39:06.587135+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestHTTPUpstreamClientOpensAndRelaysSSE"}
+{"Time":"2026-09-15T18:39:06.587139+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPUpstreamClientOpensAndRelaysSSE","Output":"=== RUN   TestHTTPUpstreamClientOpensAndRelaysSSE\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.598294+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestHTTPUpstreamClientOpensAndRelaysSSE","Output":"--- PASS: TestHTTPUpstreamClientOpensAndRelaysSSE (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.598321+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestHTTPUpstreamClientOpensAndRelaysSSE","Elapsed":0.01}
+{"Time":"2026-09-15T18:39:06.598343+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestDailyUsageSeparatesModelReasoningRegionAndKey"}
+{"Time":"2026-09-15T18:39:06.598347+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestDailyUsageSeparatesModelReasoningRegionAndKey","Output":"=== RUN   TestDailyUsageSeparatesModelReasoningRegionAndKey\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.5984+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestDailyUsageSeparatesModelReasoningRegionAndKey","Output":"--- PASS: TestDailyUsageSeparatesModelReasoningRegionAndKey (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.59842+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestDailyUsageSeparatesModelReasoningRegionAndKey","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.598424+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestJSONLUsageSinkWritesRedactedCounters"}
+{"Time":"2026-09-15T18:39:06.598427+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestJSONLUsageSinkWritesRedactedCounters","Output":"=== RUN   TestJSONLUsageSinkWritesRedactedCounters\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.606712+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestJSONLUsageSinkWritesRedactedCounters","Output":"--- PASS: TestJSONLUsageSinkWritesRedactedCounters (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.606736+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestJSONLUsageSinkWritesRedactedCounters","Elapsed":0.01}
+{"Time":"2026-09-15T18:39:06.606743+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestRelayDuplexClosesBothSidesAtTurnEnd"}
+{"Time":"2026-09-15T18:39:06.606747+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestRelayDuplexClosesBothSidesAtTurnEnd","Output":"=== RUN   TestRelayDuplexClosesBothSidesAtTurnEnd\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.606851+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestRelayDuplexClosesBothSidesAtTurnEnd","Output":"--- PASS: TestRelayDuplexClosesBothSidesAtTurnEnd (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.606872+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestRelayDuplexClosesBothSidesAtTurnEnd","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.606877+08:00","Action":"run","Package":"local/auto-gateway","Test":"TestRelayDuplexRejectsMissingConnection"}
+{"Time":"2026-09-15T18:39:06.606881+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestRelayDuplexRejectsMissingConnection","Output":"=== RUN   TestRelayDuplexRejectsMissingConnection\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.606914+08:00","Action":"output","Package":"local/auto-gateway","Test":"TestRelayDuplexRejectsMissingConnection","Output":"--- PASS: TestRelayDuplexRejectsMissingConnection (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:06.606925+08:00","Action":"pass","Package":"local/auto-gateway","Test":"TestRelayDuplexRejectsMissingConnection","Elapsed":0}
+{"Time":"2026-09-15T18:39:06.606943+08:00","Action":"output","Package":"local/auto-gateway","Output":"PASS\n","OutputType":"frame"}
+{"Time":"2026-09-15T18:39:07.616266+08:00","Action":"output","Package":"local/auto-gateway","Output":"ok  \tlocal/auto-gateway\t3.435s\n"}
+{"Time":"2026-09-15T18:39:07.616355+08:00","Action":"pass","Package":"local/auto-gateway","Elapsed":3.437}

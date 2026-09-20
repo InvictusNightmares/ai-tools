@@ -1,0 +1,71 @@
+{
+  "rows": [
+    {
+      "region": "tokyo",
+      "path": "/v1/chat/completions",
+      "status": 200,
+      "request_id": "1d60b2452f9d364ac2c727b64e78a7b2",
+      "model": "deepseek-flash",
+      "effort": "none",
+      "complete": true,
+      "policy": null,
+      "passed": true
+    },
+    {
+      "region": "tokyo",
+      "path": "/v1/responses",
+      "status": 200,
+      "request_id": "cad9bd65842654b0dd5cd270d07f18e1",
+      "model": "deepseek-flash",
+      "effort": "none",
+      "complete": true,
+      "policy": null,
+      "passed": true
+    },
+    {
+      "region": "tokyo",
+      "path": "/v1/messages",
+      "status": 200,
+      "request_id": "a22d514e1a6cd455ff20d0c8492bfbc3",
+      "model": "deepseek-flash",
+      "effort": "none",
+      "complete": true,
+      "policy": null,
+      "passed": true
+    },
+    {
+      "region": "us",
+      "path": "/v1/chat/completions",
+      "status": 200,
+      "request_id": "eea1cc8dac7e370296b7066becadc2ea",
+      "model": "deepseek-flash",
+      "effort": "none",
+      "complete": true,
+      "policy": null,
+      "passed": true
+    },
+    {
+      "region": "us",
+      "path": "/v1/responses",
+      "status": 200,
+      "request_id": "68a48d3997b2374c206175cb40603ca6",
+      "model": "deepseek-flash",
+      "effort": "none",
+      "complete": true,
+      "policy": null,
+      "passed": true
+    },
+    {
+      "region": "us",
+      "path": "/v1/messages",
+      "status": 200,
+      "request_id": "b3222744d165a927fd9f5adc8e9ea983",
+      "model": "deepseek-flash",
+      "effort": "none",
+      "complete": true,
+      "policy": null,
+      "passed": true
+    }
+  ],
+  "passed": true
+}

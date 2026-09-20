@@ -1,0 +1,47 @@
+{
+  "regions": [
+    {
+      "region": "tokyo",
+      "release": {
+        "release_id": "candidate-20260917-r17-native-v27",
+        "path": "/data/ai-gateway/releases/candidate-20260917-r17-native-v27",
+        "state_schema": "session-json-v1",
+        "backup": "/data/ai-gateway/acceptance-tokyo/backups/release-20260917-120326-647537"
+      },
+      "gateway-ops@tokyo.timer": "active",
+      "gateway-usage@tokyo.timer": "active",
+      "status.json": {
+        "alerts": [],
+        "at": "2026-09-17T04:14:03.210758+00:00"
+      },
+      "usage-status.json": {
+        "status": "running",
+        "at": "2026-09-17T04:13:53.909767+00:00"
+      },
+      "auto-acceptance-tokyo": "running",
+      "guard-acceptance-tokyo": "running"
+    },
+    {
+      "region": "us",
+      "release": {
+        "release_id": "candidate-20260917-r17-native-v27",
+        "path": "/data/ai-gateway/releases/candidate-20260917-r17-native-v27",
+        "state_schema": "session-json-v1",
+        "backup": "/data/ai-gateway/acceptance-us/backups/release-20260917-120519-665391"
+      },
+      "gateway-ops@us.timer": "active",
+      "gateway-usage@us.timer": "active",
+      "status.json": {
+        "alerts": [],
+        "at": "2026-09-17T04:13:37.172638+00:00"
+      },
+      "usage-status.json": {
+        "status": "completed",
+        "remaining": 0,
+        "at": "2026-09-17T04:13:55.879617+00:00"
+      },
+      "auto-acceptance-us": "running",
+      "guard-acceptance-us": "running"
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "scope": "Real SSH four-turn synthetic file tool task; zero external model requests",
+  "result": {
+    "scope": "fixed-model real coding task; not natural Auto selection or device UI",
+    "candidate": "synthetic-relay-only",
+    "task": "relay_fixture",
+    "source_commit": null,
+    "completed": true,
+    "failure": null,
+    "seconds": 12.246,
+    "changed_files": [
+      "src/main.txt"
+    ],
+    "file_sha256": {
+      "src/main.txt": "94c3f1415d2061d05e4cce4d33e43e26a5ad7ebcf6e89acace6e8b84240a629c"
+    },
+    "checks": [
+      {
+        "argv": [
+          "/usr/bin/true"
+        ],
+        "exit_code": 0,
+        "seconds": 0.005,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "requests": [
+      {
+        "turn": 0,
+        "response_model": "synthetic-relay-only",
+        "usage": {
+          "prompt_tokens": 10,
+          "completion_tokens": 10
+        },
+        "response_sha256": "ae49257bbf3ed738cfaa57f7144362dc0d6bab68855d9885a3e4571ee016af6c"
+      },
+      {
+        "turn": 1,
+        "response_model": "synthetic-relay-only",
+        "usage": {
+          "prompt_tokens": 10,
+          "completion_tokens": 10
+        },
+        "response_sha256": "285bd8ebab19ead9e50256d6ed279e320557a215b4d6e5b0dfa69c8d6549817b"
+      },
+      {
+        "turn": 2,
+        "response_model": "synthetic-relay-only",
+        "usage": {
+          "prompt_tokens": 10,
+          "completion_tokens": 10
+        },
+        "response_sha256": "b24e0c9bb6ce1e2a2fddc8ccbdd9dd79bf66f28bc620c853652154915a650b7b"
+      },
+      {
+        "turn": 3,
+        "response_model": "synthetic-relay-only",
+        "usage": {
+          "prompt_tokens": 10,
+          "completion_tokens": 10
+        },
+        "response_sha256": "c172f1207339a9adc86ef128f8cd431c89c4a77e055448cd3de2c63373c38ce0"
+      }
+    ],
+    "quality_review_pending": true
+  },
+  "python_tests_passed": 42
+}

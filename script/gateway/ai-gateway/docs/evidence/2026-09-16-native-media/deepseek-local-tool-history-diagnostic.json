@@ -1,0 +1,66 @@
+[
+  {
+    "case": "original-none",
+    "status": 400,
+    "model": null,
+    "reported_effort": null,
+    "error": {
+      "code": "invalid_request_error",
+      "message": "The `reasoning_text` in the thinking mode must be passed back to the API.",
+      "type": "invalid_request_error"
+    },
+    "upstream_client_request_id": "68c28f96-1732-4e2c-a6de-501f1a85387b"
+  },
+  {
+    "case": "test-none",
+    "status": 400,
+    "model": null,
+    "reported_effort": null,
+    "error": {
+      "code": "invalid_request_error",
+      "message": "The `reasoning_text` in the thinking mode must be passed back to the API.",
+      "type": "invalid_request_error"
+    },
+    "upstream_client_request_id": "807ae73d-f680-4251-8519-6f26987cf5a5"
+  },
+  {
+    "case": "original-explicit-disable",
+    "status": 400,
+    "model": null,
+    "reported_effort": null,
+    "error": {
+      "code": "invalid_request_error",
+      "message": "The `reasoning_text` in the thinking mode must be passed back to the API.",
+      "type": "invalid_request_error"
+    },
+    "upstream_client_request_id": "7421772a-d9d0-417b-b175-de546b4f2422"
+  },
+  {
+    "case": "original-new-user",
+    "status": 200,
+    "model": "deepseek-flash",
+    "reported_effort": null,
+    "error": null,
+    "upstream_client_request_id": "c0ac446d-325a-48f9-9fce-413387f452da"
+  },
+  {
+    "case": "original-no-tools",
+    "status": 400,
+    "model": null,
+    "reported_effort": null,
+    "error": {
+      "code": "invalid_request_error",
+      "message": "The `reasoning_text` in the thinking mode must be passed back to the API.",
+      "type": "invalid_request_error"
+    },
+    "upstream_client_request_id": "91ee3fe4-952a-4b8e-80d7-a59e2bc864d9"
+  },
+  {
+    "case": "original-no-history",
+    "status": 200,
+    "model": "deepseek-flash",
+    "reported_effort": null,
+    "error": null,
+    "upstream_client_request_id": "3d2b8ec4-f342-4c16-829f-6d8bc6557d90"
+  }
+]

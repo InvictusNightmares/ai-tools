@@ -1,0 +1,75 @@
+{"Time":"2026-09-16T09:06:21.015997+08:00","Action":"start","Package":"local/guard-gateway/go-check"}
+{"Time":"2026-09-16T09:06:21.137691+08:00","Action":"start","Package":"local/guard-gateway/guard-deployment"}
+{"Time":"2026-09-16T09:06:21.137791+08:00","Action":"start","Package":"local/guard-gateway/guard-deployment/cmd/preflight-api"}
+{"Time":"2026-09-16T09:06:21.137857+08:00","Action":"output","Package":"local/guard-gateway/guard-deployment/cmd/preflight-api","Output":"?   \tlocal/guard-gateway/guard-deployment/cmd/preflight-api\t[no test files]\n"}
+{"Time":"2026-09-16T09:06:21.137879+08:00","Action":"skip","Package":"local/guard-gateway/guard-deployment/cmd/preflight-api","Elapsed":0}
+{"Time":"2026-09-16T09:06:21.454023+08:00","Action":"run","Package":"local/guard-gateway/go-check","Test":"TestPreflightDecisionCacheAvoidsRepeatedGuardCall"}
+{"Time":"2026-09-16T09:06:21.454249+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightDecisionCacheAvoidsRepeatedGuardCall","Output":"=== RUN   TestPreflightDecisionCacheAvoidsRepeatedGuardCall\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.455576+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightDecisionCacheAvoidsRepeatedGuardCall","Output":"--- PASS: TestPreflightDecisionCacheAvoidsRepeatedGuardCall (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.455707+08:00","Action":"pass","Package":"local/guard-gateway/go-check","Test":"TestPreflightDecisionCacheAvoidsRepeatedGuardCall","Elapsed":0}
+{"Time":"2026-09-16T09:06:21.455748+08:00","Action":"run","Package":"local/guard-gateway/go-check","Test":"TestPreflightRulesRunBeforeSanitizedDecisionCache"}
+{"Time":"2026-09-16T09:06:21.455847+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightRulesRunBeforeSanitizedDecisionCache","Output":"=== RUN   TestPreflightRulesRunBeforeSanitizedDecisionCache\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.457093+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightRulesRunBeforeSanitizedDecisionCache","Output":"--- PASS: TestPreflightRulesRunBeforeSanitizedDecisionCache (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.457105+08:00","Action":"pass","Package":"local/guard-gateway/go-check","Test":"TestPreflightRulesRunBeforeSanitizedDecisionCache","Elapsed":0}
+{"Time":"2026-09-16T09:06:21.457113+08:00","Action":"run","Package":"local/guard-gateway/go-check","Test":"TestPreflightAuditFailureFailsClosed"}
+{"Time":"2026-09-16T09:06:21.457119+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightAuditFailureFailsClosed","Output":"=== RUN   TestPreflightAuditFailureFailsClosed\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.457805+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightAuditFailureFailsClosed","Output":"--- PASS: TestPreflightAuditFailureFailsClosed (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.457814+08:00","Action":"pass","Package":"local/guard-gateway/go-check","Test":"TestPreflightAuditFailureFailsClosed","Elapsed":0}
+{"Time":"2026-09-16T09:06:21.457821+08:00","Action":"run","Package":"local/guard-gateway/go-check","Test":"TestPreflightAllowsBenignRequestThroughModel"}
+{"Time":"2026-09-16T09:06:21.457826+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightAllowsBenignRequestThroughModel","Output":"=== RUN   TestPreflightAllowsBenignRequestThroughModel\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.459186+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightAllowsBenignRequestThroughModel","Output":"--- PASS: TestPreflightAllowsBenignRequestThroughModel (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.459196+08:00","Action":"pass","Package":"local/guard-gateway/go-check","Test":"TestPreflightAllowsBenignRequestThroughModel","Elapsed":0}
+{"Time":"2026-09-16T09:06:21.459237+08:00","Action":"run","Package":"local/guard-gateway/go-check","Test":"TestPreflightBlocksHighConfidenceRuleBeforeModel"}
+{"Time":"2026-09-16T09:06:21.459277+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightBlocksHighConfidenceRuleBeforeModel","Output":"=== RUN   TestPreflightBlocksHighConfidenceRuleBeforeModel\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.460741+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightBlocksHighConfidenceRuleBeforeModel","Output":"--- PASS: TestPreflightBlocksHighConfidenceRuleBeforeModel (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.460752+08:00","Action":"pass","Package":"local/guard-gateway/go-check","Test":"TestPreflightBlocksHighConfidenceRuleBeforeModel","Elapsed":0}
+{"Time":"2026-09-16T09:06:21.460757+08:00","Action":"run","Package":"local/guard-gateway/go-check","Test":"TestPreflightFailClosedWhenModelUnavailable"}
+{"Time":"2026-09-16T09:06:21.460761+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightFailClosedWhenModelUnavailable","Output":"=== RUN   TestPreflightFailClosedWhenModelUnavailable\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.461458+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightFailClosedWhenModelUnavailable","Output":"--- PASS: TestPreflightFailClosedWhenModelUnavailable (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.461489+08:00","Action":"pass","Package":"local/guard-gateway/go-check","Test":"TestPreflightFailClosedWhenModelUnavailable","Elapsed":0}
+{"Time":"2026-09-16T09:06:21.461495+08:00","Action":"run","Package":"local/guard-gateway/go-check","Test":"TestPreflightRedactsSecretsBeforeModelAndAudit"}
+{"Time":"2026-09-16T09:06:21.461499+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightRedactsSecretsBeforeModelAndAudit","Output":"=== RUN   TestPreflightRedactsSecretsBeforeModelAndAudit\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.463935+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightRedactsSecretsBeforeModelAndAudit","Output":"--- PASS: TestPreflightRedactsSecretsBeforeModelAndAudit (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.46395+08:00","Action":"pass","Package":"local/guard-gateway/go-check","Test":"TestPreflightRedactsSecretsBeforeModelAndAudit","Elapsed":0}
+{"Time":"2026-09-16T09:06:21.463955+08:00","Action":"run","Package":"local/guard-gateway/go-check","Test":"TestPreflightDetectsQuotedJSONCredentialFields"}
+{"Time":"2026-09-16T09:06:21.463959+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightDetectsQuotedJSONCredentialFields","Output":"=== RUN   TestPreflightDetectsQuotedJSONCredentialFields\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.465022+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightDetectsQuotedJSONCredentialFields","Output":"--- PASS: TestPreflightDetectsQuotedJSONCredentialFields (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.465076+08:00","Action":"pass","Package":"local/guard-gateway/go-check","Test":"TestPreflightDetectsQuotedJSONCredentialFields","Elapsed":0}
+{"Time":"2026-09-16T09:06:21.465111+08:00","Action":"run","Package":"local/guard-gateway/go-check","Test":"TestPreflightScansMetadataAndToolSchemaForCredentials"}
+{"Time":"2026-09-16T09:06:21.465116+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightScansMetadataAndToolSchemaForCredentials","Output":"=== RUN   TestPreflightScansMetadataAndToolSchemaForCredentials\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.465672+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightScansMetadataAndToolSchemaForCredentials","Output":"--- PASS: TestPreflightScansMetadataAndToolSchemaForCredentials (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.465684+08:00","Action":"pass","Package":"local/guard-gateway/go-check","Test":"TestPreflightScansMetadataAndToolSchemaForCredentials","Elapsed":0}
+{"Time":"2026-09-16T09:06:21.465705+08:00","Action":"run","Package":"local/guard-gateway/go-check","Test":"TestPreflightBlocksRealSecretWhenRequestWantsToUseIt"}
+{"Time":"2026-09-16T09:06:21.465709+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightBlocksRealSecretWhenRequestWantsToUseIt","Output":"=== RUN   TestPreflightBlocksRealSecretWhenRequestWantsToUseIt\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.466042+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightBlocksRealSecretWhenRequestWantsToUseIt","Output":"--- PASS: TestPreflightBlocksRealSecretWhenRequestWantsToUseIt (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.466052+08:00","Action":"pass","Package":"local/guard-gateway/go-check","Test":"TestPreflightBlocksRealSecretWhenRequestWantsToUseIt","Elapsed":0}
+{"Time":"2026-09-16T09:06:21.466059+08:00","Action":"run","Package":"local/guard-gateway/go-check","Test":"TestPreflightStrictlyBlocksMediumModelVerdict"}
+{"Time":"2026-09-16T09:06:21.466063+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightStrictlyBlocksMediumModelVerdict","Output":"=== RUN   TestPreflightStrictlyBlocksMediumModelVerdict\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.466777+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightStrictlyBlocksMediumModelVerdict","Output":"--- PASS: TestPreflightStrictlyBlocksMediumModelVerdict (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.466783+08:00","Action":"pass","Package":"local/guard-gateway/go-check","Test":"TestPreflightStrictlyBlocksMediumModelVerdict","Elapsed":0}
+{"Time":"2026-09-16T09:06:21.466788+08:00","Action":"run","Package":"local/guard-gateway/go-check","Test":"TestPreflightRuleRiskCannotBeDowngradedByModel"}
+{"Time":"2026-09-16T09:06:21.466792+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightRuleRiskCannotBeDowngradedByModel","Output":"=== RUN   TestPreflightRuleRiskCannotBeDowngradedByModel\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.467984+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestPreflightRuleRiskCannotBeDowngradedByModel","Output":"--- PASS: TestPreflightRuleRiskCannotBeDowngradedByModel (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.467994+08:00","Action":"pass","Package":"local/guard-gateway/go-check","Test":"TestPreflightRuleRiskCannotBeDowngradedByModel","Elapsed":0}
+{"Time":"2026-09-16T09:06:21.467997+08:00","Action":"run","Package":"local/guard-gateway/go-check","Test":"TestUpstreamCyberQuarantinesAccountAfterThreshold"}
+{"Time":"2026-09-16T09:06:21.468001+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestUpstreamCyberQuarantinesAccountAfterThreshold","Output":"=== RUN   TestUpstreamCyberQuarantinesAccountAfterThreshold\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.468466+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestUpstreamCyberQuarantinesAccountAfterThreshold","Output":"--- PASS: TestUpstreamCyberQuarantinesAccountAfterThreshold (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.468481+08:00","Action":"pass","Package":"local/guard-gateway/go-check","Test":"TestUpstreamCyberQuarantinesAccountAfterThreshold","Elapsed":0}
+{"Time":"2026-09-16T09:06:21.468486+08:00","Action":"run","Package":"local/guard-gateway/go-check","Test":"TestRequestCorrelationDoesNotInvalidateSafetyCache"}
+{"Time":"2026-09-16T09:06:21.46849+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestRequestCorrelationDoesNotInvalidateSafetyCache","Output":"=== RUN   TestRequestCorrelationDoesNotInvalidateSafetyCache\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.46901+08:00","Action":"output","Package":"local/guard-gateway/go-check","Test":"TestRequestCorrelationDoesNotInvalidateSafetyCache","Output":"--- PASS: TestRequestCorrelationDoesNotInvalidateSafetyCache (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.469027+08:00","Action":"pass","Package":"local/guard-gateway/go-check","Test":"TestRequestCorrelationDoesNotInvalidateSafetyCache","Elapsed":0}
+{"Time":"2026-09-16T09:06:21.469063+08:00","Action":"output","Package":"local/guard-gateway/go-check","Output":"PASS\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.73084+08:00","Action":"run","Package":"local/guard-gateway/guard-deployment","Test":"TestHTTPModelClientSendsSanitizedInputOnly"}
+{"Time":"2026-09-16T09:06:21.730906+08:00","Action":"output","Package":"local/guard-gateway/guard-deployment","Test":"TestHTTPModelClientSendsSanitizedInputOnly","Output":"=== RUN   TestHTTPModelClientSendsSanitizedInputOnly\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.746096+08:00","Action":"output","Package":"local/guard-gateway/guard-deployment","Test":"TestHTTPModelClientSendsSanitizedInputOnly","Output":"--- PASS: TestHTTPModelClientSendsSanitizedInputOnly (0.02s)\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.746124+08:00","Action":"pass","Package":"local/guard-gateway/guard-deployment","Test":"TestHTTPModelClientSendsSanitizedInputOnly","Elapsed":0.02}
+{"Time":"2026-09-16T09:06:21.746147+08:00","Action":"run","Package":"local/guard-gateway/guard-deployment","Test":"TestHTTPModelClientChecksAllLongInputChunks"}
+{"Time":"2026-09-16T09:06:21.746159+08:00","Action":"output","Package":"local/guard-gateway/guard-deployment","Test":"TestHTTPModelClientChecksAllLongInputChunks","Output":"=== RUN   TestHTTPModelClientChecksAllLongInputChunks\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.837075+08:00","Action":"output","Package":"local/guard-gateway/guard-deployment","Test":"TestHTTPModelClientChecksAllLongInputChunks","Output":"--- PASS: TestHTTPModelClientChecksAllLongInputChunks (0.09s)\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:21.837103+08:00","Action":"pass","Package":"local/guard-gateway/guard-deployment","Test":"TestHTTPModelClientChecksAllLongInputChunks","Elapsed":0.09}
+{"Time":"2026-09-16T09:06:21.837118+08:00","Action":"output","Package":"local/guard-gateway/guard-deployment","Output":"PASS\n","OutputType":"frame"}
+{"Time":"2026-09-16T09:06:22.471087+08:00","Action":"output","Package":"local/guard-gateway/go-check","Output":"ok  \tlocal/guard-gateway/go-check\t1.454s\n"}
+{"Time":"2026-09-16T09:06:22.471182+08:00","Action":"pass","Package":"local/guard-gateway/go-check","Elapsed":1.455}
+{"Time":"2026-09-16T09:06:22.843784+08:00","Action":"output","Package":"local/guard-gateway/guard-deployment","Output":"ok  \tlocal/guard-gateway/guard-deployment\t1.706s\n"}
+{"Time":"2026-09-16T09:06:22.843823+08:00","Action":"pass","Package":"local/guard-gateway/guard-deployment","Elapsed":1.706}

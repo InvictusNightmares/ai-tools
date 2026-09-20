@@ -1,0 +1,33 @@
+{
+  "region": "fixture",
+  "mode": "allow",
+  "scope": "Native Codex approval through v13 gateway with synthetic local identity, Guard, business proposal and reviewer; not regional acceptance",
+  "checks": {
+    "native_review_decision": true,
+    "file_effect_matches_review": true,
+    "native_turn_completed": true,
+    "native_reviewer_request_seen": true
+  },
+  "reviews": [
+    {
+      "status": "approved",
+      "decision_source": "agent"
+    }
+  ],
+  "passed": true,
+  "gateway_candidate_tested": true,
+  "native_review_requests": [
+    {
+      "sha256": "aad307f4371977e4ec5d1afd515ef171170f5a5b11d54f1c97dbb7c4e3764067",
+      "model": "codex-auto-review",
+      "stream": true,
+      "reasoning": {
+        "effort": "low",
+        "summary": "auto",
+        "context": "all_turns"
+      },
+      "text_format_type": "json_schema",
+      "tools_count": 0
+    }
+  ]
+}

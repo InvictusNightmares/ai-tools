@@ -1,0 +1,67 @@
+{
+  "recorded_at": "2026-09-16T14:10:52.181535+08:00",
+  "scope": "documentation_only",
+  "modified_documents": [
+    {
+      "path": "docs/CHANGELOG.md",
+      "before_sha256": "35870ff93113c9eba6f8e1066104f6e0da50bb1c767dfd62cdc7dab19455b29f",
+      "after_sha256": "aa81cdfc858a107d3a8ce0a1f9ff003ac9849eb68d6a119f69ba73be15e7fcf1"
+    },
+    {
+      "path": "docs/智能网关与Guard分阶段实施总计划.md",
+      "before_sha256": "cb503dd96faa4464588e74f55641cb73d23a505954e5c42c1a1b1ac115b4ca46",
+      "after_sha256": "512ebe7d42e6773b714310a1492455088e303e400549679ba84ee1e81f85e216"
+    },
+    {
+      "path": "README.md",
+      "before_sha256": "6292611ecbaca9de178e626ede92707759ad4f95623e65fffa7a37d08c04db57",
+      "after_sha256": "8bade02cf9aa496092a0725743958934dcc7610a415882923d329921a1b47857"
+    },
+    {
+      "path": "auto/README.md",
+      "before_sha256": "c362aea897d956051d1d3e98a17d9c9b88eedad28f3ace0b5563047bf7ae6aa7",
+      "after_sha256": "b51280bc3b5ef23a9536be873a4bb628fb374a6def229f2e132ffc182d25a9cf"
+    },
+    {
+      "path": "guard/README.md",
+      "before_sha256": "b34b615bdaeaad83af15a3a3b5c8956adf3d467c8730eb3406e9e2bd21addd69",
+      "after_sha256": "868997a3da7f9b5db04dabf41087700079399ac71fff5be15332b5f5ff43ea8b"
+    },
+    {
+      "path": "deploy/guard/README.md",
+      "before_sha256": "f3c1b5fb087246f7325c0937abb5a8d60ec2a63273cb4beab35b04718ec4fc86",
+      "after_sha256": "59df81320e691a370b23bf4b919d48c5fd78e96724a42875cc48c0a072901d61"
+    },
+    {
+      "path": "deploy/acceptance/README.md",
+      "before_sha256": "1de1e89645a1d2147f3b72463c484633b6eaafd2ad70d532c2bace77fba5b4b1",
+      "after_sha256": "38b76af3074e332199e65f482abd3fa6b214f4f8eeac2b7772917c5610c6418a"
+    },
+    {
+      "path": "docs/维护指南.md",
+      "before_sha256": "185d09b6ffad6fe2d9e1fe793b4bd9430bfd78bf4eb4498a37620edadc048919",
+      "after_sha256": "e23f5a5867da3dcc01fc60ea3c37a042ef3f8577383b139ceb073ab9274015e7"
+    },
+    {
+      "path": "docs/evidence/2026-09-16-maintenance/README.md",
+      "before_sha256": "3502a753985ab6e73ca54e35c480f2640708b8aaa2d5e7d3663d6981752d6b16",
+      "after_sha256": "65500952407d96da5f7f93ed5f2ccbf72eff58c3469679ec023ad3ad2dc2b633"
+    }
+  ],
+  "non_markdown_manifest_files_unchanged": 106,
+  "documentation_changed_since_frozen_manifest": [
+    "auto/README.md",
+    "guard/README.md",
+    "deploy/acceptance/README.md",
+    "deploy/guard/README.md",
+    "README.md"
+  ],
+  "historical_rows_preserved": 97,
+  "local_markdown_links_checked": 222,
+  "markdown_errors": [],
+  "prior_regression_timestamp_utc": "2026-09-16T06:03:19.010687+00:00",
+  "tests_rerun": false,
+  "servers_accessed": false,
+  "servers_modified": false,
+  "old_evidence_overwritten": false
+}

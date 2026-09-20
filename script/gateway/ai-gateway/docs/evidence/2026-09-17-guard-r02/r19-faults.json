@@ -1,0 +1,175 @@
+{
+  "release": "candidate-20260917-r19-native-v29",
+  "scope": "isolated_guard_real_qwen",
+  "queue_capacity": 1,
+  "queue_timeout_ms": 100,
+  "queue_results": [
+    {
+      "status": 200,
+      "decision": "allow",
+      "reason_codes": null,
+      "upstream_called": false,
+      "retry_suppressed": null
+    },
+    {
+      "status": 503,
+      "decision": "unavailable",
+      "reason_codes": [
+        "queue_timeout"
+      ],
+      "upstream_called": false,
+      "retry_suppressed": true
+    },
+    {
+      "status": 503,
+      "decision": "unavailable",
+      "reason_codes": [
+        "queue_timeout"
+      ],
+      "upstream_called": false,
+      "retry_suppressed": true
+    },
+    {
+      "status": 503,
+      "decision": "unavailable",
+      "reason_codes": [
+        "queue_timeout"
+      ],
+      "upstream_called": false,
+      "retry_suppressed": true
+    },
+    {
+      "status": 503,
+      "decision": "unavailable",
+      "reason_codes": [
+        "queue_timeout"
+      ],
+      "upstream_called": false,
+      "retry_suppressed": true
+    },
+    {
+      "status": 503,
+      "decision": "unavailable",
+      "reason_codes": [
+        "queue_timeout"
+      ],
+      "upstream_called": false,
+      "retry_suppressed": true
+    },
+    {
+      "status": 503,
+      "decision": "unavailable",
+      "reason_codes": [
+        "queue_timeout"
+      ],
+      "upstream_called": false,
+      "retry_suppressed": true
+    },
+    {
+      "status": 503,
+      "decision": "unavailable",
+      "reason_codes": [
+        "queue_timeout"
+      ],
+      "upstream_called": false,
+      "retry_suppressed": true
+    },
+    {
+      "status": 503,
+      "decision": "unavailable",
+      "reason_codes": [
+        "queue_timeout"
+      ],
+      "upstream_called": false,
+      "retry_suppressed": true
+    },
+    {
+      "status": 503,
+      "decision": "unavailable",
+      "reason_codes": [
+        "queue_timeout"
+      ],
+      "upstream_called": false,
+      "retry_suppressed": true
+    },
+    {
+      "status": 503,
+      "decision": "unavailable",
+      "reason_codes": [
+        "queue_timeout"
+      ],
+      "upstream_called": false,
+      "retry_suppressed": true
+    },
+    {
+      "status": 503,
+      "decision": "unavailable",
+      "reason_codes": [
+        "queue_timeout"
+      ],
+      "upstream_called": false,
+      "retry_suppressed": true
+    },
+    {
+      "status": 503,
+      "decision": "unavailable",
+      "reason_codes": [
+        "queue_timeout"
+      ],
+      "upstream_called": false,
+      "retry_suppressed": true
+    },
+    {
+      "status": 503,
+      "decision": "unavailable",
+      "reason_codes": [
+        "queue_timeout"
+      ],
+      "upstream_called": false,
+      "retry_suppressed": true
+    },
+    {
+      "status": 503,
+      "decision": "unavailable",
+      "reason_codes": [
+        "queue_timeout"
+      ],
+      "upstream_called": false,
+      "retry_suppressed": true
+    },
+    {
+      "status": 503,
+      "decision": "unavailable",
+      "reason_codes": [
+        "queue_timeout"
+      ],
+      "upstream_called": false,
+      "retry_suppressed": true
+    }
+  ],
+  "audit_disk_full": {
+    "status": 503,
+    "decision": "unavailable",
+    "reason_codes": [
+      "security_usage_unavailable",
+      "audit_write_failed"
+    ],
+    "upstream_called": false,
+    "retry_suppressed": true
+  },
+  "tokenizer_unavailable": {
+    "status": 503,
+    "decision": "unavailable",
+    "reason_codes": [
+      "classifier_error"
+    ],
+    "upstream_called": false,
+    "retry_suppressed": true
+  },
+  "tokenizer_calls": {
+    "tokenizer": 1,
+    "classification": 0
+  },
+  "production_containers_restarted": false,
+  "passed": true
+}

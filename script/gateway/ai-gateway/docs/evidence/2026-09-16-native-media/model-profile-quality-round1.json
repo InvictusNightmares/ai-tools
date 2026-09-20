@@ -1,0 +1,807 @@
+{
+  "scope": "same three pre-fix projects, five fixed candidates; frozen rubric then independent artifact review; not optimal-model proof",
+  "rubric_sha256": "815b5f3f1cc5b6c9a19ced7435808766f12de9f164771b955552f0c07bb5c855",
+  "round": 1,
+  "results": [
+    {
+      "task": "xiaoyuan",
+      "candidate": "deepseek-flash",
+      "source_commit": "2e394cb6b0847619dad1e52d99662ffb0a2e8b0b",
+      "completed": true,
+      "failure": null,
+      "seconds": 221.945,
+      "changed_files": [
+        "entry/src/main/ets/capabilities/Navigation.ets"
+      ],
+      "file_sha256": {
+        "entry/src/main/ets/capabilities/Navigation.ets": "17356d0bf7462caea7c1470269264a320d8cbd3f84d92242413ea63c44f900ad"
+      },
+      "build_and_prescribed_checks": true,
+      "model_turns": 12,
+      "check_attempts": 2,
+      "quality_review": "implementation review with build evidence; not device UI",
+      "requirements": [
+        {
+          "requirement": "logout uses one login route transition",
+          "status": "pass"
+        },
+        {
+          "requirement": "router stack cleared correctly",
+          "status": "pass"
+        },
+        {
+          "requirement": "selected tab and cached navigation state reset",
+          "status": "pass"
+        },
+        {
+          "requirement": "existing banner or push state rules preserved",
+          "status": "pass"
+        },
+        {
+          "requirement": "no changes outside Navigation implementation required by the task",
+          "status": "pass"
+        },
+        {
+          "requirement": "unsigned HAP builds and five existing behavior checks pass",
+          "status": "pass"
+        }
+      ],
+      "assessment": "pass_implementation_and_hap_and_behavior",
+      "review_note": "All five identical Navigation artifact hashes; only three logout preference deletions and diagnostic text changed; existing stack/tab/banner behavior retained and five prescribed behavior checks pass.",
+      "device_ui": "not_tested_no_device_or_AVD"
+    },
+    {
+      "task": "reminder",
+      "candidate": "deepseek-flash",
+      "source_commit": "64175b4ee9fbc41066b2bfe4f563e475c3e8eab6",
+      "completed": true,
+      "failure": null,
+      "seconds": 532.701,
+      "changed_files": [
+        "app/src/androidTest/java/com/rhzl/chargeoperateapp/activity/my/MessagePagesInstrumentedTest.java",
+        "app/src/androidTest/java/com/rhzl/chargeoperateapp/adapter/MessageAdapterInstrumentedTest.java",
+        "app/src/main/java/com/rhzl/chargeoperateapp/adapter/LowElectAdapter.kt",
+        "app/src/main/java/com/rhzl/chargeoperateapp/bean/LowElectPageListBean.java"
+      ],
+      "file_sha256": {
+        "app/src/androidTest/java/com/rhzl/chargeoperateapp/activity/my/MessagePagesInstrumentedTest.java": "d7924180dc4294d0adb083445fac2dbaf68d40158b512a8e5011c5fac368afe3",
+        "app/src/androidTest/java/com/rhzl/chargeoperateapp/adapter/MessageAdapterInstrumentedTest.java": "49dbf311e9b281bc6490f7fdbca8ac8fb8a68214dd8de2f3c951ea7ffdf9e235",
+        "app/src/main/java/com/rhzl/chargeoperateapp/adapter/LowElectAdapter.kt": "32fbeed12653e41ac0baf8bcaf9df44fde71a23453cea90bbd1a4841c8c06b14",
+        "app/src/main/java/com/rhzl/chargeoperateapp/bean/LowElectPageListBean.java": "f4313fe00c45982b43067665b4c15012cdc76b9f46cb10b6f1ab210c1f63efe2"
+      },
+      "build_and_prescribed_checks": true,
+      "model_turns": 22,
+      "check_attempts": 2,
+      "quality_review": "implementation review with build evidence; not device UI",
+      "requirements": [
+        {
+          "requirement": "subtitle left is batCode, right is deviceName",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "remove erroneous stationName DTO field and related getters/setters",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "null, empty, whitespace names hide both suffix and divider",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "arrow remains a sibling outside the weighted subtitle area",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "expanded details still use deviceCode",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "fault adapter, read-state and expand/collapse behavior preserved",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "app builds and existing applicable instrumented tests compile with corrected field",
+          "status": "pass_implementation_and_compile"
+        }
+      ],
+      "assessment": "pass_implementation_and_compile",
+      "review_note": "DTO/adapter field correction verified; helper trims null and whitespace; name/divider visibility linked; arrow remains outside subtitle row; expanded deviceCode and unrelated fault/read/expand behavior preserved. Instrumented tests compiled, not executed.",
+      "device_ui": "not_tested_no_device_or_AVD"
+    },
+    {
+      "task": "startup",
+      "candidate": "deepseek-flash",
+      "source_commit": "6532369b3d55c31728484e628443ba9196d85c6b",
+      "completed": false,
+      "failure": "http_403",
+      "seconds": 237.909,
+      "changed_files": [],
+      "file_sha256": {},
+      "build_and_prescribed_checks": true,
+      "model_turns": 8,
+      "check_attempts": 1,
+      "quality_review": "implementation review with build evidence; not device UI",
+      "requirements": [
+        {
+          "requirement": "Android 12 bundled asset URLs use valid asset handling instead of HTTP URL connection",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "bundled path and MIME remain correct",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "local VIN is trimmed; absent or whitespace VIN cannot enter online business page",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "nonempty VIN follows online route with proper encoding",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "app update remains in Splash; remote H5 update begins after Main and is asynchronous",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "optional update cancellation continues startup",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "overlapping native VIN/update callbacks cannot navigate twice",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "weak-network and offline fallback remain",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "debug build and 21 existing JVM tests pass",
+          "status": "unverified_guard_block_before_edits"
+        }
+      ],
+      "assessment": "not_scored_infrastructure_block_before_edits",
+      "device_ui": "not_tested_no_device_or_AVD"
+    },
+    {
+      "task": "xiaoyuan",
+      "candidate": "gpt-5.6-luna",
+      "source_commit": "2e394cb6b0847619dad1e52d99662ffb0a2e8b0b",
+      "completed": true,
+      "failure": null,
+      "seconds": 231.298,
+      "changed_files": [
+        "entry/src/main/ets/capabilities/Navigation.ets"
+      ],
+      "file_sha256": {
+        "entry/src/main/ets/capabilities/Navigation.ets": "17356d0bf7462caea7c1470269264a320d8cbd3f84d92242413ea63c44f900ad"
+      },
+      "build_and_prescribed_checks": true,
+      "model_turns": 10,
+      "check_attempts": 2,
+      "quality_review": "implementation review with build evidence; not device UI",
+      "requirements": [
+        {
+          "requirement": "logout uses one login route transition",
+          "status": "pass"
+        },
+        {
+          "requirement": "router stack cleared correctly",
+          "status": "pass"
+        },
+        {
+          "requirement": "selected tab and cached navigation state reset",
+          "status": "pass"
+        },
+        {
+          "requirement": "existing banner or push state rules preserved",
+          "status": "pass"
+        },
+        {
+          "requirement": "no changes outside Navigation implementation required by the task",
+          "status": "pass"
+        },
+        {
+          "requirement": "unsigned HAP builds and five existing behavior checks pass",
+          "status": "pass"
+        }
+      ],
+      "assessment": "pass_implementation_and_hap_and_behavior",
+      "review_note": "All five identical Navigation artifact hashes; only three logout preference deletions and diagnostic text changed; existing stack/tab/banner behavior retained and five prescribed behavior checks pass.",
+      "device_ui": "not_tested_no_device_or_AVD"
+    },
+    {
+      "task": "reminder",
+      "candidate": "gpt-5.6-luna",
+      "source_commit": "64175b4ee9fbc41066b2bfe4f563e475c3e8eab6",
+      "completed": true,
+      "failure": null,
+      "seconds": 743.394,
+      "changed_files": [
+        "app/src/androidTest/java/com/rhzl/chargeoperateapp/activity/my/MessagePagesInstrumentedTest.java",
+        "app/src/androidTest/java/com/rhzl/chargeoperateapp/adapter/MessageAdapterInstrumentedTest.java",
+        "app/src/main/java/com/rhzl/chargeoperateapp/adapter/LowElectAdapter.kt",
+        "app/src/main/java/com/rhzl/chargeoperateapp/bean/LowElectPageListBean.java",
+        "app/src/main/res/layout/item_low_elec.xml"
+      ],
+      "file_sha256": {
+        "app/src/androidTest/java/com/rhzl/chargeoperateapp/activity/my/MessagePagesInstrumentedTest.java": "d7924180dc4294d0adb083445fac2dbaf68d40158b512a8e5011c5fac368afe3",
+        "app/src/androidTest/java/com/rhzl/chargeoperateapp/adapter/MessageAdapterInstrumentedTest.java": "ac0097b49bf35225f65a60b1972170410930f395ebe83199e4ebcc46c48c0e36",
+        "app/src/main/java/com/rhzl/chargeoperateapp/adapter/LowElectAdapter.kt": "32fbeed12653e41ac0baf8bcaf9df44fde71a23453cea90bbd1a4841c8c06b14",
+        "app/src/main/java/com/rhzl/chargeoperateapp/bean/LowElectPageListBean.java": "f4313fe00c45982b43067665b4c15012cdc76b9f46cb10b6f1ab210c1f63efe2",
+        "app/src/main/res/layout/item_low_elec.xml": "e1c49a0b8c67dc0885dca3785b563d132e8aeaf1e27d3085a6f7b1b37d713b2f"
+      },
+      "build_and_prescribed_checks": true,
+      "model_turns": 22,
+      "check_attempts": 4,
+      "quality_review": "implementation review with build evidence; not device UI",
+      "requirements": [
+        {
+          "requirement": "subtitle left is batCode, right is deviceName",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "remove erroneous stationName DTO field and related getters/setters",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "null, empty, whitespace names hide both suffix and divider",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "arrow remains a sibling outside the weighted subtitle area",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "expanded details still use deviceCode",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "fault adapter, read-state and expand/collapse behavior preserved",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "app builds and existing applicable instrumented tests compile with corrected field",
+          "status": "pass_implementation_and_compile"
+        }
+      ],
+      "assessment": "pass_implementation_and_compile",
+      "review_note": "DTO/adapter field correction verified; helper trims null and whitespace; name/divider visibility linked; arrow remains outside subtitle row; expanded deviceCode and unrelated fault/read/expand behavior preserved. Instrumented tests compiled, not executed.",
+      "additional_layout_change": "device name uses width=0/weight=1; Luna also end gravity. Device visual effect unverified.",
+      "device_ui": "not_tested_no_device_or_AVD"
+    },
+    {
+      "task": "startup",
+      "candidate": "gpt-5.6-luna",
+      "source_commit": "6532369b3d55c31728484e628443ba9196d85c6b",
+      "completed": false,
+      "failure": "http_403",
+      "seconds": 156.871,
+      "changed_files": [],
+      "file_sha256": {},
+      "build_and_prescribed_checks": true,
+      "model_turns": 3,
+      "check_attempts": 1,
+      "quality_review": "implementation review with build evidence; not device UI",
+      "requirements": [
+        {
+          "requirement": "Android 12 bundled asset URLs use valid asset handling instead of HTTP URL connection",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "bundled path and MIME remain correct",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "local VIN is trimmed; absent or whitespace VIN cannot enter online business page",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "nonempty VIN follows online route with proper encoding",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "app update remains in Splash; remote H5 update begins after Main and is asynchronous",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "optional update cancellation continues startup",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "overlapping native VIN/update callbacks cannot navigate twice",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "weak-network and offline fallback remain",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "debug build and 21 existing JVM tests pass",
+          "status": "unverified_guard_block_before_edits"
+        }
+      ],
+      "assessment": "not_scored_infrastructure_block_before_edits",
+      "device_ui": "not_tested_no_device_or_AVD"
+    },
+    {
+      "task": "xiaoyuan",
+      "candidate": "gpt-5.6-sol",
+      "source_commit": "2e394cb6b0847619dad1e52d99662ffb0a2e8b0b",
+      "completed": true,
+      "failure": null,
+      "seconds": 212.433,
+      "changed_files": [
+        "entry/src/main/ets/capabilities/Navigation.ets"
+      ],
+      "file_sha256": {
+        "entry/src/main/ets/capabilities/Navigation.ets": "17356d0bf7462caea7c1470269264a320d8cbd3f84d92242413ea63c44f900ad"
+      },
+      "build_and_prescribed_checks": true,
+      "model_turns": 9,
+      "check_attempts": 2,
+      "quality_review": "implementation review with build evidence; not device UI",
+      "requirements": [
+        {
+          "requirement": "logout uses one login route transition",
+          "status": "pass"
+        },
+        {
+          "requirement": "router stack cleared correctly",
+          "status": "pass"
+        },
+        {
+          "requirement": "selected tab and cached navigation state reset",
+          "status": "pass"
+        },
+        {
+          "requirement": "existing banner or push state rules preserved",
+          "status": "pass"
+        },
+        {
+          "requirement": "no changes outside Navigation implementation required by the task",
+          "status": "pass"
+        },
+        {
+          "requirement": "unsigned HAP builds and five existing behavior checks pass",
+          "status": "pass"
+        }
+      ],
+      "assessment": "pass_implementation_and_hap_and_behavior",
+      "review_note": "All five identical Navigation artifact hashes; only three logout preference deletions and diagnostic text changed; existing stack/tab/banner behavior retained and five prescribed behavior checks pass.",
+      "device_ui": "not_tested_no_device_or_AVD"
+    },
+    {
+      "task": "reminder",
+      "candidate": "gpt-5.6-sol",
+      "source_commit": "64175b4ee9fbc41066b2bfe4f563e475c3e8eab6",
+      "completed": true,
+      "failure": null,
+      "seconds": 455.723,
+      "changed_files": [
+        "app/src/androidTest/java/com/rhzl/chargeoperateapp/activity/my/MessagePagesInstrumentedTest.java",
+        "app/src/androidTest/java/com/rhzl/chargeoperateapp/adapter/MessageAdapterInstrumentedTest.java",
+        "app/src/main/java/com/rhzl/chargeoperateapp/adapter/LowElectAdapter.kt",
+        "app/src/main/java/com/rhzl/chargeoperateapp/bean/LowElectPageListBean.java",
+        "app/src/test/java/com/rhzl/chargeoperateapp/utils/MessageDisplayUtilsTest.java",
+        "docs/tech-design/SYS-80964-native-message-lists.md"
+      ],
+      "file_sha256": {
+        "app/src/androidTest/java/com/rhzl/chargeoperateapp/activity/my/MessagePagesInstrumentedTest.java": "d7924180dc4294d0adb083445fac2dbaf68d40158b512a8e5011c5fac368afe3",
+        "app/src/androidTest/java/com/rhzl/chargeoperateapp/adapter/MessageAdapterInstrumentedTest.java": "28c728d5b4a6a4ea57d44866dc448114381b4ac2e9cf29953228d61cbfae0d3d",
+        "app/src/main/java/com/rhzl/chargeoperateapp/adapter/LowElectAdapter.kt": "32fbeed12653e41ac0baf8bcaf9df44fde71a23453cea90bbd1a4841c8c06b14",
+        "app/src/main/java/com/rhzl/chargeoperateapp/bean/LowElectPageListBean.java": "0c74f0bf5ab17044f49ffef85bb18f2424d60a44472ad8e561b44146ca19ab4e",
+        "app/src/test/java/com/rhzl/chargeoperateapp/utils/MessageDisplayUtilsTest.java": "ca4d167f31acc37f8a2312fa5cd1782b56653ff52cc7c3700c69002711b88d1d",
+        "docs/tech-design/SYS-80964-native-message-lists.md": "946cf303fe8f8b225e7b3338e024fff8b30773b50d45a3ee9e9e7eea160decbc"
+      },
+      "build_and_prescribed_checks": true,
+      "model_turns": 11,
+      "check_attempts": 2,
+      "quality_review": "implementation review with build evidence; not device UI",
+      "requirements": [
+        {
+          "requirement": "subtitle left is batCode, right is deviceName",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "remove erroneous stationName DTO field and related getters/setters",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "null, empty, whitespace names hide both suffix and divider",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "arrow remains a sibling outside the weighted subtitle area",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "expanded details still use deviceCode",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "fault adapter, read-state and expand/collapse behavior preserved",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "app builds and existing applicable instrumented tests compile with corrected field",
+          "status": "pass_implementation_and_compile"
+        }
+      ],
+      "assessment": "pass_implementation_and_compile",
+      "review_note": "DTO/adapter field correction verified; helper trims null and whitespace; name/divider visibility linked; arrow remains outside subtitle row; expanded deviceCode and unrelated fault/read/expand behavior preserved. Instrumented tests compiled, not executed.",
+      "device_ui": "not_tested_no_device_or_AVD"
+    },
+    {
+      "task": "startup",
+      "candidate": "gpt-5.6-sol",
+      "source_commit": "6532369b3d55c31728484e628443ba9196d85c6b",
+      "completed": false,
+      "failure": "http_403",
+      "seconds": 116.653,
+      "changed_files": [],
+      "file_sha256": {},
+      "build_and_prescribed_checks": true,
+      "model_turns": 3,
+      "check_attempts": 1,
+      "quality_review": "implementation review with build evidence; not device UI",
+      "requirements": [
+        {
+          "requirement": "Android 12 bundled asset URLs use valid asset handling instead of HTTP URL connection",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "bundled path and MIME remain correct",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "local VIN is trimmed; absent or whitespace VIN cannot enter online business page",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "nonempty VIN follows online route with proper encoding",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "app update remains in Splash; remote H5 update begins after Main and is asynchronous",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "optional update cancellation continues startup",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "overlapping native VIN/update callbacks cannot navigate twice",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "weak-network and offline fallback remain",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "debug build and 21 existing JVM tests pass",
+          "status": "unverified_guard_block_before_edits"
+        }
+      ],
+      "assessment": "not_scored_infrastructure_block_before_edits",
+      "device_ui": "not_tested_no_device_or_AVD"
+    },
+    {
+      "task": "xiaoyuan",
+      "candidate": "gpt-5.6-terra",
+      "source_commit": "2e394cb6b0847619dad1e52d99662ffb0a2e8b0b",
+      "completed": true,
+      "failure": null,
+      "seconds": 175.631,
+      "changed_files": [
+        "entry/src/main/ets/capabilities/Navigation.ets"
+      ],
+      "file_sha256": {
+        "entry/src/main/ets/capabilities/Navigation.ets": "17356d0bf7462caea7c1470269264a320d8cbd3f84d92242413ea63c44f900ad"
+      },
+      "build_and_prescribed_checks": true,
+      "model_turns": 6,
+      "check_attempts": 2,
+      "quality_review": "implementation review with build evidence; not device UI",
+      "requirements": [
+        {
+          "requirement": "logout uses one login route transition",
+          "status": "pass"
+        },
+        {
+          "requirement": "router stack cleared correctly",
+          "status": "pass"
+        },
+        {
+          "requirement": "selected tab and cached navigation state reset",
+          "status": "pass"
+        },
+        {
+          "requirement": "existing banner or push state rules preserved",
+          "status": "pass"
+        },
+        {
+          "requirement": "no changes outside Navigation implementation required by the task",
+          "status": "pass"
+        },
+        {
+          "requirement": "unsigned HAP builds and five existing behavior checks pass",
+          "status": "pass"
+        }
+      ],
+      "assessment": "pass_implementation_and_hap_and_behavior",
+      "review_note": "All five identical Navigation artifact hashes; only three logout preference deletions and diagnostic text changed; existing stack/tab/banner behavior retained and five prescribed behavior checks pass.",
+      "device_ui": "not_tested_no_device_or_AVD"
+    },
+    {
+      "task": "reminder",
+      "candidate": "gpt-5.6-terra",
+      "source_commit": "64175b4ee9fbc41066b2bfe4f563e475c3e8eab6",
+      "completed": false,
+      "failure": "turn_limit",
+      "seconds": 662.019,
+      "changed_files": [
+        "app/src/androidTest/java/com/rhzl/chargeoperateapp/activity/my/MessagePagesInstrumentedTest.java",
+        "app/src/androidTest/java/com/rhzl/chargeoperateapp/adapter/MessageAdapterInstrumentedTest.java",
+        "app/src/main/java/com/rhzl/chargeoperateapp/adapter/LowElectAdapter.kt",
+        "app/src/main/java/com/rhzl/chargeoperateapp/bean/LowElectPageListBean.java",
+        "app/src/main/res/layout/item_low_elec.xml"
+      ],
+      "file_sha256": {
+        "app/src/androidTest/java/com/rhzl/chargeoperateapp/activity/my/MessagePagesInstrumentedTest.java": "d532eae9426f4034438b90ec4014ccc2df02592b01911733ad66d5f4aabc871b",
+        "app/src/androidTest/java/com/rhzl/chargeoperateapp/adapter/MessageAdapterInstrumentedTest.java": "e0da888935fb7d355732c066b25b1dee4cf393189110c979cab5c93880b5712e",
+        "app/src/main/java/com/rhzl/chargeoperateapp/adapter/LowElectAdapter.kt": "32fbeed12653e41ac0baf8bcaf9df44fde71a23453cea90bbd1a4841c8c06b14",
+        "app/src/main/java/com/rhzl/chargeoperateapp/bean/LowElectPageListBean.java": "0c74f0bf5ab17044f49ffef85bb18f2424d60a44472ad8e561b44146ca19ab4e",
+        "app/src/main/res/layout/item_low_elec.xml": "ac7cd9d86f9b2bc62f0789c1c4392e2ddd5d9a749d449ee9487d141eaa4c6698"
+      },
+      "build_and_prescribed_checks": true,
+      "model_turns": 24,
+      "check_attempts": 2,
+      "quality_review": "implementation review with build evidence; not device UI",
+      "requirements": [
+        {
+          "requirement": "subtitle left is batCode, right is deviceName",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "remove erroneous stationName DTO field and related getters/setters",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "null, empty, whitespace names hide both suffix and divider",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "arrow remains a sibling outside the weighted subtitle area",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "expanded details still use deviceCode",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "fault adapter, read-state and expand/collapse behavior preserved",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "app builds and existing applicable instrumented tests compile with corrected field",
+          "status": "pass_implementation_and_compile"
+        }
+      ],
+      "assessment": "artifact_pass_but_model_hit_turn_limit",
+      "review_note": "DTO/adapter field correction verified; helper trims null and whitespace; name/divider visibility linked; arrow remains outside subtitle row; expanded deviceCode and unrelated fault/read/expand behavior preserved. Instrumented tests compiled, not executed.",
+      "additional_layout_change": "device name uses width=0/weight=1; Luna also end gravity. Device visual effect unverified.",
+      "device_ui": "not_tested_no_device_or_AVD"
+    },
+    {
+      "task": "startup",
+      "candidate": "gpt-5.6-terra",
+      "source_commit": "6532369b3d55c31728484e628443ba9196d85c6b",
+      "completed": false,
+      "failure": "http_403",
+      "seconds": 141.708,
+      "changed_files": [],
+      "file_sha256": {},
+      "build_and_prescribed_checks": true,
+      "model_turns": 4,
+      "check_attempts": 1,
+      "quality_review": "implementation review with build evidence; not device UI",
+      "requirements": [
+        {
+          "requirement": "Android 12 bundled asset URLs use valid asset handling instead of HTTP URL connection",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "bundled path and MIME remain correct",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "local VIN is trimmed; absent or whitespace VIN cannot enter online business page",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "nonempty VIN follows online route with proper encoding",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "app update remains in Splash; remote H5 update begins after Main and is asynchronous",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "optional update cancellation continues startup",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "overlapping native VIN/update callbacks cannot navigate twice",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "weak-network and offline fallback remain",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "debug build and 21 existing JVM tests pass",
+          "status": "unverified_guard_block_before_edits"
+        }
+      ],
+      "assessment": "not_scored_infrastructure_block_before_edits",
+      "device_ui": "not_tested_no_device_or_AVD"
+    },
+    {
+      "task": "xiaoyuan",
+      "candidate": "gpt-6-astra",
+      "source_commit": "2e394cb6b0847619dad1e52d99662ffb0a2e8b0b",
+      "completed": true,
+      "failure": null,
+      "seconds": 186.824,
+      "changed_files": [
+        "entry/src/main/ets/capabilities/Navigation.ets"
+      ],
+      "file_sha256": {
+        "entry/src/main/ets/capabilities/Navigation.ets": "17356d0bf7462caea7c1470269264a320d8cbd3f84d92242413ea63c44f900ad"
+      },
+      "build_and_prescribed_checks": true,
+      "model_turns": 8,
+      "check_attempts": 2,
+      "quality_review": "implementation review with build evidence; not device UI",
+      "requirements": [
+        {
+          "requirement": "logout uses one login route transition",
+          "status": "pass"
+        },
+        {
+          "requirement": "router stack cleared correctly",
+          "status": "pass"
+        },
+        {
+          "requirement": "selected tab and cached navigation state reset",
+          "status": "pass"
+        },
+        {
+          "requirement": "existing banner or push state rules preserved",
+          "status": "pass"
+        },
+        {
+          "requirement": "no changes outside Navigation implementation required by the task",
+          "status": "pass"
+        },
+        {
+          "requirement": "unsigned HAP builds and five existing behavior checks pass",
+          "status": "pass"
+        }
+      ],
+      "assessment": "pass_implementation_and_hap_and_behavior",
+      "review_note": "All five identical Navigation artifact hashes; only three logout preference deletions and diagnostic text changed; existing stack/tab/banner behavior retained and five prescribed behavior checks pass.",
+      "device_ui": "not_tested_no_device_or_AVD"
+    },
+    {
+      "task": "reminder",
+      "candidate": "gpt-6-astra",
+      "source_commit": "64175b4ee9fbc41066b2bfe4f563e475c3e8eab6",
+      "completed": true,
+      "failure": null,
+      "seconds": 294.652,
+      "changed_files": [
+        "app/src/androidTest/java/com/rhzl/chargeoperateapp/adapter/MessageAdapterInstrumentedTest.java",
+        "app/src/main/java/com/rhzl/chargeoperateapp/adapter/LowElectAdapter.kt",
+        "app/src/main/java/com/rhzl/chargeoperateapp/bean/LowElectPageListBean.java",
+        "app/src/test/java/com/rhzl/chargeoperateapp/utils/MessageDisplayUtilsTest.java"
+      ],
+      "file_sha256": {
+        "app/src/androidTest/java/com/rhzl/chargeoperateapp/adapter/MessageAdapterInstrumentedTest.java": "d39a95799915ee615799d13c09139fc75c63b59a78e2db37ff4d5509e903e751",
+        "app/src/main/java/com/rhzl/chargeoperateapp/adapter/LowElectAdapter.kt": "3e2739516fdf8c1aded4e33ff647b6298c787a0d9de75eec37b2b165681aca55",
+        "app/src/main/java/com/rhzl/chargeoperateapp/bean/LowElectPageListBean.java": "f4313fe00c45982b43067665b4c15012cdc76b9f46cb10b6f1ab210c1f63efe2",
+        "app/src/test/java/com/rhzl/chargeoperateapp/utils/MessageDisplayUtilsTest.java": "1cb6d12893355441042042bb2e367a676e5eeedb189cbb8ed3c98b013182ef75"
+      },
+      "build_and_prescribed_checks": true,
+      "model_turns": 11,
+      "check_attempts": 2,
+      "quality_review": "implementation review with build evidence; not device UI",
+      "requirements": [
+        {
+          "requirement": "subtitle left is batCode, right is deviceName",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "remove erroneous stationName DTO field and related getters/setters",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "null, empty, whitespace names hide both suffix and divider",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "arrow remains a sibling outside the weighted subtitle area",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "expanded details still use deviceCode",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "fault adapter, read-state and expand/collapse behavior preserved",
+          "status": "pass_static_review"
+        },
+        {
+          "requirement": "app builds and existing applicable instrumented tests compile with corrected field",
+          "status": "pass_implementation_and_compile"
+        }
+      ],
+      "assessment": "pass_implementation_and_compile",
+      "review_note": "DTO/adapter field correction verified; helper trims null and whitespace; name/divider visibility linked; arrow remains outside subtitle row; expanded deviceCode and unrelated fault/read/expand behavior preserved. Instrumented tests compiled, not executed.",
+      "device_ui": "not_tested_no_device_or_AVD"
+    },
+    {
+      "task": "startup",
+      "candidate": "gpt-6-astra",
+      "source_commit": "6532369b3d55c31728484e628443ba9196d85c6b",
+      "completed": false,
+      "failure": "http_403",
+      "seconds": 108.104,
+      "changed_files": [],
+      "file_sha256": {},
+      "build_and_prescribed_checks": true,
+      "model_turns": 3,
+      "check_attempts": 1,
+      "quality_review": "implementation review with build evidence; not device UI",
+      "requirements": [
+        {
+          "requirement": "Android 12 bundled asset URLs use valid asset handling instead of HTTP URL connection",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "bundled path and MIME remain correct",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "local VIN is trimmed; absent or whitespace VIN cannot enter online business page",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "nonempty VIN follows online route with proper encoding",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "app update remains in Splash; remote H5 update begins after Main and is asynchronous",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "optional update cancellation continues startup",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "overlapping native VIN/update callbacks cannot navigate twice",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "weak-network and offline fallback remain",
+          "status": "unverified_guard_block_before_edits"
+        },
+        {
+          "requirement": "debug build and 21 existing JVM tests pass",
+          "status": "unverified_guard_block_before_edits"
+        }
+      ],
+      "assessment": "not_scored_infrastructure_block_before_edits",
+      "device_ui": "not_tested_no_device_or_AVD"
+    }
+  ]
+}

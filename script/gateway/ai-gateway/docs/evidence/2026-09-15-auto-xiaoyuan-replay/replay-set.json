@@ -1,0 +1,16 @@
+{
+  "source": "脱敏自历史小源鸿蒙 App 开发会话的任务类型摘要",
+  "cases": [
+    {"id":"login-ui-parity","summary":"让鸿蒙登录页与 Android 基线对齐：输入框内边距、图标与文字间距、协议链接可点击。","kind":"ui-coding","expected_band":"medium"},
+    {"id":"network-transport","summary":"网络请求遇到传输异常时显示统一的网络异常提示，同时保留业务错误静默开关。","kind":"bugfix","expected_band":"medium"},
+    {"id":"long-text-overflow","summary":"待办卡片中的公司名称过长时保持一行并显示省略号，不破坏卡片布局。","kind":"ui-bugfix","expected_band":"quick-medium"},
+    {"id":"logout-session","summary":"退出登录后冷启动仍进入主页面，检查持久化登录态和统一导航边界并修复。","kind":"state-bugfix","expected_band":"high"},
+    {"id":"release-audit","summary":"审计鸿蒙 PRO 发布包：构建、签名、权限清单、混淆配置和相机调用链，区分本地证据与 AGC/真机验证。","kind":"release-security","expected_band":"high"},
+    {"id":"architecture-plan","summary":"为登录、网络层、H5 Bridge、权限申请和发布验证设计分阶段改造方案，列出取舍、回归矩阵和设备验证边界。","kind":"architecture","expected_band":"highest"}
+  ],
+  "notes": [
+    "不包含账号、密码、API key、真实域名、生产日志和源代码片段。",
+    "测试只观察 Guard 决策、路由模型、内部 effort、缓存与用量，不保存模型回复正文。",
+    "历史来源包括登录 UI/网络异常、退出登录持久化、云测图标与 PRO 环境、生产发布权限与相机审计。"
+  ]
+}

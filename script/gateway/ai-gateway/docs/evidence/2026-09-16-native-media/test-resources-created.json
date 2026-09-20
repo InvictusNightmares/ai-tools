@@ -1,0 +1,37 @@
+{
+  "scope": "dedicated acceptance resources; not multi-user or model acceptance",
+  "source_groups_unchanged_verified": true,
+  "keys_exposed": false,
+  "quota_per_key_usd": 3,
+  "expiry_hours": 24,
+  "interactive_login": false,
+  "night_policy_unchanged": true,
+  "resources": {
+    "tokyo": {
+      "group_id": 729,
+      "user_ids": [
+        2,
+        3
+      ],
+      "key_ids": [
+        142,
+        143
+      ],
+      "account_links": 3
+    },
+    "us": {
+      "group_id": 704,
+      "user_ids": [
+        3,
+        4
+      ],
+      "key_ids": [
+        88,
+        89
+      ],
+      "account_links": 3
+    }
+  },
+  "retired": false,
+  "created_at_approx": "2026-09-17T01:06:00+08:00"
+}

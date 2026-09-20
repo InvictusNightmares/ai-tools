@@ -1,0 +1,200 @@
+[
+  {
+    "region": "tokyo",
+    "native_version": "1.18.4",
+    "exit_code": 0,
+    "seconds": 16.045,
+    "scope": "native OpenCode with real regional models and Guard; all repository paths and contents synthetic",
+    "tracked_changes": 5,
+    "untracked_additions": 751,
+    "answer_chars": 333,
+    "answer_sha256": "fb8d358827d2228393376a73905243b2f98a91f2d1866d5191b88c6b9dc2b624",
+    "worktree_unchanged": true,
+    "event_types": [
+      "step_finish",
+      "step_start",
+      "text",
+      "tool_use"
+    ],
+    "errors": [],
+    "trial": "gateway-v27-pure-synthetic-native",
+    "route_count": 5,
+    "models": {
+      "deepseek-flash": 5
+    },
+    "efforts": {
+      "none": 5
+    },
+    "tool_binding_reuses": 3,
+    "classifier_attempts": 2,
+    "tool_calls": 4,
+    "tool_errors": 1,
+    "log_sha256": "d0ead577b930c9920afc503226436c3e7bb4b7398edbb26b98ab5ddf4a549019",
+    "note": "Synthetic inventory only; coverage adjudication in README. Native session text and tool bodies not exported."
+  },
+  {
+    "region": "us",
+    "native_version": "1.18.4",
+    "exit_code": 0,
+    "seconds": 17.01,
+    "scope": "native OpenCode with real regional models and Guard; all repository paths and contents synthetic",
+    "tracked_changes": 5,
+    "untracked_additions": 751,
+    "answer_chars": 504,
+    "answer_sha256": "6188b7ddeed6ab2662e8a0434dc9f383ca574e7c7048be63ebea6648663fe59e",
+    "worktree_unchanged": true,
+    "event_types": [
+      "step_finish",
+      "step_start",
+      "text",
+      "tool_use"
+    ],
+    "errors": [],
+    "trial": "gateway-v27-pure-synthetic-native",
+    "route_count": 5,
+    "models": {
+      "deepseek-flash": 5
+    },
+    "efforts": {
+      "none": 5
+    },
+    "tool_binding_reuses": 3,
+    "classifier_attempts": 2,
+    "tool_calls": 5,
+    "tool_errors": 1,
+    "log_sha256": "53a6cded8720833f88e6e9974077a9f7383fa0d41eaf60ea3c82edcba8129ac3",
+    "note": "Synthetic inventory only; coverage adjudication in README. Native session text and tool bodies not exported."
+  },
+  {
+    "region": "tokyo",
+    "native_version": "1.18.4",
+    "exit_code": 0,
+    "seconds": 27.044,
+    "scope": "native OpenCode with real regional models and Guard; all repository paths and contents synthetic",
+    "tracked_changes": 5,
+    "untracked_additions": 751,
+    "answer_chars": 738,
+    "answer_sha256": "9c64593bc3e8bb555924f301735724d5cf089b23e6253e1145730c2a46800453",
+    "worktree_unchanged": true,
+    "event_types": [
+      "step_finish",
+      "step_start",
+      "text",
+      "tool_use"
+    ],
+    "errors": [],
+    "trial": "gateway-v27-r2-synthetic-native",
+    "route_count": 7,
+    "models": {
+      "deepseek-flash": 7
+    },
+    "efforts": {
+      "none": 7
+    },
+    "tool_binding_reuses": 5,
+    "classifier_attempts": 2,
+    "tool_calls": 14,
+    "tool_errors": 1,
+    "log_sha256": "2879a9d08996b29bdbbaae7d457afae89e5d1dbe73a48c05fb77e53412a9a6a7",
+    "note": "Synthetic inventory only; coverage adjudication in README. Native session text and tool bodies not exported."
+  },
+  {
+    "region": "us",
+    "native_version": "1.18.4",
+    "exit_code": 0,
+    "seconds": 53.013,
+    "scope": "native OpenCode with real regional models and Guard; all repository paths and contents synthetic",
+    "tracked_changes": 5,
+    "untracked_additions": 751,
+    "answer_chars": 999,
+    "answer_sha256": "97fbe66582ddb0fe904c8357f6fdf7893c3c071bb105da8fafeb091a949ffc67",
+    "worktree_unchanged": true,
+    "event_types": [
+      "step_finish",
+      "step_start",
+      "text",
+      "tool_use"
+    ],
+    "errors": [],
+    "trial": "gateway-v27-r2-synthetic-native",
+    "route_count": 10,
+    "models": {
+      "deepseek-flash": 10
+    },
+    "efforts": {
+      "none": 10
+    },
+    "tool_binding_reuses": 8,
+    "classifier_attempts": 2,
+    "tool_calls": 22,
+    "tool_errors": 4,
+    "log_sha256": "e32de1820467b15cc49ddc1515a417c656fa620fcaf602928bee12717ad8a4ac",
+    "note": "Synthetic inventory only; coverage adjudication in README. Native session text and tool bodies not exported."
+  },
+  {
+    "region": "tokyo",
+    "native_version": "1.18.4",
+    "exit_code": 0,
+    "seconds": 53.046,
+    "scope": "native OpenCode with real regional models and Guard; all repository paths and contents synthetic",
+    "tracked_changes": 5,
+    "untracked_additions": 751,
+    "answer_chars": 790,
+    "answer_sha256": "eded1bffee9dc585d1c53802e389d649760021ed2a6227a7d0937349482bb94c",
+    "worktree_unchanged": true,
+    "event_types": [
+      "step_finish",
+      "step_start",
+      "text",
+      "tool_use"
+    ],
+    "errors": [],
+    "trial": "gateway-v27-r2-native-normal",
+    "route_count": 13,
+    "models": {
+      "deepseek-flash": 13
+    },
+    "efforts": {
+      "none": 13
+    },
+    "tool_binding_reuses": 11,
+    "classifier_attempts": 2,
+    "tool_calls": 25,
+    "tool_errors": 2,
+    "log_sha256": "8bd2db11e09e3089f6a27a9b99a3d0f6d129dccd788156c620fc505d69ba5969",
+    "note": "Synthetic inventory only; coverage adjudication in README. Native session text and tool bodies not exported."
+  },
+  {
+    "region": "us",
+    "native_version": "1.18.4",
+    "exit_code": 0,
+    "seconds": 124.021,
+    "scope": "native OpenCode with real regional models and Guard; all repository paths and contents synthetic",
+    "tracked_changes": 5,
+    "untracked_additions": 751,
+    "answer_chars": 843,
+    "answer_sha256": "b5f20221615a20b15c639e31b3704c79e597bb3cbad80cc07f1169d9d9b4d93d",
+    "worktree_unchanged": true,
+    "event_types": [
+      "step_finish",
+      "step_start",
+      "text",
+      "tool_use"
+    ],
+    "errors": [],
+    "trial": "gateway-v27-r2-native-normal",
+    "route_count": 7,
+    "models": {
+      "deepseek-flash": 7
+    },
+    "efforts": {
+      "none": 7
+    },
+    "tool_binding_reuses": 5,
+    "classifier_attempts": 2,
+    "tool_calls": 11,
+    "tool_errors": 1,
+    "log_sha256": "c734315e6ecececf10698ae5719df59b9ff040c2a2c3bf2a1b51471f65c1a205",
+    "note": "Synthetic inventory only; coverage adjudication in README. Native session text and tool bodies not exported."
+  }
+]

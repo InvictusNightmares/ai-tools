@@ -1,0 +1,102 @@
+{
+  "tokyo": {
+    "status": 0,
+    "rows": [
+      [
+        {
+          "user_id": 1,
+          "group_id": 728,
+          "api_key_id": 141,
+          "review_route": null,
+          "model_routing_enabled": false
+        }
+      ],
+      [
+        {
+          "id": 23,
+          "type": "apikey",
+          "status": "active",
+          "platform": "openai",
+          "schedulable": true,
+          "review_mapping": null,
+          "compact_mapping": null,
+          "compact_supported": null,
+          "compact_last_status": null
+        },
+        {
+          "id": 22,
+          "type": "apikey",
+          "status": "active",
+          "platform": "openai",
+          "schedulable": true,
+          "review_mapping": null,
+          "compact_mapping": null,
+          "compact_supported": null,
+          "compact_last_status": null
+        },
+        {
+          "id": 28,
+          "type": "oauth",
+          "status": "active",
+          "platform": "openai",
+          "schedulable": true,
+          "review_mapping": "codex-auto-review",
+          "compact_mapping": null,
+          "compact_supported": null,
+          "compact_last_status": null
+        }
+      ]
+    ],
+    "error_bytes": 0
+  },
+  "us": {
+    "status": 0,
+    "rows": [
+      [
+        {
+          "user_id": 1,
+          "group_id": 324,
+          "api_key_id": 4,
+          "review_route": null,
+          "model_routing_enabled": false
+        }
+      ],
+      [
+        {
+          "id": 70,
+          "type": "apikey",
+          "status": "active",
+          "platform": "openai",
+          "schedulable": true,
+          "review_mapping": null,
+          "compact_mapping": null,
+          "compact_supported": null,
+          "compact_last_status": null
+        },
+        {
+          "id": 60,
+          "type": "apikey",
+          "status": "active",
+          "platform": "openai",
+          "schedulable": true,
+          "review_mapping": null,
+          "compact_mapping": null,
+          "compact_supported": null,
+          "compact_last_status": null
+        },
+        {
+          "id": 54,
+          "type": "oauth",
+          "status": "active",
+          "platform": "openai",
+          "schedulable": true,
+          "review_mapping": "codex-auto-review",
+          "compact_mapping": null,
+          "compact_supported": null,
+          "compact_last_status": null
+        }
+      ]
+    ],
+    "error_bytes": 0
+  }
+}

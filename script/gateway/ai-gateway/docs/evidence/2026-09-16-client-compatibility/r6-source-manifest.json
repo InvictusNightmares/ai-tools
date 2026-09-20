@@ -1,0 +1,473 @@
+{
+  "files": [
+    {
+      "path": "auto/README.md",
+      "sha256": "64a750478a075c714276f51b4ceec987aa0008d8b6a2939f2d0fc5377b49f700"
+    },
+    {
+      "path": "auto/audit_sink.go",
+      "sha256": "f96c07fe4927e007f00b60f22c2833015b4fd624dcc9fb0a2506241762866dc6"
+    },
+    {
+      "path": "auto/audit_sink_test.go",
+      "sha256": "c3cc20319a4566257cc9831f75722d06b6186ea221fc0135a39aa623febba506"
+    },
+    {
+      "path": "auto/auto_gateway_test.go",
+      "sha256": "52854cdf1d1f64c8e03c344e7788db63a8d757cbc1fde1cad0f45bdaf3318b92"
+    },
+    {
+      "path": "auto/buffered_sse.go",
+      "sha256": "d60e7360b598a88201b9639db5510dba9b1ee18c3e2d67d66d40a19c8ff5c9c4"
+    },
+    {
+      "path": "auto/buffered_sse_chat.go",
+      "sha256": "f07ed4cee01af49e968238887aee47714500cee99eca8bce1e6a30d27ec2c26c"
+    },
+    {
+      "path": "auto/buffered_sse_delta.go",
+      "sha256": "f8d2ce52d65a57a7b07553de7a86445756f80fc54bc6f3264d96ba051e364761"
+    },
+    {
+      "path": "auto/buffered_sse_messages.go",
+      "sha256": "795019de3ecaa3075f0f8469370dc161a754ae6dff2609030f35555653af1be7"
+    },
+    {
+      "path": "auto/buffered_sse_test.go",
+      "sha256": "d559c23c5b2608439bbe62e537eb07cf1388b755046f6625790ede32f602313a"
+    },
+    {
+      "path": "auto/cache_coalescing_test.go",
+      "sha256": "fab26a066e00c65d25778b1c063985a4f895fac73000f09c6089e77bdf00e9c5"
+    },
+    {
+      "path": "auto/cache_key.go",
+      "sha256": "7e3503c5bbdbe30f0abcf7d30119f12b04d23cd6473d77f954e62bf1f2fe984a"
+    },
+    {
+      "path": "auto/cache_key_test.go",
+      "sha256": "1f1d8c33bc86bd8f16f71fa0ac473fdc939dbe9e28963537fa4f40b5b493973d"
+    },
+    {
+      "path": "auto/cache_namespace.go",
+      "sha256": "e366e3c6bbda63818915508a570ed3ea45f8a586a248bb22e9cc9527c9da32b8"
+    },
+    {
+      "path": "auto/cache_policy.go",
+      "sha256": "6a93f853adb98d11d7f0eff5f230d7b9eaaf7942ab46a0d1185bed99c5acec30"
+    },
+    {
+      "path": "auto/cache_policy_test.go",
+      "sha256": "57d132b4de567c3f379b9eeef045182e8e5f0518518517d8fd3a46b199f6ee3e"
+    },
+    {
+      "path": "auto/cache_regression_test.go",
+      "sha256": "ce134239157c786be2cb4d4a626b179aa0bdc7f6e2d7e4e47aabdc476978103a"
+    },
+    {
+      "path": "auto/classifier.go",
+      "sha256": "ee7bfbb904e204934ec8450fcd89078030f169ad304bc3087371a2a064d82688"
+    },
+    {
+      "path": "auto/client_compatibility.go",
+      "sha256": "b4439f13a51398decde98ccdf8e53a39895e8853888ccb13de043e8cd8f188c7"
+    },
+    {
+      "path": "auto/client_compatibility_test.go",
+      "sha256": "35dcd1484220d67650ae693236437a2e874ead5f6dc41a323b877cb0ecaf1e11"
+    },
+    {
+      "path": "auto/client_session.go",
+      "sha256": "b48d7a1784fed04ca1fc048afb163cb859204138350614e99973201be1a69327"
+    },
+    {
+      "path": "auto/client_session_test.go",
+      "sha256": "c560f56936e0db196dd4274672dc57f5ed88b5d9b1cc553f4337156e110ffcb2"
+    },
+    {
+      "path": "auto/effort_matrix_test.go",
+      "sha256": "9bd0bb7e0e76f2c01cc066824296c327a052909438994cc44b07651bfa2dcac5"
+    },
+    {
+      "path": "auto/gateway.go",
+      "sha256": "b770e95724b93924e581bcb50388311174e817641d1dcc9cf4e9db211ec0dc96"
+    },
+    {
+      "path": "auto/history_replay_regression_test.go",
+      "sha256": "7d7cc9f0cf7c53d42f7092335ec452294379b7d654fc10ba49c6235b27dca300"
+    },
+    {
+      "path": "auto/history_transport.go",
+      "sha256": "6ebb032111ee2b50df048dc5f9791a23517020c89596aec37f7c8956e6828794"
+    },
+    {
+      "path": "auto/history_transport_test.go",
+      "sha256": "dc25425932b5c95255721026cd4a43132e54bea67f9b168bc91de7cd6ab159c3"
+    },
+    {
+      "path": "auto/http.go",
+      "sha256": "b89fbbffe010a90faf01cd26c74f78b8aa90519eb0e4b8873dd09caa8f7703ba"
+    },
+    {
+      "path": "auto/http_test.go",
+      "sha256": "c0440af976ed7c82b7c16057e516dbdc23901d174f5b2da185f0fd37bf8966fe"
+    },
+    {
+      "path": "auto/models.go",
+      "sha256": "d83b9d099093762e7b00a97e8cb55aecb5bb32d03bf0e72ba2606aba5ef35675"
+    },
+    {
+      "path": "auto/phase_d_integration_test.go",
+      "sha256": "c8d55e7d29141e87d0bd1ff26d9d378ebb68864f26ea6ca619a30f0a1b85a6d1"
+    },
+    {
+      "path": "auto/pilot_auth.go",
+      "sha256": "a037f346d4f849195da72dc424b617caecd8022e84dbb57f7c67ed533fa5272d"
+    },
+    {
+      "path": "auto/pipeline.go",
+      "sha256": "ec80eec7269f3064970512d31f467687d9ba5d818523555a044ebbbcbb58df23"
+    },
+    {
+      "path": "auto/pipeline_cache.go",
+      "sha256": "3c334961fdf005f9ab667eb5194541f1f4d11449647a301f92fbcc2ca0dc3821"
+    },
+    {
+      "path": "auto/pipeline_observability.go",
+      "sha256": "e0fefef7f6bb18d30ad0aded5df93ae4987c7f8cf27675e21cdc215c193964a3"
+    },
+    {
+      "path": "auto/pipeline_test.go",
+      "sha256": "308123ee403d43ac9f23840fe2c8eb7a430a5a48c3f7c22b7996a336f45841b0"
+    },
+    {
+      "path": "auto/preflight.go",
+      "sha256": "19a6ed30f0cb2c234c8c75303898d86141ab0a68a5dc22c2cc3416d7a95579a2"
+    },
+    {
+      "path": "auto/preflight_http.go",
+      "sha256": "7e03000653ceddb863595237c711be776c8d11c338164110c2db6d1d4475caad"
+    },
+    {
+      "path": "auto/preflight_http_test.go",
+      "sha256": "4384877307f87b0c0bdd5bc9a89be1bb9182f251f6d53eedf459b42dd3336d4f"
+    },
+    {
+      "path": "auto/preflight_required_test.go",
+      "sha256": "5c6232efd73cffd7353854c95ce790066a3c391595baad5e62e3ca3776624fd9"
+    },
+    {
+      "path": "auto/protocol.go",
+      "sha256": "bbedbaf996828dd437f980fec084eff944a626006b53b1fd5650bf69da3f673a"
+    },
+    {
+      "path": "auto/protocol_test.go",
+      "sha256": "17c3375a103c94eb684646b55851079203541d75c4af003992669976c6fdb61f"
+    },
+    {
+      "path": "auto/provider_adapter.go",
+      "sha256": "724d08330cc572a2cbf348734693ef63286102751eb0137c783a7f4d1c66912e"
+    },
+    {
+      "path": "auto/provider_payload.go",
+      "sha256": "a163f8c5488423a8eea8183cf5bbc52d51d174ef44040e16624f46de651cb4a5"
+    },
+    {
+      "path": "auto/provider_payload_test.go",
+      "sha256": "98f99824530a11c9c00b91824e83137e250dec064a0c37f1f33a97d7a53caa40"
+    },
+    {
+      "path": "auto/reasoning.go",
+      "sha256": "0a63c8c8a450b0c2cc2d16817e8165ae40907c21f9154ae2f999b7e196fd5818"
+    },
+    {
+      "path": "auto/redaction_boundary_test.go",
+      "sha256": "729493840108a138ef3799723cba9e967c1eb37873d690bef4fe8a5ecdcd484f"
+    },
+    {
+      "path": "auto/response_cache.go",
+      "sha256": "dd5afeffeb813de0179a53c17ff83f9e2654658b43a2e3ae4dc5ae7660823bd0"
+    },
+    {
+      "path": "auto/response_validation.go",
+      "sha256": "89c7a9e200a986e688cc8835ff6a31de8e8a8c72b8af80a62d4c979073bd00ce"
+    },
+    {
+      "path": "auto/route_audit.go",
+      "sha256": "835446a59b0e9c392fb712b45adee93013262e32cc3e0f65ff7000ac098c9a23"
+    },
+    {
+      "path": "auto/route_audit_test.go",
+      "sha256": "8854aa45d37c45b4eab47826c4c605a9c493fdede079037ad0494edb090798eb"
+    },
+    {
+      "path": "auto/route_state.go",
+      "sha256": "d757cf0eaaf4ff13290f49bb61f2403e1643f59af9339c53867d9f308f0d5216"
+    },
+    {
+      "path": "auto/semantic_cache.go",
+      "sha256": "9c7ee1c1124667d04239132399c522b6d7386054b7fa808c05efbe5eaf4d5f5b"
+    },
+    {
+      "path": "auto/semantic_classifier.go",
+      "sha256": "0f7cc038857ed18be4f38dcc4bac41fbdb83e79a8cec0455fc1dab910e142ae8"
+    },
+    {
+      "path": "auto/semantic_classifier_test.go",
+      "sha256": "78caf4890e42ea2836179f117508636583c4cef7fb246b9b56a8bbda6b896f3d"
+    },
+    {
+      "path": "auto/semantic_regression_test.go",
+      "sha256": "b79f8f766eca0b78e847398954fab961d4b4658154f5546cc09d343a1a57a9d0"
+    },
+    {
+      "path": "auto/session_state.go",
+      "sha256": "06e30a43869fe3cc882980f10a398eb3ba78c5b822f8aad567c78adadeb1584c"
+    },
+    {
+      "path": "auto/session_state_test.go",
+      "sha256": "b4ace7bbbc13aea276d23d12b479252b14cefe33d9e0328dda053fae005832fc"
+    },
+    {
+      "path": "auto/stream_boundary.go",
+      "sha256": "f803f6be42f1a21aa05c3e6bcdcf032e7d043fca956ac37f47ea20b9515b7a4e"
+    },
+    {
+      "path": "auto/stream_observation.go",
+      "sha256": "c87f498d690afae0b093f7086a9a10d3fa6beac79b8503963209ed24be399dbb"
+    },
+    {
+      "path": "auto/sub2api_identity.go",
+      "sha256": "d574298e8f688a0970dc0273de0c53ea671539a15b40c3c53a956b5d890c56d5"
+    },
+    {
+      "path": "auto/sub2api_identity_test.go",
+      "sha256": "3637269b92690dd6b7309536283fea367129ba4b1028e9b26c09589bb990c619"
+    },
+    {
+      "path": "auto/testdata/history-cases.json",
+      "sha256": "8f3321f791c85bd2fcb9e43b1783c308f8ee52ae20edcc2efef4c50fe619540c"
+    },
+    {
+      "path": "auto/token_count.go",
+      "sha256": "11d497d713738f0eab9598fc5d211b64dd076ff0bc4095c53198998b167f0175"
+    },
+    {
+      "path": "auto/token_count_test.go",
+      "sha256": "946e0e877fe275368caa454a097dcf280a1813e024f64054daa48274f5e91eb0"
+    },
+    {
+      "path": "auto/tool_rounds.go",
+      "sha256": "7288a4a74ddcc648870d98750ff4ca138f20bf02219fac90fa5fb85894ca25a5"
+    },
+    {
+      "path": "auto/tool_rounds_test.go",
+      "sha256": "9f4a406707cce2bba6efe6519a5873b83c834da4581312bbcb57f237f5603472"
+    },
+    {
+      "path": "auto/upstream_http.go",
+      "sha256": "ec612273d6c7002477fedd4532149418d9cb38be43b097c0958d26bf668ca53e"
+    },
+    {
+      "path": "auto/upstream_http_test.go",
+      "sha256": "a5879b42ecc07feefa6172b795a69b1cba65732fd2cee452d552ff687230f388"
+    },
+    {
+      "path": "auto/upstream_stream.go",
+      "sha256": "04595d3af547fc7421bbe83dc23345b7ff1363222910f9625457ac9a76edc0fb"
+    },
+    {
+      "path": "auto/upstream_stream_test.go",
+      "sha256": "b595a7096fd43727cf0843dae58a6ac989c5d52b4b5c22520f34131361173076"
+    },
+    {
+      "path": "auto/usage.go",
+      "sha256": "e701fb727fce7d58c7c44e4e046bdc8a2c9aedd95257deae9a8524a54384ae70"
+    },
+    {
+      "path": "auto/usage_daily.go",
+      "sha256": "52e6dc242b5a2f6f4c10a114f53570047040c5c77be414863ecccffcbeb35ec1"
+    },
+    {
+      "path": "auto/usage_daily_test.go",
+      "sha256": "36b9fe71835e3422e5af9282b0b44d662570cb75f03809f67378876ed7181b6f"
+    },
+    {
+      "path": "auto/usage_sink.go",
+      "sha256": "2eb1f78ac707007c96b1a68af2bd2b2d99dc59f9f080075ce36756f59c532362"
+    },
+    {
+      "path": "auto/usage_sink_test.go",
+      "sha256": "684ce4039c04a28d30042970c85863f87dcad4b32d708503b5b580b7d7640b02"
+    },
+    {
+      "path": "auto/websocket_relay.go",
+      "sha256": "33e9d03da4a747bfeda6505e5160299808ddc7740d0a93d79fb691b3f9bcf3be"
+    },
+    {
+      "path": "auto/websocket_relay_test.go",
+      "sha256": "5f5fa25c840cd7a5312e2bd51f8dbd010fa56af278eb40c38b5e1848170ec02a"
+    },
+    {
+      "path": "guard/README.md",
+      "sha256": "868997a3da7f9b5db04dabf41087700079399ac71fff5be15332b5f5ff43ea8b"
+    },
+    {
+      "path": "guard/model/client.go",
+      "sha256": "8a0e1da175f9ec00eba28b0a433488ec3201d3249c2477e67fe15d0659c5ca76"
+    },
+    {
+      "path": "guard/model/client_test.go",
+      "sha256": "715c9147fc3883c841b6923feba88a3df039d6158b7c31d5a439249e70c01a23"
+    },
+    {
+      "path": "guard/preflight.go",
+      "sha256": "99218c5f583048bdd988bfa327e9ae6fafcf0a93a3aca975b082aa587f93434b"
+    },
+    {
+      "path": "guard/preflight_test.go",
+      "sha256": "5a4ed4a157679454561f741c33c821ea0388a737b2ec357358bb18db58025f96"
+    },
+    {
+      "path": "guard/redaction.go",
+      "sha256": "040ba0539458249966799756536ac6f3815648c865c1c7d42e6f534aa506cbc0"
+    },
+    {
+      "path": "guard/redaction_test.go",
+      "sha256": "0b7d81ada547deba496b8d5398ccb2eec0e668b2812328c822d488e35fa1d274"
+    },
+    {
+      "path": "guard/request_correlation_test.go",
+      "sha256": "037cf807093142cae780bf766e55327c392bd14e72b587464208818a19502417"
+    },
+    {
+      "path": "guard/rules.go",
+      "sha256": "f445de62b530a7470960e77de8a34a53cb94986f5baf4644c4255bce0028aa46"
+    },
+    {
+      "path": "guard/types.go",
+      "sha256": "1f9964fe3faf64b8b805c9ff80d0f4f5609c0400e89dbc0e25069e25131a9dcf"
+    },
+    {
+      "path": "cmd/auto-preview/main.go",
+      "sha256": "4f6fbafd8e8d3eb36467102cdda89d61d985fb9356c501fa4091f45a33bdc9f5"
+    },
+    {
+      "path": "cmd/auto-server/acceptance.go",
+      "sha256": "ef5f11ae7650a9c043fcc3c69077403e26863b0f47735a58ac0b51940b684349"
+    },
+    {
+      "path": "cmd/auto-server/acceptance_test.go",
+      "sha256": "d78330e8e7b7490b5876577cd4d4b9f77594f5169ff6af1eebb095db9f028a5c"
+    },
+    {
+      "path": "cmd/auto-server/main.go",
+      "sha256": "2f71fa15ff5d95b5ba180d0857f16fb8752575fc76d09bf4bdf874f479035c65"
+    },
+    {
+      "path": "cmd/effort-probe/main.go",
+      "sha256": "210b26ae1c96dc2a2ce11f832858e9707498b1151000d304a3da0ea365e6f3e4"
+    },
+    {
+      "path": "cmd/preflight-api/main.go",
+      "sha256": "1498b30992a00b479e631b5970ee68bb8a80e3c33e8d25f12dbceadb13d76449"
+    },
+    {
+      "path": "cmd/semantic-eval/main.go",
+      "sha256": "fbc3044c1dfa55be6c148c9323a1a1eb525b0eaa74e86254bbd2cea2219ad324"
+    },
+    {
+      "path": "tools/analyze-evaluation.py",
+      "sha256": "9329d4676b7b46d1594066ebdb6b92d3f73423366cbf72e81418a24214d14b03"
+    },
+    {
+      "path": "tools/live-history.py",
+      "sha256": "750e43d977d166cc9d72c42899a0880843eacf5b2601bd529a57244c0a2de4bf"
+    },
+    {
+      "path": "tools/live-routing-ladder.py",
+      "sha256": "d23f34e18f2168804fa80df80560ae8deba43fe62ccfcd2fd99c2d4c78a8ad6e"
+    },
+    {
+      "path": "tools/run-pilot.sh",
+      "sha256": "950ccb2d0eaa6c135297c6247eaabd779e299f570b1d669c8906037f720d8ce4"
+    },
+    {
+      "path": "tools/test_analyze_evaluation.py",
+      "sha256": "e57ee663ad8c1651ca86e0f2256ed620d402514d55a84fc2391d5911c1b4b81a"
+    },
+    {
+      "path": "tools/test_live_routing_ladder.py",
+      "sha256": "1ef3bd24e7807872a0f6146b1b52624ad13a2269bad52765c2e4aac4b10b6f66"
+    },
+    {
+      "path": "tools/verify-entrypoint-live.py",
+      "sha256": "91ae77caf75e928c0a8fbb17a40eeab8b2acf40eb192d5e4b35d7e138d503634"
+    },
+    {
+      "path": "tools/verify-redaction-live.py",
+      "sha256": "4b525d0115be476e0a03904b8c5973f372721b6e8426d074962c58206697c2d5"
+    },
+    {
+      "path": "deploy/acceptance/README.md",
+      "sha256": "28516bc0050f3cab4caaede2363cbdc42a70fd8955fda6617fd8cf66e65bd309"
+    },
+    {
+      "path": "deploy/acceptance/compose.yaml",
+      "sha256": "fc515565208acc10e214d7655ab565318ba586341a3497f3f070b16c754231ef"
+    },
+    {
+      "path": "deploy/acceptance/deploy.sh",
+      "sha256": "82bfafda8aea73dd4ae323280fcd38b49412a3f06a5c01856ba91d30d81a019e"
+    },
+    {
+      "path": "deploy/acceptance/nginx.conf.template",
+      "sha256": "dc7a4b75a6ac75d32fd071e0da836b804d08f6415fefe92aa15c8a5c839669da"
+    },
+    {
+      "path": "deploy/acceptance/prepare.py",
+      "sha256": "1c41bcf2428888aac71580cd8663c5a5dc0c18931ce7e6addef1ed85091f97bf"
+    },
+    {
+      "path": "deploy/acceptance/run-auto.sh",
+      "sha256": "5ef3e4433283191964ebf7d5b34d90ab3b1d81a60bfed66702ea5d8defd6bf82"
+    },
+    {
+      "path": "deploy/guard/Dockerfile",
+      "sha256": "ad41142613c3431143c5872b2fdf0099e99fce7d9a26a1be267c05930e7ceb5e"
+    },
+    {
+      "path": "deploy/guard/README.md",
+      "sha256": "59df81320e691a370b23bf4b919d48c5fd78e96724a42875cc48c0a072901d61"
+    },
+    {
+      "path": "deploy/guard/docker-compose.yaml",
+      "sha256": "595a721c8f362a11e3e86958c21637d8c00ed8d8bbc3f8d71bf42b4509a61ded"
+    },
+    {
+      "path": "config/auto.example.yaml",
+      "sha256": "53462a96ab54dcffb4aa60e02e601def3bbb0c093de1e767a0792b34ca580a3f"
+    },
+    {
+      "path": "go.mod",
+      "sha256": "5cf4f0741b9cb499ac12946f98ecca2d5bcf3bc52c1ade94b751f34b4c810636"
+    },
+    {
+      "path": "verify.sh",
+      "sha256": "473e8673a78d186480a3baaf6e504a18df80027ffc6d86b57a3d0c2ef8d887b8"
+    },
+    {
+      "path": "verify-on-linux.sh",
+      "sha256": "d695f084474fe8ebc52c0ede14f60365fb30bb483512bfda4c79d3b3d4d8d898"
+    },
+    {
+      "path": "README.md",
+      "sha256": "2cce0d46d550ea4c938cb10edb3250e6e3c79a8dc99d6b42cb6a8ce31690a73f"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "98ae0377c32a307f3f658bd664ea01e39ee745981e25d1072ca4635c63cfbdfc"
+    }
+  ],
+  "checked_at": "2026-09-16T07:10:48.427070+00:00"
+}

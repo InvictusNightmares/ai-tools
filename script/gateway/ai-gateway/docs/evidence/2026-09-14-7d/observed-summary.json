@@ -1,0 +1,67 @@
+{
+  "window": {
+    "start_utc": "2026-09-07T03:16:00Z",
+    "end_utc": "2026-09-14T03:16:00Z",
+    "basis": "public.usage_logs.created_at; aggregate only"
+  },
+  "regions": {
+    "tokyo": {
+      "usage_rows": 89570,
+      "request_ids": 89570,
+      "active_api_keys": 100,
+      "input_tokens": 711585597,
+      "cache_read_tokens": 7361466363,
+      "cache_creation_tokens": 0,
+      "output_tokens": 61424201,
+      "business_duration_avg_ms": 19865,
+      "prompt_token_proxy_quantiles_p50_p90_p95_p99": [
+        71284,
+        183270,
+        228579,
+        461966
+      ],
+      "prompt_token_proxy_max": 792095,
+      "over_32k_rows": 68123,
+      "peak_hour_requests": 5104,
+      "peak_minute_requests": 159
+    },
+    "us": {
+      "usage_rows": 156462,
+      "request_ids": 156462,
+      "active_api_keys": 71,
+      "input_tokens": 1542926048,
+      "cache_read_tokens": 22674504064,
+      "cache_creation_tokens": 0,
+      "output_tokens": 83666339,
+      "business_duration_hours_sum": 792.69,
+      "prompt_token_proxy_quantiles_p50_p90_p95_p99": [
+        111864,
+        322729,
+        502108,
+        774061
+      ],
+      "prompt_token_proxy_max": 934009,
+      "over_32k_rows": 135629,
+      "peak_hour_requests": 3970,
+      "peak_minute_requests": 111
+    }
+  },
+  "combined": {
+    "usage_rows": 246032,
+    "request_ids": 246032,
+    "active_api_keys_sum_not_distinct": 171,
+    "input_tokens": 2254511645,
+    "cache_read_tokens": 30035970427,
+    "output_tokens": 145090540,
+    "prompt_token_proxy_sum": 32290482072,
+    "peak_hour_sum_upper_bound": 9074,
+    "peak_minute_sum_upper_bound": 270
+  },
+  "limitations": [
+    "usage_logs records are completed usage records; they are not a complete arrival or retry count",
+    "active_api_keys is summed by region and is not a distinct cross-region count",
+    "peak_hour_sum_upper_bound assumes regional peaks overlap; exact shared-service peak requires timestamp-aligned merge",
+    "prompt_token_proxy is input+cache_read+cache_creation as recorded by Sub2API, not a guard-model tokenizer measurement",
+    "US and Tokyo model lists are intentionally omitted from this artifact; no credentials or request content were read"
+  ]
+}

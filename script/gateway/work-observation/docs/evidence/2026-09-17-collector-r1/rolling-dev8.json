@@ -1,0 +1,10 @@
+{
+  "scope": "actual synthetic collector process to rolling analysis",
+  "events": 6,
+  "review_pending": 6,
+  "idempotent": true,
+  "body_copies_created": 0,
+  "semantic_review": "pending_local_worker",
+  "production_changed": false,
+  "runtime_version": "observation-dev.8"
+}

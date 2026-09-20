@@ -1,0 +1,4 @@
+{"region": "tokyo", "model": "auto", "protocol": "chat", "status": 400, "elapsed_s": 0.23, "answer": "", "content_correct": false, "error_code": "audio_not_supported", "error_message": "Audio input is not supported by this gateway."}
+{"region": "tokyo", "model": "auto", "protocol": "responses", "status": 400, "elapsed_s": 0.23, "answer": "", "content_correct": false, "error_code": "audio_not_supported", "error_message": "Audio input is not supported by this gateway."}
+{"region": "us", "model": "auto", "protocol": "chat", "status": 400, "elapsed_s": 0.43, "answer": "", "content_correct": false, "error_code": "audio_not_supported", "error_message": "Audio input is not supported by this gateway."}
+{"region": "us", "model": "auto", "protocol": "responses", "status": 400, "elapsed_s": 0.47, "answer": "", "content_correct": false, "error_code": "audio_not_supported", "error_message": "Audio input is not supported by this gateway."}

@@ -1,0 +1,138 @@
+{
+  "scope": "exact 18000 synthetic request IDs; Guard v25/preflight-r16",
+  "requests": 18000,
+  "unique_ids": 18000,
+  "decision_counts": {
+    "allow": 18000
+  },
+  "preflight_queue_wait_max_ms": 0,
+  "preflight_queue_wait_p95_ms": 0,
+  "zero_queue_field": "omitempty int64; verified cmd/preflight-api/main.go recordDecision and guard/usage.go",
+  "docker_oom_events_in_window": 0,
+  "vllm_running": true,
+  "vllm_oom_killed": false,
+  "gpu_samples": [
+    {
+      "at": "2026-09-17T02:04:11.307047+00:00",
+      "used_mib": 64937,
+      "total_mib": 81559,
+      "gpu_utilization_percent": 88,
+      "running": true,
+      "oom_killed": false
+    },
+    {
+      "at": "2026-09-17T02:05:11.383058+00:00",
+      "used_mib": 64937,
+      "total_mib": 81559,
+      "gpu_utilization_percent": 88,
+      "running": true,
+      "oom_killed": false
+    },
+    {
+      "at": "2026-09-17T02:06:11.441662+00:00",
+      "used_mib": 64937,
+      "total_mib": 81559,
+      "gpu_utilization_percent": 89,
+      "running": true,
+      "oom_killed": false
+    },
+    {
+      "at": "2026-09-17T02:07:11.511935+00:00",
+      "used_mib": 64937,
+      "total_mib": 81559,
+      "gpu_utilization_percent": 88,
+      "running": true,
+      "oom_killed": false
+    },
+    {
+      "at": "2026-09-17T02:08:11.561019+00:00",
+      "used_mib": 64937,
+      "total_mib": 81559,
+      "gpu_utilization_percent": 88,
+      "running": true,
+      "oom_killed": false
+    },
+    {
+      "at": "2026-09-17T02:09:11.631683+00:00",
+      "used_mib": 64937,
+      "total_mib": 81559,
+      "gpu_utilization_percent": 89,
+      "running": true,
+      "oom_killed": false
+    },
+    {
+      "at": "2026-09-17T02:10:11.699744+00:00",
+      "used_mib": 64937,
+      "total_mib": 81559,
+      "gpu_utilization_percent": 88,
+      "running": true,
+      "oom_killed": false
+    },
+    {
+      "at": "2026-09-17T02:11:11.753901+00:00",
+      "used_mib": 64937,
+      "total_mib": 81559,
+      "gpu_utilization_percent": 89,
+      "running": true,
+      "oom_killed": false
+    },
+    {
+      "at": "2026-09-17T02:12:11.808637+00:00",
+      "used_mib": 64937,
+      "total_mib": 81559,
+      "gpu_utilization_percent": 91,
+      "running": true,
+      "oom_killed": false
+    },
+    {
+      "at": "2026-09-17T02:13:11.861989+00:00",
+      "used_mib": 64937,
+      "total_mib": 81559,
+      "gpu_utilization_percent": 97,
+      "running": true,
+      "oom_killed": false
+    },
+    {
+      "at": "2026-09-17T02:14:11.917475+00:00",
+      "used_mib": 64937,
+      "total_mib": 81559,
+      "gpu_utilization_percent": 89,
+      "running": true,
+      "oom_killed": false
+    },
+    {
+      "at": "2026-09-17T02:15:11.967629+00:00",
+      "used_mib": 64937,
+      "total_mib": 81559,
+      "gpu_utilization_percent": 89,
+      "running": true,
+      "oom_killed": false
+    },
+    {
+      "at": "2026-09-17T02:16:12.022377+00:00",
+      "used_mib": 64937,
+      "total_mib": 81559,
+      "gpu_utilization_percent": 90,
+      "running": true,
+      "oom_killed": false
+    },
+    {
+      "at": "2026-09-17T02:17:12.101816+00:00",
+      "used_mib": 64937,
+      "total_mib": 81559,
+      "gpu_utilization_percent": 89,
+      "running": true,
+      "oom_killed": false
+    },
+    {
+      "at": "2026-09-17T02:18:12.146917+00:00",
+      "used_mib": 64937,
+      "total_mib": 81559,
+      "gpu_utilization_percent": 89,
+      "running": true,
+      "oom_killed": false
+    }
+  ],
+  "gpu_memory_observation": "tail-window minute samples only, not continuous full-window sampling",
+  "min_sampled_headroom_percent": 20.38
+}

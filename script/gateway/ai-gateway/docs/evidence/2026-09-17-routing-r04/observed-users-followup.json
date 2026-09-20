@@ -1,0 +1,172 @@
+{
+  "snapshot": "2026-09-17T06:58:20.884308+00:00",
+  "window_start": "2026-09-17T06:40:00Z",
+  "api_key_id": 5,
+  "name": "付晓镇",
+  "business_requests": 10,
+  "models": {
+    "gpt-5.6-luna": 2,
+    "gpt-5.6-terra": 4,
+    "deepseek-flash": 4
+  },
+  "classification_calls": 5,
+  "exact_bill_matches": 15,
+  "total_attempts": 15,
+  "token_mismatches": 0,
+  "costs": {
+    "business": 0.202624,
+    "classification": 0.0966754
+  },
+  "records": [
+    {
+      "request_id": "f87d0d650e6f27b52c67c85263b3f34f",
+      "purpose": "classification",
+      "model": "gpt-5.6-luna",
+      "exact_matches": 1,
+      "total_cost": 0.0023414,
+      "ua": "Codex Desktop/0.154.0-alpha.6.2 (Mac OS 15.8.0; arm64) unknown (Codex Desktop; 26.908.70816)",
+      "success": true,
+      "token_match": true
+    },
+    {
+      "request_id": "f87d0d650e6f27b52c67c85263b3f34f",
+      "purpose": "business",
+      "model": "gpt-5.6-luna",
+      "exact_matches": 1,
+      "total_cost": 0.0034858,
+      "ua": "Codex Desktop/0.154.0-alpha.6.2 (Mac OS 15.8.0; arm64) unknown (Codex Desktop; 26.908.70816)",
+      "success": true,
+      "token_match": true
+    },
+    {
+      "request_id": "9592b17aaeadc1cc1e887cec2681e1e8",
+      "purpose": "classification",
+      "model": "gpt-5.6-luna",
+      "exact_matches": 1,
+      "total_cost": 0.0034066,
+      "ua": "Codex Desktop/0.154.0-alpha.6.2 (Mac OS 15.8.0; arm64) unknown (Codex Desktop; 26.908.70816)",
+      "success": true,
+      "token_match": true
+    },
+    {
+      "request_id": "9592b17aaeadc1cc1e887cec2681e1e8",
+      "purpose": "classification",
+      "model": "gpt-5.6-sol",
+      "exact_matches": 1,
+      "total_cost": 0.085195,
+      "ua": "Codex Desktop/0.154.0-alpha.6.2 (Mac OS 15.8.0; arm64) unknown (Codex Desktop; 26.908.70816)",
+      "success": true,
+      "token_match": true
+    },
+    {
+      "request_id": "9592b17aaeadc1cc1e887cec2681e1e8",
+      "purpose": "business",
+      "model": "gpt-5.6-terra",
+      "exact_matches": 1,
+      "total_cost": 0.0815616,
+      "ua": "Codex Desktop/0.154.0-alpha.6.2 (Mac OS 15.8.0; arm64) unknown (Codex Desktop; 26.908.70816)",
+      "success": true,
+      "token_match": true
+    },
+    {
+      "request_id": "35b300a16a7d8abd94bb2c5c32b1c5a8",
+      "purpose": "business",
+      "model": "gpt-5.6-terra",
+      "exact_matches": 1,
+      "total_cost": 0.0198936,
+      "ua": "Codex Desktop/0.154.0-alpha.6.2 (Mac OS 15.8.0; arm64) unknown (Codex Desktop; 26.908.70816)",
+      "success": true,
+      "token_match": true
+    },
+    {
+      "request_id": "ac2946de401876eac36bc2b167128793",
+      "purpose": "business",
+      "model": "gpt-5.6-terra",
+      "exact_matches": 1,
+      "total_cost": 0.0164772,
+      "ua": "Codex Desktop/0.154.0-alpha.6.2 (Mac OS 15.8.0; arm64) unknown (Codex Desktop; 26.908.70816)",
+      "success": true,
+      "token_match": true
+    },
+    {
+      "request_id": "e0815374c88f4130bcc226418636a103",
+      "purpose": "business",
+      "model": "gpt-5.6-terra",
+      "exact_matches": 1,
+      "total_cost": 0.025846,
+      "ua": "Codex Desktop/0.154.0-alpha.6.2 (Mac OS 15.8.0; arm64) unknown (Codex Desktop; 26.908.70816)",
+      "success": true,
+      "token_match": true
+    },
+    {
+      "request_id": "e6c135fc91911e0e2b5069b28e421274",
+      "purpose": "classification",
+      "model": "gpt-5.6-luna",
+      "exact_matches": 1,
+      "total_cost": 0.0023332,
+      "ua": "Codex Desktop/0.154.0-alpha.6.2 (Mac OS 15.8.0; arm64) unknown (Codex Desktop; 26.908.70816)",
+      "success": true,
+      "token_match": true
+    },
+    {
+      "request_id": "e6c135fc91911e0e2b5069b28e421274",
+      "purpose": "business",
+      "model": "gpt-5.6-luna",
+      "exact_matches": 1,
+      "total_cost": 0.0034634,
+      "ua": "Codex Desktop/0.154.0-alpha.6.2 (Mac OS 15.8.0; arm64) unknown (Codex Desktop; 26.908.70816)",
+      "success": true,
+      "token_match": true
+    },
+    {
+      "request_id": "d2a1824f2f3aabee89139acf4bfcc736",
+      "purpose": "classification",
+      "model": "gpt-5.6-luna",
+      "exact_matches": 1,
+      "total_cost": 0.0033992,
+      "ua": "Codex Desktop/0.154.0-alpha.6.2 (Mac OS 15.8.0; arm64) unknown (Codex Desktop; 26.908.70816)",
+      "success": true,
+      "token_match": true
+    },
+    {
+      "request_id": "d2a1824f2f3aabee89139acf4bfcc736",
+      "purpose": "business",
+      "model": "deepseek-flash",
+      "exact_matches": 1,
+      "total_cost": 0.044458848,
+      "ua": "Codex Desktop/0.154.0-alpha.6.2 (Mac OS 15.8.0; arm64) unknown (Codex Desktop; 26.908.70816)",
+      "success": true,
+      "token_match": true
+    },
+    {
+      "request_id": "6bb151db30d78c67a82527a8c208961f",
+      "purpose": "business",
+      "model": "deepseek-flash",
+      "exact_matches": 1,
+      "total_cost": 0.001687336,
+      "ua": "Codex Desktop/0.154.0-alpha.6.2 (Mac OS 15.8.0; arm64) unknown (Codex Desktop; 26.908.70816)",
+      "success": true,
+      "token_match": true
+    },
+    {
+      "request_id": "325b13fc9cc39edd3c6be5b3bb251bcb",
+      "purpose": "business",
+      "model": "deepseek-flash",
+      "exact_matches": 1,
+      "total_cost": 0.00301224,
+      "ua": "Codex Desktop/0.154.0-alpha.6.2 (Mac OS 15.8.0; arm64) unknown (Codex Desktop; 26.908.70816)",
+      "success": true,
+      "token_match": true
+    },
+    {
+      "request_id": "6fd67864e1dd66ef6e8b88d85db96630",
+      "purpose": "business",
+      "model": "deepseek-flash",
+      "exact_matches": 1,
+      "total_cost": 0.002737976,
+      "ua": "Codex Desktop/0.154.0-alpha.6.2 (Mac OS 15.8.0; arm64) unknown (Codex Desktop; 26.908.70816)",
+      "success": true,
+      "token_match": true
+    }
+  ]
+}

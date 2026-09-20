@@ -1,0 +1,56 @@
+{
+  "client": "opencode",
+  "native_version": "1.18.4",
+  "runs": [
+    {
+      "client": "opencode",
+      "session": "xiaoyuan-opencode-191029",
+      "run_id": "opencode-191029",
+      "at": "2026-09-16T11:10:29.728298+00:00",
+      "workspace": "/private/tmp/gateway-v6-xiaoyuan-20260916/opencode",
+      "phase": "finished",
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_s": 363.16,
+      "finished_at": "2026-09-16T11:16:32.849630+00:00",
+      "changed_files": [
+        "entry/src/main/ets/capabilities/Navigation.ets"
+      ],
+      "stdout_bytes": 317535,
+      "stderr_bytes": 0
+    }
+  ],
+  "final_changed_files": [
+    "entry/src/main/ets/capabilities/Navigation.ets"
+  ],
+  "diff_numstat": "11\t1\tentry/src/main/ets/capabilities/Navigation.ets",
+  "review": "Build and five behavior checks passed, but added JPush.stopPush is outside scope. Native OpenCode review correction pending.",
+  "quality_accepted_for_logout_scope": false,
+  "baseline_files_preserved": {
+    "entry/src/main/ets/network/HttpClient.ets": true,
+    "entry/src/main/ets/pages/Login/index.ets": true
+  },
+  "behavior": {
+    "scope": "execute transpiled Navigation with synthetic persistent-store and navigation adapters; not HarmonyOS device UI",
+    "workspace": "/private/tmp/gateway-v6-xiaoyuan-20260916/opencode",
+    "checks": {
+      "login_state_removed": true,
+      "user_approval_filter_removed": true,
+      "cleanup_before_navigation": true,
+      "other_routes_preserve_login": true,
+      "unrelated_preferences_preserved": true
+    },
+    "pass": true
+  },
+  "unsigned_hap_build_pass": true,
+  "final_build_duration": "14 s 517 ms ",
+  "build_after_last_source_edit": true,
+  "build_log_sha256": "4e8ce156829bee24ae0e43bad2b085b9b71863054cbb866359a65f56a0dfc210",
+  "hap_sha256": "e2a01bb44b46c79fc39b4c982069003d7ee903420f4503b72473d4979cc12466",
+  "hap_bytes": 10395673,
+  "patch_sha256": "64f0b4dbece9f0e5841b5d76cfa83c9fef6f9c513e5798fd3866dc86d36dbfd7",
+  "patch_bytes": 1420,
+  "workflow_pass": false,
+  "device_tested": false,
+  "artifacts_directory": "/private/tmp/gateway-v6-xiaoyuan-20260916/opencode"
+}

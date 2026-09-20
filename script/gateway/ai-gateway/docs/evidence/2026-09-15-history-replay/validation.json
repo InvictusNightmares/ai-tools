@@ -1,0 +1,27 @@
+{
+  "markdown": [
+    {
+      "file": "doc/gateway/智能网关与Guard分阶段实施总计划.md",
+      "tables": 5,
+      "markdown": "pass",
+      "local_links": "pass",
+      "chronology": "pass"
+    },
+    {
+      "file": "script/gateway/auto-gateway/README.md",
+      "tables": 0,
+      "markdown": "pass",
+      "local_links": "pass",
+      "chronology": "pass"
+    },
+    {
+      "file": "doc/gateway/evidence/2026-09-15-history-replay/README.md",
+      "tables": 2,
+      "markdown": "pass",
+      "local_links": "pass",
+      "chronology": "pass"
+    }
+  ],
+  "archive_matches_current_sources": true,
+  "production_cutover": false
+}

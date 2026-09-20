@@ -1,0 +1,44 @@
+[
+  {
+    "schema": "gateway-release-v1",
+    "release_id": "candidate-20260916-r11-native-v9.1",
+    "created_at": "2026-09-16T14:46:03.060828+00:00",
+    "platform": "linux/amd64",
+    "toolchain_image": "golang:1.27.1-bookworm",
+    "git_commit": null,
+    "dirty": true,
+    "candidate_only": true,
+    "source_sha256": "b504cc1b5cf1f3f9b166984655a797da77301c202644326c0b112ae591641943",
+    "config_schema": "gateway-config-v1",
+    "state_schema": "session-json-v1",
+    "log_append_contract": "locked-reopen-jsonl-v1",
+    "compatible_state_schemas": [
+      "session-json-v1"
+    ],
+    "guard_contract": "credential-redaction-v1",
+    "operations_contract": "independent-usage-health-v1",
+    "guard_rule_version": "preflight-r11",
+    "guard_model_version": "qwen3guard-gen-8b",
+    "classifier_policy": "semantic-v8-native-compaction",
+    "business_revision": "guard-r11-semantic-v8-native-v9",
+    "binaries": {
+      "auto-server": "4c0ee129b5ef7efe90439ac6ec129f44fc79a48c1e8dad358015cf9bc8756533",
+      "preflight-api": "42870c2490d65ef8ce31354ca3328856637325729eeca615eed4a0380f73746d"
+    },
+    "binary_versions": {
+      "auto-server": {
+        "release_id": "candidate-20260916-r11-native-v9",
+        "source_sha256": "a59a8ec4e97ae18c09eb58e02671985f4fd2e7c4074c0a2c3c136c75be1e26a3"
+      },
+      "preflight-api": {
+        "release_id": "candidate-20260916-r11-native-v8",
+        "source_sha256": "84fcfb43a9c787486705fcf62194c9b05bb8745871e01e6baa21dde1db44d655"
+      }
+    },
+    "component_source_sha256": {
+      "auto-server": "8c31fbc3d809e23ccc64a65a5766d77013af1e920838febd5be273eb2126e427",
+      "preflight-api": "c74ff4768bb4b6d9da358f67a723cedb861ab49f2eec869e49fa27e03d3ec6b3"
+    },
+    "tests_including_subtests": 483
+  }
+]

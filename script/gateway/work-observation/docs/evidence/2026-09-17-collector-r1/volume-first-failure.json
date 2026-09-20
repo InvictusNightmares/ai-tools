@@ -1,0 +1,6 @@
+{
+  "stage": "initial_mount_verification",
+  "reason": "losetup JSON requires list mode",
+  "scope": "new lab-only filesystem",
+  "forwarding_test_started": false
+}

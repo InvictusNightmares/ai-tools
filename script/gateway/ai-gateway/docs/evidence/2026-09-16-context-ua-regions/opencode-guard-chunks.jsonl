@@ -1,0 +1,4 @@
+{"chunk": 0, "chars": 20000, "labels": ["Safety: Controversial", "Categories: Jailbreak"]}
+{"chunk": 1, "chars": 20000, "labels": ["Safety: Safe", "Categories: None"]}
+{"chunk": 2, "chars": 20000, "labels": ["Safety: Safe", "Categories: None"]}
+{"chunk": 3, "chars": 4000, "labels": ["Safety: Safe", "Categories: None"]}

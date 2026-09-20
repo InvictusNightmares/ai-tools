@@ -1,0 +1,46 @@
+{
+  "client": "opencode",
+  "scope": "actual native client and actual v15 gateway; synthetic auth Guard classifiers and models; not real regional acceptance",
+  "source_sha256": "efc73780c1b690f3ea7199b9da2d4013f514192dfd727ab44845ee3f49798e89",
+  "binary_sha256": "2f745b054652c5b0489a6c3cc80e27822ceed0680fc5abb19de7ace8d4f3203c",
+  "checks": [
+    {
+      "check": "initial_marker",
+      "passed": true
+    },
+    {
+      "check": "native_compaction_and_recall",
+      "passed": true,
+      "compaction_part": true
+    },
+    {
+      "check": "multiple_native_tools",
+      "passed": true,
+      "completed_reads": 2
+    },
+    {
+      "check": "native_child_session",
+      "passed": true
+    },
+    {
+      "check": "native_fork_continuity",
+      "passed": true
+    },
+    {
+      "check": "native_cancel",
+      "passed": true
+    },
+    {
+      "check": "resume_after_cancel",
+      "passed": true
+    }
+  ],
+  "stage_counts": {
+    "route_decided": 12,
+    "upstream_started": 12,
+    "upstream_completed": 11,
+    "request_canceled": 1
+  },
+  "complete_upstream_failed": 0,
+  "private_result_sha256": "9e685855a30be6fc98a7c3fe00cdebc6f5086afb5f847a185cbfeb34099bf762"
+}

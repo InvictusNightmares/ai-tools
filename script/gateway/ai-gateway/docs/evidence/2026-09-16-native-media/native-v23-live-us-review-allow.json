@@ -1,0 +1,22 @@
+{
+  "region": "us",
+  "client": "Codex 0.154.0 app-server native auto review",
+  "log_dir": "/tmp/gateway-codex-native-review-v23-live-us-090532",
+  "checks": {
+    "native_turn_completed": true,
+    "fixture_written": true,
+    "native_review_observed": true
+  },
+  "thread_hash": "f082b75d9c26251071b880f789db8a288020c5cd64e1f52151c39ae69e41f32c",
+  "approval_items": [
+    {
+      "review": {
+        "status": "approved",
+        "riskLevel": "low",
+        "userAuthorization": "high"
+      },
+      "decision_source": "agent"
+    }
+  ],
+  "passed": true
+}

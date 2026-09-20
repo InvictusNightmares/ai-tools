@@ -1,0 +1,21 @@
+{
+  "artifact": "observation-dev.9",
+  "scope": "isolated GPU build after performance optimizations",
+  "remote_dir": "/data/work-observation-lab/collector-r1",
+  "image": "golang:1.27.1-bookworm",
+  "commands": {
+    "gofmt": "pass",
+    "go_test": "pass",
+    "go_test_race": "pass (source/capture, source/proxy, cmd/observe)",
+    "go_vet": "pass (source/capture, source/proxy, cmd/observe)",
+    "linux_static_build": "pass (CGO_ENABLED=0)"
+  },
+  "source_sha256": {
+    "source/capture/engine.go": "dff6757c46375ce2713f30eea5c8ce9d153ad795a578c7494509a8720a6860f1",
+    "source/capture/websocket.go": "62146217ae24bfbad59ca25f26e6e842f89cdefbcd47ebc2090f082f0b350a07",
+    "source/capture/store.go": "ec6d3228c663af83dec0e2d9caad10afd838d23dd30f8c1599dbdfa570f72682",
+    "source/capture/chunk_pool.go": "ef0006d22ce21bb7f4308f5b419738fd28e9e20f4b5a728a32c9b8e6df45d463"
+  },
+  "synthetic_only": true,
+  "formal_entry_enabled": false
+}

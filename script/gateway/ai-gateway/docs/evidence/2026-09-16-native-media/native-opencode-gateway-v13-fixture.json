@@ -1,0 +1,45 @@
+{
+  "scope": "native opencode through actual gateway candidate with synthetic local auth, Guard, and model fixtures",
+  "gateway_candidate_tested": true,
+  "guard_and_models": "synthetic local fixtures",
+  "region": "fixture",
+  "checks": [
+    {
+      "check": "initial_marker",
+      "passed": true
+    },
+    {
+      "check": "native_compaction_and_recall",
+      "passed": true,
+      "compaction_part": true
+    },
+    {
+      "check": "multiple_native_tools",
+      "passed": true,
+      "completed_reads": 2
+    },
+    {
+      "check": "native_child_session",
+      "passed": true
+    },
+    {
+      "check": "native_fork_continuity",
+      "passed": true
+    },
+    {
+      "check": "native_cancel",
+      "passed": true
+    },
+    {
+      "check": "resume_after_cancel",
+      "passed": true
+    }
+  ],
+  "native_session_sha256": [
+    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  ],
+  "request_count": 12,
+  "binary_sha256": "dcac994a532f421f9abc83a24b6ce9f40fd3600e9229b8d5511884ab5ad8365e",
+  "driver_sha256": "75ece66f2b93de16ec774ff1583974d658a132ad281375a362892a6c51944891",
+  "all_checks_pass": true
+}

@@ -1,0 +1,324 @@
+{
+  "scope": "classifier_only_not_guard_auto_business_acceptance",
+  "label_authority": "implementer_assigned_not_independent_human_adjudication",
+  "consistency_definition": "same_complexity_and_target_effort_in_all_three_languages",
+  "fixture_sha256": "8f3321f791c85bd2fcb9e43b1783c308f8ee52ae20edcc2efef4c50fe619540c",
+  "trials": [
+    {
+      "file": "sol-astra-checkpoints.jsonl",
+      "sha256": "1ac2122562c94b6065910e4f406158e1ad3e1d3587716ea58fd06b36f1a3afc5",
+      "primary": "gpt-5.6-sol",
+      "reviewer": "gpt-6-astra",
+      "requests": 48,
+      "expected_requests": 48,
+      "complete": true,
+      "missing_samples": [],
+      "successes": 48,
+      "business_calls": 0,
+      "splits": {
+        "history_holdout": {
+          "groups": 16,
+          "consistent_groups": 15,
+          "consistency_percent": 93.75,
+          "differences": [
+            {
+              "case_id": "reminder-correction",
+              "variants": [
+                {
+                  "language": "zh",
+                  "ok": true,
+                  "complexity": "bounded",
+                  "effort": "low"
+                },
+                {
+                  "language": "en",
+                  "ok": true,
+                  "complexity": "multi_step",
+                  "effort": "medium"
+                },
+                {
+                  "language": "mixed",
+                  "ok": true,
+                  "complexity": "bounded",
+                  "effort": "low"
+                }
+              ]
+            }
+          ],
+          "languages": {
+            "zh": {
+              "requests": 16,
+              "successes": 16,
+              "median_ms": 4299.0,
+              "p95_ms": 8162,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 14,
+              "assigned_complexity_matches": 13,
+              "task_boundary_checks": 16,
+              "task_boundary_matches": 16,
+              "efforts": {
+                "medium": 8,
+                "none": 4,
+                "low": 4
+              }
+            },
+            "en": {
+              "requests": 16,
+              "successes": 16,
+              "median_ms": 3607.5,
+              "p95_ms": 6156,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 13,
+              "assigned_complexity_matches": 12,
+              "task_boundary_checks": 16,
+              "task_boundary_matches": 16,
+              "efforts": {
+                "medium": 9,
+                "none": 4,
+                "low": 3
+              }
+            },
+            "mixed": {
+              "requests": 16,
+              "successes": 16,
+              "median_ms": 3134.0,
+              "p95_ms": 6113,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 13,
+              "assigned_complexity_matches": 13,
+              "task_boundary_checks": 16,
+              "task_boundary_matches": 16,
+              "efforts": {
+                "medium": 8,
+                "none": 4,
+                "low": 4
+              }
+            }
+          },
+          "classifier_attempts": 51,
+          "input_tokens": 37705,
+          "output_tokens": 3846,
+          "prompt_cache_hit_tokens": 0
+        }
+      }
+    },
+    {
+      "file": "astra-sol-checkpoints.jsonl",
+      "sha256": "3abdf0469ca19d5cbe8b750df9c266276852356ab34be8ed06cf6455025b9bbf",
+      "primary": "gpt-6-astra",
+      "reviewer": "gpt-5.6-sol",
+      "requests": 48,
+      "expected_requests": 48,
+      "complete": true,
+      "missing_samples": [],
+      "successes": 48,
+      "business_calls": 0,
+      "splits": {
+        "history_holdout": {
+          "groups": 16,
+          "consistent_groups": 13,
+          "consistency_percent": 81.25,
+          "differences": [
+            {
+              "case_id": "startup-start",
+              "variants": [
+                {
+                  "language": "en",
+                  "ok": true,
+                  "complexity": "multi_step",
+                  "effort": "medium"
+                },
+                {
+                  "language": "zh",
+                  "ok": true,
+                  "complexity": "multi_step",
+                  "effort": "medium"
+                },
+                {
+                  "language": "mixed",
+                  "ok": true,
+                  "complexity": "bounded",
+                  "effort": "low"
+                }
+              ]
+            },
+            {
+              "case_id": "reminder-tool_result",
+              "variants": [
+                {
+                  "language": "zh",
+                  "ok": true,
+                  "complexity": "bounded",
+                  "effort": "low"
+                },
+                {
+                  "language": "en",
+                  "ok": true,
+                  "complexity": "multi_step",
+                  "effort": "medium"
+                },
+                {
+                  "language": "mixed",
+                  "ok": true,
+                  "complexity": "multi_step",
+                  "effort": "medium"
+                }
+              ]
+            },
+            {
+              "case_id": "reminder-correction",
+              "variants": [
+                {
+                  "language": "en",
+                  "ok": true,
+                  "complexity": "multi_step",
+                  "effort": "medium"
+                },
+                {
+                  "language": "mixed",
+                  "ok": true,
+                  "complexity": "bounded",
+                  "effort": "low"
+                },
+                {
+                  "language": "zh",
+                  "ok": true,
+                  "complexity": "bounded",
+                  "effort": "low"
+                }
+              ]
+            }
+          ],
+          "languages": {
+            "zh": {
+              "requests": 16,
+              "successes": 16,
+              "median_ms": 4234.0,
+              "p95_ms": 10274,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 14,
+              "assigned_complexity_matches": 13,
+              "task_boundary_checks": 16,
+              "task_boundary_matches": 16,
+              "efforts": {
+                "medium": 9,
+                "none": 4,
+                "low": 3
+              }
+            },
+            "en": {
+              "requests": 16,
+              "successes": 16,
+              "median_ms": 4588.0,
+              "p95_ms": 14992,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 14,
+              "assigned_complexity_matches": 11,
+              "task_boundary_checks": 16,
+              "task_boundary_matches": 16,
+              "efforts": {
+                "medium": 11,
+                "none": 4,
+                "low": 1
+              }
+            },
+            "mixed": {
+              "requests": 16,
+              "successes": 16,
+              "median_ms": 5013.5,
+              "p95_ms": 13458,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 14,
+              "assigned_complexity_matches": 12,
+              "task_boundary_checks": 16,
+              "task_boundary_matches": 16,
+              "efforts": {
+                "medium": 9,
+                "none": 4,
+                "low": 3
+              }
+            }
+          },
+          "classifier_attempts": 49,
+          "input_tokens": 37705,
+          "output_tokens": 4516,
+          "prompt_cache_hit_tokens": 0
+        }
+      }
+    },
+    {
+      "file": "sol-astra-v5-checkpoints.jsonl",
+      "sha256": "e805d67474965a48735ba22598133a932be8106d95726f35b2e9521acc7dd238",
+      "primary": "gpt-5.6-sol",
+      "reviewer": "gpt-6-astra",
+      "requests": 48,
+      "expected_requests": 48,
+      "complete": true,
+      "missing_samples": [],
+      "successes": 48,
+      "business_calls": 0,
+      "splits": {
+        "history_holdout": {
+          "groups": 16,
+          "consistent_groups": 16,
+          "consistency_percent": 100.0,
+          "differences": [],
+          "languages": {
+            "zh": {
+              "requests": 16,
+              "successes": 16,
+              "median_ms": 3034.5,
+              "p95_ms": 9314,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 14,
+              "assigned_complexity_matches": 13,
+              "task_boundary_checks": 16,
+              "task_boundary_matches": 12,
+              "efforts": {
+                "medium": 8,
+                "none": 4,
+                "low": 4
+              }
+            },
+            "en": {
+              "requests": 16,
+              "successes": 16,
+              "median_ms": 3156.5,
+              "p95_ms": 9949,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 14,
+              "assigned_complexity_matches": 13,
+              "task_boundary_checks": 16,
+              "task_boundary_matches": 12,
+              "efforts": {
+                "medium": 8,
+                "none": 4,
+                "low": 4
+              }
+            },
+            "mixed": {
+              "requests": 16,
+              "successes": 16,
+              "median_ms": 3092.0,
+              "p95_ms": 56514,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 14,
+              "assigned_complexity_matches": 13,
+              "task_boundary_checks": 16,
+              "task_boundary_matches": 12,
+              "efforts": {
+                "medium": 8,
+                "none": 4,
+                "low": 4
+              }
+            }
+          },
+          "classifier_attempts": 51,
+          "input_tokens": 43849,
+          "output_tokens": 3973,
+          "prompt_cache_hit_tokens": 0
+        }
+      }
+    }
+  ]
+}

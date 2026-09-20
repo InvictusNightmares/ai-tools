@@ -1,0 +1,27 @@
+{
+  "schema": "work-observation-semantic-preview-candidate-v1",
+  "scope": "local_candidate_only",
+  "production_enabled": false,
+  "route_preview_only": true,
+  "credential_source": "0600 token file",
+  "shared_auto_classifier_token_allowed": false,
+  "regions": {
+    "tokyo": {
+      "classifier_endpoint": "http://106.14.254.110:9881/v1/chat/completions",
+      "token_file": "/run/work-observation/auto-route-tokyo.token"
+    },
+    "us": {
+      "classifier_endpoint": "http://106.14.254.110:9880/v1/chat/completions",
+      "token_file": "/run/work-observation/auto-route-us.token"
+    }
+  },
+  "checks": {
+    "token_file_symlink_rejected": true,
+    "token_file_permissions_checked": true,
+    "production_route_preview_without_flag_rejected": true,
+    "business_upstream_origin_still_required": true,
+    "python_regression_tests": 54,
+    "remote_deployment": "candidate_preview_deployed_and_verified"
+  },
+  "secrets_or_employee_content": false
+}

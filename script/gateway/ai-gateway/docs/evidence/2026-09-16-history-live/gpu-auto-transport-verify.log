@@ -1,0 +1,550 @@
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.262s
+
+OK
+=== RUN   TestJSONLAuditSinkDoesNotPersistPrompt
+--- PASS: TestJSONLAuditSinkDoesNotPersistPrompt (0.00s)
+=== RUN   TestClassifierAndCapabilityFilter
+--- PASS: TestClassifierAndCapabilityFilter (0.01s)
+=== RUN   TestMultipleUpgradesAndTaskReset
+--- PASS: TestMultipleUpgradesAndTaskReset (0.00s)
+=== RUN   TestToolLoopLocksModel
+--- PASS: TestToolLoopLocksModel (0.00s)
+=== RUN   TestStreamingTurnCannotSwitchModelsMidResponse
+--- PASS: TestStreamingTurnCannotSwitchModelsMidResponse (0.01s)
+=== RUN   TestHardFailureFailsOverWithoutWaitingForHealthRefresh
+--- PASS: TestHardFailureFailsOverWithoutWaitingForHealthRefresh (0.00s)
+=== RUN   TestCacheNamespaceIsolation
+--- PASS: TestCacheNamespaceIsolation (0.00s)
+=== RUN   TestReasoningEffortIsGeneratedFromFeatures
+--- PASS: TestReasoningEffortIsGeneratedFromFeatures (0.02s)
+=== RUN   TestProviderReasoningMapping
+--- PASS: TestProviderReasoningMapping (0.00s)
+=== RUN   TestProviderParametersNeverForwardClientEffort
+--- PASS: TestProviderParametersNeverForwardClientEffort (0.00s)
+=== RUN   TestUsageNormalization
+--- PASS: TestUsageNormalization (0.00s)
+=== RUN   TestPublicModelIsAutoOnly
+--- PASS: TestPublicModelIsAutoOnly (0.00s)
+=== RUN   TestPipelineCoalescesConcurrentCacheMisses
+--- PASS: TestPipelineCoalescesConcurrentCacheMisses (0.02s)
+=== RUN   TestMemoryResponseCacheCapacityEvictsLeastRecentlyUsed
+--- PASS: TestMemoryResponseCacheCapacityEvictsLeastRecentlyUsed (0.00s)
+=== RUN   TestResponseCacheKeySeparatesEffectiveModelEffortAndRequest
+--- PASS: TestResponseCacheKeySeparatesEffectiveModelEffortAndRequest (0.00s)
+=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses
+=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/stream
+=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/tools
+=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/image
+=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/blocked
+=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/large
+--- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses (0.00s)
+    --- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/stream (0.00s)
+    --- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/tools (0.00s)
+    --- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/image (0.00s)
+    --- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/blocked (0.00s)
+    --- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/large (0.00s)
+=== RUN   TestCachePipelineBillingOnResponseHit
+--- PASS: TestCachePipelineBillingOnResponseHit (0.00s)
+=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize
+=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable
+=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited
+=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect
+=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize
+=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error
+--- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize (0.00s)
+    --- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable (0.00s)
+    --- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited (0.00s)
+    --- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect (0.00s)
+    --- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize (0.00s)
+    --- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error (0.00s)
+=== RUN   TestCachePipelineGuardBeforeCache
+=== RUN   TestCachePipelineGuardBeforeCache/block
+=== RUN   TestCachePipelineGuardBeforeCache/unavailable
+=== RUN   TestCachePipelineGuardBeforeCache/invalid
+--- PASS: TestCachePipelineGuardBeforeCache (0.00s)
+    --- PASS: TestCachePipelineGuardBeforeCache/block (0.00s)
+    --- PASS: TestCachePipelineGuardBeforeCache/unavailable (0.00s)
+    --- PASS: TestCachePipelineGuardBeforeCache/invalid (0.00s)
+=== RUN   TestCachePipelineProtocolIsolation
+--- PASS: TestCachePipelineProtocolIsolation (0.00s)
+=== RUN   TestMemoryCacheDoesNotAliasUsage
+--- PASS: TestMemoryCacheDoesNotAliasUsage (0.00s)
+=== RUN   TestCachePipelineIdentityIsolation
+=== RUN   TestCachePipelineIdentityIsolation/region
+=== RUN   TestCachePipelineIdentityIsolation/api_key
+=== RUN   TestCachePipelineIdentityIsolation/revision
+=== RUN   TestCachePipelineIdentityIsolation/client_key
+=== RUN   TestCachePipelineIdentityIsolation/model
+=== RUN   TestCachePipelineIdentityIsolation/effort
+=== RUN   TestCachePipelineIdentityIsolation/protocol
+=== RUN   TestCachePipelineIdentityIsolation/missing_region
+=== RUN   TestCachePipelineIdentityIsolation/missing_api_key
+=== RUN   TestCachePipelineIdentityIsolation/missing_revision
+=== RUN   TestCachePipelineIdentityIsolation/missing_secret
+--- PASS: TestCachePipelineIdentityIsolation (0.00s)
+    --- PASS: TestCachePipelineIdentityIsolation/region (0.00s)
+    --- PASS: TestCachePipelineIdentityIsolation/api_key (0.00s)
+    --- PASS: TestCachePipelineIdentityIsolation/revision (0.00s)
+    --- PASS: TestCachePipelineIdentityIsolation/client_key (0.00s)
+    --- PASS: TestCachePipelineIdentityIsolation/model (0.00s)
+    --- PASS: TestCachePipelineIdentityIsolation/effort (0.00s)
+    --- PASS: TestCachePipelineIdentityIsolation/protocol (0.00s)
+    --- PASS: TestCachePipelineIdentityIsolation/missing_region (0.00s)
+    --- PASS: TestCachePipelineIdentityIsolation/missing_api_key (0.00s)
+    --- PASS: TestCachePipelineIdentityIsolation/missing_revision (0.00s)
+    --- PASS: TestCachePipelineIdentityIsolation/missing_secret (0.00s)
+=== RUN   TestMemoryCacheConcurrentCopies
+--- PASS: TestMemoryCacheConcurrentCopies (0.01s)
+=== RUN   TestCachePipelineInitialSelectionIsNotUpgrade
+--- PASS: TestCachePipelineInitialSelectionIsNotUpgrade (0.00s)
+=== RUN   TestClaudeCodeAliasesEnterAuto
+--- PASS: TestClaudeCodeAliasesEnterAuto (0.00s)
+=== RUN   TestClaudeCodeSystemAndToolRoundPreserved
+--- PASS: TestClaudeCodeSystemAndToolRoundPreserved (0.00s)
+=== RUN   TestClientSessionSignalsAndIsolation
+--- PASS: TestClientSessionSignalsAndIsolation (0.00s)
+=== RUN   TestEveryModelEffortAcrossProtocols
+=== RUN   TestEveryModelEffortAcrossProtocols/deepseek-flash/chat/none
+=== RUN   TestEveryModelEffortAcrossProtocols/deepseek-flash/chat/minimal
+=== RUN   TestEveryModelEffortAcrossProtocols/deepseek-flash/chat/low
+=== RUN   TestEveryModelEffortAcrossProtocols/deepseek-flash/chat/medium
+=== RUN   TestEveryModelEffortAcrossProtocols/deepseek-flash/chat/high
+=== RUN   TestEveryModelEffortAcrossProtocols/deepseek-flash/chat/xhigh
+=== RUN   TestEveryModelEffortAcrossProtocols/deepseek-flash/chat/max
+=== RUN   TestEveryModelEffortAcrossProtocols/deepseek-flash/responses/none
+=== RUN   TestEveryModelEffortAcrossProtocols/deepseek-flash/responses/minimal
+=== RUN   TestEveryModelEffortAcrossProtocols/deepseek-flash/responses/low
+=== RUN   TestEveryModelEffortAcrossProtocols/deepseek-flash/responses/medium
+=== RUN   TestEveryModelEffortAcrossProtocols/deepseek-flash/responses/high
+=== RUN   TestEveryModelEffortAcrossProtocols/deepseek-flash/responses/xhigh
+=== RUN   TestEveryModelEffortAcrossProtocols/deepseek-flash/responses/max
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/chat/none
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/chat/minimal
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/chat/low
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/chat/medium
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/chat/high
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/chat/xhigh
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/chat/max
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/responses/none
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/responses/minimal
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/responses/low
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/responses/medium
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/responses/high
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/responses/xhigh
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/responses/max
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/chat/none
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/chat/minimal
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/chat/low
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/chat/medium
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/chat/high
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/chat/xhigh
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/chat/max
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/responses/none
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/responses/minimal
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/responses/low
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/responses/medium
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/responses/high
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/responses/xhigh
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/responses/max
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/chat/none
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/chat/minimal
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/chat/low
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/chat/medium
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/chat/high
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/chat/xhigh
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/chat/max
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/responses/none
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/responses/minimal
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/responses/low
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/responses/medium
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/responses/high
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/responses/xhigh
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/responses/max
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-6-astra/chat/none
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-6-astra/chat/minimal
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-6-astra/chat/low
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-6-astra/chat/medium
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-6-astra/chat/high
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-6-astra/chat/xhigh
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-6-astra/chat/max
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-6-astra/responses/none
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-6-astra/responses/minimal
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-6-astra/responses/low
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-6-astra/responses/medium
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-6-astra/responses/high
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-6-astra/responses/xhigh
+=== RUN   TestEveryModelEffortAcrossProtocols/gpt-6-astra/responses/max
+--- PASS: TestEveryModelEffortAcrossProtocols (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/deepseek-flash/chat/none (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/deepseek-flash/chat/minimal (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/deepseek-flash/chat/low (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/deepseek-flash/chat/medium (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/deepseek-flash/chat/high (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/deepseek-flash/chat/xhigh (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/deepseek-flash/chat/max (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/deepseek-flash/responses/none (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/deepseek-flash/responses/minimal (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/deepseek-flash/responses/low (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/deepseek-flash/responses/medium (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/deepseek-flash/responses/high (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/deepseek-flash/responses/xhigh (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/deepseek-flash/responses/max (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/chat/none (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/chat/minimal (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/chat/low (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/chat/medium (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/chat/high (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/chat/xhigh (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/chat/max (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/responses/none (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/responses/minimal (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/responses/low (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/responses/medium (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/responses/high (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/responses/xhigh (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-luna/responses/max (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/chat/none (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/chat/minimal (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/chat/low (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/chat/medium (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/chat/high (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/chat/xhigh (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/chat/max (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/responses/none (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/responses/minimal (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/responses/low (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/responses/medium (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/responses/high (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/responses/xhigh (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-terra/responses/max (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/chat/none (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/chat/minimal (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/chat/low (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/chat/medium (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/chat/high (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/chat/xhigh (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/chat/max (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/responses/none (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/responses/minimal (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/responses/low (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/responses/medium (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/responses/high (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/responses/xhigh (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-5.6-sol/responses/max (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-6-astra/chat/none (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-6-astra/chat/minimal (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-6-astra/chat/low (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-6-astra/chat/medium (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-6-astra/chat/high (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-6-astra/chat/xhigh (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-6-astra/chat/max (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-6-astra/responses/none (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-6-astra/responses/minimal (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-6-astra/responses/low (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-6-astra/responses/medium (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-6-astra/responses/high (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-6-astra/responses/xhigh (0.00s)
+    --- PASS: TestEveryModelEffortAcrossProtocols/gpt-6-astra/responses/max (0.00s)
+=== RUN   TestReportedDowngradeCannotPopulateHigherEffortCache
+--- PASS: TestReportedDowngradeCannotPopulateHigherEffortCache (0.00s)
+=== RUN   TestBufferedAndStreamReportedEffortPreserved
+--- PASS: TestBufferedAndStreamReportedEffortPreserved (0.00s)
+=== RUN   TestResponsesClientConfigurationCannotOverrideAutoEffort
+--- PASS: TestResponsesClientConfigurationCannotOverrideAutoEffort (0.00s)
+=== RUN   TestNativeEffortMatchesUsageAuditAndCache
+--- PASS: TestNativeEffortMatchesUsageAuditAndCache (0.00s)
+=== RUN   TestHistoricalProjectCheckpoints
+=== RUN   TestHistoricalProjectCheckpoints/logout-start/zh
+=== RUN   TestHistoricalProjectCheckpoints/logout-start/en
+=== RUN   TestHistoricalProjectCheckpoints/logout-start/mixed
+=== RUN   TestHistoricalProjectCheckpoints/logout-tool_result/zh
+=== RUN   TestHistoricalProjectCheckpoints/logout-tool_result/en
+=== RUN   TestHistoricalProjectCheckpoints/logout-tool_result/mixed
+=== RUN   TestHistoricalProjectCheckpoints/logout-correction/zh
+=== RUN   TestHistoricalProjectCheckpoints/logout-correction/en
+=== RUN   TestHistoricalProjectCheckpoints/logout-correction/mixed
+=== RUN   TestHistoricalProjectCheckpoints/logout-new_task/zh
+=== RUN   TestHistoricalProjectCheckpoints/logout-new_task/en
+=== RUN   TestHistoricalProjectCheckpoints/logout-new_task/mixed
+=== RUN   TestHistoricalProjectCheckpoints/startup-start/zh
+=== RUN   TestHistoricalProjectCheckpoints/startup-start/en
+=== RUN   TestHistoricalProjectCheckpoints/startup-start/mixed
+=== RUN   TestHistoricalProjectCheckpoints/startup-tool_result/zh
+=== RUN   TestHistoricalProjectCheckpoints/startup-tool_result/en
+=== RUN   TestHistoricalProjectCheckpoints/startup-tool_result/mixed
+=== RUN   TestHistoricalProjectCheckpoints/startup-correction/zh
+=== RUN   TestHistoricalProjectCheckpoints/startup-correction/en
+=== RUN   TestHistoricalProjectCheckpoints/startup-correction/mixed
+=== RUN   TestHistoricalProjectCheckpoints/startup-new_task/zh
+=== RUN   TestHistoricalProjectCheckpoints/startup-new_task/en
+=== RUN   TestHistoricalProjectCheckpoints/startup-new_task/mixed
+=== RUN   TestHistoricalProjectCheckpoints/release-start/zh
+=== RUN   TestHistoricalProjectCheckpoints/release-start/en
+=== RUN   TestHistoricalProjectCheckpoints/release-start/mixed
+=== RUN   TestHistoricalProjectCheckpoints/release-tool_result/zh
+=== RUN   TestHistoricalProjectCheckpoints/release-tool_result/en
+=== RUN   TestHistoricalProjectCheckpoints/release-tool_result/mixed
+=== RUN   TestHistoricalProjectCheckpoints/release-correction/zh
+=== RUN   TestHistoricalProjectCheckpoints/release-correction/en
+=== RUN   TestHistoricalProjectCheckpoints/release-correction/mixed
+=== RUN   TestHistoricalProjectCheckpoints/release-new_task/zh
+=== RUN   TestHistoricalProjectCheckpoints/release-new_task/en
+=== RUN   TestHistoricalProjectCheckpoints/release-new_task/mixed
+=== RUN   TestHistoricalProjectCheckpoints/reminder-start/zh
+=== RUN   TestHistoricalProjectCheckpoints/reminder-start/en
+=== RUN   TestHistoricalProjectCheckpoints/reminder-start/mixed
+=== RUN   TestHistoricalProjectCheckpoints/reminder-tool_result/zh
+=== RUN   TestHistoricalProjectCheckpoints/reminder-tool_result/en
+=== RUN   TestHistoricalProjectCheckpoints/reminder-tool_result/mixed
+=== RUN   TestHistoricalProjectCheckpoints/reminder-correction/zh
+=== RUN   TestHistoricalProjectCheckpoints/reminder-correction/en
+=== RUN   TestHistoricalProjectCheckpoints/reminder-correction/mixed
+=== RUN   TestHistoricalProjectCheckpoints/reminder-new_task/zh
+=== RUN   TestHistoricalProjectCheckpoints/reminder-new_task/en
+=== RUN   TestHistoricalProjectCheckpoints/reminder-new_task/mixed
+--- PASS: TestHistoricalProjectCheckpoints (0.01s)
+    --- PASS: TestHistoricalProjectCheckpoints/logout-start/zh (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/logout-start/en (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/logout-start/mixed (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/logout-tool_result/zh (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/logout-tool_result/en (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/logout-tool_result/mixed (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/logout-correction/zh (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/logout-correction/en (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/logout-correction/mixed (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/logout-new_task/zh (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/logout-new_task/en (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/logout-new_task/mixed (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/startup-start/zh (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/startup-start/en (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/startup-start/mixed (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/startup-tool_result/zh (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/startup-tool_result/en (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/startup-tool_result/mixed (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/startup-correction/zh (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/startup-correction/en (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/startup-correction/mixed (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/startup-new_task/zh (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/startup-new_task/en (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/startup-new_task/mixed (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/release-start/zh (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/release-start/en (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/release-start/mixed (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/release-tool_result/zh (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/release-tool_result/en (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/release-tool_result/mixed (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/release-correction/zh (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/release-correction/en (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/release-correction/mixed (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/release-new_task/zh (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/release-new_task/en (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/release-new_task/mixed (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/reminder-start/zh (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/reminder-start/en (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/reminder-start/mixed (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/reminder-tool_result/zh (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/reminder-tool_result/en (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/reminder-tool_result/mixed (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/reminder-correction/zh (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/reminder-correction/en (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/reminder-correction/mixed (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/reminder-new_task/zh (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/reminder-new_task/en (0.00s)
+    --- PASS: TestHistoricalProjectCheckpoints/reminder-new_task/mixed (0.00s)
+=== RUN   TestToolResultWithUserCorrectionIsCurrentTask
+--- PASS: TestToolResultWithUserCorrectionIsCurrentTask (0.00s)
+=== RUN   TestToolRoundCannotResetOrFailover
+--- PASS: TestToolRoundCannotResetOrFailover (0.00s)
+=== RUN   TestNestedToolResultImageIsNotSilentlyClassifiedAsText
+--- PASS: TestNestedToolResultImageIsNotSilentlyClassifiedAsText (0.00s)
+=== RUN   TestToolHistoryWithoutCatalogCannotUseResponseCache
+--- PASS: TestToolHistoryWithoutCatalogCannotUseResponseCache (0.00s)
+=== RUN   TestCompletedReasoningIsPortableButPendingToolReasoningIsPreserved
+=== RUN   TestCompletedReasoningIsPortableButPendingToolReasoningIsPreserved/responses
+=== RUN   TestCompletedReasoningIsPortableButPendingToolReasoningIsPreserved/anthropic
+=== RUN   TestCompletedReasoningIsPortableButPendingToolReasoningIsPreserved/chat
+--- PASS: TestCompletedReasoningIsPortableButPendingToolReasoningIsPreserved (0.00s)
+    --- PASS: TestCompletedReasoningIsPortableButPendingToolReasoningIsPreserved/responses (0.00s)
+    --- PASS: TestCompletedReasoningIsPortableButPendingToolReasoningIsPreserved/anthropic (0.00s)
+    --- PASS: TestCompletedReasoningIsPortableButPendingToolReasoningIsPreserved/chat (0.00s)
+=== RUN   TestUserReasoningPartDoesNotMasqueradeAsAssistantHistory
+--- PASS: TestUserReasoningPartDoesNotMasqueradeAsAssistantHistory (0.00s)
+=== RUN   TestHTTPModelsExposeAutoOnly
+--- PASS: TestHTTPModelsExposeAutoOnly (0.00s)
+=== RUN   TestHTTPRouteNormalizesProtocolAndIgnoresClientEffort
+--- PASS: TestHTTPRouteNormalizesProtocolAndIgnoresClientEffort (0.00s)
+=== RUN   TestHTTPRouteRejectsNonAutoModel
+--- PASS: TestHTTPRouteRejectsNonAutoModel (0.00s)
+=== RUN   TestHTTPRouteHonorsPreflightBlockAndUnavailable
+=== RUN   TestHTTPRouteHonorsPreflightBlockAndUnavailable/block
+=== RUN   TestHTTPRouteHonorsPreflightBlockAndUnavailable/unavailable
+--- PASS: TestHTTPRouteHonorsPreflightBlockAndUnavailable (0.00s)
+    --- PASS: TestHTTPRouteHonorsPreflightBlockAndUnavailable/block (0.00s)
+    --- PASS: TestHTTPRouteHonorsPreflightBlockAndUnavailable/unavailable (0.00s)
+=== RUN   TestHTTPRouteKeepsModelWhenStreamIsActive
+--- PASS: TestHTTPRouteKeepsModelWhenStreamIsActive (0.00s)
+=== RUN   TestHTTPCompletionForwardsBufferedResponse
+--- PASS: TestHTTPCompletionForwardsBufferedResponse (0.00s)
+=== RUN   TestHTTPCompletionForwardsAllowlistedAuthOnStream
+--- PASS: TestHTTPCompletionForwardsAllowlistedAuthOnStream (0.00s)
+=== RUN   TestPhaseDOrderGuardThenAutoThenUpstream
+--- PASS: TestPhaseDOrderGuardThenAutoThenUpstream (0.00s)
+=== RUN   TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable
+=== RUN   TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/block
+=== RUN   TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/unavailable
+--- PASS: TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable (0.00s)
+    --- PASS: TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/block (0.00s)
+    --- PASS: TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/unavailable (0.00s)
+=== RUN   TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt
+=== RUN   TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt/block
+=== RUN   TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt/unavailable
+--- PASS: TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt (0.00s)
+    --- PASS: TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt/block (0.00s)
+    --- PASS: TestPipelineAuditsPreflightBlockAndUnavailableWithoutPrompt/unavailable (0.00s)
+=== RUN   TestPipelineAllowMapsAutoDecisionAndCallsUpstreamOnce
+--- PASS: TestPipelineAllowMapsAutoDecisionAndCallsUpstreamOnce (0.00s)
+=== RUN   TestPipelinePropagatesUpstreamFailureWithoutRetry
+--- PASS: TestPipelinePropagatesUpstreamFailureWithoutRetry (0.00s)
+=== RUN   TestPipelineResponseCacheHitSkipsUpstreamAndRecordsUsage
+--- PASS: TestPipelineResponseCacheHitSkipsUpstreamAndRecordsUsage (0.00s)
+=== RUN   TestPipelineCacheExpiresAndUpstreamFailureIsNotStored
+--- PASS: TestPipelineCacheExpiresAndUpstreamFailureIsNotStored (0.00s)
+=== RUN   TestHTTPPreflightCheckerSendsSanitizedShapeAndParsesAllow
+--- PASS: TestHTTPPreflightCheckerSendsSanitizedShapeAndParsesAllow (0.00s)
+=== RUN   TestHTTPPreflightCheckerFailsClosedOnUnavailable
+--- PASS: TestHTTPPreflightCheckerFailsClosedOnUnavailable (0.00s)
+=== RUN   TestGuardReceivesIsolatedSessionAndRequestID
+--- PASS: TestGuardReceivesIsolatedSessionAndRequestID (0.00s)
+=== RUN   TestMissingPreflightStopsAllRouting
+--- PASS: TestMissingPreflightStopsAllRouting (0.00s)
+=== RUN   TestNormalizeChatCompletions
+--- PASS: TestNormalizeChatCompletions (0.00s)
+=== RUN   TestNormalizeResponsesIgnoresClientReasoning
+--- PASS: TestNormalizeResponsesIgnoresClientReasoning (0.00s)
+=== RUN   TestNormalizeAnthropicMessagesAndTools
+--- PASS: TestNormalizeAnthropicMessagesAndTools (0.00s)
+=== RUN   TestNormalizeRejectsMalformedAndUnknownProtocol
+--- PASS: TestNormalizeRejectsMalformedAndUnknownProtocol (0.00s)
+=== RUN   TestStreamCapabilityIsRequired
+--- PASS: TestStreamCapabilityIsRequired (0.00s)
+=== RUN   TestBuildProviderPayloadUsesGeneratedParameters
+=== RUN   TestBuildProviderPayloadUsesGeneratedParameters/chat
+=== RUN   TestBuildProviderPayloadUsesGeneratedParameters/responses
+=== RUN   TestBuildProviderPayloadUsesGeneratedParameters/anthropic
+--- PASS: TestBuildProviderPayloadUsesGeneratedParameters (0.00s)
+    --- PASS: TestBuildProviderPayloadUsesGeneratedParameters/chat (0.00s)
+    --- PASS: TestBuildProviderPayloadUsesGeneratedParameters/responses (0.00s)
+    --- PASS: TestBuildProviderPayloadUsesGeneratedParameters/anthropic (0.00s)
+=== RUN   TestBuildProviderPayloadPreservesRawPartsAndTools
+--- PASS: TestBuildProviderPayloadPreservesRawPartsAndTools (0.00s)
+=== RUN   TestBuildRouteAuditExplainsGeneratedEffort
+--- PASS: TestBuildRouteAuditExplainsGeneratedEffort (0.00s)
+=== RUN   TestClassifierTransportFailuresRetainAttemptedEffort
+--- PASS: TestClassifierTransportFailuresRetainAttemptedEffort (0.00s)
+=== RUN   TestSemanticClassificationDoesNotUseLanguageOrLengthAsDifficulty
+--- PASS: TestSemanticClassificationDoesNotUseLanguageOrLengthAsDifficulty (0.00s)
+=== RUN   TestSemanticInputSeparatesRolesAndContinuation
+--- PASS: TestSemanticInputSeparatesRolesAndContinuation (0.00s)
+=== RUN   TestSemanticNormalizedPartsNotDuplicated
+--- PASS: TestSemanticNormalizedPartsNotDuplicated (0.00s)
+=== RUN   TestSemanticClassifierValidatedReviewAndSeparateUsage
+--- PASS: TestSemanticClassifierValidatedReviewAndSeparateUsage (0.00s)
+=== RUN   TestSemanticClassifierFailsClosedOnBadResponse
+--- PASS: TestSemanticClassifierFailsClosedOnBadResponse (0.00s)
+=== RUN   TestPipelineGuardPrecedesSemanticAndClassifierFailureHasNoUpstream
+--- PASS: TestPipelineGuardPrecedesSemanticAndClassifierFailureHasNoUpstream (0.00s)
+=== RUN   TestSemanticCacheContextIdentityExpiryAndNoRawText
+--- PASS: TestSemanticCacheContextIdentityExpiryAndNoRawText (0.00s)
+=== RUN   TestSemanticEscalationAndContinuation
+--- PASS: TestSemanticEscalationAndContinuation (0.00s)
+=== RUN   TestUsagePurposeIsolation
+--- PASS: TestUsagePurposeIsolation (0.00s)
+=== RUN   TestHTTPUpstreamRejectsNonJSON200
+--- PASS: TestHTTPUpstreamRejectsNonJSON200 (0.00s)
+=== RUN   TestRawProtocolPreservesDevelopmentFieldsAndIgnoresClientEffort
+--- PASS: TestRawProtocolPreservesDevelopmentFieldsAndIgnoresClientEffort (0.00s)
+=== RUN   TestSemanticRejectsUnreadableImageAndProviderStoredHistory
+--- PASS: TestSemanticRejectsUnreadableImageAndProviderStoredHistory (0.00s)
+=== RUN   TestPilotIdentityRunsBeforeGuardAndRejectsForgedKeyID
+--- PASS: TestPilotIdentityRunsBeforeGuardAndRejectsForgedKeyID (0.00s)
+=== RUN   TestObservedStreamCompletionUsageAndFailure
+--- PASS: TestObservedStreamCompletionUsageAndFailure (0.00s)
+=== RUN   TestResultAuditRecordsActualResponseAndFailedAttempt
+--- PASS: TestResultAuditRecordsActualResponseAndFailedAttempt (0.00s)
+=== RUN   TestClassifierUnavailableIsHTTP503
+--- PASS: TestClassifierUnavailableIsHTTP503 (0.00s)
+=== RUN   TestAuditFailureDoesNotLeaveCoalescedCallPending
+--- PASS: TestAuditFailureDoesNotLeaveCoalescedCallPending (0.00s)
+=== RUN   TestAstraEffortMappingUsesVerifiedSupport
+--- PASS: TestAstraEffortMappingUsesVerifiedSupport (0.00s)
+=== RUN   TestFailedStateWriteDoesNotPublishMemoryState
+--- PASS: TestFailedStateWriteDoesNotPublishMemoryState (0.00s)
+=== RUN   TestFileSessionStateStorePersistsOnlyRouteState
+--- PASS: TestFileSessionStateStorePersistsOnlyRouteState (0.00s)
+=== RUN   TestSessionStateStoreSeparatesSessionsAndKeepsOneSessionSticky
+--- PASS: TestSessionStateStoreSeparatesSessionsAndKeepsOneSessionSticky (0.00s)
+=== RUN   TestSessionStateStoreExpiresAndDoesNotUseSharedGatewayState
+--- PASS: TestSessionStateStoreExpiresAndDoesNotUseSharedGatewayState (0.00s)
+=== RUN   TestSessionStateStoreConcurrentSessions
+--- PASS: TestSessionStateStoreConcurrentSessions (0.00s)
+=== RUN   TestTokenCountAuditsToolBindingFailureAndCompletion
+=== RUN   TestTokenCountAuditsToolBindingFailureAndCompletion/missing_tool_binding
+=== RUN   TestTokenCountAuditsToolBindingFailureAndCompletion/completed
+--- PASS: TestTokenCountAuditsToolBindingFailureAndCompletion (0.00s)
+    --- PASS: TestTokenCountAuditsToolBindingFailureAndCompletion/missing_tool_binding (0.00s)
+    --- PASS: TestTokenCountAuditsToolBindingFailureAndCompletion/completed (0.00s)
+=== RUN   TestTokenCountGuardAndStateBoundary
+=== RUN   TestTokenCountGuardAndStateBoundary/block
+=== RUN   TestTokenCountGuardAndStateBoundary/unavailable
+=== RUN   TestTokenCountGuardAndStateBoundary/allow
+--- PASS: TestTokenCountGuardAndStateBoundary (0.00s)
+    --- PASS: TestTokenCountGuardAndStateBoundary/block (0.00s)
+    --- PASS: TestTokenCountGuardAndStateBoundary/unavailable (0.00s)
+    --- PASS: TestTokenCountGuardAndStateBoundary/allow (0.00s)
+=== RUN   TestHTTPTokenCounterValidatesResponse
+--- PASS: TestHTTPTokenCounterValidatesResponse (0.00s)
+=== RUN   TestInterleavedAgentsResumeTheirOwnToolProvider
+=== RUN   TestInterleavedAgentsResumeTheirOwnToolProvider/chat
+=== RUN   TestInterleavedAgentsResumeTheirOwnToolProvider/responses
+=== RUN   TestInterleavedAgentsResumeTheirOwnToolProvider/anthropic
+--- PASS: TestInterleavedAgentsResumeTheirOwnToolProvider (0.00s)
+    --- PASS: TestInterleavedAgentsResumeTheirOwnToolProvider/chat (0.00s)
+    --- PASS: TestInterleavedAgentsResumeTheirOwnToolProvider/responses (0.00s)
+    --- PASS: TestInterleavedAgentsResumeTheirOwnToolProvider/anthropic (0.00s)
+=== RUN   TestStreamToolCallIDsAcrossProtocols
+--- PASS: TestStreamToolCallIDsAcrossProtocols (0.00s)
+=== RUN   TestMalformedStreamCannotBecomeSuccessfulAfterDone
+--- PASS: TestMalformedStreamCannotBecomeSuccessfulAfterDone (0.00s)
+=== RUN   TestSSEMultilineDataAndCRLF
+--- PASS: TestSSEMultilineDataAndCRLF (0.00s)
+=== RUN   TestHTTPUpstreamClientBuildsGeneratedPayloadAndAuth
+--- PASS: TestHTTPUpstreamClientBuildsGeneratedPayloadAndAuth (0.00s)
+=== RUN   TestHTTPUpstreamClientPropagatesStatusWithoutCachingContract
+--- PASS: TestHTTPUpstreamClientPropagatesStatusWithoutCachingContract (0.00s)
+=== RUN   TestHTTPUpstreamClientRejectsStreamingComplete
+--- PASS: TestHTTPUpstreamClientRejectsStreamingComplete (0.00s)
+=== RUN   TestHTTPUpstreamClientEnforcesResponseLimit
+--- PASS: TestHTTPUpstreamClientEnforcesResponseLimit (0.00s)
+=== RUN   TestHTTPUpstreamClientOpensAndRelaysSSE
+--- PASS: TestHTTPUpstreamClientOpensAndRelaysSSE (0.00s)
+=== RUN   TestDailyUsageSeparatesModelReasoningRegionAndKey
+--- PASS: TestDailyUsageSeparatesModelReasoningRegionAndKey (0.00s)
+=== RUN   TestJSONLUsageSinkWritesRedactedCounters
+--- PASS: TestJSONLUsageSinkWritesRedactedCounters (0.00s)
+=== RUN   TestRelayDuplexClosesBothSidesAtTurnEnd
+--- PASS: TestRelayDuplexClosesBothSidesAtTurnEnd (0.00s)
+=== RUN   TestRelayDuplexRejectsMissingConnection
+--- PASS: TestRelayDuplexRejectsMissingConnection (0.00s)
+PASS
+ok  	local/auto-gateway	0.118s
+?   	local/auto-gateway/cmd/auto-preview	[no test files]
+?   	local/auto-gateway/cmd/auto-server	[no test files]
+?   	local/auto-gateway/cmd/effort-probe	[no test files]
+?   	local/auto-gateway/cmd/semantic-eval	[no test files]
+ok  	local/auto-gateway	2.195s
+?   	local/auto-gateway/cmd/auto-preview	[no test files]
+?   	local/auto-gateway/cmd/auto-server	[no test files]
+?   	local/auto-gateway/cmd/effort-probe	[no test files]
+?   	local/auto-gateway/cmd/semantic-eval	[no test files]

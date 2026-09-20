@@ -1,0 +1,29 @@
+{
+  "source_thread": "019fcb9a-55e9-70b1-99d6-60912a1c9bab",
+  "source_title": "修复退出登录状态未清除",
+  "base_commit": "2e394cb6b0847619dad1e52d99662ffb0a2e8b0b",
+  "oracle_commit": "5b3a9d1",
+  "tracked_files": 209,
+  "excluded_signing_entries": 22,
+  "adaptations": [
+    "Signing material and publishing script excluded",
+    "Signing configuration removed for unsigned assembleHap",
+    "Installed oh_modules copied without modifying original",
+    "Android NavigationUtil copied as reference"
+  ],
+  "original_worktree_clean": true,
+  "source_credential_placeholders": [
+    {
+      "path": "entry/src/main/ets/entryability/EntryAbility.ets",
+      "count": 1
+    },
+    {
+      "path": "entry/src/main/ets/constants/AppConstants.ets",
+      "count": 1
+    }
+  ],
+  "baseline_unsigned_build": "passed before unrelated credential placeholders",
+  "source_credential_placeholder_format": "<REDACTED:secret>",
+  "android_reference_sha256": "5e90ac31ad29b79112e5965180d9d6d5c71e5d8af1600505f5002339ea24a588",
+  "baseline_navigation_sha256": "27610743d7a6e8161e71aabba2c05f04db6a144c41308d7f6839a08e93a46c77"
+}

@@ -1,0 +1,12 @@
+{
+  "archive": "auto-gateway-stage6.tgz",
+  "sha256": "460fa781bd2b7c2a8225b72c56525a91cbd4c18b4de5e569a408df92721b2508",
+  "host": "qiyuan-gpu",
+  "directory": "/tmp/auto-gateway-stage6/auto-gateway",
+  "gofmt": "pass",
+  "go_test": "pass",
+  "go_vet": "pass",
+  "go_test_race": "pass",
+  "static_build": "pass",
+  "production_changed": false
+}

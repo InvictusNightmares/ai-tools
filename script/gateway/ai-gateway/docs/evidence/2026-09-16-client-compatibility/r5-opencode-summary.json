@@ -1,0 +1,12 @@
+{
+  "at": "2026-09-16T07:17:07.856999+00:00",
+  "client": "opencode",
+  "exit_code": 0,
+  "elapsed_ms": 15827,
+  "has_final_text": true,
+  "error_event_types": [],
+  "stdout_bytes": 950,
+  "stderr_bytes": 0,
+  "pass": true,
+  "cli_version": "1.18.4"
+}

@@ -1,0 +1,1126 @@
+{
+  "scope": "synthetic_transport_and_bounded_hash_queue_only",
+  "full_capture_acceptance": false,
+  "rows": [
+    {
+      "mode": "json",
+      "payload_bytes": 1112,
+      "delay_ms": 0,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "go-off",
+      "rounds": 3,
+      "measured_requests": 3000,
+      "ok": 3000,
+      "first_p95_ms_median": 1.109,
+      "total_p95_ms_median": 1.142,
+      "first_vs_nginx_percent": 60.02886002886003,
+      "total_vs_nginx_percent": 64.08045977011494,
+      "rps_median": 26362.155649284738,
+      "cpu_ms_per_exchange_including_warmup": 0.08720930232558129,
+      "peak_rss_mib": 30.44140625,
+      "round_first_p95_ms": [
+        1.234,
+        0.992,
+        1.109
+      ],
+      "round_total_p95_ms": [
+        1.241,
+        0.995,
+        1.142
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1112,
+      "delay_ms": 0,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "go-on",
+      "rounds": 3,
+      "measured_requests": 3000,
+      "ok": 3000,
+      "first_p95_ms_median": 1.188,
+      "total_p95_ms_median": 1.194,
+      "first_vs_nginx_percent": 71.42857142857144,
+      "total_vs_nginx_percent": 71.55172413793105,
+      "rps_median": 25011.23317009752,
+      "cpu_ms_per_exchange_including_warmup": 0.09689922480620188,
+      "peak_rss_mib": 29.99609375,
+      "round_first_p95_ms": [
+        1.188,
+        1.072,
+        1.241
+      ],
+      "round_total_p95_ms": [
+        1.194,
+        1.08,
+        1.267
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1112,
+      "delay_ms": 0,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "nginx",
+      "rounds": 3,
+      "measured_requests": 3000,
+      "ok": 3000,
+      "first_p95_ms_median": 0.693,
+      "total_p95_ms_median": 0.696,
+      "first_vs_nginx_percent": 0.0,
+      "total_vs_nginx_percent": 0.0,
+      "rps_median": 62336.79447995218,
+      "cpu_ms_per_exchange_including_warmup": 0.019379844961240036,
+      "peak_rss_mib": 15.7734375,
+      "round_first_p95_ms": [
+        0.796,
+        0.589,
+        0.693
+      ],
+      "round_total_p95_ms": [
+        0.799,
+        0.592,
+        0.696
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1112,
+      "delay_ms": 0,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "rust-off",
+      "rounds": 3,
+      "measured_requests": 3000,
+      "ok": 3000,
+      "first_p95_ms_median": 0.923,
+      "total_p95_ms_median": 0.925,
+      "first_vs_nginx_percent": 33.18903318903321,
+      "total_vs_nginx_percent": 32.90229885057472,
+      "rps_median": 25387.622665693776,
+      "cpu_ms_per_exchange_including_warmup": 0.07751937984496123,
+      "peak_rss_mib": 26.74609375,
+      "round_first_p95_ms": [
+        0.663,
+        0.923,
+        0.948
+      ],
+      "round_total_p95_ms": [
+        0.67,
+        0.925,
+        0.951
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1112,
+      "delay_ms": 0,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "rust-on",
+      "rounds": 3,
+      "measured_requests": 3000,
+      "ok": 3000,
+      "first_p95_ms_median": 0.757,
+      "total_p95_ms_median": 0.76,
+      "first_vs_nginx_percent": 9.23520923520924,
+      "total_vs_nginx_percent": 9.195402298850585,
+      "rps_median": 32595.94673965725,
+      "cpu_ms_per_exchange_including_warmup": 0.08720930232558174,
+      "peak_rss_mib": 44.88671875,
+      "round_first_p95_ms": [
+        0.664,
+        0.757,
+        0.787
+      ],
+      "round_total_p95_ms": [
+        0.667,
+        0.76,
+        0.789
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1112,
+      "delay_ms": 20,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "go-off",
+      "rounds": 3,
+      "measured_requests": 1200,
+      "ok": 1200,
+      "first_p95_ms_median": 21.188,
+      "total_p95_ms_median": 21.194,
+      "first_vs_nginx_percent": 1.6747444695042857,
+      "total_vs_nginx_percent": 1.6840186153624703,
+      "rps_median": 769.4808564281918,
+      "cpu_ms_per_exchange_including_warmup": 0.12345679012345787,
+      "peak_rss_mib": 31.01171875,
+      "round_first_p95_ms": [
+        21.127,
+        21.188,
+        21.588
+      ],
+      "round_total_p95_ms": [
+        21.134,
+        21.194,
+        21.592
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1112,
+      "delay_ms": 20,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "go-on",
+      "rounds": 3,
+      "measured_requests": 1200,
+      "ok": 1200,
+      "first_p95_ms_median": 21.335,
+      "total_p95_ms_median": 21.34,
+      "first_vs_nginx_percent": 2.3801525984932237,
+      "total_vs_nginx_percent": 2.384493594971926,
+      "rps_median": 769.5366467289405,
+      "cpu_ms_per_exchange_including_warmup": 0.10802469135802442,
+      "peak_rss_mib": 30.09765625,
+      "round_first_p95_ms": [
+        21.335,
+        21.247,
+        21.569
+      ],
+      "round_total_p95_ms": [
+        21.34,
+        21.251,
+        21.572
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1112,
+      "delay_ms": 20,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "nginx",
+      "rounds": 3,
+      "measured_requests": 1200,
+      "ok": 1200,
+      "first_p95_ms_median": 20.839,
+      "total_p95_ms_median": 20.843,
+      "first_vs_nginx_percent": 0.0,
+      "total_vs_nginx_percent": 0.0,
+      "rps_median": 773.5762789347577,
+      "cpu_ms_per_exchange_including_warmup": 0.030864197530863863,
+      "peak_rss_mib": 15.87109375,
+      "round_first_p95_ms": [
+        20.842,
+        20.679,
+        20.839
+      ],
+      "round_total_p95_ms": [
+        20.847,
+        20.682,
+        20.843
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1112,
+      "delay_ms": 20,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "rust-off",
+      "rounds": 3,
+      "measured_requests": 1200,
+      "ok": 1200,
+      "first_p95_ms_median": 21.303,
+      "total_p95_ms_median": 21.307,
+      "first_vs_nginx_percent": 2.2265943663323684,
+      "total_vs_nginx_percent": 2.2261670584848625,
+      "rps_median": 761.3124361773941,
+      "cpu_ms_per_exchange_including_warmup": 0.09259259259259385,
+      "peak_rss_mib": 26.76171875,
+      "round_first_p95_ms": [
+        20.768,
+        21.303,
+        21.45
+      ],
+      "round_total_p95_ms": [
+        20.77,
+        21.307,
+        21.453
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1112,
+      "delay_ms": 20,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "rust-on",
+      "rounds": 3,
+      "measured_requests": 1200,
+      "ok": 1200,
+      "first_p95_ms_median": 20.888,
+      "total_p95_ms_median": 20.891,
+      "first_vs_nginx_percent": 0.23513604299632007,
+      "total_vs_nginx_percent": 0.23029314398117506,
+      "rps_median": 772.9912915921926,
+      "cpu_ms_per_exchange_including_warmup": 0.10030864197530992,
+      "peak_rss_mib": 44.9140625,
+      "round_first_p95_ms": [
+        20.868,
+        20.888,
+        21.155
+      ],
+      "round_total_p95_ms": [
+        20.871,
+        20.891,
+        21.158
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1048664,
+      "delay_ms": 0,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "go-off",
+      "rounds": 3,
+      "measured_requests": 768,
+      "ok": 768,
+      "first_p95_ms_median": 27.286,
+      "total_p95_ms_median": 27.289,
+      "first_vs_nginx_percent": 0.24615158528968895,
+      "total_vs_nginx_percent": 0.22771513571087088,
+      "rps_median": 1117.9431167222617,
+      "cpu_ms_per_exchange_including_warmup": 1.7592592592592593,
+      "peak_rss_mib": 31.01953125,
+      "round_first_p95_ms": [
+        25.132,
+        28.498,
+        27.286
+      ],
+      "round_total_p95_ms": [
+        25.138,
+        28.501,
+        27.289
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1048664,
+      "delay_ms": 0,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "go-on",
+      "rounds": 3,
+      "measured_requests": 768,
+      "ok": 768,
+      "first_p95_ms_median": 27.935,
+      "total_p95_ms_median": 27.938,
+      "first_vs_nginx_percent": 2.630515448767401,
+      "total_vs_nginx_percent": 2.6113784111359895,
+      "rps_median": 1154.3844497668683,
+      "cpu_ms_per_exchange_including_warmup": 2.3263888888888906,
+      "peak_rss_mib": 47.25390625,
+      "round_first_p95_ms": [
+        26.009,
+        28.493,
+        27.935
+      ],
+      "round_total_p95_ms": [
+        26.012,
+        28.496,
+        27.938
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1048664,
+      "delay_ms": 0,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "nginx",
+      "rounds": 3,
+      "measured_requests": 768,
+      "ok": 768,
+      "first_p95_ms_median": 27.219,
+      "total_p95_ms_median": 27.227,
+      "first_vs_nginx_percent": 0.0,
+      "total_vs_nginx_percent": 0.0,
+      "rps_median": 1163.9024899406886,
+      "cpu_ms_per_exchange_including_warmup": 0.6018518518518513,
+      "peak_rss_mib": 16.05078125,
+      "round_first_p95_ms": [
+        25.945,
+        32.005,
+        27.219
+      ],
+      "round_total_p95_ms": [
+        25.947,
+        32.009,
+        27.227
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1048664,
+      "delay_ms": 0,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "rust-off",
+      "rounds": 3,
+      "measured_requests": 768,
+      "ok": 768,
+      "first_p95_ms_median": 28.268,
+      "total_p95_ms_median": 28.273,
+      "first_vs_nginx_percent": 3.853925566699723,
+      "total_vs_nginx_percent": 3.841774708928636,
+      "rps_median": 1122.790254482341,
+      "cpu_ms_per_exchange_including_warmup": 2.0138888888888866,
+      "peak_rss_mib": 27.0625,
+      "round_first_p95_ms": [
+        28.268,
+        27.631,
+        29.023
+      ],
+      "round_total_p95_ms": [
+        28.273,
+        27.633,
+        29.026
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1048664,
+      "delay_ms": 0,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "rust-on",
+      "rounds": 3,
+      "measured_requests": 768,
+      "ok": 768,
+      "first_p95_ms_median": 29.716,
+      "total_p95_ms_median": 29.719,
+      "first_vs_nginx_percent": 9.173738932363417,
+      "total_vs_nginx_percent": 9.152679325669366,
+      "rps_median": 1100.169637563037,
+      "cpu_ms_per_exchange_including_warmup": 2.7314814814814783,
+      "peak_rss_mib": 47.09375,
+      "round_first_p95_ms": [
+        29.716,
+        26.55,
+        32.735
+      ],
+      "round_total_p95_ms": [
+        29.719,
+        26.553,
+        32.739
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1048664,
+      "delay_ms": 20,
+      "concurrency": 16,
+      "offered_rps": 50,
+      "candidate": "go-off",
+      "rounds": 3,
+      "measured_requests": 600,
+      "ok": 600,
+      "first_p95_ms_median": 24.475,
+      "total_p95_ms_median": 24.48,
+      "first_vs_nginx_percent": 0.7865261077252717,
+      "total_vs_nginx_percent": 0.7946638119158411,
+      "rps_median": 49.95093909922139,
+      "cpu_ms_per_exchange_including_warmup": 2.0833333333333313,
+      "peak_rss_mib": 30.55859375,
+      "round_first_p95_ms": [
+        24.110999999999997,
+        24.475,
+        24.583
+      ],
+      "round_total_p95_ms": [
+        24.113,
+        24.48,
+        24.589
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1048664,
+      "delay_ms": 20,
+      "concurrency": 16,
+      "offered_rps": 50,
+      "candidate": "go-on",
+      "rounds": 3,
+      "measured_requests": 600,
+      "ok": 600,
+      "first_p95_ms_median": 24.441,
+      "total_p95_ms_median": 24.445999999999998,
+      "first_vs_nginx_percent": 0.646516224674687,
+      "total_vs_nginx_percent": 0.6546712232881724,
+      "rps_median": 49.95125310906683,
+      "cpu_ms_per_exchange_including_warmup": 2.830459770114941,
+      "peak_rss_mib": 31.04296875,
+      "round_first_p95_ms": [
+        23.895,
+        24.506,
+        24.441
+      ],
+      "round_total_p95_ms": [
+        23.898,
+        24.509,
+        24.445999999999998
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1048664,
+      "delay_ms": 20,
+      "concurrency": 16,
+      "offered_rps": 50,
+      "candidate": "nginx",
+      "rounds": 3,
+      "measured_requests": 600,
+      "ok": 600,
+      "first_p95_ms_median": 24.284,
+      "total_p95_ms_median": 24.287,
+      "first_vs_nginx_percent": 0.0,
+      "total_vs_nginx_percent": 0.0,
+      "rps_median": 49.95225738072451,
+      "cpu_ms_per_exchange_including_warmup": 0.8189655172413784,
+      "peak_rss_mib": 15.73046875,
+      "round_first_p95_ms": [
+        23.986,
+        24.496000000000002,
+        24.284
+      ],
+      "round_total_p95_ms": [
+        23.989,
+        24.501,
+        24.287
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1048664,
+      "delay_ms": 20,
+      "concurrency": 16,
+      "offered_rps": 50,
+      "candidate": "rust-off",
+      "rounds": 3,
+      "measured_requests": 600,
+      "ok": 600,
+      "first_p95_ms_median": 24.360999999999997,
+      "total_p95_ms_median": 24.363999999999997,
+      "first_vs_nginx_percent": 0.3170812057321726,
+      "total_vs_nginx_percent": 0.31704203895086547,
+      "rps_median": 49.952360920425704,
+      "cpu_ms_per_exchange_including_warmup": 2.428160919540237,
+      "peak_rss_mib": 27.546875,
+      "round_first_p95_ms": [
+        24.275,
+        24.360999999999997,
+        24.402
+      ],
+      "round_total_p95_ms": [
+        24.284,
+        24.363999999999997,
+        24.407
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 1048664,
+      "delay_ms": 20,
+      "concurrency": 16,
+      "offered_rps": 50,
+      "candidate": "rust-on",
+      "rounds": 3,
+      "measured_requests": 600,
+      "ok": 600,
+      "first_p95_ms_median": 24.427,
+      "total_p95_ms_median": 24.43,
+      "first_vs_nginx_percent": 0.5888650963597364,
+      "total_vs_nginx_percent": 0.5887923580516263,
+      "rps_median": 49.953130326549115,
+      "cpu_ms_per_exchange_including_warmup": 3.2758620689655116,
+      "peak_rss_mib": 47.1640625,
+      "round_first_p95_ms": [
+        24.395,
+        24.427,
+        24.490000000000002
+      ],
+      "round_total_p95_ms": [
+        24.399,
+        24.43,
+        24.497
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 8388696,
+      "delay_ms": 0,
+      "concurrency": 4,
+      "offered_rps": 0,
+      "candidate": "go-off",
+      "rounds": 3,
+      "measured_requests": 192,
+      "ok": 192,
+      "first_p95_ms_median": 35.902,
+      "total_p95_ms_median": 35.907,
+      "first_vs_nginx_percent": -9.1571569545305,
+      "total_vs_nginx_percent": -9.15140167999191,
+      "rps_median": 150.06644754714327,
+      "cpu_ms_per_exchange_including_warmup": 11.250000000000004,
+      "peak_rss_mib": 30.7265625,
+      "round_first_p95_ms": [
+        35.902,
+        42.106,
+        34.046
+      ],
+      "round_total_p95_ms": [
+        35.907,
+        42.113,
+        34.05
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 8388696,
+      "delay_ms": 0,
+      "concurrency": 4,
+      "offered_rps": 0,
+      "candidate": "go-on",
+      "rounds": 3,
+      "measured_requests": 192,
+      "ok": 192,
+      "first_p95_ms_median": 37.919,
+      "total_p95_ms_median": 37.926,
+      "first_vs_nginx_percent": -4.05354115533515,
+      "total_vs_nginx_percent": -4.043113045238334,
+      "rps_median": 149.90180529999802,
+      "cpu_ms_per_exchange_including_warmup": 18.159722222222218,
+      "peak_rss_mib": 47.359375,
+      "round_first_p95_ms": [
+        38.958,
+        37.552,
+        37.919
+      ],
+      "round_total_p95_ms": [
+        38.963,
+        37.558,
+        37.926
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 8388696,
+      "delay_ms": 0,
+      "concurrency": 4,
+      "offered_rps": 0,
+      "candidate": "nginx",
+      "rounds": 3,
+      "measured_requests": 192,
+      "ok": 192,
+      "first_p95_ms_median": 39.521,
+      "total_p95_ms_median": 39.524,
+      "first_vs_nginx_percent": 0.0,
+      "total_vs_nginx_percent": 0.0,
+      "rps_median": 147.0879551911989,
+      "cpu_ms_per_exchange_including_warmup": 4.236111111111113,
+      "peak_rss_mib": 15.7734375,
+      "round_first_p95_ms": [
+        35.101,
+        39.521,
+        40.903
+      ],
+      "round_total_p95_ms": [
+        35.104,
+        39.524,
+        40.906
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 8388696,
+      "delay_ms": 0,
+      "concurrency": 4,
+      "offered_rps": 0,
+      "candidate": "rust-off",
+      "rounds": 3,
+      "measured_requests": 192,
+      "ok": 192,
+      "first_p95_ms_median": 38.832,
+      "total_p95_ms_median": 38.837,
+      "first_vs_nginx_percent": -1.7433769388426446,
+      "total_vs_nginx_percent": -1.738184394292075,
+      "rps_median": 153.98856884145349,
+      "cpu_ms_per_exchange_including_warmup": 13.715277777777771,
+      "peak_rss_mib": 26.64453125,
+      "round_first_p95_ms": [
+        36.706,
+        38.832,
+        40.716
+      ],
+      "round_total_p95_ms": [
+        36.709,
+        38.837,
+        40.719
+      ]
+    },
+    {
+      "mode": "json",
+      "payload_bytes": 8388696,
+      "delay_ms": 0,
+      "concurrency": 4,
+      "offered_rps": 0,
+      "candidate": "rust-on",
+      "rounds": 3,
+      "measured_requests": 192,
+      "ok": 192,
+      "first_p95_ms_median": 37.663,
+      "total_p95_ms_median": 37.669,
+      "first_vs_nginx_percent": -4.70129804407784,
+      "total_vs_nginx_percent": -4.6933508754174795,
+      "rps_median": 148.00675099493145,
+      "cpu_ms_per_exchange_including_warmup": 20.173611111111118,
+      "peak_rss_mib": 86.953125,
+      "round_first_p95_ms": [
+        37.338,
+        37.663,
+        38.567
+      ],
+      "round_total_p95_ms": [
+        37.342,
+        37.669,
+        38.571
+      ]
+    },
+    {
+      "mode": "sse",
+      "payload_bytes": 1048664,
+      "delay_ms": 20,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "go-off",
+      "rounds": 3,
+      "measured_requests": 384,
+      "ok": 384,
+      "first_p95_ms_median": 34.699,
+      "total_p95_ms_median": 56.027,
+      "first_vs_nginx_percent": 3.3046533091190655,
+      "total_vs_nginx_percent": 1.0533340547950187,
+      "rps_median": 332.4987761252569,
+      "cpu_ms_per_exchange_including_warmup": 2.4374999999999982,
+      "peak_rss_mib": 31.04296875,
+      "round_first_p95_ms": [
+        34.207,
+        38.135,
+        34.699
+      ],
+      "round_total_p95_ms": [
+        55.017,
+        61.799,
+        56.027
+      ]
+    },
+    {
+      "mode": "sse",
+      "payload_bytes": 1048664,
+      "delay_ms": 20,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "go-on",
+      "rounds": 3,
+      "measured_requests": 384,
+      "ok": 384,
+      "first_p95_ms_median": 33.234,
+      "total_p95_ms_median": 56.188,
+      "first_vs_nginx_percent": -1.0568936258894213,
+      "total_vs_nginx_percent": 1.3437223815450094,
+      "rps_median": 340.269735434645,
+      "cpu_ms_per_exchange_including_warmup": 3.249999999999995,
+      "peak_rss_mib": 54.66015625,
+      "round_first_p95_ms": [
+        33.234,
+        32.8,
+        35.637
+      ],
+      "round_total_p95_ms": [
+        56.794,
+        53.886,
+        56.188
+      ]
+    },
+    {
+      "mode": "sse",
+      "payload_bytes": 1048664,
+      "delay_ms": 20,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "nginx",
+      "rounds": 3,
+      "measured_requests": 384,
+      "ok": 384,
+      "first_p95_ms_median": 33.589,
+      "total_p95_ms_median": 55.443,
+      "first_vs_nginx_percent": 0.0,
+      "total_vs_nginx_percent": 0.0,
+      "rps_median": 336.7610858631795,
+      "cpu_ms_per_exchange_including_warmup": 0.9166666666666656,
+      "peak_rss_mib": 16.1171875,
+      "round_first_p95_ms": [
+        33.589,
+        31.465,
+        33.812
+      ],
+      "round_total_p95_ms": [
+        55.732,
+        52.272,
+        55.443
+      ]
+    },
+    {
+      "mode": "sse",
+      "payload_bytes": 1048664,
+      "delay_ms": 20,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "rust-off",
+      "rounds": 3,
+      "measured_requests": 384,
+      "ok": 384,
+      "first_p95_ms_median": 32.704,
+      "total_p95_ms_median": 54.281,
+      "first_vs_nginx_percent": -2.63479115186519,
+      "total_vs_nginx_percent": -2.095846184369532,
+      "rps_median": 340.5519862943363,
+      "cpu_ms_per_exchange_including_warmup": 2.6250000000000013,
+      "peak_rss_mib": 27.69140625,
+      "round_first_p95_ms": [
+        32.499,
+        32.704,
+        33.751
+      ],
+      "round_total_p95_ms": [
+        54.554,
+        54.281,
+        54.049
+      ]
+    },
+    {
+      "mode": "sse",
+      "payload_bytes": 1048664,
+      "delay_ms": 20,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "rust-on",
+      "rounds": 3,
+      "measured_requests": 384,
+      "ok": 384,
+      "first_p95_ms_median": 32.576,
+      "total_p95_ms_median": 53.72,
+      "first_vs_nginx_percent": -3.015868290214052,
+      "total_vs_nginx_percent": -3.107696192485976,
+      "rps_median": 338.37524968194185,
+      "cpu_ms_per_exchange_including_warmup": 3.5833333333333384,
+      "peak_rss_mib": 54.73828125,
+      "round_first_p95_ms": [
+        32.576,
+        34.564,
+        31.07
+      ],
+      "round_total_p95_ms": [
+        52.64,
+        55.521,
+        53.72
+      ]
+    },
+    {
+      "mode": "sse",
+      "payload_bytes": 1048664,
+      "delay_ms": 20,
+      "concurrency": 16,
+      "offered_rps": 50,
+      "candidate": "go-off",
+      "rounds": 3,
+      "measured_requests": 600,
+      "ok": 600,
+      "first_p95_ms_median": 24.261000000000003,
+      "total_p95_ms_median": 42.94,
+      "first_vs_nginx_percent": 1.5784625690839382,
+      "total_vs_nginx_percent": 1.2258368694012312,
+      "rps_median": 49.72745353645202,
+      "cpu_ms_per_exchange_including_warmup": 2.8448275862068986,
+      "peak_rss_mib": 30.22265625,
+      "round_first_p95_ms": [
+        24.241,
+        24.273,
+        24.261000000000003
+      ],
+      "round_total_p95_ms": [
+        42.772,
+        42.941,
+        42.94
+      ]
+    },
+    {
+      "mode": "sse",
+      "payload_bytes": 1048664,
+      "delay_ms": 20,
+      "concurrency": 16,
+      "offered_rps": 50,
+      "candidate": "go-on",
+      "rounds": 3,
+      "measured_requests": 600,
+      "ok": 600,
+      "first_p95_ms_median": 24.096,
+      "total_p95_ms_median": 42.597,
+      "first_vs_nginx_percent": 0.8876235136493271,
+      "total_vs_nginx_percent": 0.41725601131543666,
+      "rps_median": 49.727546613557294,
+      "cpu_ms_per_exchange_including_warmup": 3.76436781609195,
+      "peak_rss_mib": 30.21484375,
+      "round_first_p95_ms": [
+        23.836000000000002,
+        24.346,
+        24.096
+      ],
+      "round_total_p95_ms": [
+        42.217999999999996,
+        42.910999999999994,
+        42.597
+      ]
+    },
+    {
+      "mode": "sse",
+      "payload_bytes": 1048664,
+      "delay_ms": 20,
+      "concurrency": 16,
+      "offered_rps": 50,
+      "candidate": "nginx",
+      "rounds": 3,
+      "measured_requests": 600,
+      "ok": 600,
+      "first_p95_ms_median": 23.883999999999997,
+      "total_p95_ms_median": 42.419999999999995,
+      "first_vs_nginx_percent": 0.0,
+      "total_vs_nginx_percent": 0.0,
+      "rps_median": 49.73124674780958,
+      "cpu_ms_per_exchange_including_warmup": 1.0344827586206906,
+      "peak_rss_mib": 15.765625,
+      "round_first_p95_ms": [
+        23.984,
+        23.552,
+        23.883999999999997
+      ],
+      "round_total_p95_ms": [
+        42.419999999999995,
+        42.543,
+        42.379
+      ]
+    },
+    {
+      "mode": "sse",
+      "payload_bytes": 1048664,
+      "delay_ms": 20,
+      "concurrency": 16,
+      "offered_rps": 50,
+      "candidate": "rust-off",
+      "rounds": 3,
+      "measured_requests": 600,
+      "ok": 600,
+      "first_p95_ms_median": 24.187,
+      "total_p95_ms_median": 42.718999999999994,
+      "first_vs_nginx_percent": 1.268631719979929,
+      "total_vs_nginx_percent": 0.7048561999057013,
+      "rps_median": 49.726446896684664,
+      "cpu_ms_per_exchange_including_warmup": 3.045977011494246,
+      "peak_rss_mib": 27.57421875,
+      "round_first_p95_ms": [
+        24.187,
+        24.203999999999997,
+        23.887
+      ],
+      "round_total_p95_ms": [
+        42.718999999999994,
+        42.793,
+        42.328
+      ]
+    },
+    {
+      "mode": "sse",
+      "payload_bytes": 1048664,
+      "delay_ms": 20,
+      "concurrency": 16,
+      "offered_rps": 50,
+      "candidate": "rust-on",
+      "rounds": 3,
+      "measured_requests": 600,
+      "ok": 600,
+      "first_p95_ms_median": 24.098,
+      "total_p95_ms_median": 42.729,
+      "first_vs_nginx_percent": 0.8959973203818583,
+      "total_vs_nginx_percent": 0.7284299858557386,
+      "rps_median": 49.729579089963984,
+      "cpu_ms_per_exchange_including_warmup": 4.094827586206889,
+      "peak_rss_mib": 47.1953125,
+      "round_first_p95_ms": [
+        24.243,
+        24.098,
+        23.968999999999998
+      ],
+      "round_total_p95_ms": [
+        42.788,
+        42.729,
+        42.399
+      ]
+    },
+    {
+      "mode": "ws",
+      "payload_bytes": 4184,
+      "delay_ms": 0,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "go-off",
+      "rounds": 3,
+      "measured_requests": 768,
+      "ok": 768,
+      "first_p95_ms_median": 2.106,
+      "total_p95_ms_median": 5.024,
+      "first_vs_nginx_percent": 60.273972602739704,
+      "total_vs_nginx_percent": 34.00906908508936,
+      "rps_median": 3829.736784135615,
+      "cpu_ms_per_exchange_including_warmup": 0.6597222222222235,
+      "peak_rss_mib": 30.984375,
+      "round_first_p95_ms": [
+        2.031,
+        2.106,
+        2.211
+      ],
+      "round_total_p95_ms": [
+        18.961,
+        5.024,
+        4.953
+      ]
+    },
+    {
+      "mode": "ws",
+      "payload_bytes": 4184,
+      "delay_ms": 0,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "go-on",
+      "rounds": 3,
+      "measured_requests": 768,
+      "ok": 768,
+      "first_p95_ms_median": 1.972,
+      "total_p95_ms_median": 5.155,
+      "first_vs_nginx_percent": 50.076103500761015,
+      "total_vs_nginx_percent": 37.50333422245933,
+      "rps_median": 3899.979540341708,
+      "cpu_ms_per_exchange_including_warmup": 0.7291666666666644,
+      "peak_rss_mib": 63.58203125,
+      "round_first_p95_ms": [
+        1.849,
+        1.972,
+        2.674
+      ],
+      "round_total_p95_ms": [
+        5.155,
+        5.029,
+        5.858
+      ]
+    },
+    {
+      "mode": "ws",
+      "payload_bytes": 4184,
+      "delay_ms": 0,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "nginx",
+      "rounds": 3,
+      "measured_requests": 768,
+      "ok": 768,
+      "first_p95_ms_median": 1.314,
+      "total_p95_ms_median": 3.749,
+      "first_vs_nginx_percent": 0.0,
+      "total_vs_nginx_percent": 0.0,
+      "rps_median": 5501.861068981517,
+      "cpu_ms_per_exchange_including_warmup": 0.19675925925926327,
+      "peak_rss_mib": 16.109375,
+      "round_first_p95_ms": [
+        1.314,
+        1.271,
+        1.445
+      ],
+      "round_total_p95_ms": [
+        3.935,
+        3.749,
+        3.623
+      ]
+    },
+    {
+      "mode": "ws",
+      "payload_bytes": 4184,
+      "delay_ms": 0,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "rust-off",
+      "rounds": 3,
+      "measured_requests": 768,
+      "ok": 768,
+      "first_p95_ms_median": 1.371,
+      "total_p95_ms_median": 3.863,
+      "first_vs_nginx_percent": 4.337899543378998,
+      "total_vs_nginx_percent": 3.040810882902112,
+      "rps_median": 4843.738993383623,
+      "cpu_ms_per_exchange_including_warmup": 0.5902777777777786,
+      "peak_rss_mib": 27.8125,
+      "round_first_p95_ms": [
+        1.382,
+        1.367,
+        1.371
+      ],
+      "round_total_p95_ms": [
+        4.042,
+        3.863,
+        3.857
+      ]
+    },
+    {
+      "mode": "ws",
+      "payload_bytes": 4184,
+      "delay_ms": 0,
+      "concurrency": 16,
+      "offered_rps": 0,
+      "candidate": "rust-on",
+      "rounds": 3,
+      "measured_requests": 768,
+      "ok": 768,
+      "first_p95_ms_median": 1.536,
+      "total_p95_ms_median": 4.568,
+      "first_vs_nginx_percent": 16.894977168949765,
+      "total_vs_nginx_percent": 21.845825553480914,
+      "rps_median": 4136.514813053444,
+      "cpu_ms_per_exchange_including_warmup": 0.7986111111111106,
+      "peak_rss_mib": 47.5390625,
+      "round_first_p95_ms": [
+        2.068,
+        1.378,
+        1.536
+      ],
+      "round_total_p95_ms": [
+        5.614,
+        3.981,
+        4.568
+      ]
+    }
+  ]
+}

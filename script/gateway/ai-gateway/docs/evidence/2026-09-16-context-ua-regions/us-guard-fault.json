@@ -1,0 +1,18 @@
+{
+  "at": "2026-09-16T09:50:09.601381+00:00",
+  "status": 503,
+  "error": "preflight_unavailable",
+  "request_id": "3dc750b7edeef189b1527f98ee546b84",
+  "audit": [
+    {
+      "stage": "preflight_unavailable",
+      "error_type": null,
+      "http_status": null,
+      "upstream_called": false,
+      "preflight_decision": "unavailable"
+    }
+  ],
+  "matching_usage_events": 0,
+  "pass": true,
+  "guard_restored": true
+}

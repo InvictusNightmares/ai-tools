@@ -1,0 +1,4 @@
+{"region": "tokyo", "kind": "review", "status": 200, "elapsed_s": 2.25, "completed": true, "output_types": ["message"], "outcome": "allow", "error": null, "bytes": 33007}
+{"region": "tokyo", "kind": "compact", "status": 502, "elapsed_s": 0.32, "completed": true, "output_types": [], "outcome": null, "error": {"message": "Upstream request failed", "type": "upstream_error"}, "bytes": 71}
+{"region": "us", "kind": "review", "status": 200, "elapsed_s": 2.09, "completed": true, "output_types": ["message"], "outcome": "allow", "error": null, "bytes": 33007}
+{"region": "us", "kind": "compact", "status": 502, "elapsed_s": 0.37, "completed": true, "output_types": [], "outcome": null, "error": {"message": "Upstream request failed", "type": "upstream_error"}, "bytes": 71}

@@ -1,0 +1,8 @@
+{
+  "source_classifier_sha256": "a29342f9ce065300ece0a8679a4a0260df82a358876260e1744d91b6176dad16",
+  "original_binary_sha256": "d5dbae2f51d29376275526752e016b9512d72efc69b15a84e49fb9f7ef5bb767",
+  "static_binary_sha256": "75637d5bb3869074b397e47d36bf03f676d78446125b0783468c9a46fdb1a7b8",
+  "host_startup_exit": 0,
+  "file": "/tmp/gateway-deepseek-low-evaluation-20260917/semantic-eval-static: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=c2322737048fde137b79684c5c647c5c4f974bf3, with debug_info, not stripped",
+  "source_changed": false
+}

@@ -1,0 +1,6 @@
+{"region": "tokyo", "status": 200, "seconds": 1.75, "content_type": "application/json; charset=utf-8", "body_bytes": 342, "case": "vision"}
+{"region": "tokyo", "status": 200, "seconds": 1.76, "content_type": "application/json; charset=utf-8", "body_bytes": 23550, "case": "pdf_inline"}
+{"region": "tokyo", "status": 404, "seconds": 0.14, "content_type": "text/plain", "body_bytes": 18, "case": "files_upload"}
+{"region": "us", "status": 200, "seconds": 1.8, "content_type": "application/json; charset=utf-8", "body_bytes": 342, "case": "vision"}
+{"region": "us", "status": 200, "seconds": 1.82, "content_type": "application/json; charset=utf-8", "body_bytes": 23550, "case": "pdf_inline"}
+{"region": "us", "status": 404, "seconds": 0.24, "content_type": "text/plain", "body_bytes": 18, "case": "files_upload"}

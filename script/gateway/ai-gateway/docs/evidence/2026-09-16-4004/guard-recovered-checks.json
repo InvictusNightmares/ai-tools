@@ -1,0 +1,14 @@
+[
+  {
+    "case": "guard_recovered",
+    "status": 200,
+    "expected": 200,
+    "pass": true,
+    "elapsed_ms": 5241,
+    "bytes": 597,
+    "body_sha256": "bab3c6e4a69f5ac8026048e63b70086cdc0d26aab0f69840dbe3ca2cb66315a1",
+    "request_id": "c2ad832795564170d2359125b162e6f6",
+    "content_type": "application/json",
+    "error": null
+  }
+]

@@ -1,0 +1,65 @@
+{
+  "scope": "offline regression on original and fixed source; no real models",
+  "regressions": [
+    {
+      "scope": "direct_json",
+      "old_failure_reproduced": true,
+      "new_targeted_race_passed": true,
+      "old_log_sha256": "a4382e535ce0e957db1507350264d6f3c3d397c24531d3a93aad8c64df124abe",
+      "new_log_sha256": "d1462ae9a083e77a84064f000296590297f849226a093c5ce164b69398a49c6c",
+      "failing_subtests": [
+        "TestJSONUpstreamRetainsBillingMetadataOnEveryOutcome/responses/complete",
+        "TestJSONUpstreamRetainsBillingMetadataOnEveryOutcome/responses/http_failure",
+        "TestJSONUpstreamRetainsBillingMetadataOnEveryOutcome/responses/invalid_json",
+        "TestJSONUpstreamRetainsBillingMetadataOnEveryOutcome/responses/too_large",
+        "TestJSONUpstreamRetainsBillingMetadataOnEveryOutcome/responses/read_failure",
+        "TestJSONUpstreamRetainsBillingMetadataOnEveryOutcome/responses/complete_json_read_failure",
+        "TestJSONUpstreamRetainsBillingMetadataOnEveryOutcome/anthropic/complete",
+        "TestJSONUpstreamRetainsBillingMetadataOnEveryOutcome/anthropic/http_failure",
+        "TestJSONUpstreamRetainsBillingMetadataOnEveryOutcome/anthropic/invalid_json",
+        "TestJSONUpstreamRetainsBillingMetadataOnEveryOutcome/anthropic/too_large",
+        "TestJSONUpstreamRetainsBillingMetadataOnEveryOutcome/anthropic/read_failure",
+        "TestJSONUpstreamRetainsBillingMetadataOnEveryOutcome/anthropic/complete_json_read_failure",
+        "TestJSONUpstreamRetainsBillingMetadataOnEveryOutcome/chat/complete",
+        "TestJSONUpstreamRetainsBillingMetadataOnEveryOutcome/chat/http_failure",
+        "TestJSONUpstreamRetainsBillingMetadataOnEveryOutcome/chat/invalid_json",
+        "TestJSONUpstreamRetainsBillingMetadataOnEveryOutcome/chat/too_large",
+        "TestJSONUpstreamRetainsBillingMetadataOnEveryOutcome/chat/read_failure",
+        "TestJSONUpstreamRetainsBillingMetadataOnEveryOutcome/chat/complete_json_read_failure"
+      ],
+      "failing_top_level": [
+        "TestJSONUpstreamRetainsBillingMetadataOnEveryOutcome"
+      ]
+    },
+    {
+      "scope": "buffered_classifier_review",
+      "old_failure_reproduced": true,
+      "new_targeted_race_passed": true,
+      "old_log_sha256": "ae8343d2107f3553de86d8ddaf919ca044e9f2430dc846f2a507247d4317629b",
+      "new_log_sha256": "62a46200dbde5ea134910ccad45f4fc34823b863aea73c950875c9392bbd4eec",
+      "failing_subtests": [
+        "TestBufferedSSEFailuresKeepReceivedUsageWithoutPartialOutput/chat/incomplete",
+        "TestBufferedSSEFailuresKeepReceivedUsageWithoutPartialOutput/chat/read_failure",
+        "TestBufferedSSEFailuresKeepReceivedUsageWithoutPartialOutput/chat/canceled",
+        "TestBufferedSSEFailuresKeepReceivedUsageWithoutPartialOutput/chat/unknown_usage",
+        "TestBufferedSSEFailuresKeepReceivedUsageWithoutPartialOutput/responses/incomplete",
+        "TestBufferedSSEFailuresKeepReceivedUsageWithoutPartialOutput/responses/read_failure",
+        "TestBufferedSSEFailuresKeepReceivedUsageWithoutPartialOutput/responses/canceled",
+        "TestBufferedSSEFailuresKeepReceivedUsageWithoutPartialOutput/responses/unknown_usage",
+        "TestBufferedSSEFailuresKeepReceivedUsageWithoutPartialOutput/anthropic/incomplete",
+        "TestBufferedSSEFailuresKeepReceivedUsageWithoutPartialOutput/anthropic/read_failure",
+        "TestBufferedSSEFailuresKeepReceivedUsageWithoutPartialOutput/anthropic/canceled",
+        "TestBufferedSSEFailuresKeepReceivedUsageWithoutPartialOutput/anthropic/unknown_usage",
+        "TestFailedClassifierAttemptsRetainReportedUsage/false/http_failure",
+        "TestFailedClassifierAttemptsRetainReportedUsage/false/read_failure",
+        "TestFailedClassifierAttemptsRetainReportedUsage/true/http_failure",
+        "TestFailedClassifierAttemptsRetainReportedUsage/true/read_failure"
+      ],
+      "failing_top_level": [
+        "TestBufferedSSEFailuresKeepReceivedUsageWithoutPartialOutput",
+        "TestFailedClassifierAttemptsRetainReportedUsage",
+        "TestRejectedActionReviewRetainsProviderCorrelation"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "scope": "classifier_only_not_guard_auto_business_acceptance",
+  "label_authority": "implementer_assigned_not_independent_human_adjudication",
+  "consistency_definition": "same_complexity_and_target_effort_in_all_three_languages",
+  "fixture_sha256": "cf573c54a6629ec78b6fd355d1608b626253167caca1962767dbf93f653d022b",
+  "trials": [
+    {
+      "file": "independent.jsonl",
+      "sha256": "487da17f154dacf7f9ee2f16b146bf8b999b1160aceb45f8436c75bd1446bb0d",
+      "primary": "gpt-5.6-luna",
+      "reviewer": "gpt-5.6-sol",
+      "requests": 36,
+      "expected_requests": 36,
+      "complete": true,
+      "missing_samples": [],
+      "successes": 36,
+      "business_calls": 0,
+      "splits": {
+        "holdout": {
+          "groups": 12,
+          "consistent_groups": 12,
+          "consistency_percent": 100.0,
+          "differences": [],
+          "languages": {
+            "zh": {
+              "requests": 12,
+              "successes": 12,
+              "median_ms": 7008.0,
+              "p95_ms": 9647,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 12,
+              "assigned_complexity_matches": 12,
+              "task_boundary_checks": 0,
+              "task_boundary_matches": 0,
+              "efforts": {
+                "none": 6,
+                "medium": 2,
+                "low": 2,
+                "high": 2
+              }
+            },
+            "en": {
+              "requests": 12,
+              "successes": 12,
+              "median_ms": 5121.5,
+              "p95_ms": 9722,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 12,
+              "assigned_complexity_matches": 12,
+              "task_boundary_checks": 0,
+              "task_boundary_matches": 0,
+              "efforts": {
+                "none": 6,
+                "medium": 2,
+                "low": 2,
+                "high": 2
+              }
+            },
+            "mixed": {
+              "requests": 12,
+              "successes": 12,
+              "median_ms": 5880.5,
+              "p95_ms": 10628,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 12,
+              "assigned_complexity_matches": 12,
+              "task_boundary_checks": 0,
+              "task_boundary_matches": 0,
+              "efforts": {
+                "none": 6,
+                "medium": 2,
+                "low": 2,
+                "high": 2
+              }
+            }
+          },
+          "classifier_attempts": 54,
+          "input_tokens": 55744,
+          "output_tokens": 5283,
+          "prompt_cache_hit_tokens": 0
+        }
+      }
+    }
+  ]
+}

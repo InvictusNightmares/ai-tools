@@ -1,0 +1,14 @@
+{
+  "at": "2026-09-16T07:28:24.845458+00:00",
+  "client": "claude",
+  "mode": "tool",
+  "tool_events": 1,
+  "exit_code": 0,
+  "elapsed_ms": 14586,
+  "has_final_text": true,
+  "error_event_types": [],
+  "stdout_bytes": 4120,
+  "stderr_bytes": 71,
+  "pass": true,
+  "cli_version": "2.1.233 (Claude Code)"
+}

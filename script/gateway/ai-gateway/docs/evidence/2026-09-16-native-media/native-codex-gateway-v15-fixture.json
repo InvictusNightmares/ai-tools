@@ -1,0 +1,22 @@
+{
+  "client": "codex",
+  "scope": "actual native client and actual v15 gateway; synthetic auth Guard classifiers and models; not real regional acceptance",
+  "source_sha256": "efc73780c1b690f3ea7199b9da2d4013f514192dfd727ab44845ee3f49798e89",
+  "binary_sha256": "2f745b054652c5b0489a6c3cc80e27822ceed0680fc5abb19de7ace8d4f3203c",
+  "checks": {
+    "initial_marker": true,
+    "multiple_native_tools": true,
+    "native_subagent": true,
+    "native_fork": true,
+    "native_cancel": true,
+    "resume_after_cancel": true
+  },
+  "stage_counts": {
+    "route_decided": 9,
+    "upstream_started": 9,
+    "upstream_completed": 8,
+    "request_canceled": 1
+  },
+  "complete_upstream_failed": 0,
+  "private_result_sha256": "47027901c98a7ab041fb529e66a9abf259fdf6f989dbf44f40ebfc282a701a2a"
+}

@@ -1,0 +1,217 @@
+{
+  "scope": "4004 route audit explicit metadata aggregation only; excludes prompts, tool bodies, credentials and reasoning signatures",
+  "runs": [
+    {
+      "run_id": "opencode-160225",
+      "correlation": "session_sha256",
+      "audit_rows": 42,
+      "requests": 14,
+      "stages": {
+        "route_decided": 14,
+        "upstream_started": 14,
+        "upstream_completed": 14
+      },
+      "completed_effective_models": {
+        "gpt-5.6-terra": 14
+      },
+      "completed_transports": {
+        "sse_relay": 14
+      },
+      "completed_response_flags": {
+        "True": 14
+      },
+      "errors": {},
+      "start": "2026-09-16T08:02:30.512730536Z",
+      "end": "2026-09-16T08:06:11.300959125Z"
+    },
+    {
+      "run_id": "claude-160228",
+      "correlation": "session_sha256",
+      "audit_rows": 42,
+      "requests": 14,
+      "stages": {
+        "route_decided": 14,
+        "upstream_started": 14,
+        "upstream_completed": 14
+      },
+      "completed_effective_models": {
+        "gpt-5.6-terra": 14
+      },
+      "completed_transports": {
+        "sse_relay": 14
+      },
+      "completed_response_flags": {
+        "True": 14
+      },
+      "errors": {},
+      "start": "2026-09-16T08:02:33.78783388Z",
+      "end": "2026-09-16T08:06:55.72388207Z"
+    },
+    {
+      "run_id": "claude-162201",
+      "correlation": "session_sha256",
+      "audit_rows": 36,
+      "requests": 12,
+      "stages": {
+        "route_decided": 12,
+        "upstream_started": 12,
+        "upstream_completed": 12
+      },
+      "completed_effective_models": {
+        "gpt-5.6-terra": 12
+      },
+      "completed_transports": {
+        "sse_relay": 12
+      },
+      "completed_response_flags": {
+        "True": 12
+      },
+      "errors": {},
+      "start": "2026-09-16T08:22:06.494220731Z",
+      "end": "2026-09-16T08:24:22.461432215Z"
+    },
+    {
+      "run_id": "codex-161537",
+      "correlation": "session_sha256",
+      "audit_rows": 42,
+      "requests": 14,
+      "stages": {
+        "route_decided": 14,
+        "upstream_started": 14,
+        "upstream_completed": 11,
+        "upstream_failed": 3
+      },
+      "completed_effective_models": {
+        "gpt-5.6-terra": 11
+      },
+      "completed_transports": {
+        "sse_relay": 11
+      },
+      "completed_response_flags": {
+        "True": 11
+      },
+      "errors": {
+        "upstream_failed": 3
+      },
+      "start": "2026-09-16T08:15:44.792258713Z",
+      "end": "2026-09-16T08:21:22.340601975Z"
+    },
+    {
+      "run_id": "codex-162243",
+      "correlation": "session_sha256",
+      "audit_rows": 24,
+      "requests": 8,
+      "stages": {
+        "route_decided": 8,
+        "upstream_started": 8,
+        "upstream_completed": 6,
+        "upstream_failed": 2
+      },
+      "completed_effective_models": {
+        "gpt-5.6-terra": 6
+      },
+      "completed_transports": {
+        "sse_relay": 6
+      },
+      "completed_response_flags": {
+        "True": 6
+      },
+      "errors": {
+        "upstream_failed": 2
+      },
+      "start": "2026-09-16T08:22:51.762819619Z",
+      "end": "2026-09-16T08:25:57.07161075Z"
+    },
+    {
+      "run_id": "hermes-160227",
+      "correlation": "response_request_ids",
+      "audit_rows": 43,
+      "requests": 15,
+      "stages": {
+        "route_decided": 14,
+        "upstream_started": 14,
+        "upstream_completed": 14,
+        "preflight_unavailable": 1
+      },
+      "completed_effective_models": {
+        "gpt-5.6-terra": 14
+      },
+      "completed_transports": {
+        "sse_relay": 14
+      },
+      "completed_response_flags": {
+        "True": 14
+      },
+      "errors": {},
+      "start": "2026-09-16T08:02:35.263552546Z",
+      "end": "2026-09-16T08:06:34.546203947Z"
+    }
+  ],
+  "upstream_failure_metadata": [
+    {
+      "run_id": "codex-161537",
+      "request_id": "45fb1791b79b0502c5217181e027205b",
+      "stage": "upstream_failed",
+      "http_status": 200,
+      "upstream_http_status": null,
+      "response_complete": true,
+      "error_type": "upstream_failed",
+      "reason": "tool_loop_locked",
+      "upstream_transport": "sse_relay",
+      "stream": true,
+      "at": "2026-09-16T08:16:10.882571322Z"
+    },
+    {
+      "run_id": "codex-161537",
+      "request_id": "3a7b6d0e751ea7dbda3e32e89e1dce8f",
+      "stage": "upstream_failed",
+      "http_status": 200,
+      "upstream_http_status": null,
+      "response_complete": true,
+      "error_type": "upstream_failed",
+      "reason": "tool_loop_locked",
+      "upstream_transport": "sse_relay",
+      "stream": true,
+      "at": "2026-09-16T08:17:26.336612156Z"
+    },
+    {
+      "run_id": "codex-161537",
+      "request_id": "93e0667e1d41f201e7f19abeffba654e",
+      "stage": "upstream_failed",
+      "http_status": 200,
+      "upstream_http_status": null,
+      "response_complete": true,
+      "error_type": "upstream_failed",
+      "reason": "tool_loop_locked",
+      "upstream_transport": "sse_relay",
+      "stream": true,
+      "at": "2026-09-16T08:18:41.487843108Z"
+    },
+    {
+      "run_id": "codex-162243",
+      "request_id": "dae26fa435e390c6a771b3e69f51f27d",
+      "stage": "upstream_failed",
+      "http_status": 200,
+      "upstream_http_status": null,
+      "response_complete": true,
+      "error_type": "upstream_failed",
+      "reason": "tool_loop_locked",
+      "upstream_transport": "sse_relay",
+      "stream": true,
+      "at": "2026-09-16T08:23:56.503708107Z"
+    },
+    {
+      "run_id": "codex-162243",
+      "request_id": "5d08827df8421a99b077eabb08c97573",
+      "stage": "upstream_failed",
+      "http_status": 200,
+      "upstream_http_status": null,
+      "response_complete": true,
+      "error_type": "upstream_failed",
+      "reason": "tool_loop_locked",
+      "upstream_transport": "sse_relay",
+      "stream": true,
+      "at": "2026-09-16T08:25:31.473006093Z"
+    }
+  ]
+}

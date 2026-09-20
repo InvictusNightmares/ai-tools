@@ -1,0 +1,9 @@
+.git
+bin
+.runtime
+verification-output
+docs/evidence
+**/__pycache__
+**/*.pyc
+**/*.secret
+**/runtime.env

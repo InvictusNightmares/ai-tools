@@ -1,0 +1,51 @@
+{
+  "source": "qiyuan-tokyo PostgreSQL public.usage_logs joined with public.api_keys (read-only)",
+  "filter": {
+    "api_key_id": 141,
+    "name": "test",
+    "lookback_hours": 3
+  },
+  "returned_record_range_asia_shanghai": [
+    "2026-09-15 15:49:41",
+    "2026-09-15 16:04:53"
+  ],
+  "records": 15,
+  "groups": [
+    {
+      "model": "deepseek-flash",
+      "reasoning_effort": null,
+      "requested_reasoning_effort": null,
+      "count": 1
+    },
+    {
+      "model": "deepseek-flash",
+      "reasoning_effort": "low",
+      "requested_reasoning_effort": "low",
+      "count": 4
+    },
+    {
+      "model": "deepseek-flash",
+      "reasoning_effort": "none",
+      "requested_reasoning_effort": "none",
+      "count": 8
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": null,
+      "requested_reasoning_effort": null,
+      "count": 1
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "low",
+      "requested_reasoning_effort": "low",
+      "count": 1
+    }
+  ],
+  "limitations": [
+    "Database fields show request effort labels, not measured model-internal reasoning.",
+    "No medium/high/xhigh samples in this test window.",
+    "The two null values are direct upstream probes without an effort parameter.",
+    "Local classifier uses keyword and length scoring; complexity quality is not yet accepted."
+  ]
+}

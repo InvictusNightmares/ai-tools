@@ -1,0 +1,12 @@
+[Unit]
+Description=Run regional Auto Guard maintenance every minute (%i)
+
+[Timer]
+OnBootSec=60
+OnUnitActiveSec=60
+RandomizedDelaySec=5
+Persistent=true
+Unit=gateway-ops@%i.service
+
+[Install]
+WantedBy=timers.target

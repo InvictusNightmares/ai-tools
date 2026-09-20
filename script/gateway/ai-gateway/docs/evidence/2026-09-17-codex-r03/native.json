@@ -1,0 +1,60 @@
+[
+  {
+    "region": "tokyo",
+    "native_version": "0.154.0",
+    "started_unix": 1789626466.642931,
+    "finished_unix": 1789626536.411253,
+    "passed": true,
+    "checks": 10,
+    "route_count": 8,
+    "models": {
+      "gpt-5.6-luna": 8
+    },
+    "efforts": {
+      "none": 4,
+      "low": 4
+    },
+    "tool_binding_reuses": 0,
+    "classifier_attempts": 7,
+    "guard_decisions_matched": 8,
+    "native_request_ids": [
+      "5056a8ae9f6290bb5b792be8b615500f",
+      "61103d03a166a5bb684795792b985143",
+      "61668119fe269e95270620b475baa2d8",
+      "69a202e7f852735cb0303bb7d675a0a5",
+      "6cd0e1ed95b8e7063e340816d513638d",
+      "7129854fee0411ce69e9fb0c2f4899cb",
+      "f35ed663a9b9d588c3653ef5b77df266",
+      "fddfbe93b638a6dd2ff0380f911e3a1b"
+    ]
+  },
+  {
+    "region": "us",
+    "native_version": "0.154.0",
+    "started_unix": 1789626441.570766,
+    "finished_unix": 1789626487.044839,
+    "passed": true,
+    "checks": 10,
+    "route_count": 8,
+    "models": {
+      "gpt-5.6-luna": 8
+    },
+    "efforts": {
+      "none": 3,
+      "low": 5
+    },
+    "tool_binding_reuses": 0,
+    "classifier_attempts": 6,
+    "guard_decisions_matched": 8,
+    "native_request_ids": [
+      "0e0720c9a381f5a779ebb83f24f902f9",
+      "27d729686675062c23bb315dc530b46b",
+      "2b9186e6cf5dd79681684e9c7599ec2e",
+      "4bacca0d3aeb6613f7419c9877c88cc5",
+      "7d00488a658e594057aa3e099d078422",
+      "84f710d8b80d04cad497c8ed646fefb2",
+      "8ab834875184d8c16a312aaf8e05a10b",
+      "e43efe7c4cb768b92a339dbcda559505"
+    ]
+  }
+]

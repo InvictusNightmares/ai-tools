@@ -1,0 +1,91 @@
+{
+  "native": {
+    "scope": "native opencode through observation collector to synthetic provider",
+    "gateway_candidate_tested": true,
+    "guard_and_models": "no Guard; synthetic provider",
+    "region": "observation-dev3",
+    "checks": [
+      {
+        "check": "initial_marker",
+        "passed": true
+      },
+      {
+        "check": "native_compaction_and_recall",
+        "passed": true,
+        "compaction_part": true
+      },
+      {
+        "check": "multiple_native_tools",
+        "passed": true,
+        "completed_reads": 2
+      },
+      {
+        "check": "native_child_session",
+        "passed": true
+      },
+      {
+        "check": "native_fork_continuity",
+        "passed": true
+      },
+      {
+        "check": "native_cancel",
+        "passed": true
+      },
+      {
+        "check": "resume_after_cancel",
+        "passed": true
+      }
+    ],
+    "native_session_sha256": [
+      "069cb24d31e5d4a61e62b77ddf9eee23d4181d5ff98dd824fb541bbbf722c30c",
+      "0de2ac7cfb365769fd9e19604a0ffb986055dc29a82e0894193e7485fa3e96e6",
+      "b570a10301c44cdf93ba15377132a0d0a9cae8304314ac1f0349d35ae0dbd594"
+    ],
+    "request_count": 12
+  },
+  "collector": {
+    "scope": "native clients, synthetic loopback provider, actual collector",
+    "production_changed": false,
+    "events": 12,
+    "kinds": {
+      "http_exchange": 12
+    },
+    "outcomes": {
+      "completed": 11,
+      "canceled": 1
+    },
+    "clients": {
+      "opencode": 12
+    },
+    "missing": {},
+    "status": {
+      "active_requests": 0,
+      "capture_enabled": false,
+      "captured": 12,
+      "complete_capture_claim": false,
+      "dropped": 0,
+      "older_loss_details_evicted": 0,
+      "projection_errors": 0,
+      "pruned": 0,
+      "queue_items": 0,
+      "queue_limit_bytes": 67108864,
+      "queued_bytes": 0,
+      "recent_losses": null,
+      "recovered_interrupted_requests": 0,
+      "started_at": "2026-09-17T10:54:16.055059Z",
+      "storage_limit_bytes": 1073741824,
+      "stored_bytes": 348633,
+      "truncated": 0,
+      "unavailable_bypassed_requests": 0,
+      "updated_at": "2026-09-17T10:54:18.833393Z",
+      "version": "observation-dev.3",
+      "write_errors": 0,
+      "written": 12
+    },
+    "all_record_checksums_valid": true,
+    "original_ua_observed": [
+      "opencode/1.18.4 ai-sdk/provider-utils/4.0.38 runtime/bun/1.3.14"
+    ],
+    "auth_headers_excluded": true
+  }
+}

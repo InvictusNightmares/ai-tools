@@ -1,0 +1,104 @@
+{
+  "tokyo": [
+    {
+      "api_key_id": 141,
+      "request_id": "client:fd681e6b-fe60-40ad-afd6-a27f94b734a4",
+      "model": "gpt-5.6-luna",
+      "user_agent": "opencode/1.18.4 ai-sdk/provider-utils/4.0.23 runtime/bun/1.3.14",
+      "created_at": "2026-09-16T17:46:07.167871+08:00"
+    },
+    {
+      "api_key_id": 141,
+      "request_id": "client:70c74e3c-d3e1-450f-9c96-7a4528fe0f0b",
+      "model": "deepseek-flash",
+      "user_agent": "opencode/1.18.4 ai-sdk/provider-utils/4.0.23 runtime/bun/1.3.14",
+      "created_at": "2026-09-16T17:46:08.242418+08:00"
+    },
+    {
+      "api_key_id": 141,
+      "request_id": "client:e236f222-71c4-48a7-b087-159ef7798aab",
+      "model": "gpt-5.6-luna",
+      "user_agent": "opencode/1.18.4 ai-sdk/provider-utils/4.0.23 runtime/bun/1.3.14",
+      "created_at": "2026-09-16T17:46:10.042426+08:00"
+    },
+    {
+      "api_key_id": 141,
+      "request_id": "client:cba59e26-d579-4d4d-b185-85a82f08b3ac",
+      "model": "deepseek-flash",
+      "user_agent": "opencode/1.18.4 ai-sdk/provider-utils/4.0.23 runtime/bun/1.3.14",
+      "created_at": "2026-09-16T17:46:11.54284+08:00"
+    },
+    {
+      "api_key_id": 141,
+      "request_id": "client:ac5c2a78-443f-4fdf-8142-5c33e83445c6",
+      "model": "gpt-5.6-luna",
+      "user_agent": "Python-urllib/3.13",
+      "created_at": "2026-09-16T17:46:12.292936+08:00"
+    },
+    {
+      "api_key_id": 141,
+      "request_id": "client:f8855022-3b7d-44e4-8fa5-7c82fe01b5bd",
+      "model": "deepseek-flash",
+      "user_agent": "Python-urllib/3.13",
+      "created_at": "2026-09-16T17:46:13.31507+08:00"
+    }
+  ],
+  "us": [
+    {
+      "api_key_id": 4,
+      "request_id": "client:5a284596-dd25-4473-a1b3-3cd0f73829d9",
+      "model": "gpt-5.6-luna",
+      "user_agent": "Python-urllib/3.13",
+      "created_at": "2026-09-16T17:47:01.014243+08:00"
+    },
+    {
+      "api_key_id": 4,
+      "request_id": "client:b799fda5-7cac-40fb-bcf0-8abd3ccfd33a",
+      "model": "deepseek-flash",
+      "user_agent": "Python-urllib/3.13",
+      "created_at": "2026-09-16T17:47:02.135786+08:00"
+    },
+    {
+      "api_key_id": 4,
+      "request_id": "client:922f2d5e-4728-4e7a-88d4-a15578ef1289",
+      "model": "gpt-5.6-luna",
+      "user_agent": "opencode/1.18.4 ai-sdk/provider-utils/4.0.23 runtime/bun/1.3.14",
+      "created_at": "2026-09-16T17:47:02.257295+08:00"
+    },
+    {
+      "api_key_id": 4,
+      "request_id": "client:af053769-cb2b-4411-b0c5-0c926c9cebb4",
+      "model": "deepseek-flash",
+      "user_agent": "opencode/1.18.4 ai-sdk/provider-utils/4.0.23 runtime/bun/1.3.14",
+      "created_at": "2026-09-16T17:47:03.50695+08:00"
+    },
+    {
+      "api_key_id": 4,
+      "request_id": "client:820b1220-6cb7-413d-86b6-cead826b6643",
+      "model": "gpt-5.6-luna",
+      "user_agent": "opencode/1.18.4 ai-sdk/provider-utils/4.0.23 runtime/bun/1.3.14",
+      "created_at": "2026-09-16T17:47:04.969061+08:00"
+    },
+    {
+      "api_key_id": 4,
+      "request_id": "client:3a8ace76-7296-4ee1-9c27-7849b8f02328",
+      "model": "gpt-5.6-luna",
+      "user_agent": "Python-urllib/3.13",
+      "created_at": "2026-09-16T17:47:05.282498+08:00"
+    },
+    {
+      "api_key_id": 4,
+      "request_id": "client:5a80986a-b852-4119-882c-5f55c5300829",
+      "model": "deepseek-flash",
+      "user_agent": "opencode/1.18.4 ai-sdk/provider-utils/4.0.23 runtime/bun/1.3.14",
+      "created_at": "2026-09-16T17:47:06.280066+08:00"
+    },
+    {
+      "api_key_id": 4,
+      "request_id": "client:7cf379d8-a793-4972-bb68-cecd6af6f83a",
+      "model": "deepseek-flash",
+      "user_agent": "Python-urllib/3.13",
+      "created_at": "2026-09-16T17:47:08.641271+08:00"
+    }
+  ]
+}

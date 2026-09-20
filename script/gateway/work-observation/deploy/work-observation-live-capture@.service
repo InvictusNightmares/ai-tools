@@ -1,0 +1,39 @@
+[Unit]
+Description=Work observation live capture and rollback watchdog (%i)
+Wants=docker.service work-observation-collector-sidecar@%i.service
+After=docker.service work-observation-collector-sidecar@%i.service
+StartLimitIntervalSec=10min
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=root
+Group=root
+Environment=WO_ROOT=/opt/work-observation/current
+Environment=WO_SIDECAR_UNIT_PREFIX=work-observation-collector-sidecar
+Environment=WO_STATE_DIR=/var/lib/work-observation/cutover-live
+# A transient upstream 5xx is evidence about the upstream, not the sidecar.
+# Keep observing it; collector fatal counters still roll the route back.
+Environment=WO_MAX_5XX=-1
+Environment=WO_INTERVAL=5
+ExecStart=/opt/work-observation/current/deploy/run-live-capture.sh %i
+Restart=on-failure
+RestartSec=30s
+RestartPreventExitStatus=1
+TimeoutStartSec=90s
+TimeoutStopSec=120s
+KillMode=control-group
+UMask=0077
+# Keep host privilege transitions available for the Docker/systemd sidecar
+# restart; the collector container remains no-new-privileges internally.
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadOnlyPaths=/opt/work-observation/current /etc/work-observation /data/work-observation/tokyo /data/work-observation/us
+ReadWritePaths=/var/lib/work-observation /data/work-observation/cutover-live /data/tokyo-sub2api-proxy /data/us-sub2api-proxy
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

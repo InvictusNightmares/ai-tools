@@ -1,0 +1,30 @@
+{
+  "at": "2026-09-17T02:59:28.403178+00:00",
+  "public_health": {
+    "tokyo": {
+      "status": 200,
+      "body": {
+        "status": "ok"
+      }
+    },
+    "us": {
+      "status": 200,
+      "body": {
+        "status": "ok"
+      }
+    }
+  },
+  "temporary_listeners_closed": {
+    "18017": true,
+    "18121": true,
+    "18122": true,
+    "18123": true,
+    "18124": true,
+    "18125": true,
+    "18131": true,
+    "18132": true,
+    "18133": true,
+    "18134": true,
+    "18135": true
+  }
+}

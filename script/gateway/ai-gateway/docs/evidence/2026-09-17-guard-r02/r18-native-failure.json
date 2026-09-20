@@ -1,0 +1,83 @@
+{
+  "release": "candidate-20260917-r18-native-v28",
+  "native_version": "1.18.4",
+  "scope": "same synthetic Kotlin repository retained for followup verification",
+  "results": [
+    {
+      "region": "tokyo",
+      "phase": "initial",
+      "exit_code": 1,
+      "seconds": 12.689,
+      "tool_calls": 2,
+      "tool_errors": 0,
+      "answer_chars": 29,
+      "answer_sha256": "17f86ef17643254154255cc0a94f98746f86ea4b3387cadd55f594b3659f24e0",
+      "worktree_unchanged": true,
+      "failure_codes": [
+        [
+          "secret_input_not_allowed"
+        ]
+      ],
+      "request_ids": [
+        "5fcc11b2e57454b21c74d7a3f025965c"
+      ]
+    },
+    {
+      "region": "tokyo",
+      "phase": "followup",
+      "exit_code": 1,
+      "seconds": 2.502,
+      "tool_calls": 0,
+      "tool_errors": 0,
+      "answer_chars": 0,
+      "answer_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "worktree_unchanged": true,
+      "failure_codes": [
+        [
+          "session_quarantined"
+        ]
+      ],
+      "request_ids": [
+        "3085f7643468ea669fa0b6d33990dc60"
+      ]
+    },
+    {
+      "region": "us",
+      "phase": "initial",
+      "exit_code": 1,
+      "seconds": 12.896,
+      "tool_calls": 2,
+      "tool_errors": 0,
+      "answer_chars": 29,
+      "answer_sha256": "17f86ef17643254154255cc0a94f98746f86ea4b3387cadd55f594b3659f24e0",
+      "worktree_unchanged": true,
+      "failure_codes": [
+        [
+          "secret_input_not_allowed"
+        ]
+      ],
+      "request_ids": [
+        "a828bc6b9b37073648333a1c30f5fabc"
+      ]
+    },
+    {
+      "region": "us",
+      "phase": "followup",
+      "exit_code": 1,
+      "seconds": 3.076,
+      "tool_calls": 0,
+      "tool_errors": 0,
+      "answer_chars": 0,
+      "answer_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "worktree_unchanged": true,
+      "failure_codes": [
+        [
+          "session_quarantined"
+        ]
+      ],
+      "request_ids": [
+        "8f5bcd90b288c9f59210c9b27f014ced"
+      ]
+    }
+  ]
+}

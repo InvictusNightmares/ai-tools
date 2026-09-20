@@ -1,0 +1,19 @@
+{
+  "region": "tokyo",
+  "mode": "deny",
+  "scope": "native Codex approval with deterministic local business proposal; review through real regional gateway",
+  "checks": {
+    "native_review_decision": true,
+    "file_effect_matches_review": true,
+    "native_turn_completed": true,
+    "native_reviewer_request_seen": true,
+    "actual_reviewer_response_200": false
+  },
+  "reviews": [
+    {
+      "status": "denied",
+      "decision_source": "agent"
+    }
+  ],
+  "passed": false
+}

@@ -1,0 +1,23 @@
+{
+  "observed_at": "2026-09-15T19:16:36.320633+08:00",
+  "source": "Tokyo Sub2API admin/groups edit dialog, read only then cancelled",
+  "api_key_id": 141,
+  "current_observed_group": "codex-E",
+  "max_effort": "unlimited",
+  "effort_mappings": [
+    {
+      "match": "all",
+      "model": "",
+      "from": "xhigh",
+      "to": "high"
+    },
+    {
+      "match": "all",
+      "model": "",
+      "from": "max",
+      "to": "high"
+    }
+  ],
+  "changed": false,
+  "finding": "These configured mappings explain the observed xhigh/max response metadata high. Highest-effort execution is not accepted by these tests."
+}

@@ -1,0 +1,9 @@
+{
+  "release_id": "candidate-20260916-r11-native-v5",
+  "region": "us",
+  "backup": "/data/ai-gateway/acceptance-us/backups/release-20260916-203401-371613",
+  "status": "updated",
+  "secret_preserved": true,
+  "state_preserved": true,
+  "protected_services_unchanged": true
+}

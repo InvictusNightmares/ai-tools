@@ -1,4 +1,4 @@
-# 3x-ui v3.7 Clash/Mihomo remote HTTPS routing overlay.
+# 3x-ui v3.8 Clash/Mihomo remote HTTPS routing overlay.
 # 3x-ui supplies proxies dynamically; use PROXY to replace its default group.
 # Client-only DNS/IPv6 defaults are in dmit-client.yaml; see dmit-setup.md.
 

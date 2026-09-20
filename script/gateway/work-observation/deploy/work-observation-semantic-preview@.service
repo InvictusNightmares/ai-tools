@@ -1,0 +1,29 @@
+[Unit]
+Description=Work observation offline Auto route preview (%i)
+After=docker.service
+Requires=docker.service
+ConditionPathExists=/data/ai-gateway/acceptance-%i/secrets/cache-secret
+
+[Service]
+Type=simple
+User=root
+Group=root
+UMask=0077
+ExecStart=/opt/work-observation/current/deploy/semantic-preview-launch.py %i
+Restart=on-failure
+RestartSec=5s
+TimeoutStartSec=45s
+TimeoutStopSec=30s
+KillMode=control-group
+NoNewPrivileges=true
+ProtectHome=true
+ProtectSystem=strict
+PrivateTmp=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadWritePaths=/data/ai-gateway/acceptance-%i/state/work-observation-semantic-preview /data/ai-gateway/acceptance-%i/logs/work-observation-semantic-preview
+LimitNOFILE=65536
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

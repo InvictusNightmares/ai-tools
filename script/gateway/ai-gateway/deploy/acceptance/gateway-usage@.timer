@@ -1,0 +1,12 @@
+[Unit]
+Description=Run regional Auto Guard usage export every minute (%i)
+
+[Timer]
+OnBootSec=60
+OnUnitInactiveSec=60
+RandomizedDelaySec=5
+Persistent=true
+Unit=gateway-usage@%i.service
+
+[Install]
+WantedBy=timers.target

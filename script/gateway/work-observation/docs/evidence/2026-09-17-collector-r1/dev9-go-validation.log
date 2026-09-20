@@ -1,0 +1,15 @@
+2026-09-18T01:33:50Z
+IMAGE=golang:1.27.1-bookworm
+GO_VERSION
+go version go1.27.1 linux/amd64
+GOFMT
+GO_TEST_RACE
+ok  	local/work-observation/source/capture	1.123s
+ok  	local/work-observation/source/proxy	1.048s
+ok  	local/work-observation/cmd/observe	1.026s
+GO_VET
+LINUX_BUILD
+GO_TEST_RACE=PASS
+GO_VET=PASS
+LINUX_BUILD=PASS
+__WO_EXIT__=0

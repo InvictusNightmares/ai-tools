@@ -1,0 +1,41 @@
+{
+  "verified_at": "2026-09-15T02:19:08.821517+00:00",
+  "host": "qiyuan-gpu",
+  "scope": "temporary mock-provider tests; no regional production traffic",
+  "original_archive_files_matched": 31,
+  "original_archive_local_sha256": "cf34e5c4ebc4d76fbf83a1dc26e152470ba4bb9cf4485416bae40d1fb4840662",
+  "original_archive_remote_sha256": "b5e0e8ba33dd9b7a86c16b8f74eb43b43e3ee1ad08d8fa4f17b080d50f27f9c6",
+  "verify_dir": "/tmp/auto-cache-fixed-20260915.y6g6aG",
+  "verify_exit": 0,
+  "race_vet_exit": 0,
+  "top_level_tests_passed": 38,
+  "tests_with_subtests_passed": 66,
+  "failed": 0,
+  "verified_go_files": 29,
+  "local_archive_sha256": "527945540280f6b5e5e274db05f8def7d98bef6f1e418e85d36e262374d19a1f",
+  "cache_accounting_test": {
+    "requests": 2,
+    "upstream_attempts": 1,
+    "response_cache_hits": 1,
+    "before": {
+      "input_tokens": 20,
+      "output_tokens": 4,
+      "provider_cache_hit_tokens": 12,
+      "provider_cache_miss_tokens": 8
+    },
+    "after": {
+      "input_tokens": 10,
+      "output_tokens": 2,
+      "provider_cache_hit_tokens": 6,
+      "provider_cache_miss_tokens": 4
+    }
+  },
+  "final_remote_archive": "/tmp/auto-gateway-cache-verified.tgz",
+  "final_remote_archive_sha256": "527945540280f6b5e5e274db05f8def7d98bef6f1e418e85d36e262374d19a1f",
+  "remote_formatted_go_files_matched": 29,
+  "guard_readyz": {
+    "checked_at": "2026-09-15T10:18:25+08:00",
+    "status": "ready",
+    "model": "qwen3guard-gen-8b"
+  }
+}

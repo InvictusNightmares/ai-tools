@@ -1,0 +1,143 @@
+{
+  "scope": "startup round2 metadata only; artifacts remain private",
+  "rows": [
+    {
+      "scope": "fixed-model real coding task; not natural Auto selection or device UI",
+      "candidate": "deepseek-flash",
+      "task": "startup",
+      "source_commit": "6532369b3d55c31728484e628443ba9196d85c6b",
+      "completed": false,
+      "failure": "RuntimeError",
+      "seconds": 149.449,
+      "changed_files": [],
+      "file_sha256": {},
+      "checks": [
+        {
+          "argv": [
+            "./gradlew",
+            "--offline",
+            ":app:assembleFatDebug",
+            ":app:testFatDebugUnitTest",
+            "--console=plain"
+          ],
+          "exit_code": 0,
+          "seconds": 144.244,
+          "log_sha256": "e1c1914d428db567ed29cf950eb8016761277d8ba48970a1ac8473fde625d550"
+        }
+      ],
+      "quality_review_pending": true
+    },
+    {
+      "scope": "fixed-model real coding task; not natural Auto selection or device UI",
+      "candidate": "gpt-5.6-luna",
+      "task": "startup",
+      "source_commit": "6532369b3d55c31728484e628443ba9196d85c6b",
+      "completed": false,
+      "failure": "RuntimeError",
+      "seconds": 138.196,
+      "changed_files": [],
+      "file_sha256": {},
+      "checks": [
+        {
+          "argv": [
+            "./gradlew",
+            "--offline",
+            ":app:assembleFatDebug",
+            ":app:testFatDebugUnitTest",
+            "--console=plain"
+          ],
+          "exit_code": 0,
+          "seconds": 132.893,
+          "log_sha256": "4bbb72e24d8a72931e040621d45a0ad7b46ee2757d516e393f64bbbf4adcb77d"
+        }
+      ],
+      "quality_review_pending": true
+    },
+    {
+      "scope": "fixed-model real coding task; not natural Auto selection or device UI",
+      "candidate": "gpt-5.6-sol",
+      "task": "startup",
+      "source_commit": "6532369b3d55c31728484e628443ba9196d85c6b",
+      "completed": false,
+      "failure": "http_403",
+      "seconds": 134.549,
+      "changed_files": [],
+      "file_sha256": {},
+      "checks": [
+        {
+          "argv": [
+            "./gradlew",
+            "--offline",
+            ":app:assembleFatDebug",
+            ":app:testFatDebugUnitTest",
+            "--console=plain"
+          ],
+          "exit_code": 0,
+          "seconds": 33.145,
+          "log_sha256": "76c2b3ee1938dd7d46aaaf3b40994dd92637fa05b02101a5d261a4f9f3669f10"
+        }
+      ],
+      "quality_review_pending": true
+    },
+    {
+      "scope": "fixed-model real coding task; not natural Auto selection or device UI",
+      "candidate": "gpt-5.6-terra",
+      "task": "startup",
+      "source_commit": "6532369b3d55c31728484e628443ba9196d85c6b",
+      "completed": false,
+      "failure": "http_403",
+      "seconds": 221.353,
+      "changed_files": [],
+      "file_sha256": {},
+      "checks": [
+        {
+          "argv": [
+            "./gradlew",
+            "--offline",
+            ":app:assembleFatDebug",
+            ":app:testFatDebugUnitTest",
+            "--console=plain"
+          ],
+          "exit_code": 0,
+          "seconds": 27.959,
+          "log_sha256": "6f62c6b39347317651c2eb108f11013686a4c4482d0e7d70138722cf0914b9d7"
+        }
+      ],
+      "quality_review_pending": true
+    },
+    {
+      "scope": "fixed-model real coding task; not natural Auto selection or device UI",
+      "candidate": "gpt-6-astra",
+      "task": "startup",
+      "source_commit": "6532369b3d55c31728484e628443ba9196d85c6b",
+      "completed": false,
+      "failure": "turn_limit",
+      "seconds": 602.05,
+      "changed_files": [
+        "app/src/main/java/com/qyxdl/onboard/ecube/ui/activity/MainActivity.kt",
+        "app/src/main/java/com/qyxdl/onboard/ecube/ui/activity/SplashActivity.kt",
+        "app/src/main/java/com/qyxdl/onboard/ecube/ui/activity/web/WebViewManager.kt"
+      ],
+      "file_sha256": {
+        "app/src/main/java/com/qyxdl/onboard/ecube/ui/activity/MainActivity.kt": "9c6763d79fcf10ddeeab5eab308634e248265153844af66c0223cc62f3651309",
+        "app/src/main/java/com/qyxdl/onboard/ecube/ui/activity/SplashActivity.kt": "4e8ca01ff3cff69538487e08df142dfca0a6b963ac8c3ff44ddcb41c4cc11195",
+        "app/src/main/java/com/qyxdl/onboard/ecube/ui/activity/web/WebViewManager.kt": "c2bb0006c2016e8060e3bc19b267094305ffa5bd4620eda112a8f5dfbb755266"
+      },
+      "checks": [
+        {
+          "argv": [
+            "./gradlew",
+            "--offline",
+            ":app:assembleFatDebug",
+            ":app:testFatDebugUnitTest",
+            "--console=plain"
+          ],
+          "exit_code": 0,
+          "seconds": 4.218,
+          "log_sha256": "849a6d2f5eef31d381268a819599102d82b982bdfe8a1b6e6000d74e0dc6fc4a"
+        }
+      ],
+      "quality_review_pending": true
+    }
+  ]
+}

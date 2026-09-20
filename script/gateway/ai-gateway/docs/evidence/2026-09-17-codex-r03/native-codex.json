@@ -1,0 +1,82 @@
+[
+  {
+    "region": "tokyo",
+    "client": "Codex 0.154.0 app-server",
+    "requested_model": "gpt-5.6-sol",
+    "compaction_mode": "legacy",
+    "started_unix": 1789626466.642931,
+    "checks": {
+      "first_turn": true,
+      "compact_completed": true,
+      "continuity_after_compaction": true,
+      "native_cancel": true,
+      "resume_after_cancel": true
+    },
+    "thread_hash": "b2720de0678a1a5353f5ef7dc17a3dc7a98f1cd7da2adc303c7737efa53481e9",
+    "compact_items": [
+      "contextCompaction"
+    ],
+    "passed": true,
+    "finished_unix": 1789626536.411253
+  },
+  {
+    "region": "tokyo",
+    "client": "Codex 0.154.0 app-server",
+    "requested_model": "gpt-5.6-sol",
+    "compaction_mode": "v2",
+    "started_unix": 1789626466.6601322,
+    "checks": {
+      "first_turn": true,
+      "compact_completed": true,
+      "continuity_after_compaction": true,
+      "native_cancel": true,
+      "resume_after_cancel": true
+    },
+    "thread_hash": "6d08e4fc303aedb5800eefd7a7ff45fdffd3dc36b00b20429c3eb1087461151a",
+    "compact_items": [
+      "contextCompaction"
+    ],
+    "passed": true,
+    "finished_unix": 1789626529.851416
+  },
+  {
+    "region": "us",
+    "client": "Codex 0.154.0 app-server",
+    "requested_model": "gpt-5.6-sol",
+    "compaction_mode": "legacy",
+    "started_unix": 1789626445.6242921,
+    "checks": {
+      "first_turn": true,
+      "compact_completed": true,
+      "continuity_after_compaction": true,
+      "native_cancel": true,
+      "resume_after_cancel": true
+    },
+    "thread_hash": "e8bccb5b025810f8af551aec159d0224f3e10689c65e6d42e91bd35c32fff392",
+    "compact_items": [
+      "contextCompaction"
+    ],
+    "passed": true,
+    "finished_unix": 1789626485.156526
+  },
+  {
+    "region": "us",
+    "client": "Codex 0.154.0 app-server",
+    "requested_model": "gpt-5.6-sol",
+    "compaction_mode": "v2",
+    "started_unix": 1789626441.570766,
+    "checks": {
+      "first_turn": true,
+      "compact_completed": true,
+      "continuity_after_compaction": true,
+      "native_cancel": true,
+      "resume_after_cancel": true
+    },
+    "thread_hash": "d3b1eb7302948d337818fae88f359c164364216d8dda89d2c7e61a1fae697e09",
+    "compact_items": [
+      "contextCompaction"
+    ],
+    "passed": true,
+    "finished_unix": 1789626487.044839
+  }
+]

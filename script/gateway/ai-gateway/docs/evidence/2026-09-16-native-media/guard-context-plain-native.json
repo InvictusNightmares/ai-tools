@@ -1,0 +1,139 @@
+[
+  {
+    "region": "tokyo",
+    "request_id": "1af58428b10f14b4ac19026a11ffc1a1",
+    "variant": "roles_plain",
+    "input_chars": 35024,
+    "user_context_chars": 16871,
+    "chunks": [
+      {
+        "chunk": 0,
+        "chars": 20000,
+        "sha256": "d9be9f210096c4e0b1781e11471a236adb18af7731cf1577e36c520e76cb9c46",
+        "label": {
+          "safety": "Safe",
+          "categories": "None"
+        },
+        "seconds": 0.258
+      },
+      {
+        "chunk": 1,
+        "chars": 20000,
+        "sha256": "f6093e2000c0ce19040e6504c68e7bfaf1acb761c70251c3fb344ea0b439b09b",
+        "label": {
+          "safety": "Safe",
+          "categories": "None"
+        },
+        "seconds": 0.253
+      },
+      {
+        "chunk": 2,
+        "chars": 2827,
+        "sha256": "16e0b537d86daf611550efc8b48c1da6b0bc5f9834bd43710efeff5f643b3a6d",
+        "label": {
+          "safety": "Safe",
+          "categories": "None"
+        },
+        "seconds": 0.09
+      }
+    ]
+  },
+  {
+    "region": "us",
+    "request_id": "b6a5af4becc5014ec19117b2d7849ba3",
+    "variant": "roles_plain",
+    "input_chars": 42533,
+    "user_context_chars": 80,
+    "chunks": [
+      {
+        "chunk": 0,
+        "chars": 20000,
+        "sha256": "e09f5b80d897dde508f90cab28f6f93c04e12a9b632bb647d518d45e0b5e1274",
+        "label": {
+          "safety": "Safe",
+          "categories": "None"
+        },
+        "seconds": 0.346
+      },
+      {
+        "chunk": 1,
+        "chars": 20000,
+        "sha256": "4d97807ae38eb8593453e1a3220193dddff6bbe530022efc2ebe26ae655bcd53",
+        "label": {
+          "safety": "Safe",
+          "categories": "None"
+        },
+        "seconds": 0.296
+      },
+      {
+        "chunk": 2,
+        "chars": 3130,
+        "sha256": "be127a661b19b7585416b08de43a910515cf0335f3d46e8be148fe0111598845",
+        "label": {
+          "safety": "Safe",
+          "categories": "None"
+        },
+        "seconds": 0.114
+      }
+    ]
+  },
+  {
+    "region": "us",
+    "request_id": "669c6604e8e6576a491f1f507b6d3a43",
+    "variant": "roles_plain",
+    "input_chars": 70289,
+    "user_context_chars": 22146,
+    "chunks": [
+      {
+        "chunk": 0,
+        "chars": 20000,
+        "sha256": "83f8442f2e1923bbfffb1186062470f6dbee2bd46d878f3912bed2e6370059f8",
+        "label": {
+          "safety": "Safe",
+          "categories": "None"
+        },
+        "seconds": 0.329
+      },
+      {
+        "chunk": 1,
+        "chars": 20000,
+        "sha256": "27d85af604d9f58b382c85d69ea4de3abb75a1401d55bacdf27abd30fc1f26cf",
+        "label": {
+          "safety": "Safe",
+          "categories": "None"
+        },
+        "seconds": 0.313
+      },
+      {
+        "chunk": 2,
+        "chars": 20000,
+        "sha256": "2cb3565f2bdad1ebf3eccb45e5a015d74a13ca236dc525caeb49e276142009c8",
+        "label": {
+          "safety": "Safe",
+          "categories": "None"
+        },
+        "seconds": 0.285
+      },
+      {
+        "chunk": 3,
+        "chars": 20000,
+        "sha256": "74b5e979aae947ad3276c3e2cdf35bf846b801b39b6daf7df366d5cdd503314e",
+        "label": {
+          "safety": "Safe",
+          "categories": "None"
+        },
+        "seconds": 0.281
+      },
+      {
+        "chunk": 4,
+        "chars": 3294,
+        "sha256": "932fd30db09a9e0d077c0224efcd3e53470fd37333683a581328bd000fafca96",
+        "label": {
+          "safety": "Safe",
+          "categories": "None"
+        },
+        "seconds": 0.092
+      }
+    ]
+  }
+]

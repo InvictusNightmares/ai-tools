@@ -1,0 +1,92 @@
+{
+  "native": {
+    "scope": "native hermes through observation collector to synthetic provider",
+    "checks": [
+      {
+        "check": "initial_marker",
+        "passed": true
+      },
+      {
+        "check": "native_compress",
+        "passed": true,
+        "new_requests": 2
+      },
+      {
+        "check": "recall_after_compress",
+        "passed": true
+      },
+      {
+        "check": "multiple_native_tools",
+        "passed": true,
+        "tool_count": 2
+      },
+      {
+        "check": "native_child_session",
+        "passed": true,
+        "child_sessions": 1
+      },
+      {
+        "check": "native_cancel_process_alive",
+        "passed": true
+      },
+      {
+        "check": "resume_after_cancel",
+        "passed": true
+      }
+    ],
+    "gateway_candidate_tested": true,
+    "guard_and_models": "no Guard; synthetic provider",
+    "region": "observation-dev4",
+    "request_count": 21,
+    "session_header_names": []
+  },
+  "collector": {
+    "scope": "native clients, synthetic loopback provider, actual collector",
+    "production_changed": false,
+    "events": 28,
+    "kinds": {
+      "http_exchange": 28
+    },
+    "outcomes": {
+      "completed": 27,
+      "canceled": 1
+    },
+    "clients": {
+      "unknown": 27,
+      "hermes": 1
+    },
+    "missing": {},
+    "status": {
+      "active_requests": 0,
+      "capture_enabled": false,
+      "captured": 28,
+      "complete_capture_claim": false,
+      "dropped": 0,
+      "older_loss_details_evicted": 0,
+      "projection_errors": 0,
+      "pruned": 0,
+      "queue_items": 0,
+      "queue_limit_bytes": 67108864,
+      "queued_bytes": 0,
+      "recent_losses": null,
+      "recovered_interrupted_requests": 0,
+      "started_at": "2026-09-17T11:04:28.644506Z",
+      "storage_limit_bytes": 1073741824,
+      "stored_bytes": 1677176,
+      "truncated": 0,
+      "unavailable_bypassed_requests": 0,
+      "updated_at": "2026-09-17T11:05:13.455678Z",
+      "version": "observation-dev.4",
+      "write_errors": 0,
+      "written": 28
+    },
+    "all_record_checksums_valid": true,
+    "original_ua_observed": [
+      "OpenAI/Python 2.24.0",
+      "hermes-cli/0.21.0",
+      "python-httpx/0.28.1",
+      "python-requests/2.33.0"
+    ],
+    "auth_headers_excluded": true
+  }
+}

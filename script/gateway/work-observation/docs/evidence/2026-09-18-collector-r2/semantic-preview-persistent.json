@@ -1,0 +1,57 @@
+{
+  "schema": "work-observation-semantic-preview-v1",
+  "host": "qiyuan-gpu",
+  "release": "candidate-20260917-r19-native-v31",
+  "services": {
+    "tokyo": {
+      "unit": "work-observation-semantic-preview@tokyo.service",
+      "listen": "127.0.0.1:8095",
+      "enabled": true,
+      "active_after_restart": true,
+      "guard_http": 200,
+      "guard_decision": "allow",
+      "route_http": 503,
+      "route_status": "classifier_unavailable",
+      "effective_model": null,
+      "upstream_called": false
+    },
+    "us": {
+      "unit": "work-observation-semantic-preview@us.service",
+      "listen": "127.0.0.1:8096",
+      "enabled": true,
+      "active_after_restart": true,
+      "guard_http": 200,
+      "guard_decision": "allow",
+      "route_http": 503,
+      "route_status": "classifier_unavailable",
+      "effective_model": null,
+      "upstream_called": false
+    }
+  },
+  "production_route_preview": {
+    "tokyo_8093_authenticated_status": 404,
+    "us_8094_authenticated_status": 404,
+    "reason": "route_preview_disabled"
+  },
+  "permissions": {
+    "auth_files": "0600 root:root",
+    "state_dirs": "0700 root:root"
+  },
+  "employee_data_sent": false,
+  "formal_capture_enabled": false,
+  "historical_isolated_smoke": {
+    "guard_http": 200,
+    "guard_decision": "allow",
+    "auto_route_http": 200,
+    "effective_model": "deepseek-flash",
+    "scope": "temporary synthetic process before persistent-service retest"
+  },
+  "audit_followup": {
+    "caller_credential_path": "works_on_successful_requests",
+    "tokyo_failure": "reviewer gpt-5.6-sol had no HTTP status after primary gpt-5.6-luna succeeded; a later retry of the same shape completed",
+    "us_failure": "no corresponding reviewer transport failure in the bounded excerpt",
+    "candidate_fix": "one 75ms retry for transport errors only",
+    "candidate_deployment": "not yet verified on GPU"
+  },
+  "current_blocker": "intermittent regional classifier reviewer transport failure; shared AUTO_CLASSIFIER_TOKEN remains rejected and production route preview remains disabled"
+}

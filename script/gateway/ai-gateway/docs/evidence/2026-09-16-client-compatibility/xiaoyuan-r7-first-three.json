@@ -1,0 +1,125 @@
+[
+  {
+    "client": "opencode",
+    "run": {
+      "client": "opencode",
+      "session": "xiaoyuan-opencode-160225",
+      "run_id": "opencode-160225",
+      "at": "2026-09-16T08:02:25.932783+00:00",
+      "workspace": "/private/tmp/gateway-xiaoyuan-20260916/opencode",
+      "phase": "finished",
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_s": 225.46,
+      "finished_at": "2026-09-16T08:06:11.392672+00:00",
+      "changed_files": [
+        "entry/src/main/ets/capabilities/Navigation.ets"
+      ],
+      "stdout_bytes": 215298,
+      "stderr_bytes": 0
+    },
+    "behavior": {
+      "scope": "execute transpiled Navigation with synthetic persistent-store and navigation adapters; not HarmonyOS device UI",
+      "workspace": "/private/tmp/gateway-xiaoyuan-20260916/opencode",
+      "checks": {
+        "login_state_removed": true,
+        "user_approval_filter_removed": true,
+        "cleanup_before_navigation": true,
+        "other_routes_preserve_login": true,
+        "unrelated_preferences_preserved": true
+      },
+      "pass": true
+    },
+    "unsigned_hap_build_pass": true,
+    "build_log_sha256": "125e2d2736c5f855d2d536041c09eaa850b2f8fcf8890133342ed359b96fd85e",
+    "hap_sha256": "ae4c75324b047f302b8b2e2b597c8ea074e3b42d18967b31c5c5c07ace25389d",
+    "hap_bytes": 10395055,
+    "patch_sha256": "4b0bee92dc3cf1a0ed665b454a3468f1127365690ef8868ce36ca83388ab4492",
+    "patch_bytes": 1024,
+    "workflow_pass": true,
+    "device_tested": false
+  },
+  {
+    "client": "claude",
+    "run": {
+      "client": "claude",
+      "session": "xiaoyuan-claude-160228",
+      "run_id": "claude-160228",
+      "at": "2026-09-16T08:02:28.215616+00:00",
+      "workspace": "/private/tmp/gateway-xiaoyuan-20260916/claude",
+      "phase": "finished",
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_s": 267.4,
+      "finished_at": "2026-09-16T08:06:55.614723+00:00",
+      "changed_files": [
+        "entry/src/main/ets/capabilities/Navigation.ets",
+        "entry/src/main/ets/pages/Login/index.ets"
+      ],
+      "stdout_bytes": 389038,
+      "stderr_bytes": 71
+    },
+    "behavior": {
+      "scope": "execute transpiled Navigation with synthetic persistent-store and navigation adapters; not HarmonyOS device UI",
+      "workspace": "/private/tmp/gateway-xiaoyuan-20260916/claude",
+      "checks": {
+        "login_state_removed": true,
+        "user_approval_filter_removed": true,
+        "cleanup_before_navigation": true,
+        "other_routes_preserve_login": true,
+        "unrelated_preferences_preserved": true
+      },
+      "pass": true
+    },
+    "unsigned_hap_build_pass": true,
+    "build_log_sha256": "61547582f7d43e4feaaf9879929368e8b98644705852a0e365c6c7a9b1978203",
+    "hap_sha256": "e7fc5494a960a6398ccc3b5659a41275cc9db46f50ad7b14b560060d62d600d6",
+    "hap_bytes": 10395266,
+    "patch_sha256": "4873264c5ea7d7f5fba389c8b00c4def387f27235200fa136cdf9e0d0277656a",
+    "patch_bytes": 1913,
+    "workflow_pass": true,
+    "device_tested": false,
+    "scope_variance": "Added JPush stop on logout and resume after login beyond original minimal fix; build passed, push behavior not device-tested."
+  },
+  {
+    "client": "hermes",
+    "run": {
+      "client": "hermes",
+      "session": "xiaoyuan-hermes-160227",
+      "run_id": "hermes-160227",
+      "at": "2026-09-16T08:02:27.731219+00:00",
+      "workspace": "/private/tmp/gateway-xiaoyuan-20260916/hermes",
+      "phase": "finished",
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_s": 248.04,
+      "finished_at": "2026-09-16T08:06:35.774988+00:00",
+      "changed_files": [
+        "entry/src/main/ets/capabilities/Navigation.ets"
+      ],
+      "stdout_bytes": 167607,
+      "stderr_bytes": 2130615
+    },
+    "behavior": {
+      "scope": "execute transpiled Navigation with synthetic persistent-store and navigation adapters; not HarmonyOS device UI",
+      "workspace": "/private/tmp/gateway-xiaoyuan-20260916/hermes",
+      "checks": {
+        "login_state_removed": true,
+        "user_approval_filter_removed": true,
+        "cleanup_before_navigation": true,
+        "other_routes_preserve_login": true,
+        "unrelated_preferences_preserved": true
+      },
+      "pass": true
+    },
+    "unsigned_hap_build_pass": true,
+    "build_log_sha256": "1cf85d15e8e26235289f2e6b5100a4c24c01d53fa39757ff921b19bb8152de0e",
+    "hap_sha256": "6ea77a57c1b206daf9caeab3ec5865457588a1bcc6aa09fc2bf61e26b0f9bf15",
+    "hap_bytes": 10395327,
+    "patch_sha256": "fa09e19df5bd69c2f8525af190d6eca00d37ddfa2677a2f65e2274a6f961e886",
+    "patch_bytes": 1605,
+    "workflow_pass": true,
+    "device_tested": false,
+    "self_correction": "First build failed on ArkTS overload ordering; client moved helper and rebuilt successfully."
+  }
+]

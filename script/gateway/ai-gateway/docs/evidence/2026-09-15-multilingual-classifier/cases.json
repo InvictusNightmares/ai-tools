@@ -1,0 +1,409 @@
+{
+  "version": 1,
+  "status": "diagnostic_fixture_not_model_quality_acceptance",
+  "label_basis": "reviewer expectations, not measured model quality",
+  "cases": [
+    {
+      "id": "label",
+      "source": "synthetic",
+      "expected_task": "formatting",
+      "reviewer_complexity": "simple",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "把按钮文案“发送验证码”改成“获取验证码”，其他行为不变。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Change the button label from Send code to Get code; leave behavior unchanged."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "把 button label 从“发送验证码”改成“获取验证码”，其余行为不变。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "login-ui",
+      "source": "historical-reconstruction",
+      "expected_task": "coding",
+      "reviewer_complexity": "bounded",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "让鸿蒙登录页与安卓对齐，调整输入框内边距、图标和文字间距，让两条协议链接能分别点击跳转。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Align the HarmonyOS login page with Android: adjust input padding and icon-to-text spacing, and make the two agreement links navigate independently."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "让 HarmonyOS Login 与 Android 对齐：调整 TextInput padding、icon 间距，两个 agreement link 分别跳转。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "network",
+      "source": "historical-reconstruction",
+      "expected_task": "debugging",
+      "reviewer_complexity": "cross-layer",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "断网时没有错误提示。排查统一网络层，区分连接超时、传输异常和业务错误，并保留后台请求的静默开关。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Offline requests show no error message. Debug the shared network layer, distinguish connection timeouts, transport failures and business errors, and preserve quiet background requests."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "断网时没有 error toast。排查 HttpClient，区分 timeout、transport exception 和 BusinessError，保留后台请求静默开关。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "logout",
+      "source": "historical-reconstruction",
+      "expected_task": "debugging",
+      "reviewer_complexity": "cross-layer",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "退出登录后重启应用又回到主页面。请追踪登录信息写入、启动读取和所有跳转登录入口，统一清理用户状态并验证冷启动。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "After logout, restarting the app opens the main page again. Trace saved login data, startup reads and every navigation-to-login entry point; centralize session cleanup and verify cold starts."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "logout 后重启又进入 Main。追踪 Login 写入、Splash 读取和 Navigation 登录入口，统一清理 session 并验证 cold start。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "release",
+      "source": "historical-reconstruction",
+      "expected_task": "audit",
+      "reviewer_complexity": "cross-layer",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "审查上架前的应用发布包，核对签名证书层级、最终权限、第三方组件合并的权限以及相机实际调用链，区分本地检查和真机验收。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Audit the app release package: verify signing certificate levels, final permissions, permissions merged from dependencies and camera call paths; distinguish local checks from device acceptance."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "审查 release 包：certificate chain、最终 permissions、HAR 合并权限、camera 调用链，区分 local check 和 device acceptance。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "card",
+      "source": "historical-reconstruction",
+      "expected_task": "debugging",
+      "reviewer_complexity": "bounded",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "公司名称设置了单行和省略号仍然超出待办卡片，两个页面复用同一个卡片组件，请定位宽度约束并做最小修改。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "The company name has single-line ellipsis but still overflows a todo card. Two pages share the component; find the width constraint and make a minimal fix."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "company name 已设 maxLines 和 ellipsis 仍溢出 CardItem，两个页面复用，请定位 width constraint 做最小修改。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "environment",
+      "source": "historical-reconstruction",
+      "expected_task": "debugging",
+      "reviewer_complexity": "cross-layer",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "生产包登录页仍显示环境切换。沿打包命令、临时生成配置、环境锁定状态到页面渲染追踪原因，确保测试包仍能切换环境。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "The production login page still shows environment switching. Trace build arguments, generated configuration, the environment lock and rendering; keep switching available in test builds."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "PRO 包 Login 仍显示 env switch。追踪 build args、generated config、EnvConfig lock 和 render；FAT/UAT 仍可切换。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "short-hard",
+      "source": "synthetic",
+      "expected_task": "debugging",
+      "reviewer_complexity": "complex",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "退出与重新登录并发时，旧请求回包会覆盖新用户状态，如何证明修复在所有交错顺序下都正确？"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "When logout races with a new login, an old response overwrites the new user state. How can we prove a fix is correct for every interleaving?"
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "logout 与 re-login 并发，旧 response 覆盖新 session，如何证明所有 interleaving 都正确？"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "term-only",
+      "source": "synthetic",
+      "expected_task": "explanation",
+      "reviewer_complexity": "simple",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "“架构”这个词是什么意思？用一句话解释。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "What does the word architecture mean? Explain in one sentence."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "architecture 这个词是什么意思？一句话解释。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "translation",
+      "source": "synthetic",
+      "expected_task": "translation",
+      "reviewer_complexity": "simple",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "把“网络异常，请检查网络连接”翻译成英文，只返回译文。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Translate the Chinese message 网络异常，请检查网络连接 into English. Return only the translation."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "把“网络异常，请检查网络连接” translate to English，只要译文。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "broad-design",
+      "source": "synthetic",
+      "expected_task": "architecture",
+      "reviewer_complexity": "complex",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "为移动应用设计跨端会话管理改造：覆盖退出、重登、旧请求晚到、多窗口、网页桥接与离线重试；明确一致性约束，比较两种方案，给出分阶段迁移、回滚条件和可验证的回归矩阵。"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Design cross-platform session management for a mobile app: handle logout, re-login, late responses, multiple windows, web bridges and offline retries; define consistency constraints, compare two approaches, and specify migration stages, rollback conditions and a verifiable regression matrix."
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "设计跨端 session management：logout、re-login、late response、multi-window、WebBridge、offline retry；明确 consistency，比较两种方案，给出 migration、rollback 和 regression matrix。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "tool-catalog",
+      "source": "synthetic",
+      "expected_task": "translation",
+      "reviewer_complexity": "simple",
+      "variants": {
+        "zh": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "把“保存”翻译成英文。"
+            }
+          ],
+          "tools": [
+            {
+              "name": "read_file",
+              "schema": "{\"type\":\"object\",\"properties\":{\"path\":{\"type\":\"string\"}},\"required\":[\"path\"]}"
+            }
+          ]
+        },
+        "en": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "Translate 保存 into English."
+            }
+          ],
+          "tools": [
+            {
+              "name": "read_file",
+              "schema": "{\"type\":\"object\",\"properties\":{\"path\":{\"type\":\"string\"}},\"required\":[\"path\"]}"
+            }
+          ]
+        },
+        "mixed": {
+          "messages": [
+            {
+              "role": "user",
+              "content": "把“保存” translate to English。"
+            }
+          ],
+          "tools": [
+            {
+              "name": "read_file",
+              "schema": "{\"type\":\"object\",\"properties\":{\"path\":{\"type\":\"string\"}},\"required\":[\"path\"]}"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

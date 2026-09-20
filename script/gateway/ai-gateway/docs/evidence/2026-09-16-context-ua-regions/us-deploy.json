@@ -1,0 +1,21 @@
+{
+  "at": "2026-09-16T09:46:12.993472+00:00",
+  "status": "deployed",
+  "region": "us",
+  "port": 4005,
+  "auto_port": 8094,
+  "guard_port": 8014,
+  "upstream_port": 9880,
+  "source_manifest_sha256": "1fecc11f466ea121208d5159f876b539107f8692d0c6c57d297af5487cb59c70",
+  "binaries": {
+    "auto-server": "69303dcf2319e1c14d6986ebf971182aba8b444c34b8ddb34d7adb014baaf263",
+    "preflight-api": "19f33884ea5682b34d34dcec1614e51cb7d328fde461dfd0b412e0c6e5cf9664"
+  },
+  "artifacts_copied_from_verified_build": "/tmp/gateway-linux-verify.ObmDVe",
+  "same_binaries_as_4004": true,
+  "independent_internal_secret": true,
+  "unrelated_containers_unchanged": true,
+  "user_key_stored": false,
+  "classifier": "gpt-5.6-luna",
+  "reviewer": "gpt-5.6-sol"
+}

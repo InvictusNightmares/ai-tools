@@ -1,0 +1,59 @@
+{
+  "at": "2026-09-16T08:18:58.373429+00:00",
+  "checks": [
+    {
+      "case": "chat_unknown_model",
+      "status": 404,
+      "expected": 404,
+      "pass": true,
+      "error_code": "model_not_found",
+      "request_id": "86250ba8b41a72fd46bf14050d20813b",
+      "elapsed_ms": 236
+    },
+    {
+      "case": "responses_unknown_model",
+      "status": 404,
+      "expected": 404,
+      "pass": true,
+      "error_code": "model_not_found",
+      "request_id": "280ceda78ba064e1205e191ae5118f9b",
+      "elapsed_ms": 126
+    },
+    {
+      "case": "messages_unknown_model",
+      "status": 404,
+      "expected": 404,
+      "pass": true,
+      "error_code": "model_not_found",
+      "request_id": "d089c1c0b85c391f848f4c8776cf29ea",
+      "elapsed_ms": 130
+    },
+    {
+      "case": "short_basic_still_blocked",
+      "status": 403,
+      "expected": 403,
+      "pass": true,
+      "error_code": "preflight_blocked",
+      "request_id": "52fca7fb5ce345dd8b268d4a4f6bed41",
+      "elapsed_ms": 134
+    },
+    {
+      "case": "api_key_still_blocked",
+      "status": 403,
+      "expected": 403,
+      "pass": true,
+      "error_code": "preflight_blocked",
+      "request_id": "de8555cef230f514f479662f6c291ced",
+      "elapsed_ms": 228
+    },
+    {
+      "case": "agent_tools_greeting",
+      "status": 200,
+      "expected": 200,
+      "pass": true,
+      "error_code": null,
+      "request_id": "6133b8a9f5ba946c859e46c855c8b02c",
+      "elapsed_ms": 4213
+    }
+  ]
+}

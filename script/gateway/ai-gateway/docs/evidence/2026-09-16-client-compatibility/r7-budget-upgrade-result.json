@@ -1,0 +1,17 @@
+{
+  "at": "2026-09-16T08:15:01.633347+00:00",
+  "status": "updated",
+  "scope": "4004_auto_and_guard_timeout",
+  "backup": "/data/ai-gateway/acceptance-tokyo/backups/r7-budget-20260916-161459",
+  "source_manifest_sha256": "0073284942d27cf6f100ac08887dc6b01c07dabfab8853b0edb1f99a51564554",
+  "binaries": {
+    "auto-server": "2394ea339c9edf0d63b326f7f18dbe348dd6dfb813c1de6a819fc34da01128b6",
+    "preflight-api": "19f33884ea5682b34d34dcec1614e51cb7d328fde461dfd0b412e0c6e5cf9664"
+  },
+  "unrelated_containers_unchanged": true,
+  "internal_secret_unchanged": true,
+  "state_unchanged_before_reopen": true,
+  "ingress_config_restored": true,
+  "guard_request_timeout_seconds": 30,
+  "auto_guard_transport_timeout_seconds": 35
+}

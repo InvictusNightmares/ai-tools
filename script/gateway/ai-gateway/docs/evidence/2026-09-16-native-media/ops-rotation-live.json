@@ -1,0 +1,96 @@
+[
+  {
+    "region": "tokyo",
+    "maintenance": {
+      "rotated": 6,
+      "expired": 0,
+      "deleted": 0,
+      "retention_days": null,
+      "applied": true
+    },
+    "files": [
+      {
+        "file": "auto/usage.jsonl",
+        "archive_bytes_preserved": true,
+        "new_inode": true,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "auto/route-audit.jsonl",
+        "archive_bytes_preserved": true,
+        "new_inode": true,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "guard/security-usage.jsonl",
+        "archive_bytes_preserved": true,
+        "new_inode": true,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "guard/security-decisions.jsonl",
+        "archive_bytes_preserved": true,
+        "new_inode": true,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "guard/guard-security.jsonl",
+        "archive_bytes_preserved": true,
+        "new_inode": true,
+        "mode": "0o600",
+        "uid": 10001
+      }
+    ]
+  },
+  {
+    "region": "us",
+    "maintenance": {
+      "rotated": 6,
+      "expired": 0,
+      "deleted": 0,
+      "retention_days": null,
+      "applied": true
+    },
+    "files": [
+      {
+        "file": "auto/usage.jsonl",
+        "archive_bytes_preserved": true,
+        "new_inode": true,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "auto/route-audit.jsonl",
+        "archive_bytes_preserved": true,
+        "new_inode": true,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "guard/security-usage.jsonl",
+        "archive_bytes_preserved": true,
+        "new_inode": true,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "guard/security-decisions.jsonl",
+        "archive_bytes_preserved": true,
+        "new_inode": true,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "guard/guard-security.jsonl",
+        "archive_bytes_preserved": true,
+        "new_inode": true,
+        "mode": "0o600",
+        "uid": 10001
+      }
+    ]
+  }
+]

@@ -1,0 +1,10 @@
+--- FAIL: TestClientBoilerplateDoesNotExcludeSmallModels (0.00s)
+    --- FAIL: TestClientBoilerplateDoesNotExcludeSmallModels/chat (0.00s)
+        context_budget_test.go:34: simple task with normal client context over-routed: model=&{gpt-5.6-terra openai 2 [text code tools stream vision structured long_context] [coding debugging architecture agent] [none low medium high xhigh max]} score=5 capabilities=[text tools stream long_context]
+    --- FAIL: TestClientBoilerplateDoesNotExcludeSmallModels/responses (0.00s)
+        context_budget_test.go:34: simple task with normal client context over-routed: model=&{gpt-5.6-terra openai 2 [text code tools stream vision structured long_context] [coding debugging architecture agent] [none low medium high xhigh max]} score=5 capabilities=[text tools stream long_context]
+    --- FAIL: TestClientBoilerplateDoesNotExcludeSmallModels/anthropic (0.00s)
+        context_budget_test.go:34: simple task with normal client context over-routed: model=&{gpt-5.6-terra openai 2 [text code tools stream vision structured long_context] [coding debugging architecture agent] [none low medium high xhigh max]} score=5 capabilities=[text tools stream long_context]
+FAIL
+FAIL	local/ai-gateway/auto	0.007s
+FAIL

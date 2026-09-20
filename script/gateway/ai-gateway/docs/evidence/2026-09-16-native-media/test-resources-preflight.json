@@ -1,0 +1,18 @@
+{
+  "scope": "read-only dedicated resource preflight; no business calls or key-status mutations",
+  "regions": {
+    "tokyo": {
+      "checks": 4,
+      "passed": 4,
+      "redis_auth": "configured password"
+    },
+    "us": {
+      "checks": 4,
+      "passed": 4,
+      "redis_auth": "no password configured; verified PING; stale container env ignored"
+    }
+  },
+  "private_evidence": "/data/ai-gateway/acceptance-tests/native-multiuser-20260916/run-20260917-013209",
+  "test_script_sha256": "13d05cfc62380e28b7cc67047252dcf809016061e988f416dc88a20834e9753c",
+  "business_matrix_complete": false
+}

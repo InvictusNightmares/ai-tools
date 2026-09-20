@@ -1,0 +1,28 @@
+{
+  "checked_at": "2026-09-16T08:34:33.253053+00:00",
+  "frozen_manifest_files": 120,
+  "post_freeze_differences": [
+    {
+      "path": "auto/README.md",
+      "current_sha256": "51871dca4fafdbda3318b8cc995f2d45f7ffe7d000c0ce80df44487384558da8"
+    },
+    {
+      "path": "guard/README.md",
+      "current_sha256": "7027f36fd5e1213d2130ce584f955935136ef6885efe6f9d3fac8fe195c1d7cf"
+    },
+    {
+      "path": "deploy/acceptance/README.md",
+      "current_sha256": "b11fcae41f97b0a0b369495743a45d1172a691258782f29322768ea6c292489b"
+    },
+    {
+      "path": "README.md",
+      "current_sha256": "926a63a343ac7d212b42c31a9f01a9c6153e35a064f01b3e23d1835b59504597"
+    }
+  ],
+  "only_documentation_changed": true,
+  "code_and_configuration_match_tested_manifest": true,
+  "markdown_file_links_checked": 255,
+  "missing_file_links": [],
+  "final_results_file": "xiaoyuan-final-results.json",
+  "route_metadata_file": "xiaoyuan-final-route-summary.json"
+}

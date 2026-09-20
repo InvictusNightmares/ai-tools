@@ -1,0 +1,26 @@
+[Unit]
+Description=Work observation collector sidecar (%i)
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=simple
+ExecStart=/opt/work-observation/current/deploy/run-collector-sidecar.sh %i
+ExecStop=-/usr/bin/docker stop --time 30 work-observation-collector-%i
+Restart=on-failure
+RestartSec=3s
+TimeoutStartSec=30s
+TimeoutStopSec=45s
+UMask=0077
+# The host service invokes Docker, which may need a SELinux/domain transition
+# when the sidecar is recreated after its Nginx network namespace changes.
+# The collector container itself still runs with --security-opt=no-new-privileges.
+PrivateTmp=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ProtectSystem=strict
+ProtectHome=true
+ReadOnlyPaths=/opt/work-observation/current /etc/work-observation
+ReadWritePaths=/data/work-observation/%i
+
+[Install]
+WantedBy=multi-user.target

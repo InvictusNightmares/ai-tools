@@ -1,0 +1,13 @@
+{
+  "verified_at": "2026-09-15T03:03:26.675912+00:00",
+  "host": "qiyuan-gpu",
+  "verify_dir": "/tmp/auto-payload-verify-20260915.sNSK3L",
+  "scope": "temporary mock-provider protocol payload tests; no regional production traffic",
+  "verify_exit": 0,
+  "race_vet_exit": 0,
+  "tests_with_subtests_passed": 71,
+  "failed": 0,
+  "verified_go_files": 31,
+  "final_local_archive": "/tmp/auto-gateway-latest.tgz",
+  "final_local_archive_sha256": "733717cde4e90c9ae6fe2c96dcef192a523d195d96d1b476e6fd3e565aa28fb8"
+}

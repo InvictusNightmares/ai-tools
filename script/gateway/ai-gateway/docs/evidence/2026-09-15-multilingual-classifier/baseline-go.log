@@ -1,0 +1,40 @@
+=== RUN   TestMultilingualDiagnostic
+{"capabilities":["text"],"case":"label","effort":"none","intent":"quick_qa","language":"zh","model":"deepseek-flash","reasons":["auto_reasoning_effort_none"],"score":1}
+{"capabilities":["text"],"case":"label","effort":"none","intent":"quick_qa","language":"en","model":"deepseek-flash","reasons":["auto_reasoning_effort_none"],"score":1}
+{"capabilities":["text"],"case":"label","effort":"none","intent":"quick_qa","language":"mixed","model":"deepseek-flash","reasons":["auto_reasoning_effort_none"],"score":1}
+{"capabilities":["text"],"case":"login-ui","effort":"none","intent":"quick_qa","language":"zh","model":"deepseek-flash","reasons":["auto_reasoning_effort_none"],"score":1}
+{"capabilities":["text"],"case":"login-ui","effort":"none","intent":"quick_qa","language":"en","model":"deepseek-flash","reasons":["auto_reasoning_effort_none"],"score":1}
+{"capabilities":["text"],"case":"login-ui","effort":"none","intent":"quick_qa","language":"mixed","model":"deepseek-flash","reasons":["auto_reasoning_effort_none"],"score":1}
+{"capabilities":["text"],"case":"network","effort":"none","intent":"quick_qa","language":"zh","model":"deepseek-flash","reasons":["auto_reasoning_effort_none"],"score":1}
+{"capabilities":["text","code"],"case":"network","effort":"none","intent":"debugging","language":"en","model":"gpt-5.6-luna","reasons":["debug_signal","auto_reasoning_effort_none"],"score":13}
+{"capabilities":["text","code"],"case":"network","effort":"none","intent":"debugging","language":"mixed","model":"gpt-5.6-luna","reasons":["debug_signal","auto_reasoning_effort_none"],"score":13}
+{"capabilities":["text"],"case":"logout","effort":"none","intent":"quick_qa","language":"zh","model":"deepseek-flash","reasons":["auto_reasoning_effort_none"],"score":1}
+{"capabilities":["text"],"case":"logout","effort":"none","intent":"quick_qa","language":"en","model":"deepseek-flash","reasons":["auto_reasoning_effort_none"],"score":1}
+{"capabilities":["text"],"case":"logout","effort":"none","intent":"quick_qa","language":"mixed","model":"deepseek-flash","reasons":["auto_reasoning_effort_none"],"score":1}
+{"capabilities":["text"],"case":"release","effort":"none","intent":"quick_qa","language":"zh","model":"deepseek-flash","reasons":["auto_reasoning_effort_none"],"score":1}
+{"capabilities":["text"],"case":"release","effort":"none","intent":"quick_qa","language":"en","model":"deepseek-flash","reasons":["auto_reasoning_effort_none"],"score":1}
+{"capabilities":["text"],"case":"release","effort":"none","intent":"quick_qa","language":"mixed","model":"deepseek-flash","reasons":["auto_reasoning_effort_none"],"score":1}
+{"capabilities":["text"],"case":"card","effort":"none","intent":"quick_qa","language":"zh","model":"deepseek-flash","reasons":["auto_reasoning_effort_none"],"score":1}
+{"capabilities":["text"],"case":"card","effort":"none","intent":"quick_qa","language":"en","model":"deepseek-flash","reasons":["auto_reasoning_effort_none"],"score":1}
+{"capabilities":["text"],"case":"card","effort":"none","intent":"quick_qa","language":"mixed","model":"deepseek-flash","reasons":["auto_reasoning_effort_none"],"score":1}
+{"capabilities":["text"],"case":"environment","effort":"none","intent":"quick_qa","language":"zh","model":"deepseek-flash","reasons":["auto_reasoning_effort_none"],"score":1}
+{"capabilities":["text"],"case":"environment","effort":"none","intent":"quick_qa","language":"en","model":"deepseek-flash","reasons":["auto_reasoning_effort_none"],"score":1}
+{"capabilities":["text"],"case":"environment","effort":"none","intent":"quick_qa","language":"mixed","model":"deepseek-flash","reasons":["auto_reasoning_effort_none"],"score":1}
+{"capabilities":["text"],"case":"short-hard","effort":"none","intent":"quick_qa","language":"zh","model":"deepseek-flash","reasons":["auto_reasoning_effort_none"],"score":1}
+{"capabilities":["text"],"case":"short-hard","effort":"none","intent":"quick_qa","language":"en","model":"deepseek-flash","reasons":["auto_reasoning_effort_none"],"score":1}
+{"capabilities":["text"],"case":"short-hard","effort":"none","intent":"quick_qa","language":"mixed","model":"deepseek-flash","reasons":["auto_reasoning_effort_none"],"score":1}
+{"capabilities":["text","code"],"case":"term-only","effort":"low","intent":"architecture","language":"zh","model":"gpt-5.6-terra","reasons":["architecture_signal","auto_reasoning_effort_low"],"score":21}
+{"capabilities":["text","code"],"case":"term-only","effort":"low","intent":"architecture","language":"en","model":"gpt-5.6-terra","reasons":["architecture_signal","auto_reasoning_effort_low"],"score":21}
+{"capabilities":["text","code"],"case":"term-only","effort":"low","intent":"architecture","language":"mixed","model":"gpt-5.6-terra","reasons":["architecture_signal","auto_reasoning_effort_low"],"score":21}
+{"capabilities":["text"],"case":"translation","effort":"low","intent":"translation","language":"zh","model":"gpt-5.6-luna","reasons":["translation_signal","auto_reasoning_effort_low"],"score":16}
+{"capabilities":["text"],"case":"translation","effort":"low","intent":"translation","language":"en","model":"gpt-5.6-luna","reasons":["translation_signal","auto_reasoning_effort_low"],"score":16}
+{"capabilities":["text"],"case":"translation","effort":"low","intent":"translation","language":"mixed","model":"gpt-5.6-luna","reasons":["translation_signal","auto_reasoning_effort_low"],"score":16}
+{"capabilities":["text","code"],"case":"broad-design","effort":"low","intent":"architecture","language":"zh","model":"gpt-5.6-terra","reasons":["debug_signal","architecture_signal","auto_reasoning_effort_low"],"score":33}
+{"capabilities":["text","code"],"case":"broad-design","effort":"medium","intent":"architecture","language":"en","model":"gpt-5.6-terra","reasons":["code_signal","architecture_signal","auto_reasoning_effort_medium"],"score":39}
+{"capabilities":["text","code"],"case":"broad-design","effort":"medium","intent":"architecture","language":"mixed","model":"gpt-5.6-terra","reasons":["code_signal","architecture_signal","auto_reasoning_effort_medium"],"score":39}
+{"capabilities":["text","tools"],"case":"tool-catalog","effort":"medium","intent":"agent","language":"zh","model":"gpt-5.6-terra","reasons":["tool_or_agent_signal","translation_signal","auto_reasoning_effort_medium"],"score":36}
+{"capabilities":["text","tools"],"case":"tool-catalog","effort":"medium","intent":"agent","language":"en","model":"gpt-5.6-terra","reasons":["tool_or_agent_signal","translation_signal","auto_reasoning_effort_medium"],"score":36}
+{"capabilities":["text","tools"],"case":"tool-catalog","effort":"medium","intent":"agent","language":"mixed","model":"gpt-5.6-terra","reasons":["tool_or_agent_signal","translation_signal","auto_reasoning_effort_medium"],"score":36}
+--- PASS: TestMultilingualDiagnostic (0.00s)
+PASS
+ok  	local/auto-gateway	0.008s

@@ -1,0 +1,46 @@
+{
+  "analysis_dir": "/data/work-observation/analysis",
+  "analysis_bytes": 2147483648,
+  "max_events": 1000,
+  "max_seconds": 20,
+  "review_queue_limit": 10000,
+  "semantic": {
+    "enabled": false,
+    "guard_url": "",
+    "auto_url": "",
+    "guard_auth_file": "",
+    "guard_auth_header": "Authorization",
+    "auto_auth_file": "",
+    "auto_auth_header": "Authorization",
+    "regions": {
+      "tokyo": {
+        "guard_url": "http://127.0.0.1:8013/v1/preflight",
+        "auto_url": "http://127.0.0.1:8095/v1/route",
+        "auto_auth_file": "/run/work-observation/auto-route-tokyo.token",
+        "auto_auth_header": "Authorization"
+      },
+      "us": {
+        "guard_url": "http://127.0.0.1:8014/v1/preflight",
+        "auto_url": "http://127.0.0.1:8096/v1/route",
+        "auto_auth_file": "/run/work-observation/auto-route-us.token",
+        "auto_auth_header": "Authorization"
+      }
+    },
+    "timeout_seconds": 3,
+    "max_jobs": 20
+  },
+  "stores": [
+    {
+      "region": "tokyo",
+      "ingress": "4000",
+      "store_dir": "/data/work-observation/tokyo",
+      "status_file": "/run/work-observation-tokyo/status.json"
+    },
+    {
+      "region": "us",
+      "ingress": "4001",
+      "store_dir": "/data/work-observation/us",
+      "status_file": "/run/work-observation-us/status.json"
+    }
+  ]
+}

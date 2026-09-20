@@ -1,0 +1,58 @@
+{
+  "source": "qiyuan-tokyo read-only PostgreSQL observations",
+  "api_key_id": 141,
+  "window_start": "2026-09-15T00:00:00+08:00",
+  "observed_at": "2026-09-15T17:55:01.804508+08:00",
+  "before_probe": [
+    {
+      "model": "deepseek-flash",
+      "effort": "low",
+      "requests": 5
+    },
+    {
+      "model": "deepseek-flash",
+      "effort": "none",
+      "requests": 10
+    },
+    {
+      "model": "deepseek-flash",
+      "effort": null,
+      "requests": 1
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "effort": "low",
+      "requests": 3
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "effort": null,
+      "requests": 1
+    }
+  ],
+  "authenticated_probe_usage": [
+    {
+      "id": 954059,
+      "request_id": "client:70b01c7a-a05a-4adf-abde-ebc53a47332f",
+      "created_at": "2026-09-15T17:55:27.596589+08:00",
+      "model": "gpt-5.6-luna",
+      "effort": "low",
+      "input_tokens": 27,
+      "output_tokens": 12
+    }
+  ],
+  "astra_authenticated_probe": {
+    "route_model": "gpt-6-astra",
+    "route_effort": "xhigh",
+    "guard": "allow",
+    "route_action": "upgrade",
+    "auto_usage_success": false,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "client_error": "non_json_response_parse_failure",
+    "observed_http_status": null,
+    "sub2api_usage_rows_found": 0,
+    "sub2api_error_rows_found": 0,
+    "acceptance": "failed_unresolved"
+  }
+}

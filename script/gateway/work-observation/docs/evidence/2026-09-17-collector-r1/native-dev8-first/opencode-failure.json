@@ -1,0 +1,7 @@
+{
+  "scope": "native workflow harness failure",
+  "reason": "media verifier parsed blank JSONL separator; workflow result was not finalized",
+  "source_log_sha256": "c6860ba0514fb83fa86cc11954739ef2f102fe22fac28f41383babdc25aee701",
+  "collector_changes_needed": false,
+  "final_acceptance": false
+}

@@ -1,0 +1,1 @@
+{"at": "2026-09-16T06:48:40.023114+00:00", "documentation_snapshot": "/data/ai-gateway/acceptance-tokyo/documentation/20260916-1445", "documentation_files_matched": 8, "health": {"http://192.168.64.16:4004/healthz": 200, "http://127.0.0.1:8013/readyz": 200}}

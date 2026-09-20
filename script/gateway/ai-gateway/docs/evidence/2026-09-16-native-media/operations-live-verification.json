@@ -1,0 +1,110 @@
+[
+  {
+    "region": "tokyo",
+    "passed": true,
+    "network_fault_detected": true,
+    "network_recovery": true,
+    "disk_fault_detected": true,
+    "post_rotation_files": [
+      {
+        "file": "auto/usage.jsonl",
+        "new_records": 2,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "auto/route-audit.jsonl",
+        "new_records": 4,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "guard/security-usage.jsonl",
+        "new_records": 3,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "guard/security-decisions.jsonl",
+        "new_records": 4,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "guard/guard-security.jsonl",
+        "new_records": 1,
+        "mode": "0o600",
+        "uid": 10001
+      }
+    ],
+    "timer_usage_sync": {
+      "region": "tokyo",
+      "imported": 5,
+      "exported": 5,
+      "remaining": 0,
+      "key_mappings": 141,
+      "partial_spools": 0
+    },
+    "retention_days": null
+  },
+  {
+    "region": "us",
+    "passed": true,
+    "network_fault_detected": true,
+    "network_recovery": true,
+    "disk_fault_detected": true,
+    "post_rotation_files": [
+      {
+        "file": "auto/usage.jsonl",
+        "new_records": 2,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "auto/route-audit.jsonl",
+        "new_records": 4,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "guard/security-usage.jsonl",
+        "new_records": 3,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "guard/security-decisions.jsonl",
+        "new_records": 4,
+        "mode": "0o600",
+        "uid": 10001
+      },
+      {
+        "file": "guard/guard-security.jsonl",
+        "new_records": 1,
+        "mode": "0o600",
+        "uid": 10001
+      }
+    ],
+    "timer_usage_sync": {
+      "region": "us",
+      "imported": 0,
+      "exported": 0,
+      "remaining": 0,
+      "key_mappings": 87,
+      "partial_spools": 0
+    },
+    "retention_days": null
+  },
+  {
+    "scope": "synthetic metric/outbox fixture over local HTTP",
+    "passed": true,
+    "alert_codes": [
+      "guard_fail_closed",
+      "guard_p95_above_300ms",
+      "guard_queue_pressure",
+      "guard_queue_wait_high",
+      "model_key_failure_rate"
+    ],
+    "export_outage_and_recovery": true
+  }
+]

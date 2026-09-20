@@ -1,0 +1,416 @@
+[
+  {
+    "region": "tokyo",
+    "checks": [
+      {
+        "case": "health",
+        "status": 200,
+        "expected": 200,
+        "pass": true,
+        "elapsed_ms": 2,
+        "bytes": 16,
+        "body_sha256": "6489d6d7a33c5d40e18fc61eeb6c34c341279ee61816394dde5189aa4ad8fae5",
+        "request_id": null,
+        "content_type": "application/json"
+      },
+      {
+        "case": "website",
+        "status": 200,
+        "expected": 200,
+        "pass": true,
+        "elapsed_ms": 194,
+        "bytes": 3299,
+        "body_sha256": "e8f7795bae795a252bdf45e4596c8caf2cea949ae8be4df883e9b7566a63070e",
+        "request_id": null,
+        "content_type": "text/html; charset=utf-8"
+      },
+      {
+        "case": "account_settings",
+        "status": 200,
+        "expected": 200,
+        "pass": true,
+        "elapsed_ms": 103,
+        "bytes": 2521,
+        "body_sha256": "e6afd4022fe0f80266c65723e3291ccb6d5b30c327eba6bb9020611e25ef50a5",
+        "request_id": null,
+        "content_type": "application/json; charset=utf-8"
+      },
+      {
+        "case": "own_usage",
+        "status": 200,
+        "expected": 200,
+        "pass": true,
+        "elapsed_ms": 134,
+        "bytes": 3879,
+        "body_sha256": "e2131cb8336645b8bf06c6d771f79cb8d670dc99ee00cb1cad1b4baddd10b63e",
+        "request_id": null,
+        "content_type": "application/json; charset=utf-8"
+      },
+      {
+        "case": "own_billing",
+        "status": 200,
+        "expected": 200,
+        "pass": true,
+        "elapsed_ms": 97,
+        "bytes": 233,
+        "body_sha256": "8d352bb08156b8ee8046ea4dfcced9a6ccf328fdfe0151eb895abef29acc544b",
+        "request_id": null,
+        "content_type": "application/json; charset=utf-8"
+      },
+      {
+        "case": "missing_key",
+        "status": 401,
+        "expected": 401,
+        "pass": true,
+        "elapsed_ms": 1,
+        "bytes": 25,
+        "body_sha256": "3341bff062d83e3afeb943f83bbb079f5b45cc050e796ec282dde50b5906cb31",
+        "request_id": "57f4737b698ada79aec67366865fb4a5",
+        "content_type": "application/json"
+      },
+      {
+        "case": "invalid_key",
+        "status": 401,
+        "expected": 401,
+        "pass": true,
+        "elapsed_ms": 195,
+        "bytes": 25,
+        "body_sha256": "3341bff062d83e3afeb943f83bbb079f5b45cc050e796ec282dde50b5906cb31",
+        "request_id": "144423b01235cd8ec86b108031af3e0f",
+        "content_type": "application/json"
+      },
+      {
+        "case": "conflicting_headers",
+        "status": 401,
+        "expected": 401,
+        "pass": true,
+        "elapsed_ms": 1,
+        "bytes": 25,
+        "body_sha256": "3341bff062d83e3afeb943f83bbb079f5b45cc050e796ec282dde50b5906cb31",
+        "request_id": "cef48b02f8d91c78adb2e4fdac895887",
+        "content_type": "application/json"
+      },
+      {
+        "case": "models_bearer",
+        "status": 200,
+        "expected": 200,
+        "pass": true,
+        "elapsed_ms": 100,
+        "bytes": 44064,
+        "body_sha256": "79765bb60bd785c521a97231a66847838fe5d7243b4361942d75337f4e3ada91",
+        "request_id": null,
+        "content_type": "application/json",
+        "models": [
+          "auto",
+          "codex-auto-review"
+        ]
+      },
+      {
+        "case": "models_x_api_key",
+        "status": 200,
+        "expected": 200,
+        "pass": true,
+        "elapsed_ms": 97,
+        "bytes": 44064,
+        "body_sha256": "79765bb60bd785c521a97231a66847838fe5d7243b4361942d75337f4e3ada91",
+        "request_id": null,
+        "content_type": "application/json",
+        "models": [
+          "auto",
+          "codex-auto-review"
+        ]
+      },
+      {
+        "case": "models_alias",
+        "status": 200,
+        "expected": 200,
+        "pass": true,
+        "elapsed_ms": 99,
+        "bytes": 44064,
+        "body_sha256": "79765bb60bd785c521a97231a66847838fe5d7243b4361942d75337f4e3ada91",
+        "request_id": null,
+        "content_type": "application/json",
+        "models": [
+          "auto",
+          "codex-auto-review"
+        ]
+      },
+      {
+        "case": "route_preview_hidden",
+        "status": 404,
+        "expected": 404,
+        "pass": true,
+        "elapsed_ms": 99,
+        "bytes": 22,
+        "body_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf",
+        "request_id": null,
+        "content_type": "application/json"
+      },
+      {
+        "case": "chat_chinese",
+        "status": 200,
+        "expected": 200,
+        "pass": true,
+        "elapsed_ms": 5483,
+        "bytes": 506,
+        "body_sha256": "d0a04b51207dba7f9ef03a8773c7ec77a62cf247d997b94914458f098b607fb5",
+        "request_id": "a552f6ab12d9359cbd3c51af675d79f9",
+        "content_type": "application/json"
+      },
+      {
+        "case": "responses_alias_sse",
+        "status": 200,
+        "expected": 200,
+        "pass": true,
+        "elapsed_ms": 5673,
+        "bytes": 68655,
+        "body_sha256": "c010c873db2b28e8eb6b52ffd91f4e95cfafa42aad608addaf5c7fe963a77577",
+        "request_id": "14ab3d9d955b75e95fccd81e73a751ba",
+        "content_type": "text/event-stream"
+      },
+      {
+        "case": "messages_claude_sse",
+        "status": 200,
+        "expected": 200,
+        "pass": true,
+        "elapsed_ms": 13206,
+        "bytes": 43134,
+        "body_sha256": "b0bda210c88116ced0f700be460ed0dbec358351f2d6d75b0508f6c434823211",
+        "request_id": "9ca3265243ef9f8a48f97a102823474a",
+        "content_type": "text/event-stream"
+      },
+      {
+        "case": "count_tokens",
+        "status": 200,
+        "expected": 200,
+        "pass": true,
+        "elapsed_ms": 9612,
+        "bytes": 21,
+        "body_sha256": "0d47d619644fa7c1183b48c5cf945dcefc0a51f71e73b758ff14c6441df0c1db",
+        "request_id": "e0c4c3d5105cf0625d054a32d1bac9d8",
+        "content_type": "application/json",
+        "input_tokens": 140,
+        "count_method": "utf8_bytes_estimate"
+      },
+      {
+        "case": "guard_blocks_credential_use",
+        "status": 403,
+        "expected": 403,
+        "pass": true,
+        "elapsed_ms": 101,
+        "bytes": 93,
+        "body_sha256": "5d0c87dbc28bb7d14ba49e20e8bcc62ab8c1d0225c417c65d29a1e882d87974d",
+        "request_id": "2d9dc15f8eb0ca58ec99c1dd0ff84d36",
+        "content_type": "application/json",
+        "error": "preflight_blocked"
+      }
+    ]
+  },
+  {
+    "region": "us",
+    "checks": [
+      {
+        "case": "health",
+        "status": 503,
+        "expected": 200,
+        "pass": false,
+        "elapsed_ms": 2,
+        "bytes": 190,
+        "body_sha256": "b429e25e7813a9e2b90dcec11d9cb5287751246128dd6c76a7349774829c5554",
+        "request_id": null,
+        "content_type": "text/html"
+      },
+      {
+        "case": "website",
+        "status": 200,
+        "expected": 200,
+        "pass": true,
+        "elapsed_ms": 222,
+        "bytes": 3296,
+        "body_sha256": "de28b374112f8d151373eab919be24f13523be04c937dbc2422705c6042363c9",
+        "request_id": null,
+        "content_type": "text/html; charset=utf-8"
+      },
+      {
+        "case": "account_settings",
+        "status": 200,
+        "expected": 200,
+        "pass": true,
+        "elapsed_ms": 387,
+        "bytes": 2518,
+        "body_sha256": "429795d856d4c2e6f3fecb837f8514269fb61d269d6002f377566be532b3a8c2",
+        "request_id": null,
+        "content_type": "application/json; charset=utf-8"
+      },
+      {
+        "case": "own_usage",
+        "status": 200,
+        "expected": 200,
+        "pass": true,
+        "elapsed_ms": 232,
+        "bytes": 5834,
+        "body_sha256": "a44efa2b4c36116d5bf9783ec9666c68fed939883e53f42163d056daaa343d35",
+        "request_id": null,
+        "content_type": "application/json; charset=utf-8"
+      },
+      {
+        "case": "own_billing",
+        "status": 200,
+        "expected": 200,
+        "pass": true,
+        "elapsed_ms": 199,
+        "bytes": 233,
+        "body_sha256": "a15a423c4e3bd31f32219c16ecbe7055be66e7bc46a65dc5d5d141aa7f5c04e1",
+        "request_id": null,
+        "content_type": "application/json; charset=utf-8"
+      },
+      {
+        "case": "missing_key",
+        "status": 401,
+        "expected": 401,
+        "pass": true,
+        "elapsed_ms": 1,
+        "bytes": 25,
+        "body_sha256": "3341bff062d83e3afeb943f83bbb079f5b45cc050e796ec282dde50b5906cb31",
+        "request_id": "01be121dabfd0c3f672d903bc2b41e74",
+        "content_type": "application/json"
+      },
+      {
+        "case": "invalid_key",
+        "status": 401,
+        "expected": 401,
+        "pass": true,
+        "elapsed_ms": 399,
+        "bytes": 25,
+        "body_sha256": "3341bff062d83e3afeb943f83bbb079f5b45cc050e796ec282dde50b5906cb31",
+        "request_id": "4d54ae9759a8dd03940d68face120fc4",
+        "content_type": "application/json"
+      },
+      {
+        "case": "conflicting_headers",
+        "status": 401,
+        "expected": 401,
+        "pass": true,
+        "elapsed_ms": 1,
+        "bytes": 25,
+        "body_sha256": "3341bff062d83e3afeb943f83bbb079f5b45cc050e796ec282dde50b5906cb31",
+        "request_id": "c14e106c9f916befbde9fb306394070f",
+        "content_type": "application/json"
+      },
+      {
+        "case": "models_bearer",
+        "status": 200,
+        "expected": 200,
+        "pass": true,
+        "elapsed_ms": 203,
+        "bytes": 44064,
+        "body_sha256": "79765bb60bd785c521a97231a66847838fe5d7243b4361942d75337f4e3ada91",
+        "request_id": null,
+        "content_type": "application/json",
+        "models": [
+          "auto",
+          "codex-auto-review"
+        ]
+      },
+      {
+        "case": "models_x_api_key",
+        "status": 200,
+        "expected": 200,
+        "pass": true,
+        "elapsed_ms": 380,
+        "bytes": 44064,
+        "body_sha256": "79765bb60bd785c521a97231a66847838fe5d7243b4361942d75337f4e3ada91",
+        "request_id": null,
+        "content_type": "application/json",
+        "models": [
+          "auto",
+          "codex-auto-review"
+        ]
+      },
+      {
+        "case": "models_alias",
+        "status": 200,
+        "expected": 200,
+        "pass": true,
+        "elapsed_ms": 196,
+        "bytes": 44064,
+        "body_sha256": "79765bb60bd785c521a97231a66847838fe5d7243b4361942d75337f4e3ada91",
+        "request_id": null,
+        "content_type": "application/json",
+        "models": [
+          "auto",
+          "codex-auto-review"
+        ]
+      },
+      {
+        "case": "route_preview_hidden",
+        "status": 404,
+        "expected": 404,
+        "pass": true,
+        "elapsed_ms": 200,
+        "bytes": 22,
+        "body_sha256": "fef916c279def93f790d739d8525fc7ffd697a4a492029472c5752bda04a4faf",
+        "request_id": null,
+        "content_type": "application/json"
+      },
+      {
+        "case": "chat_chinese",
+        "status": 200,
+        "expected": 200,
+        "pass": true,
+        "elapsed_ms": 4996,
+        "bytes": 519,
+        "body_sha256": "d9bf232839198053599f443d83191e5d80e758765defa1c664d5027971bc40a8",
+        "request_id": "6984c1f41ce79879e4cfedf043a83bf8",
+        "content_type": "application/json"
+      },
+      {
+        "case": "responses_alias_sse",
+        "status": 200,
+        "expected": 200,
+        "pass": true,
+        "elapsed_ms": 6524,
+        "bytes": 129369,
+        "body_sha256": "07894e1d963b60e0550aa31e64d93c600fd387037c9082f3c9b4320c7e8b76d2",
+        "request_id": "8c9d7e70f8683f735bb12f29bd2f875a",
+        "content_type": "text/event-stream"
+      },
+      {
+        "case": "messages_claude_sse",
+        "status": 200,
+        "expected": 200,
+        "pass": true,
+        "elapsed_ms": 18729,
+        "bytes": 12473,
+        "body_sha256": "bb0ef0b7c978197a5101ea344a0602e72dbc71d0f3c7e30a5f02f6112cbc8de6",
+        "request_id": "29bdfc7379214a12aca8622050fe9160",
+        "content_type": "text/event-stream"
+      },
+      {
+        "case": "count_tokens",
+        "status": 200,
+        "expected": 200,
+        "pass": true,
+        "elapsed_ms": 3194,
+        "bytes": 21,
+        "body_sha256": "0d47d619644fa7c1183b48c5cf945dcefc0a51f71e73b758ff14c6441df0c1db",
+        "request_id": "bf59c27429baf48de0a50d69761e520b",
+        "content_type": "application/json",
+        "input_tokens": 140,
+        "count_method": "utf8_bytes_estimate"
+      },
+      {
+        "case": "guard_blocks_credential_use",
+        "status": 403,
+        "expected": 403,
+        "pass": true,
+        "elapsed_ms": 202,
+        "bytes": 93,
+        "body_sha256": "5d0c87dbc28bb7d14ba49e20e8bcc62ab8c1d0225c417c65d29a1e882d87974d",
+        "request_id": "556d1f4b892422e697a988c6f286a746",
+        "content_type": "application/json",
+        "error": "preflight_blocked"
+      }
+    ]
+  }
+]

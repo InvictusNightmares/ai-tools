@@ -1,0 +1,83 @@
+{
+  "scope": "only ten fixed-model loopback evaluation processes; exact PID/start time/cmdline/binary/output identity checked",
+  "stopped": [
+    {
+      "model": "deepseek-flash",
+      "port": 18121,
+      "pid": 2643299,
+      "output": "/data/ai-gateway/acceptance-tests/model-profiles-20260917/deepseek-flash",
+      "binary_sha256": "3acd441da7b008e109af7ccd170380839868b16f4b26da741313b3e55c86147c",
+      "listener_closed": true
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "port": 18122,
+      "pid": 2643307,
+      "output": "/data/ai-gateway/acceptance-tests/model-profiles-20260917/gpt-5.6-luna",
+      "binary_sha256": "3acd441da7b008e109af7ccd170380839868b16f4b26da741313b3e55c86147c",
+      "listener_closed": true
+    },
+    {
+      "model": "gpt-5.6-terra",
+      "port": 18123,
+      "pid": 2643315,
+      "output": "/data/ai-gateway/acceptance-tests/model-profiles-20260917/gpt-5.6-terra",
+      "binary_sha256": "3acd441da7b008e109af7ccd170380839868b16f4b26da741313b3e55c86147c",
+      "listener_closed": true
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "port": 18124,
+      "pid": 2643323,
+      "output": "/data/ai-gateway/acceptance-tests/model-profiles-20260917/gpt-5.6-sol",
+      "binary_sha256": "3acd441da7b008e109af7ccd170380839868b16f4b26da741313b3e55c86147c",
+      "listener_closed": true
+    },
+    {
+      "model": "gpt-6-astra",
+      "port": 18125,
+      "pid": 2643331,
+      "output": "/data/ai-gateway/acceptance-tests/model-profiles-20260917/gpt-6-astra",
+      "binary_sha256": "3acd441da7b008e109af7ccd170380839868b16f4b26da741313b3e55c86147c",
+      "listener_closed": true
+    },
+    {
+      "model": "deepseek-flash",
+      "port": 18131,
+      "pid": 2710949,
+      "output": "/data/ai-gateway/acceptance-tests/cache-fixed-us-20260917/deepseek-flash",
+      "listener_closed": true
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "port": 18132,
+      "pid": 2710957,
+      "output": "/data/ai-gateway/acceptance-tests/cache-fixed-us-20260917/gpt-5.6-luna",
+      "listener_closed": true
+    },
+    {
+      "model": "gpt-5.6-terra",
+      "port": 18133,
+      "pid": 2710965,
+      "output": "/data/ai-gateway/acceptance-tests/cache-fixed-us-20260917/gpt-5.6-terra",
+      "listener_closed": true
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "port": 18134,
+      "pid": 2710976,
+      "output": "/data/ai-gateway/acceptance-tests/cache-fixed-us-20260917/gpt-5.6-sol",
+      "listener_closed": true
+    },
+    {
+      "model": "gpt-6-astra",
+      "port": 18135,
+      "pid": 2710984,
+      "output": "/data/ai-gateway/acceptance-tests/cache-fixed-us-20260917/gpt-6-astra",
+      "listener_closed": true
+    }
+  ],
+  "docker_services_unchanged": true,
+  "logs_and_states_preserved": true,
+  "keys_and_business_groups_changed": false
+}

@@ -1,0 +1,60 @@
+{
+  "at": "2026-09-16T06:38:08.506163+00:00",
+  "source_files": 117,
+  "source_files_matched": 117,
+  "source_manifest_sha256": "f2225860ee36895b028eb10b29374d8c7432103e13da9a4e53d8a0ed79b601bc",
+  "containers": [
+    {
+      "name": "guard-acceptance-tokyo",
+      "running": true,
+      "started_at": "2026-09-16T06:33:34.184522598Z",
+      "restart_count": 0,
+      "image": "sha256:ec90772179318f186810ff22a3e4e1c5de8a97f4f1d56652c558761220128b2b",
+      "user": "10001:10001",
+      "read_only": true
+    },
+    {
+      "name": "auto-acceptance-tokyo",
+      "running": true,
+      "started_at": "2026-09-16T06:33:34.177376127Z",
+      "restart_count": 0,
+      "image": "sha256:ec90772179318f186810ff22a3e4e1c5de8a97f4f1d56652c558761220128b2b",
+      "user": "10001:10001",
+      "read_only": true
+    },
+    {
+      "name": "nginx-acceptance-tokyo",
+      "running": true,
+      "started_at": "2026-09-16T06:33:34.47197568Z",
+      "restart_count": 0,
+      "image": "sha256:f787d2269bb599297ef6e2fc50d690813821fa348870b62abfc6fa99112ad7d2",
+      "user": "10001:10001",
+      "read_only": true
+    }
+  ],
+  "health": {
+    "8013/readyz": 200,
+    "8093/healthz": 200
+  },
+  "linux_race_tests": {
+    "local/ai-gateway/cmd/auto-server": 7,
+    "local/ai-gateway/auto": 317,
+    "local/ai-gateway/guard": 31,
+    "local/ai-gateway/guard/model": 2
+  },
+  "only_internal_secret_files": [
+    "cache-secret"
+  ],
+  "endpoint": {
+    "bind_address": "192.168.64.16",
+    "port": 4004,
+    "region": "tokyo",
+    "auth": "sub2api-caller-key",
+    "identity_namespace": "key-hmac-v1",
+    "business_response_cache": false
+  },
+  "binaries": {
+    "preflight-api": "d181c948c2bbc92402c547e9940e136eec009c63f15c277b8f6ae33e0be80acd",
+    "auto-server": "2a09956195c08c98356965e754d4ace90d72cf15dcd82f8dc3d043bce1815d9e"
+  }
+}

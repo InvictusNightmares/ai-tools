@@ -1,0 +1,74 @@
+[
+  {
+    "region": "tokyo",
+    "native_version": "1.18.4",
+    "runtime": "user Mac native installation with isolated configuration",
+    "started_unix": 1789618003.6057868,
+    "finished_unix": 1789618020.891256,
+    "exit_code": 0,
+    "seconds": 17.285,
+    "scope": "native OpenCode through deployed 4004/4005; all repository paths and contents synthetic",
+    "tracked_changes": 5,
+    "untracked_additions": 751,
+    "answer_chars": 790,
+    "answer_sha256": "fb31418e68b1d0cc21ac9d6d9e912802fb8ef79dd026f2aee519c49649e7bb57",
+    "worktree_unchanged": true,
+    "tool_calls": 5,
+    "tool_errors": 0,
+    "errors": [],
+    "route_count": 5,
+    "models": {
+      "deepseek-flash": 5
+    },
+    "efforts": {
+      "none": 5
+    },
+    "tool_binding_reuses": 3,
+    "classifier_attempts": 2,
+    "guard_decisions_matched": 5,
+    "native_request_ids": [
+      "019aa3ed4ea6583af5370bba66ec98c4",
+      "7865bfdc3ff0bc6d5df155d51260fefd",
+      "80e909e628365c70ad157fed39efdd57",
+      "89f01afb0961d3bbd0e6cfe124853d50",
+      "c989ef2c3a57edec39e0c4b166ea78f0"
+    ]
+  },
+  {
+    "region": "us",
+    "native_version": "1.18.4",
+    "runtime": "user Mac native installation with isolated configuration",
+    "started_unix": 1789618003.8155499,
+    "finished_unix": 1789618026.9491782,
+    "exit_code": 0,
+    "seconds": 23.134,
+    "scope": "native OpenCode through deployed 4004/4005; all repository paths and contents synthetic",
+    "tracked_changes": 5,
+    "untracked_additions": 751,
+    "answer_chars": 869,
+    "answer_sha256": "cf43da4fa1b5390a48f618cb6cbd657fda6f2124621a66141135c66a4138dc94",
+    "worktree_unchanged": true,
+    "tool_calls": 5,
+    "tool_errors": 0,
+    "errors": [],
+    "route_count": 7,
+    "models": {
+      "deepseek-flash": 7
+    },
+    "efforts": {
+      "none": 7
+    },
+    "tool_binding_reuses": 5,
+    "classifier_attempts": 2,
+    "guard_decisions_matched": 7,
+    "native_request_ids": [
+      "07366b28d2e1282eb81583d2de65640b",
+      "4c92dac6ae5b03005b1bb82a6dcd2ddb",
+      "5821f2f1bb11416360bd88983fed74dd",
+      "6ef903a7c11bd8e9eea584619c905054",
+      "9ef9d67199314aff9d1a4db739cf8630",
+      "f250e7155b2864a0b95b8cd25a74741a",
+      "f5bc4e76b00cdf33f78263f64c798ef9"
+    ]
+  }
+]

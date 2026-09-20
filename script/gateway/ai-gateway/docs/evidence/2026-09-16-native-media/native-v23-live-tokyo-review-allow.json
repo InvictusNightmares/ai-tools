@@ -1,0 +1,22 @@
+{
+  "region": "tokyo",
+  "client": "Codex 0.154.0 app-server native auto review",
+  "log_dir": "/tmp/gateway-codex-native-review-v23-live-tokyo-090531",
+  "checks": {
+    "native_turn_completed": true,
+    "fixture_written": true,
+    "native_review_observed": true
+  },
+  "thread_hash": "decee507abee4be4620f18cfa24278b981827ef0443ca112a4febd9cf65195a8",
+  "approval_items": [
+    {
+      "review": {
+        "status": "approved",
+        "riskLevel": "low",
+        "userAuthorization": "high"
+      },
+      "decision_source": "agent"
+    }
+  ],
+  "passed": true
+}

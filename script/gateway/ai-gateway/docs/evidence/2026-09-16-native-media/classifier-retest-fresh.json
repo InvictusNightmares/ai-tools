@@ -1,0 +1,168 @@
+{
+  "scope": "classifier_only_not_guard_auto_business_acceptance",
+  "label_authority": "implementer_assigned_not_independent_human_adjudication",
+  "consistency_definition": "same_complexity_and_target_effort_in_all_three_languages",
+  "fixture_sha256": "3ec8c315a1e500aca80c8dd7d6d07ed7bd17bd35e27c67d63e51500584197d3b",
+  "trials": [
+    {
+      "file": "deepseek-low-fresh.jsonl",
+      "sha256": "91bbcecdd543912a0093de1375c470a05b659f0739c70557e376c952a7ac1c5a",
+      "primary": "deepseek-flash",
+      "reviewer": "gpt-5.6-sol",
+      "requests": 72,
+      "expected_requests": 72,
+      "complete": true,
+      "missing_samples": [],
+      "successes": 72,
+      "business_calls": 0,
+      "splits": {
+        "holdout": {
+          "groups": 24,
+          "consistent_groups": 24,
+          "consistency_percent": 100.0,
+          "differences": [],
+          "languages": {
+            "zh": {
+              "requests": 24,
+              "successes": 24,
+              "median_ms": 7487.5,
+              "p95_ms": 17172,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 23,
+              "assigned_complexity_matches": 24,
+              "task_boundary_checks": 0,
+              "task_boundary_matches": 0,
+              "efforts": {
+                "none": 5,
+                "low": 5,
+                "medium": 5,
+                "high": 5,
+                "xhigh": 4
+              }
+            },
+            "en": {
+              "requests": 24,
+              "successes": 24,
+              "median_ms": 8197.0,
+              "p95_ms": 12598,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 23,
+              "assigned_complexity_matches": 24,
+              "task_boundary_checks": 0,
+              "task_boundary_matches": 0,
+              "efforts": {
+                "none": 5,
+                "low": 5,
+                "medium": 5,
+                "high": 5,
+                "xhigh": 4
+              }
+            },
+            "mixed": {
+              "requests": 24,
+              "successes": 24,
+              "median_ms": 7499.5,
+              "p95_ms": 16763,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 23,
+              "assigned_complexity_matches": 24,
+              "task_boundary_checks": 0,
+              "task_boundary_matches": 0,
+              "efforts": {
+                "none": 5,
+                "low": 5,
+                "medium": 5,
+                "high": 5,
+                "xhigh": 4
+              }
+            }
+          },
+          "classifier_attempts": 99,
+          "input_tokens": 74435,
+          "output_tokens": 82516,
+          "prompt_cache_hit_tokens": 38272
+        }
+      }
+    },
+    {
+      "file": "luna-baseline-fresh.jsonl",
+      "sha256": "021d1c30ae827794bb49b8f57fce401612ca4e2969f607d4ff96c7fd41535a81",
+      "primary": "gpt-5.6-luna",
+      "reviewer": "gpt-5.6-sol",
+      "requests": 72,
+      "expected_requests": 72,
+      "complete": true,
+      "missing_samples": [],
+      "successes": 72,
+      "business_calls": 0,
+      "splits": {
+        "holdout": {
+          "groups": 24,
+          "consistent_groups": 24,
+          "consistency_percent": 100.0,
+          "differences": [],
+          "languages": {
+            "zh": {
+              "requests": 24,
+              "successes": 24,
+              "median_ms": 3702.5,
+              "p95_ms": 8629,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 24,
+              "assigned_complexity_matches": 24,
+              "task_boundary_checks": 0,
+              "task_boundary_matches": 0,
+              "efforts": {
+                "none": 5,
+                "low": 5,
+                "medium": 5,
+                "high": 5,
+                "xhigh": 4
+              }
+            },
+            "en": {
+              "requests": 24,
+              "successes": 24,
+              "median_ms": 3221.0,
+              "p95_ms": 8386,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 23,
+              "assigned_complexity_matches": 24,
+              "task_boundary_checks": 0,
+              "task_boundary_matches": 0,
+              "efforts": {
+                "none": 5,
+                "low": 5,
+                "medium": 5,
+                "high": 5,
+                "xhigh": 4
+              }
+            },
+            "mixed": {
+              "requests": 24,
+              "successes": 24,
+              "median_ms": 4848.0,
+              "p95_ms": 11832,
+              "high_complexity_to_simple": 0,
+              "expected_task_in_labels": 23,
+              "assigned_complexity_matches": 24,
+              "task_boundary_checks": 0,
+              "task_boundary_matches": 0,
+              "efforts": {
+                "none": 5,
+                "low": 5,
+                "medium": 5,
+                "high": 5,
+                "xhigh": 4
+              }
+            }
+          },
+          "classifier_attempts": 104,
+          "input_tokens": 75368,
+          "output_tokens": 11194,
+          "prompt_cache_hit_tokens": 0
+        }
+      }
+    }
+  ]
+}

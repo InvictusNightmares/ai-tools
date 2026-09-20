@@ -1,0 +1,107 @@
+{
+  "scope": "native client to local deterministic fixture only, no real model or gateway",
+  "captured_at": "2026-09-16T23:51:08+08:00",
+  "session_identifiers": "sha256 only; synthetic isolated profiles",
+  "results": [
+    {
+      "client": "opencode",
+      "exit_code": 0,
+      "request_count": 2,
+      "completion_fixture_observed": true,
+      "requests": [
+        {
+          "path": "/v1/responses",
+          "user_agent": "opencode/1.18.4 ai-sdk/provider-utils/4.0.38 runtime/bun/1.3.14",
+          "session_header_names": [
+            "x-session-affinity",
+            "x-session-id"
+          ],
+          "session_header_sha256": {
+            "x-session-affinity": "35f4009f51540958ef784d53a7337e9185bfc0d11d250f6d53497b8d16ec889a",
+            "x-session-id": "35f4009f51540958ef784d53a7337e9185bfc0d11d250f6d53497b8d16ec889a"
+          },
+          "tool_count": 0,
+          "has_metadata": false
+        },
+        {
+          "path": "/v1/responses",
+          "user_agent": "opencode/1.18.4 ai-sdk/provider-utils/4.0.38 runtime/bun/1.3.14",
+          "session_header_names": [
+            "x-session-affinity",
+            "x-session-id"
+          ],
+          "session_header_sha256": {
+            "x-session-affinity": "35f4009f51540958ef784d53a7337e9185bfc0d11d250f6d53497b8d16ec889a",
+            "x-session-id": "35f4009f51540958ef784d53a7337e9185bfc0d11d250f6d53497b8d16ec889a"
+          },
+          "tool_count": 0,
+          "has_metadata": false
+        }
+      ]
+    },
+    {
+      "client": "claude",
+      "exit_code": 0,
+      "request_count": 1,
+      "completion_fixture_observed": true,
+      "requests": [
+        {
+          "path": "/v1/messages?beta=true",
+          "user_agent": "claude-cli/2.1.233 (external, sdk-cli)",
+          "session_header_names": [
+            "x-claude-code-session-id"
+          ],
+          "session_header_sha256": {
+            "x-claude-code-session-id": "17285c8b6e77e90bf6b268ad4ac63f6f4a1c88d3856fe84c207b38c3616cb8a1"
+          },
+          "tool_count": 0,
+          "has_metadata": true
+        }
+      ]
+    },
+    {
+      "client": "hermes",
+      "exit_code": 0,
+      "request_count": 2,
+      "completion_fixture_observed": true,
+      "requests": [
+        {
+          "path": "/v1/chat/completions",
+          "user_agent": "OpenAI/Python 2.24.0",
+          "session_header_names": [],
+          "session_header_sha256": {},
+          "tool_count": 0,
+          "has_metadata": false
+        },
+        {
+          "path": "/v1/chat/completions",
+          "user_agent": "OpenAI/Python 2.24.0",
+          "session_header_names": [],
+          "session_header_sha256": {},
+          "tool_count": 6,
+          "has_metadata": false
+        }
+      ]
+    },
+    {
+      "client": "codex",
+      "exit_code": 0,
+      "request_count": 1,
+      "completion_fixture_observed": true,
+      "requests": [
+        {
+          "path": "/v1/responses",
+          "user_agent": "Codex Desktop/0.154.0 (Mac OS 14.8.7; arm64) dumb (codex_exec; 0.154.0)",
+          "session_header_names": [
+            "session-id"
+          ],
+          "session_header_sha256": {
+            "session-id": "4fcb22fd27791ea92452d80afeda1c4eaacc675a43b2119f2241f04e2f7075e7"
+          },
+          "tool_count": 5,
+          "has_metadata": false
+        }
+      ]
+    }
+  ]
+}

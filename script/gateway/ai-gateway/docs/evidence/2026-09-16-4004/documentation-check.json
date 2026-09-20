@@ -1,0 +1,10 @@
+{
+  "checked_at": "2026-09-16T06:47:30.894584+00:00",
+  "runtime_sources_still_match_deployed_manifest": 111,
+  "documentation_only_changes_after_freeze": [
+    "auto/README.md"
+  ],
+  "project_local_links_checked": 238,
+  "missing_links": [],
+  "tests_rerun_after_documentation_only_edits": false
+}

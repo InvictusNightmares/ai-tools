@@ -1,0 +1,64 @@
+{
+  "native": {
+    "region": "observation-dev3",
+    "client": "Codex 0.154.0 app-server",
+    "scope": "native Codex through observation collector to synthetic provider",
+    "checks": {
+      "initial_marker": true,
+      "multiple_native_tools": true,
+      "native_subagent": true,
+      "native_fork": true,
+      "native_cancel": true,
+      "resume_after_cancel": true
+    },
+    "collaboration_item_types": [
+      "collabAgentToolCall"
+    ],
+    "passed": true
+  },
+  "collector": {
+    "scope": "native clients, synthetic loopback provider, actual collector",
+    "production_changed": false,
+    "events": 9,
+    "kinds": {
+      "http_exchange": 9
+    },
+    "outcomes": {
+      "completed": 8,
+      "canceled": 1
+    },
+    "clients": {
+      "codex": 9
+    },
+    "missing": {},
+    "status": {
+      "active_requests": 0,
+      "capture_enabled": false,
+      "captured": 9,
+      "complete_capture_claim": false,
+      "dropped": 0,
+      "older_loss_details_evicted": 0,
+      "projection_errors": 0,
+      "pruned": 0,
+      "queue_items": 0,
+      "queue_limit_bytes": 67108864,
+      "queued_bytes": 0,
+      "recent_losses": null,
+      "recovered_interrupted_requests": 0,
+      "started_at": "2026-09-17T10:54:15.784824Z",
+      "storage_limit_bytes": 1073741824,
+      "stored_bytes": 472464,
+      "truncated": 0,
+      "unavailable_bypassed_requests": 0,
+      "updated_at": "2026-09-17T10:54:17.236342Z",
+      "version": "observation-dev.3",
+      "write_errors": 0,
+      "written": 9
+    },
+    "all_record_checksums_valid": true,
+    "original_ua_observed": [
+      "Codex Desktop/0.154.0 (Mac OS 14.8.7; arm64) dumb (gateway_native_acceptance; 1.0)"
+    ],
+    "auth_headers_excluded": true
+  }
+}

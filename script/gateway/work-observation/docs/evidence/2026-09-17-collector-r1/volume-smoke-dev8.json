@@ -1,0 +1,14 @@
+{
+  "scope": "isolated synthetic real filesystem ENOSPC",
+  "capacity_bytes": 268435456,
+  "production_changed": false,
+  "real_enospc": true,
+  "all_three_business_responses_unchanged": true,
+  "capture_loss_visible": true,
+  "capture_resumed_without_restart": true,
+  "filesystem_within_cap": true,
+  "recorded_requests": 2,
+  "capture_faults": 2,
+  "passed": true,
+  "unmounted_after_test": true
+}

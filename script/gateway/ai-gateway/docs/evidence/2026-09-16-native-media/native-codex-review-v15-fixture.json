@@ -1,0 +1,183 @@
+{
+  "recorded_at": "2026-09-17T03:53:00+08:00",
+  "scope": "Actual native Codex 0.154 and v15 gateway; synthetic identity Guard classifiers and review models; not real regional acceptance",
+  "gateway_binary_sha256": "2f745b054652c5b0489a6c3cc80e27822ceed0680fc5abb19de7ace8d4f3203c",
+  "results": [
+    {
+      "result": {
+        "region": "guard_unavailable",
+        "mode": "allow",
+        "scope": "native Codex with actual gateway, synthetic identity/Guard/models; fail-closed approval injection only",
+        "checks": {
+          "no_approved_decision": true,
+          "no_file_write": true,
+          "native_turn_terminated": true,
+          "fault_at_expected_stage": true
+        },
+        "fault": "guard_unavailable",
+        "reviews": [
+          {
+            "status": "denied",
+            "decision_source": "agent"
+          }
+        ],
+        "native_turn_status": "completed",
+        "review_upstream_calls": 0,
+        "passed": true
+      },
+      "event_counts": {
+        "usage.jsonl": {
+          "classification|": 2,
+          "business|": 2
+        },
+        "audit.jsonl": {
+          "route_decided|": 2,
+          "upstream_started|": 2,
+          "upstream_completed|": 2,
+          "preflight_unavailable|": 4
+        }
+      },
+      "result_sha256": "df54011c30b64073d6a820946e0b8da4c32245f7065a8687f0867b1e4a95fe41"
+    },
+    {
+      "result": {
+        "region": "reviewer_unavailable",
+        "mode": "allow",
+        "scope": "native Codex with actual gateway, synthetic identity/Guard/models; fail-closed approval injection only",
+        "checks": {
+          "no_approved_decision": true,
+          "no_file_write": true,
+          "native_turn_terminated": true,
+          "fault_at_expected_stage": true
+        },
+        "fault": "reviewer_unavailable",
+        "reviews": [
+          {
+            "status": "denied",
+            "decision_source": "agent"
+          }
+        ],
+        "native_turn_status": "completed",
+        "review_upstream_calls": 4,
+        "passed": true
+      },
+      "event_counts": {
+        "usage.jsonl": {
+          "classification|": 2,
+          "business|": 2,
+          "action_review|": 4
+        },
+        "audit.jsonl": {
+          "route_decided|": 2,
+          "upstream_started|": 6,
+          "upstream_completed|": 2,
+          "upstream_failed|upstream_failed": 4
+        }
+      },
+      "result_sha256": "9d14cc59019bb3cb2026eb73833d528706e24f40fe1a12f94bd6fa74e9a4414b"
+    },
+    {
+      "result": {
+        "region": "reviewer_invalid_schema",
+        "mode": "allow",
+        "scope": "native Codex with actual gateway, synthetic identity/Guard/models; fail-closed approval injection only",
+        "checks": {
+          "no_approved_decision": true,
+          "no_file_write": true,
+          "native_turn_terminated": true,
+          "fault_at_expected_stage": true
+        },
+        "fault": "reviewer_invalid_schema",
+        "reviews": [
+          {
+            "status": "denied",
+            "decision_source": "agent"
+          }
+        ],
+        "native_turn_status": "completed",
+        "review_upstream_calls": 3,
+        "passed": true
+      },
+      "event_counts": {
+        "usage.jsonl": {
+          "classification|": 2,
+          "business|": 2,
+          "action_review|": 3
+        },
+        "audit.jsonl": {
+          "route_decided|": 2,
+          "upstream_started|": 5,
+          "upstream_completed|": 5
+        }
+      },
+      "result_sha256": "a45d96e64756a2a6d90d64f0ea974b644ca4303cd9b20c183ce107e581691d3e"
+    },
+    {
+      "result": {
+        "region": "v15_deny",
+        "mode": "deny",
+        "scope": "native Codex approval with synthetic local business and reviewer responses",
+        "checks": {
+          "native_review_decision": true,
+          "file_effect_matches_review": true,
+          "native_turn_completed": true,
+          "native_reviewer_request_seen": true
+        },
+        "reviews": [
+          {
+            "status": "denied",
+            "decision_source": "agent"
+          }
+        ],
+        "passed": true
+      },
+      "event_counts": {
+        "usage.jsonl": {
+          "classification|": 2,
+          "business|": 2,
+          "action_review|": 1
+        },
+        "audit.jsonl": {
+          "route_decided|": 2,
+          "upstream_started|": 3,
+          "upstream_completed|": 3
+        }
+      },
+      "result_sha256": "75ff210ab3152ed65f502ebd88bad7de491070a08332fb1a7bb738b561a5515a"
+    },
+    {
+      "result": {
+        "region": "v15_allow",
+        "mode": "allow",
+        "scope": "native Codex approval with synthetic local business and reviewer responses",
+        "checks": {
+          "native_review_decision": true,
+          "file_effect_matches_review": true,
+          "native_turn_completed": true,
+          "native_reviewer_request_seen": true
+        },
+        "reviews": [
+          {
+            "status": "approved",
+            "decision_source": "agent"
+          }
+        ],
+        "passed": true
+      },
+      "event_counts": {
+        "usage.jsonl": {
+          "classification|": 2,
+          "business|": 2,
+          "action_review|": 1
+        },
+        "audit.jsonl": {
+          "route_decided|": 2,
+          "upstream_started|": 3,
+          "upstream_completed|": 3
+        }
+      },
+      "result_sha256": "74f05d83dcceddbda443aa9b458df4d394bab35d4a4e0008f0d158023e0df7f3"
+    }
+  ],
+  "passed": true
+}

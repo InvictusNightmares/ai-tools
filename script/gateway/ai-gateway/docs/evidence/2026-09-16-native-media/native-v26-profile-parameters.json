@@ -1,0 +1,85 @@
+{
+  "scope": "fixed-model endpoint business bills since01:47UTC, includes transport-diagnostic/round3 and round4; not timing benchmark or natural Auto routes",
+  "results": [
+    {
+      "label": "profile-deepseek-flash",
+      "requests": 27,
+      "effective_model_counts": {
+        "deepseek-flash": 27
+      },
+      "requested_reasoning_effort_counts": {
+        "high": 27
+      },
+      "billed_reasoning_effort_counts": {
+        "high": 27
+      },
+      "user_agent_counts": {
+        "ai-gateway-model-profile/1": 27
+      }
+    },
+    {
+      "label": "profile-gpt-5.6-luna",
+      "requests": 26,
+      "effective_model_counts": {
+        "gpt-5.6-luna": 26
+      },
+      "requested_reasoning_effort_counts": {
+        "high": 26
+      },
+      "billed_reasoning_effort_counts": {
+        "high": 26
+      },
+      "user_agent_counts": {
+        "ai-gateway-model-profile/1": 26
+      }
+    },
+    {
+      "label": "profile-gpt-5.6-terra",
+      "requests": 26,
+      "effective_model_counts": {
+        "gpt-5.6-terra": 26
+      },
+      "requested_reasoning_effort_counts": {
+        "high": 26
+      },
+      "billed_reasoning_effort_counts": {
+        "high": 26
+      },
+      "user_agent_counts": {
+        "ai-gateway-model-profile/1": 26
+      }
+    },
+    {
+      "label": "profile-gpt-5.6-sol",
+      "requests": 29,
+      "effective_model_counts": {
+        "gpt-5.6-sol": 29
+      },
+      "requested_reasoning_effort_counts": {
+        "high": 29
+      },
+      "billed_reasoning_effort_counts": {
+        "high": 29
+      },
+      "user_agent_counts": {
+        "ai-gateway-model-profile/1": 29
+      }
+    },
+    {
+      "label": "profile-gpt-6-astra",
+      "requests": 26,
+      "effective_model_counts": {
+        "gpt-6-astra": 26
+      },
+      "requested_reasoning_effort_counts": {
+        "high": 26
+      },
+      "billed_reasoning_effort_counts": {
+        "high": 26
+      },
+      "user_agent_counts": {
+        "ai-gateway-model-profile/1": 26
+      }
+    }
+  ]
+}

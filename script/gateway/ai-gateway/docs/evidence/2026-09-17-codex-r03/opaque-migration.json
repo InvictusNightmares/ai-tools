@@ -1,0 +1,16 @@
+[
+  {
+    "region": "tokyo",
+    "requests": [],
+    "passed": false,
+    "status": 502,
+    "error_type": "http_error"
+  },
+  {
+    "region": "us",
+    "requests": [],
+    "passed": false,
+    "status": 502,
+    "error_type": "http_error"
+  }
+]

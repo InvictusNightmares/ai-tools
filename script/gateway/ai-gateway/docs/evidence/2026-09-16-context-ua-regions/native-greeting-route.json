@@ -1,0 +1,466 @@
+{
+  "tokyo": {
+    "session": "v6-native-hello-tokyo-174601",
+    "route": [
+      {
+        "at": "2026-09-16T09:46:07.21606271Z",
+        "request_id": "70c62e1bb735337e3fcdf6e81fffc98b",
+        "stage": "route_decided",
+        "task_complexity": "simple",
+        "score": 5,
+        "confidence": 0.99,
+        "effective_model": "deepseek-flash",
+        "effective_reasoning_effort": "none",
+        "required_capabilities": [
+          "text",
+          "stream"
+        ],
+        "context_budget": {
+          "input_estimate_tokens": 3737,
+          "output_limit_tokens": 32000,
+          "method": "utf8_bytes_with_framing_v1"
+        },
+        "classifier_trace": {
+          "primary_model": "gpt-5.6-luna",
+          "primary_valid": true,
+          "reviewed": false,
+          "decision_model": "gpt-5.6-luna",
+          "cache_hit": false
+        },
+        "response_complete": false
+      },
+      {
+        "at": "2026-09-16T09:46:07.2174192Z",
+        "request_id": "70c62e1bb735337e3fcdf6e81fffc98b",
+        "stage": "upstream_started",
+        "task_complexity": "simple",
+        "score": 5,
+        "confidence": 0.99,
+        "effective_model": "deepseek-flash",
+        "effective_reasoning_effort": "none",
+        "required_capabilities": [
+          "text",
+          "stream"
+        ],
+        "context_budget": {
+          "input_estimate_tokens": 3737,
+          "output_limit_tokens": 32000,
+          "method": "utf8_bytes_with_framing_v1"
+        },
+        "classifier_trace": {
+          "primary_model": "gpt-5.6-luna",
+          "primary_valid": true,
+          "reviewed": false,
+          "decision_model": "gpt-5.6-luna",
+          "cache_hit": false
+        },
+        "response_complete": false
+      },
+      {
+        "at": "2026-09-16T09:46:08.292033255Z",
+        "request_id": "70c62e1bb735337e3fcdf6e81fffc98b",
+        "stage": "upstream_completed",
+        "task_complexity": "simple",
+        "score": 5,
+        "confidence": 0.99,
+        "effective_model": "deepseek-flash",
+        "effective_reasoning_effort": "none",
+        "required_capabilities": [
+          "text",
+          "stream"
+        ],
+        "context_budget": {
+          "input_estimate_tokens": 3737,
+          "output_limit_tokens": 32000,
+          "method": "utf8_bytes_with_framing_v1"
+        },
+        "classifier_trace": {
+          "primary_model": "gpt-5.6-luna",
+          "primary_valid": true,
+          "reviewed": false,
+          "decision_model": "gpt-5.6-luna",
+          "cache_hit": false
+        },
+        "http_status": 200,
+        "response_complete": true,
+        "upstream_request_id": "70c62e1bb735337e3fcdf6e81fffc98b"
+      },
+      {
+        "at": "2026-09-16T09:46:10.087769518Z",
+        "request_id": "f6aabb918081057c7d963b32dc5da1b6",
+        "stage": "route_decided",
+        "task_complexity": "simple",
+        "score": 5,
+        "confidence": 1,
+        "effective_model": "deepseek-flash",
+        "effective_reasoning_effort": "none",
+        "required_capabilities": [
+          "text",
+          "tools",
+          "stream"
+        ],
+        "context_budget": {
+          "input_estimate_tokens": 58020,
+          "output_limit_tokens": 32000,
+          "method": "utf8_bytes_with_framing_v1"
+        },
+        "classifier_trace": {
+          "primary_model": "gpt-5.6-luna",
+          "primary_valid": true,
+          "reviewed": false,
+          "decision_model": "gpt-5.6-luna",
+          "cache_hit": false
+        },
+        "response_complete": false
+      },
+      {
+        "at": "2026-09-16T09:46:10.089875452Z",
+        "request_id": "f6aabb918081057c7d963b32dc5da1b6",
+        "stage": "upstream_started",
+        "task_complexity": "simple",
+        "score": 5,
+        "confidence": 1,
+        "effective_model": "deepseek-flash",
+        "effective_reasoning_effort": "none",
+        "required_capabilities": [
+          "text",
+          "tools",
+          "stream"
+        ],
+        "context_budget": {
+          "input_estimate_tokens": 58020,
+          "output_limit_tokens": 32000,
+          "method": "utf8_bytes_with_framing_v1"
+        },
+        "classifier_trace": {
+          "primary_model": "gpt-5.6-luna",
+          "primary_valid": true,
+          "reviewed": false,
+          "decision_model": "gpt-5.6-luna",
+          "cache_hit": false
+        },
+        "response_complete": false
+      },
+      {
+        "at": "2026-09-16T09:46:11.590603795Z",
+        "request_id": "f6aabb918081057c7d963b32dc5da1b6",
+        "stage": "upstream_completed",
+        "task_complexity": "simple",
+        "score": 5,
+        "confidence": 1,
+        "effective_model": "deepseek-flash",
+        "effective_reasoning_effort": "none",
+        "required_capabilities": [
+          "text",
+          "tools",
+          "stream"
+        ],
+        "context_budget": {
+          "input_estimate_tokens": 58020,
+          "output_limit_tokens": 32000,
+          "method": "utf8_bytes_with_framing_v1"
+        },
+        "classifier_trace": {
+          "primary_model": "gpt-5.6-luna",
+          "primary_valid": true,
+          "reviewed": false,
+          "decision_model": "gpt-5.6-luna",
+          "cache_hit": false
+        },
+        "http_status": 200,
+        "response_complete": true,
+        "upstream_request_id": "f6aabb918081057c7d963b32dc5da1b6"
+      }
+    ],
+    "usage": [
+      {
+        "at": "2026-09-16T09:46:04.076239414Z",
+        "request_id": "70c62e1bb735337e3fcdf6e81fffc98b",
+        "upstream_request_id": "70c62e1bb735337e3fcdf6e81fffc98b",
+        "response_id": "resp_088d8d3e746c18a7016aaa655cb9e487d0bbcc070d56e6aa13",
+        "purpose": "classification",
+        "effective_model": "gpt-5.6-luna",
+        "effective_reasoning_effort": "none",
+        "success": true,
+        "http_status": 200,
+        "input_tokens": 1284,
+        "output_tokens": 80,
+        "cache_hit_tokens": 0
+      },
+      {
+        "at": "2026-09-16T09:46:08.292392248Z",
+        "request_id": "70c62e1bb735337e3fcdf6e81fffc98b",
+        "upstream_request_id": "70c62e1bb735337e3fcdf6e81fffc98b",
+        "response_id": "e170df7a-f76a-44a9-ba96-50caa2b74472",
+        "purpose": "business",
+        "effective_model": "deepseek-flash",
+        "effective_reasoning_effort": "none",
+        "success": true,
+        "http_status": 200,
+        "input_tokens": 524,
+        "output_tokens": 2,
+        "cache_hit_tokens": 384
+      },
+      {
+        "at": "2026-09-16T09:46:06.316107482Z",
+        "request_id": "f6aabb918081057c7d963b32dc5da1b6",
+        "upstream_request_id": "f6aabb918081057c7d963b32dc5da1b6",
+        "response_id": "resp_04b4edf11d691a92016aaa655ed94087d0b36b9f613e7d0bc2",
+        "purpose": "classification",
+        "effective_model": "gpt-5.6-luna",
+        "effective_reasoning_effort": "none",
+        "success": true,
+        "http_status": 200,
+        "input_tokens": 14754,
+        "output_tokens": 80,
+        "cache_hit_tokens": 0
+      },
+      {
+        "at": "2026-09-16T09:46:11.591010607Z",
+        "request_id": "f6aabb918081057c7d963b32dc5da1b6",
+        "upstream_request_id": "f6aabb918081057c7d963b32dc5da1b6",
+        "response_id": "bc96cbda-56cf-4a02-86c9-eab7d092b42a",
+        "purpose": "business",
+        "effective_model": "deepseek-flash",
+        "effective_reasoning_effort": "none",
+        "success": true,
+        "http_status": 200,
+        "input_tokens": 12018,
+        "output_tokens": 8,
+        "cache_hit_tokens": 0
+      }
+    ]
+  },
+  "us": {
+    "session": "v6-native-hello-us-174656",
+    "route": [
+      {
+        "at": "2026-09-16T09:47:02.358952511Z",
+        "request_id": "31863d3643b20b4d6a54a967bc420c82",
+        "stage": "route_decided",
+        "task_complexity": "simple",
+        "score": 5,
+        "confidence": 0.99,
+        "effective_model": "deepseek-flash",
+        "effective_reasoning_effort": "none",
+        "required_capabilities": [
+          "text",
+          "stream"
+        ],
+        "context_budget": {
+          "input_estimate_tokens": 3737,
+          "output_limit_tokens": 32000,
+          "method": "utf8_bytes_with_framing_v1"
+        },
+        "classifier_trace": {
+          "primary_model": "gpt-5.6-luna",
+          "primary_valid": true,
+          "reviewed": false,
+          "decision_model": "gpt-5.6-luna",
+          "cache_hit": false
+        },
+        "response_complete": false
+      },
+      {
+        "at": "2026-09-16T09:47:02.359580219Z",
+        "request_id": "31863d3643b20b4d6a54a967bc420c82",
+        "stage": "upstream_started",
+        "task_complexity": "simple",
+        "score": 5,
+        "confidence": 0.99,
+        "effective_model": "deepseek-flash",
+        "effective_reasoning_effort": "none",
+        "required_capabilities": [
+          "text",
+          "stream"
+        ],
+        "context_budget": {
+          "input_estimate_tokens": 3737,
+          "output_limit_tokens": 32000,
+          "method": "utf8_bytes_with_framing_v1"
+        },
+        "classifier_trace": {
+          "primary_model": "gpt-5.6-luna",
+          "primary_valid": true,
+          "reviewed": false,
+          "decision_model": "gpt-5.6-luna",
+          "cache_hit": false
+        },
+        "response_complete": false
+      },
+      {
+        "at": "2026-09-16T09:47:03.607597668Z",
+        "request_id": "31863d3643b20b4d6a54a967bc420c82",
+        "stage": "upstream_completed",
+        "task_complexity": "simple",
+        "score": 5,
+        "confidence": 0.99,
+        "effective_model": "deepseek-flash",
+        "effective_reasoning_effort": "none",
+        "required_capabilities": [
+          "text",
+          "stream"
+        ],
+        "context_budget": {
+          "input_estimate_tokens": 3737,
+          "output_limit_tokens": 32000,
+          "method": "utf8_bytes_with_framing_v1"
+        },
+        "classifier_trace": {
+          "primary_model": "gpt-5.6-luna",
+          "primary_valid": true,
+          "reviewed": false,
+          "decision_model": "gpt-5.6-luna",
+          "cache_hit": false
+        },
+        "http_status": 200,
+        "response_complete": true,
+        "upstream_request_id": "31863d3643b20b4d6a54a967bc420c82"
+      },
+      {
+        "at": "2026-09-16T09:47:05.071977634Z",
+        "request_id": "d9d22b60f7c476189bcba6be43de0a4e",
+        "stage": "route_decided",
+        "task_complexity": "simple",
+        "score": 5,
+        "confidence": 1,
+        "effective_model": "deepseek-flash",
+        "effective_reasoning_effort": "none",
+        "required_capabilities": [
+          "text",
+          "tools",
+          "stream"
+        ],
+        "context_budget": {
+          "input_estimate_tokens": 58017,
+          "output_limit_tokens": 32000,
+          "method": "utf8_bytes_with_framing_v1"
+        },
+        "classifier_trace": {
+          "primary_model": "gpt-5.6-luna",
+          "primary_valid": true,
+          "reviewed": false,
+          "decision_model": "gpt-5.6-luna",
+          "cache_hit": false
+        },
+        "response_complete": false
+      },
+      {
+        "at": "2026-09-16T09:47:05.073379782Z",
+        "request_id": "d9d22b60f7c476189bcba6be43de0a4e",
+        "stage": "upstream_started",
+        "task_complexity": "simple",
+        "score": 5,
+        "confidence": 1,
+        "effective_model": "deepseek-flash",
+        "effective_reasoning_effort": "none",
+        "required_capabilities": [
+          "text",
+          "tools",
+          "stream"
+        ],
+        "context_budget": {
+          "input_estimate_tokens": 58017,
+          "output_limit_tokens": 32000,
+          "method": "utf8_bytes_with_framing_v1"
+        },
+        "classifier_trace": {
+          "primary_model": "gpt-5.6-luna",
+          "primary_valid": true,
+          "reviewed": false,
+          "decision_model": "gpt-5.6-luna",
+          "cache_hit": false
+        },
+        "response_complete": false
+      },
+      {
+        "at": "2026-09-16T09:47:06.381350988Z",
+        "request_id": "d9d22b60f7c476189bcba6be43de0a4e",
+        "stage": "upstream_completed",
+        "task_complexity": "simple",
+        "score": 5,
+        "confidence": 1,
+        "effective_model": "deepseek-flash",
+        "effective_reasoning_effort": "none",
+        "required_capabilities": [
+          "text",
+          "tools",
+          "stream"
+        ],
+        "context_budget": {
+          "input_estimate_tokens": 58017,
+          "output_limit_tokens": 32000,
+          "method": "utf8_bytes_with_framing_v1"
+        },
+        "classifier_trace": {
+          "primary_model": "gpt-5.6-luna",
+          "primary_valid": true,
+          "reviewed": false,
+          "decision_model": "gpt-5.6-luna",
+          "cache_hit": false
+        },
+        "http_status": 200,
+        "response_complete": true,
+        "upstream_request_id": "d9d22b60f7c476189bcba6be43de0a4e"
+      }
+    ],
+    "usage": [
+      {
+        "at": "2026-09-16T09:46:58.947816664Z",
+        "request_id": "31863d3643b20b4d6a54a967bc420c82",
+        "upstream_request_id": "31863d3643b20b4d6a54a967bc420c82",
+        "response_id": "resp_0ed387ed87f42d2c016aaa6593ded487d0992bc41cc457ed95",
+        "purpose": "classification",
+        "effective_model": "gpt-5.6-luna",
+        "effective_reasoning_effort": "none",
+        "success": true,
+        "http_status": 200,
+        "input_tokens": 1284,
+        "output_tokens": 79,
+        "cache_hit_tokens": 0
+      },
+      {
+        "at": "2026-09-16T09:47:03.607899653Z",
+        "request_id": "31863d3643b20b4d6a54a967bc420c82",
+        "upstream_request_id": "31863d3643b20b4d6a54a967bc420c82",
+        "response_id": "ba2e3b4e-d50d-44ab-a441-3d85a2df2e4e",
+        "purpose": "business",
+        "effective_model": "deepseek-flash",
+        "effective_reasoning_effort": "none",
+        "success": true,
+        "http_status": 200,
+        "input_tokens": 524,
+        "output_tokens": 2,
+        "cache_hit_tokens": 384
+      },
+      {
+        "at": "2026-09-16T09:47:01.725395593Z",
+        "request_id": "d9d22b60f7c476189bcba6be43de0a4e",
+        "upstream_request_id": "d9d22b60f7c476189bcba6be43de0a4e",
+        "response_id": "resp_075d04e984c21af2016aaa6596679487d0b3d4ee25a55465d4",
+        "purpose": "classification",
+        "effective_model": "gpt-5.6-luna",
+        "effective_reasoning_effort": "none",
+        "success": true,
+        "http_status": 200,
+        "input_tokens": 14755,
+        "output_tokens": 80,
+        "cache_hit_tokens": 0
+      },
+      {
+        "at": "2026-09-16T09:47:06.381667447Z",
+        "request_id": "d9d22b60f7c476189bcba6be43de0a4e",
+        "upstream_request_id": "d9d22b60f7c476189bcba6be43de0a4e",
+        "response_id": "998ff470-cc23-4a96-a343-22a85b902890",
+        "purpose": "business",
+        "effective_model": "deepseek-flash",
+        "effective_reasoning_effort": "none",
+        "success": true,
+        "http_status": 200,
+        "input_tokens": 12019,
+        "output_tokens": 8,
+        "cache_hit_tokens": 1664
+      }
+    ]
+  }
+}

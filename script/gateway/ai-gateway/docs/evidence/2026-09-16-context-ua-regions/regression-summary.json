@@ -1,0 +1,10 @@
+{
+  "checked_at": "2026-09-16T09:24:10.720113+00:00",
+  "go_tests_including_subtests": 403,
+  "python_tests": 10,
+  "go_vet": "passed",
+  "race": "passed",
+  "linux_static_builds": 5,
+  "build_directory": "/tmp/gateway-linux-verify.ObmDVe",
+  "scope": "isolated regression; deployment and native clients pending"
+}

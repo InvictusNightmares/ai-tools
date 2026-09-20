@@ -1,0 +1,17 @@
+{
+  "checks": {
+    "cache_real_gateway_ids": true,
+    "multiuser_success_and_rejection_ids": true,
+    "natural_real_gateway_ids_and_no_false_xhigh": true
+  },
+  "scope": "actual v14 gateway; synthetic auth Guard classifier and backend; local acceptance driver correlation only",
+  "candidate_binary_sha256": "bf97a6077ac101a6beefa22741b6ecd85214270411d5f55f339d76ca92f3f660",
+  "cache_requests": 6,
+  "natural_probe_requests": 8,
+  "does_not_prove_regional_models_or_highest_effort": true,
+  "tools": {
+    "gateway-native-multiuser.py": "da6cf766ba5ace658539838c82b16bc8ba79f82d7b3b0db51bad759c6e12226f",
+    "gateway-cache-benchmark.py": "b2d0f31d4f9ba0ba0fc7c9c72d7f5d6eb59f908982a2c7e5d0af6e5b3187395d",
+    "gateway-natural-effort-probe.py": "c69ef99cf4ffdf04f553d2a360a3e9326425079b266dd84b713bffebb125cfa2"
+  }
+}

@@ -1,0 +1,15 @@
+[
+  "README.md",
+  "auto/README.md",
+  "auto/auto_gateway_test.go",
+  "auto/client_compatibility_test.go",
+  "auto/gateway.go",
+  "auto/http.go",
+  "auto/http_test.go",
+  "auto/migration_routing_test.go",
+  "auto/route_audit.go",
+  "auto/route_state.go",
+  "auto/semantic_classifier.go",
+  "auto/task_routing.go",
+  "tools/release.py"
+]

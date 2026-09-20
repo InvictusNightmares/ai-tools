@@ -1,0 +1,14 @@
+{
+  "scope": "After acceptance relay tooling and documentation changes; deployable Go components unchanged",
+  "components": {
+    "auto-server": {
+      "current_source_sha256": "29ae6b2d0147930168c5a8ba7e29dca69cc00f231a9e0ed08276b71820880d2d",
+      "matches_deployed_source": true
+    },
+    "preflight-api": {
+      "current_source_sha256": "86a63b1d236a90a8a418ad5190a1edbda452fbf2f2145c49fe2f04a47c0d39f6",
+      "matches_deployed_source": true
+    }
+  },
+  "python_tool_tests_passed": 42
+}

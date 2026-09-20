@@ -1,0 +1,34 @@
+{
+  "columns": [
+    "id",
+    "source",
+    "model",
+    "cwd",
+    "tool_call_count",
+    "api_call_count",
+    "message_count",
+    "end_reason"
+  ],
+  "sessions": [
+    [
+      "20260916_160228_3ed96b",
+      "cli",
+      "auto",
+      "/private/tmp/gateway-xiaoyuan-20260916/hermes",
+      43,
+      13,
+      57,
+      "cli_close"
+    ],
+    [
+      "20260916_155406_56ef41",
+      "cli",
+      "auto",
+      "/private/tmp/gateway-xiaoyuan-20260916/hermes",
+      15,
+      2,
+      18,
+      "cli_close"
+    ]
+  ]
+}

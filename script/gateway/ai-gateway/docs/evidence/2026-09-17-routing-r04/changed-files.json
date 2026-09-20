@@ -1,0 +1,14 @@
+{
+  "baseline": "candidate-20260917-r19-native-v30",
+  "current": "candidate-20260917-r19-native-v31",
+  "files": [
+    "auto/README.md",
+    "auto/classifier.go",
+    "auto/output_format.go",
+    "auto/output_format_test.go",
+    "auto/protocol.go",
+    "auto/route_audit.go",
+    "auto/semantic_classifier.go",
+    "tools/release.py"
+  ]
+}

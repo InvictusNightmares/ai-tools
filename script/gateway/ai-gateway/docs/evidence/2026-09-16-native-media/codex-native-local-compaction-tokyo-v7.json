@@ -1,0 +1,19 @@
+{
+  "region": "tokyo",
+  "client": "Codex 0.154.0 app-server",
+  "checks": {
+    "first_turn": true,
+    "compact_completed": true,
+    "continuity_after_compaction": true,
+    "native_cancel": true,
+    "resume_after_cancel": true
+  },
+  "thread_hash": "9e9c34317a05392f3e72e16df3872e80e94f5e846a8ff633ff534de831f9a721",
+  "compact_items": [
+    "contextCompaction"
+  ],
+  "passed": true,
+  "release_id": "candidate-20260916-r11-native-v7",
+  "transport_note": "app-server first connection fell back to HTTP; this result proves native local compaction/cancellation, not WebSocket",
+  "compaction_implementation": "Codex native local summary over ordinary Responses"
+}

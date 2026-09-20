@@ -1,0 +1,48 @@
+{
+  "client": "hermes",
+  "scope": "actual native client and actual v15 gateway; synthetic auth Guard classifiers and models; not real regional acceptance",
+  "source_sha256": "efc73780c1b690f3ea7199b9da2d4013f514192dfd727ab44845ee3f49798e89",
+  "binary_sha256": "2f745b054652c5b0489a6c3cc80e27822ceed0680fc5abb19de7ace8d4f3203c",
+  "checks": [
+    {
+      "check": "initial_marker",
+      "passed": true
+    },
+    {
+      "check": "native_compress",
+      "passed": true,
+      "new_requests": 1
+    },
+    {
+      "check": "recall_after_compress",
+      "passed": true
+    },
+    {
+      "check": "multiple_native_tools",
+      "passed": true,
+      "tool_count": 2
+    },
+    {
+      "check": "native_child_session",
+      "passed": true,
+      "child_sessions": 1
+    },
+    {
+      "check": "native_cancel_process_alive",
+      "passed": true
+    },
+    {
+      "check": "resume_after_cancel",
+      "passed": true
+    }
+  ],
+  "stage_counts": {
+    "identity_rejected": 6,
+    "route_decided": 19,
+    "upstream_started": 19,
+    "upstream_completed": 18,
+    "request_canceled": 1
+  },
+  "complete_upstream_failed": 0,
+  "private_result_sha256": "79b54f9abcd9a07500955fe4ee75b4140dc117df3f21ae8fb69d67902591ed2e"
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "release_id": "candidate-20260917-r19-native-v31",
+    "region": "tokyo",
+    "backup": "/data/ai-gateway/acceptance-tokyo/backups/release-20260917-145324-862409",
+    "changed_services": [
+      "auto"
+    ],
+    "status": "updated",
+    "secret_preserved": true,
+    "state_preserved": true,
+    "protected_services_unchanged": true
+  },
+  {
+    "release_id": "candidate-20260917-r19-native-v31",
+    "region": "us",
+    "backup": "/data/ai-gateway/acceptance-us/backups/release-20260917-145257-439490",
+    "changed_services": [
+      "auto"
+    ],
+    "status": "updated",
+    "secret_preserved": true,
+    "state_preserved": true,
+    "protected_services_unchanged": true
+  }
+]

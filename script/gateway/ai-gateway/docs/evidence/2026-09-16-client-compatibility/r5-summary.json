@@ -1,0 +1,16 @@
+{
+  "scope": "isolated_linux_offline",
+  "go_tests_including_subtests": {
+    "local/ai-gateway/cmd/auto-server": 7,
+    "local/ai-gateway/auto": 318,
+    "local/ai-gateway/guard": 49,
+    "local/ai-gateway/guard/model": 2
+  },
+  "total": 376,
+  "go_vet": "passed",
+  "static_linux_amd64_builds": 5,
+  "python_tests": 8,
+  "go_failures": 0,
+  "source_archive_sha256": "7958eec00b01f6a71a51e8c978744983f417c080b4bc7c4449f1c2beeece8ee2",
+  "note": "r5 passes Basic regression; real Codex template regression discovered afterward"
+}

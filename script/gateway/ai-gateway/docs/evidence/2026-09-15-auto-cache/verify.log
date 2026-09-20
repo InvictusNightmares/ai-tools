@@ -1,0 +1,135 @@
+=== RUN   TestClassifierAndCapabilityFilter
+--- PASS: TestClassifierAndCapabilityFilter (0.01s)
+=== RUN   TestMultipleUpgradesAndTaskReset
+--- PASS: TestMultipleUpgradesAndTaskReset (0.00s)
+=== RUN   TestToolLoopLocksModel
+--- PASS: TestToolLoopLocksModel (0.00s)
+=== RUN   TestStreamingTurnCannotSwitchModelsMidResponse
+--- PASS: TestStreamingTurnCannotSwitchModelsMidResponse (0.01s)
+=== RUN   TestHardFailureFailsOverWithoutWaitingForHealthRefresh
+--- PASS: TestHardFailureFailsOverWithoutWaitingForHealthRefresh (0.00s)
+=== RUN   TestCacheNamespaceIsolation
+--- PASS: TestCacheNamespaceIsolation (0.00s)
+=== RUN   TestReasoningEffortIsGeneratedFromFeatures
+--- PASS: TestReasoningEffortIsGeneratedFromFeatures (0.02s)
+=== RUN   TestProviderReasoningMapping
+--- PASS: TestProviderReasoningMapping (0.00s)
+=== RUN   TestProviderParametersNeverForwardClientEffort
+--- PASS: TestProviderParametersNeverForwardClientEffort (0.00s)
+=== RUN   TestUsageNormalization
+--- PASS: TestUsageNormalization (0.00s)
+=== RUN   TestPublicModelIsAutoOnly
+--- PASS: TestPublicModelIsAutoOnly (0.00s)
+=== RUN   TestResponseCacheKeySeparatesEffectiveModelEffortAndRequest
+--- PASS: TestResponseCacheKeySeparatesEffectiveModelEffortAndRequest (0.00s)
+=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses
+=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/stream
+=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/tools
+=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/image
+=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/blocked
+=== RUN   TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/large
+--- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses (0.00s)
+    --- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/stream (0.00s)
+    --- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/tools (0.00s)
+    --- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/image (0.00s)
+    --- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/blocked (0.00s)
+    --- PASS: TestResponseCachePolicyKeepsOnlyReusableAllowedResponses/large (0.00s)
+=== RUN   TestCachePipelineBillingOnResponseHit
+--- PASS: TestCachePipelineBillingOnResponseHit (0.00s)
+=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize
+=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable
+=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited
+=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect
+=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize
+=== RUN   TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error
+--- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize (0.00s)
+    --- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/unavailable (0.00s)
+    --- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/rate_limited (0.00s)
+    --- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/redirect (0.00s)
+    --- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/oversize (0.00s)
+    --- PASS: TestCachePipelineRejectsUnsuccessfulHTTPAndOversize/transport_error (0.00s)
+=== RUN   TestCachePipelineGuardBeforeCache
+=== RUN   TestCachePipelineGuardBeforeCache/block
+=== RUN   TestCachePipelineGuardBeforeCache/unavailable
+=== RUN   TestCachePipelineGuardBeforeCache/invalid
+--- PASS: TestCachePipelineGuardBeforeCache (0.00s)
+    --- PASS: TestCachePipelineGuardBeforeCache/block (0.00s)
+    --- PASS: TestCachePipelineGuardBeforeCache/unavailable (0.00s)
+    --- PASS: TestCachePipelineGuardBeforeCache/invalid (0.00s)
+=== RUN   TestCachePipelineProtocolIsolation
+--- PASS: TestCachePipelineProtocolIsolation (0.00s)
+=== RUN   TestMemoryCacheDoesNotAliasUsage
+--- PASS: TestMemoryCacheDoesNotAliasUsage (0.00s)
+=== RUN   TestCachePipelineIdentityIsolation
+=== RUN   TestCachePipelineIdentityIsolation/region
+=== RUN   TestCachePipelineIdentityIsolation/api_key
+=== RUN   TestCachePipelineIdentityIsolation/revision
+=== RUN   TestCachePipelineIdentityIsolation/client_key
+=== RUN   TestCachePipelineIdentityIsolation/model
+=== RUN   TestCachePipelineIdentityIsolation/effort
+=== RUN   TestCachePipelineIdentityIsolation/protocol
+=== RUN   TestCachePipelineIdentityIsolation/missing_region
+=== RUN   TestCachePipelineIdentityIsolation/missing_api_key
+=== RUN   TestCachePipelineIdentityIsolation/missing_revision
+=== RUN   TestCachePipelineIdentityIsolation/missing_secret
+--- PASS: TestCachePipelineIdentityIsolation (0.00s)
+    --- PASS: TestCachePipelineIdentityIsolation/region (0.00s)
+    --- PASS: TestCachePipelineIdentityIsolation/api_key (0.00s)
+    --- PASS: TestCachePipelineIdentityIsolation/revision (0.00s)
+    --- PASS: TestCachePipelineIdentityIsolation/client_key (0.00s)
+    --- PASS: TestCachePipelineIdentityIsolation/model (0.00s)
+    --- PASS: TestCachePipelineIdentityIsolation/effort (0.00s)
+    --- PASS: TestCachePipelineIdentityIsolation/protocol (0.00s)
+    --- PASS: TestCachePipelineIdentityIsolation/missing_region (0.00s)
+    --- PASS: TestCachePipelineIdentityIsolation/missing_api_key (0.00s)
+    --- PASS: TestCachePipelineIdentityIsolation/missing_revision (0.00s)
+    --- PASS: TestCachePipelineIdentityIsolation/missing_secret (0.00s)
+=== RUN   TestMemoryCacheConcurrentCopies
+--- PASS: TestMemoryCacheConcurrentCopies (0.01s)
+=== RUN   TestCachePipelineInitialSelectionIsNotUpgrade
+--- PASS: TestCachePipelineInitialSelectionIsNotUpgrade (0.00s)
+=== RUN   TestHTTPModelsExposeAutoOnly
+--- PASS: TestHTTPModelsExposeAutoOnly (0.00s)
+=== RUN   TestHTTPRouteNormalizesProtocolAndIgnoresClientEffort
+--- PASS: TestHTTPRouteNormalizesProtocolAndIgnoresClientEffort (0.00s)
+=== RUN   TestHTTPRouteRejectsNonAutoModel
+--- PASS: TestHTTPRouteRejectsNonAutoModel (0.00s)
+=== RUN   TestHTTPRouteHonorsPreflightBlockAndUnavailable
+=== RUN   TestHTTPRouteHonorsPreflightBlockAndUnavailable/block
+=== RUN   TestHTTPRouteHonorsPreflightBlockAndUnavailable/unavailable
+--- PASS: TestHTTPRouteHonorsPreflightBlockAndUnavailable (0.00s)
+    --- PASS: TestHTTPRouteHonorsPreflightBlockAndUnavailable/block (0.00s)
+    --- PASS: TestHTTPRouteHonorsPreflightBlockAndUnavailable/unavailable (0.00s)
+=== RUN   TestHTTPRouteKeepsModelWhenStreamIsActive
+--- PASS: TestHTTPRouteKeepsModelWhenStreamIsActive (0.00s)
+=== RUN   TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable
+=== RUN   TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/block
+=== RUN   TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/unavailable
+--- PASS: TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable (0.00s)
+    --- PASS: TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/block (0.00s)
+    --- PASS: TestPipelineStopsBeforeUpstreamOnBlockAndUnavailable/unavailable (0.00s)
+=== RUN   TestPipelineAllowMapsAutoDecisionAndCallsUpstreamOnce
+--- PASS: TestPipelineAllowMapsAutoDecisionAndCallsUpstreamOnce (0.00s)
+=== RUN   TestPipelinePropagatesUpstreamFailureWithoutRetry
+--- PASS: TestPipelinePropagatesUpstreamFailureWithoutRetry (0.00s)
+=== RUN   TestPipelineResponseCacheHitSkipsUpstreamAndRecordsUsage
+--- PASS: TestPipelineResponseCacheHitSkipsUpstreamAndRecordsUsage (0.00s)
+=== RUN   TestPipelineCacheExpiresAndUpstreamFailureIsNotStored
+--- PASS: TestPipelineCacheExpiresAndUpstreamFailureIsNotStored (0.00s)
+=== RUN   TestNormalizeChatCompletions
+--- PASS: TestNormalizeChatCompletions (0.00s)
+=== RUN   TestNormalizeResponsesIgnoresClientReasoning
+--- PASS: TestNormalizeResponsesIgnoresClientReasoning (0.00s)
+=== RUN   TestNormalizeAnthropicMessagesAndTools
+--- PASS: TestNormalizeAnthropicMessagesAndTools (0.00s)
+=== RUN   TestNormalizeRejectsMalformedAndUnknownProtocol
+--- PASS: TestNormalizeRejectsMalformedAndUnknownProtocol (0.00s)
+=== RUN   TestStreamCapabilityIsRequired
+--- PASS: TestStreamCapabilityIsRequired (0.00s)
+=== RUN   TestBuildRouteAuditExplainsGeneratedEffort
+--- PASS: TestBuildRouteAuditExplainsGeneratedEffort (0.00s)
+=== RUN   TestDailyUsageSeparatesModelReasoningRegionAndKey
+--- PASS: TestDailyUsageSeparatesModelReasoningRegionAndKey (0.00s)
+PASS
+ok  	local/auto-gateway	0.064s
+?   	local/auto-gateway/cmd/auto-preview	[no test files]

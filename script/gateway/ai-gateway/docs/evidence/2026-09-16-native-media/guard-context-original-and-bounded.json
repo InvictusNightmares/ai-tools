@@ -1,0 +1,226 @@
+[
+  {
+    "region": "tokyo",
+    "request_id": "1af58428b10f14b4ac19026a11ffc1a1",
+    "variant": "original",
+    "input_chars": 35024,
+    "user_context_chars": 16871,
+    "chunks": [
+      {
+        "chunk": 0,
+        "chars": 20000,
+        "sha256": "67908e3623ce1aa4f1801979cd3f3d5f860803971f2dfa7cde91a1df461ff37f",
+        "label": {
+          "safety": "Controversial",
+          "categories": "Jailbreak"
+        },
+        "seconds": 0.287
+      },
+      {
+        "chunk": 1,
+        "chars": 15024,
+        "sha256": "fc36d147a004cac42ce523d6b63b3a7947d3482ff98765cb8661269c552fab67",
+        "label": {
+          "safety": "Safe",
+          "categories": "None"
+        },
+        "seconds": 0.228
+      }
+    ]
+  },
+  {
+    "region": "tokyo",
+    "request_id": "1af58428b10f14b4ac19026a11ffc1a1",
+    "variant": "bounded_context",
+    "input_chars": 35024,
+    "user_context_chars": 16871,
+    "chunks": [
+      {
+        "chunk": 0,
+        "chars": 20000,
+        "sha256": "4c1c53b3ed6a155d00bdc30899edb4eeefe6c25a251ff9005acb1e3c3577aa67",
+        "label": {
+          "safety": "Safe",
+          "categories": "None"
+        },
+        "seconds": 0.259
+      },
+      {
+        "chunk": 1,
+        "chars": 20000,
+        "sha256": "544106c041291c37c70a7131c488b1f29331a379ba198e78d6d3cf7037b3c4c6",
+        "label": {
+          "safety": "Safe",
+          "categories": "None"
+        },
+        "seconds": 0.274
+      },
+      {
+        "chunk": 2,
+        "chars": 4123,
+        "sha256": "4fa402d0777c929e99e04004a4c8574618f14c668c683547028786d81b2569e2",
+        "label": {
+          "safety": "Safe",
+          "categories": "None"
+        },
+        "seconds": 0.098
+      }
+    ]
+  },
+  {
+    "region": "tokyo",
+    "request_id": "1af58428b10f14b4ac19026a11ffc1a1",
+    "variant": "clear_roles",
+    "input_chars": 35024,
+    "user_context_chars": 16871,
+    "chunks": [
+      {
+        "chunk": 0,
+        "chars": 20000,
+        "sha256": "8b5ddbd651ed7ac6710d39c63a174ed10a8feb81716203160f22c52f0b56f775",
+        "label": {
+          "safety": "Safe",
+          "categories": "None"
+        },
+        "seconds": 0.272
+      },
+      {
+        "chunk": 1,
+        "chars": 20000,
+        "sha256": "6da7874662ed9fbec0ad9daadcfa93db4e53a38c81c363ca64c1748ae0fe27dd",
+        "label": {
+          "safety": "Safe",
+          "categories": "None"
+        },
+        "seconds": 0.317
+      },
+      {
+        "chunk": 2,
+        "chars": 4171,
+        "sha256": "bc81056e2c1dbe3653b80624f41b9092cd081f92a182f3e69ae9b16a74cb8bfd",
+        "label": {
+          "safety": "Safe",
+          "categories": "None"
+        },
+        "seconds": 0.115
+      }
+    ]
+  },
+  {
+    "region": "us",
+    "request_id": "b6a5af4becc5014ec19117b2d7849ba3",
+    "variant": "original",
+    "input_chars": 42533,
+    "user_context_chars": 80,
+    "chunks": [
+      {
+        "chunk": 0,
+        "chars": 20000,
+        "sha256": "9e92f2e2bc483233e9e6acc1aba6633d3f549a7815e1f03e27a745d39cfa9261",
+        "label": {
+          "safety": "Controversial",
+          "categories": "Jailbreak"
+        },
+        "seconds": 0.133
+      },
+      {
+        "chunk": 1,
+        "chars": 20000,
+        "sha256": "2ef8c642598d4a96032923a87f16e61b339db4ae5ba40352ea53644b24787177",
+        "label": {
+          "safety": "Safe",
+          "categories": "None"
+        },
+        "seconds": 0.1
+      },
+      {
+        "chunk": 2,
+        "chars": 4426,
+        "sha256": "1322f66eac4c5a38cb85d1330baba163206438700d26d0dd606cf2891386953c",
+        "label": {
+          "safety": "Safe",
+          "categories": "None"
+        },
+        "seconds": 0.088
+      }
+    ]
+  },
+  {
+    "region": "us",
+    "request_id": "b6a5af4becc5014ec19117b2d7849ba3",
+    "variant": "bounded_context",
+    "input_chars": 42533,
+    "user_context_chars": 80,
+    "chunks": [
+      {
+        "chunk": 0,
+        "chars": 20000,
+        "sha256": "9e92f2e2bc483233e9e6acc1aba6633d3f549a7815e1f03e27a745d39cfa9261",
+        "label": {
+          "safety": "Controversial",
+          "categories": "Jailbreak"
+        },
+        "seconds": 0.135
+      },
+      {
+        "chunk": 1,
+        "chars": 20000,
+        "sha256": "2ef8c642598d4a96032923a87f16e61b339db4ae5ba40352ea53644b24787177",
+        "label": {
+          "safety": "Safe",
+          "categories": "None"
+        },
+        "seconds": 0.101
+      },
+      {
+        "chunk": 2,
+        "chars": 4426,
+        "sha256": "1322f66eac4c5a38cb85d1330baba163206438700d26d0dd606cf2891386953c",
+        "label": {
+          "safety": "Safe",
+          "categories": "None"
+        },
+        "seconds": 0.088
+      }
+    ]
+  },
+  {
+    "region": "us",
+    "request_id": "b6a5af4becc5014ec19117b2d7849ba3",
+    "variant": "clear_roles",
+    "input_chars": 42533,
+    "user_context_chars": 80,
+    "chunks": [
+      {
+        "chunk": 0,
+        "chars": 20000,
+        "sha256": "482550249f65584f8b0a6a0957af7f54280c448a2b2a944d0522bc13839667cc",
+        "label": {
+          "safety": "Controversial",
+          "categories": "Jailbreak"
+        },
+        "seconds": 0.366
+      },
+      {
+        "chunk": 1,
+        "chars": 20000,
+        "sha256": "5c052a25af8b8f3a57c8f0c91905515dc687adffc24bfc96e3bd66ca3a6a28dc",
+        "label": {
+          "safety": "Safe",
+          "categories": "None"
+        },
+        "seconds": 0.299
+      },
+      {
+        "chunk": 2,
+        "chars": 4474,
+        "sha256": "f9b9b51de1c68813ea054fae0aaea51c3a089eea34a1ea1aea1256c86fdcdf3f",
+        "label": {
+          "safety": "Controversial",
+          "categories": "Jailbreak"
+        },
+        "seconds": 0.153
+      }
+    ]
+  }
+]

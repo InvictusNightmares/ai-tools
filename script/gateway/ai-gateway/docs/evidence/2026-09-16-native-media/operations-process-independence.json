@@ -1,0 +1,26 @@
+[
+  {
+    "region": "tokyo",
+    "scope": "two OS processes, separate filesystem locks, real current loopback health endpoints, blocked synthetic export",
+    "health_elapsed_ms": 14,
+    "blocked_export_status": {
+      "status": "running",
+      "at": "2026-09-16T15:28:16.658611+00:00",
+      "last_completed_at": null
+    },
+    "recovered": true,
+    "passed": true
+  },
+  {
+    "region": "us",
+    "scope": "two OS processes, separate filesystem locks, real current loopback health endpoints, blocked synthetic export",
+    "health_elapsed_ms": 10,
+    "blocked_export_status": {
+      "status": "running",
+      "at": "2026-09-16T15:28:16.690864+00:00",
+      "last_completed_at": null
+    },
+    "recovered": true,
+    "passed": true
+  }
+]

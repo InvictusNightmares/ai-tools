@@ -1,0 +1,8 @@
+{
+  "at": "2026-09-16T13:08:12.490214+00:00",
+  "phase": "full",
+  "checks": 17,
+  "passed": 17,
+  "real_authorized_keys_tested": 1,
+  "raw_requests_or_responses_retained": false
+}

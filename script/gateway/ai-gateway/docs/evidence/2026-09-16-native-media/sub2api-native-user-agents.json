@@ -1,0 +1,272 @@
+{
+  "tokyo": [
+    {
+      "model": "deepseek-flash",
+      "user_agent": "Anthropic/Python 0.87.0",
+      "requests": 5,
+      "first_at": "2026-09-16T18:44:31.704566+08:00",
+      "last_at": "2026-09-16T18:50:24.362268+08:00"
+    },
+    {
+      "model": "deepseek-flash",
+      "user_agent": "Codex Desktop/0.154.0 (Mac OS 14.8.7; arm64) dumb (codex_exec; 0.154.0)",
+      "requests": 1,
+      "first_at": "2026-09-16T18:44:26.494158+08:00",
+      "last_at": "2026-09-16T18:44:26.494158+08:00"
+    },
+    {
+      "model": "deepseek-flash",
+      "user_agent": "Python-urllib/3.13",
+      "requests": 4,
+      "first_at": "2026-09-16T18:45:26.431979+08:00",
+      "last_at": "2026-09-16T19:11:25.227838+08:00"
+    },
+    {
+      "model": "deepseek-flash",
+      "user_agent": "claude-cli/2.1.233 (external, sdk-cli)",
+      "requests": 1,
+      "first_at": "2026-09-16T18:44:23.462184+08:00",
+      "last_at": "2026-09-16T18:44:23.462184+08:00"
+    },
+    {
+      "model": "deepseek-flash",
+      "user_agent": "gateway-native-upstream-probe/1",
+      "requests": 1,
+      "first_at": "2026-09-16T18:44:34.491807+08:00",
+      "last_at": "2026-09-16T18:44:34.491807+08:00"
+    },
+    {
+      "model": "deepseek-flash",
+      "user_agent": "opencode/1.18.4 ai-sdk/provider-utils/4.0.23 runtime/bun/1.3.14",
+      "requests": 7,
+      "first_at": "2026-09-16T18:44:27.306569+08:00",
+      "last_at": "2026-09-16T19:17:40.772204+08:00"
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "user_agent": "Anthropic/Python 0.87.0",
+      "requests": 5,
+      "first_at": "2026-09-16T18:44:30.290967+08:00",
+      "last_at": "2026-09-16T18:50:23.638473+08:00"
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "user_agent": "Codex Desktop/0.154.0 (Mac OS 14.8.7; arm64) dumb (codex_exec; 0.154.0)",
+      "requests": 1,
+      "first_at": "2026-09-16T18:44:24.505684+08:00",
+      "last_at": "2026-09-16T18:44:24.505684+08:00"
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "user_agent": "Python-urllib/3.13",
+      "requests": 10,
+      "first_at": "2026-09-16T18:45:25.785612+08:00",
+      "last_at": "2026-09-16T19:11:36.685269+08:00"
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "user_agent": "claude-cli/2.1.233 (external, sdk-cli)",
+      "requests": 1,
+      "first_at": "2026-09-16T18:44:22.547716+08:00",
+      "last_at": "2026-09-16T18:44:22.547716+08:00"
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "user_agent": "gateway-native-advanced-sdk/1",
+      "requests": 1,
+      "first_at": "2026-09-16T19:07:28.273639+08:00",
+      "last_at": "2026-09-16T19:07:28.273639+08:00"
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "user_agent": "gateway-native-file-tool-sdk/1",
+      "requests": 2,
+      "first_at": "2026-09-16T19:12:26.630091+08:00",
+      "last_at": "2026-09-16T19:12:33.555218+08:00"
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "user_agent": "gateway-native-files-sdk/1",
+      "requests": 12,
+      "first_at": "2026-09-16T18:47:34.638335+08:00",
+      "last_at": "2026-09-16T19:11:31.823391+08:00"
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "user_agent": "gateway-native-upstream-probe/1",
+      "requests": 3,
+      "first_at": "2026-09-16T18:44:33.758572+08:00",
+      "last_at": "2026-09-16T18:44:40.643479+08:00"
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "user_agent": "opencode/1.18.4 ai-sdk/provider-utils/4.0.23 runtime/bun/1.3.14",
+      "requests": 38,
+      "first_at": "2026-09-16T18:44:26.686268+08:00",
+      "last_at": "2026-09-16T19:18:26.942988+08:00"
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "user_agent": "opencode/1.18.4 ai-sdk/provider-utils/4.0.23 runtime/bun/1.3.14",
+      "requests": 5,
+      "first_at": "2026-09-16T19:10:39.106715+08:00",
+      "last_at": "2026-09-16T19:18:40.11913+08:00"
+    },
+    {
+      "model": "gpt-5.6-terra",
+      "user_agent": "gateway-native-advanced-sdk/1",
+      "requests": 1,
+      "first_at": "2026-09-16T19:07:47.734162+08:00",
+      "last_at": "2026-09-16T19:07:47.734162+08:00"
+    },
+    {
+      "model": "gpt-5.6-terra",
+      "user_agent": "gateway-native-file-tool-sdk/1",
+      "requests": 2,
+      "first_at": "2026-09-16T19:12:30.363558+08:00",
+      "last_at": "2026-09-16T19:12:36.079932+08:00"
+    },
+    {
+      "model": "gpt-5.6-terra",
+      "user_agent": "opencode/1.18.4 ai-sdk/provider-utils/4.0.23 runtime/bun/1.3.14",
+      "requests": 30,
+      "first_at": "2026-09-16T18:45:18.472954+08:00",
+      "last_at": "2026-09-16T19:18:19.653373+08:00"
+    },
+    {
+      "model": "gpt-image-2.5-flare",
+      "user_agent": "gateway-image-acceptance/1",
+      "requests": 1,
+      "first_at": "2026-09-16T18:46:07.033289+08:00",
+      "last_at": "2026-09-16T18:46:07.033289+08:00"
+    },
+    {
+      "model": "gpt-image-2.5-flare",
+      "user_agent": "gateway-native-advanced-sdk/1",
+      "requests": 1,
+      "first_at": "2026-09-16T19:07:43.693353+08:00",
+      "last_at": "2026-09-16T19:07:43.693353+08:00"
+    },
+    {
+      "model": "gpt-image-2.5-sunburst",
+      "user_agent": "gateway-image-acceptance/1",
+      "requests": 1,
+      "first_at": "2026-09-16T18:46:25.144618+08:00",
+      "last_at": "2026-09-16T18:46:25.144618+08:00"
+    },
+    {
+      "model": "gpt-image-2.5-sunburst",
+      "user_agent": "gateway-native-advanced-sdk/1",
+      "requests": 1,
+      "first_at": "2026-09-16T19:07:44.256282+08:00",
+      "last_at": "2026-09-16T19:07:44.256282+08:00"
+    }
+  ],
+  "us": [
+    {
+      "model": "deepseek-flash",
+      "user_agent": "Anthropic/Python 0.87.0",
+      "requests": 2,
+      "first_at": "2026-09-16T19:11:30.11715+08:00",
+      "last_at": "2026-09-16T19:11:30.452384+08:00"
+    },
+    {
+      "model": "deepseek-flash",
+      "user_agent": "Codex Desktop/0.154.0 (Mac OS 14.8.7; arm64) dumb (codex_exec; 0.154.0)",
+      "requests": 1,
+      "first_at": "2026-09-16T19:11:22.97428+08:00",
+      "last_at": "2026-09-16T19:11:22.97428+08:00"
+    },
+    {
+      "model": "deepseek-flash",
+      "user_agent": "OpenAI/Python 2.24.0",
+      "requests": 1,
+      "first_at": "2026-09-16T19:11:37.504104+08:00",
+      "last_at": "2026-09-16T19:11:37.504104+08:00"
+    },
+    {
+      "model": "deepseek-flash",
+      "user_agent": "Python-urllib/3.13",
+      "requests": 3,
+      "first_at": "2026-09-16T19:13:20.824854+08:00",
+      "last_at": "2026-09-16T19:16:06.788859+08:00"
+    },
+    {
+      "model": "deepseek-flash",
+      "user_agent": "claude-cli/2.1.233 (external, sdk-cli)",
+      "requests": 1,
+      "first_at": "2026-09-16T19:11:21.804261+08:00",
+      "last_at": "2026-09-16T19:11:21.804261+08:00"
+    },
+    {
+      "model": "deepseek-flash",
+      "user_agent": "opencode/1.18.4 ai-sdk/provider-utils/4.0.23 runtime/bun/1.3.14",
+      "requests": 2,
+      "first_at": "2026-09-16T19:11:18.096068+08:00",
+      "last_at": "2026-09-16T19:11:22.337105+08:00"
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "user_agent": "Anthropic/Python 0.87.0",
+      "requests": 2,
+      "first_at": "2026-09-16T19:11:29.2154+08:00",
+      "last_at": "2026-09-16T19:11:29.397432+08:00"
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "user_agent": "Codex Desktop/0.154.0 (Mac OS 14.8.7; arm64) dumb (codex_exec; 0.154.0)",
+      "requests": 1,
+      "first_at": "2026-09-16T19:11:21.046594+08:00",
+      "last_at": "2026-09-16T19:11:21.046594+08:00"
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "user_agent": "OpenAI/Python 2.24.0",
+      "requests": 3,
+      "first_at": "2026-09-16T19:11:35.965405+08:00",
+      "last_at": "2026-09-16T19:11:39.00895+08:00"
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "user_agent": "Python-urllib/3.13",
+      "requests": 6,
+      "first_at": "2026-09-16T19:13:19.779745+08:00",
+      "last_at": "2026-09-16T19:16:05.563838+08:00"
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "user_agent": "claude-cli/2.1.233 (external, sdk-cli)",
+      "requests": 1,
+      "first_at": "2026-09-16T19:11:20.418606+08:00",
+      "last_at": "2026-09-16T19:11:20.418606+08:00"
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "user_agent": "gateway-native-file-tool-sdk/1",
+      "requests": 2,
+      "first_at": "2026-09-16T19:12:26.893202+08:00",
+      "last_at": "2026-09-16T19:12:32.864+08:00"
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "user_agent": "gateway-native-files-sdk/1",
+      "requests": 6,
+      "first_at": "2026-09-16T19:11:36.505578+08:00",
+      "last_at": "2026-09-16T19:11:50.568573+08:00"
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "user_agent": "opencode/1.18.4 ai-sdk/provider-utils/4.0.23 runtime/bun/1.3.14",
+      "requests": 2,
+      "first_at": "2026-09-16T19:11:17.140048+08:00",
+      "last_at": "2026-09-16T19:11:20.846153+08:00"
+    },
+    {
+      "model": "gpt-5.6-terra",
+      "user_agent": "gateway-native-file-tool-sdk/1",
+      "requests": 2,
+      "first_at": "2026-09-16T19:12:28.818645+08:00",
+      "last_at": "2026-09-16T19:12:34.293376+08:00"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+services:
+  qwen3guard-vllm:
+    image: m.daocloud.io/docker.io/vllm/vllm-openai:v0.19.0
+    container_name: qwen3guard-vllm
+    restart: unless-stopped
+    ipc: host
+    gpus: '"device=1"'
+    command:
+      - /models/Qwen/Qwen3Guard-Gen-8B
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8001"
+      - --served-model-name
+      - qwen3guard-gen-8b
+      - --max-model-len
+      - "32768"
+      - --dtype
+      - bfloat16
+      - --gpu-memory-utilization
+      - "${GUARD_GPU_MEMORY_UTILIZATION:-0.70}"
+      - --max-num-seqs
+      - "${GUARD_MAX_NUM_SEQS:-192}"
+    volumes:
+      - ${GUARD_MODEL_DIR:-/data/vllm/models/Qwen/Qwen3Guard-Gen-8B}:/models/Qwen/Qwen3Guard-Gen-8B:ro
+    ports:
+      - 127.0.0.1:8001:8001
+
+  preflight-api:
+    build:
+      context: ../..
+      dockerfile: deploy/guard/Dockerfile
+    container_name: guard-preflight-api
+    restart: unless-stopped
+    depends_on:
+      - qwen3guard-vllm
+    environment:
+      GUARD_VLLM_BASE_URL: http://qwen3guard-vllm:8001/v1
+      GUARD_MODEL: qwen3guard-gen-8b
+      GUARD_MODEL_VERSION: qwen3guard-gen-8b
+      PREFLIGHT_LISTEN_ADDR: 0.0.0.0:8011
+      PREFLIGHT_FAIL_CLOSED: "true"
+      PREFLIGHT_AUDIT_REQUIRED: "true"
+      PREFLIGHT_AUDIT_LOG: /var/log/gateway/preflight-security.jsonl
+      PREFLIGHT_MAX_QUEUE: "128"
+      PREFLIGHT_QUEUE_TIMEOUT: 1s
+      PREFLIGHT_REQUEST_TIMEOUT: 3s
+      PREFLIGHT_MAX_CHUNK_CHARS: "20000"
+    ports:
+      - 0.0.0.0:8011:8011
+    volumes:
+      - ${PREFLIGHT_LOG_DIR:-./logs}:/var/log/gateway

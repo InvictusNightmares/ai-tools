@@ -1,0 +1,67 @@
+{
+  "window_start": "2026-09-17T05:00:00Z",
+  "snapshot": "2026-09-17T06:40:00Z",
+  "excluded_internal_test_key": 4,
+  "users": [
+    {
+      "api_key_id": 5,
+      "name": "付晓镇",
+      "business_requests": 9,
+      "models": {
+        "gpt-5.6-terra": 9
+      },
+      "classification_calls": 8,
+      "exact_bill_matches": 17,
+      "total_attempts": 17,
+      "latest_route": "2026-09-17T05:49:26.591908664Z",
+      "post_v30_requests": 0,
+      "task_types": {
+        "agent": 5,
+        "summary": 1,
+        "quick_qa": 2,
+        "audit": 1
+      },
+      "route_reasons": {
+        "initial_selection": 1,
+        "tool_loop_locked": 5,
+        "sticky_quality_floor": 2,
+        "cooldown_or_same_tier": 1
+      },
+      "client_uas": [
+        "Codex Desktop/0.154.0-alpha.6.2 (Mac OS 15.8.0; arm64) unknown (Codex Desktop; 26.908.70816)"
+      ],
+      "costs": {
+        "business": 0.2489548,
+        "classification": 0.54741
+      }
+    },
+    {
+      "api_key_id": 60,
+      "name": "产爱军",
+      "business_requests": 28,
+      "models": {
+        "gpt-5.6-terra": 28
+      },
+      "classification_calls": 9,
+      "exact_bill_matches": 37,
+      "total_attempts": 37,
+      "latest_route": "2026-09-17T06:28:51.946651093Z",
+      "post_v30_requests": 5,
+      "task_types": {
+        "debugging": 27,
+        "summary": 1
+      },
+      "route_reasons": {
+        "initial_selection": 3,
+        "tool_loop_locked": 25
+      },
+      "client_uas": [
+        "Bun/1.4.2"
+      ],
+      "costs": {
+        "business": 1.1222452,
+        "classification": 0.8044338
+      }
+    }
+  ]
+}

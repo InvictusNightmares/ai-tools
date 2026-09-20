@@ -1,0 +1,14 @@
+{
+  "scope": "synthetic SQLite report only",
+  "events": 1000000,
+  "elapsed_seconds": 6.785595834007836,
+  "python_traced_peak_bytes": 24640,
+  "process_maxrss_bytes": 102268928,
+  "database_bytes": 284450816,
+  "p95_verified": 949.0,
+  "distribution_omitted_events": {
+    "model": 500000
+  },
+  "report_version": 2,
+  "body_data_used": false
+}

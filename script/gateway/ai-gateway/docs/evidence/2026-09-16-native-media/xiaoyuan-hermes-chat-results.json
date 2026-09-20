@@ -1,0 +1,90 @@
+{
+  "checked_at": "2026-09-16T12:00:03.490547+00:00",
+  "scope": "Native clients independently diagnose, edit and build the actual pre-fix Xiaoyuan project through gateway 4005; review follow-ups use the same respective native clients.",
+  "original_app_worktree_clean": true,
+  "parent_agent_edited_app_source": false,
+  "all_workflows_pass": true,
+  "gateway_versions": {
+    "hermes-chat": "native-v3 / Guard r10 / semantic-v7, Luna primary / Sol reviewer"
+  },
+  "limits": [
+    "One historical logout defect, one authorized API Key, isolated unsigned builds.",
+    "Behavior adapters are synthetic; no connected HarmonyOS device or simulator UI.",
+    "No evidence for all client features, all models, highest effort, multi-user traffic or production cutover."
+  ],
+  "results": [
+    {
+      "client": "hermes-chat",
+      "native_version": "0.21.0",
+      "runs": [
+        {
+          "client": "hermes-chat",
+          "session": "xiaoyuan-hermes-chat-195054",
+          "run_id": "hermes-chat-195054",
+          "at": "2026-09-16T11:50:54.574322+00:00",
+          "workspace": "/private/tmp/gateway-v6-xiaoyuan-20260916/hermes-chat",
+          "phase": "finished",
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_s": 172.03,
+          "finished_at": "2026-09-16T11:53:46.608586+00:00",
+          "changed_files": [
+            "entry/src/main/ets/capabilities/Navigation.ets"
+          ],
+          "stdout_bytes": 160935,
+          "stderr_bytes": 166455
+        },
+        {
+          "client": "hermes-chat",
+          "session": "xiaoyuan-hermes-chat-195655",
+          "run_id": "hermes-chat-195655",
+          "at": "2026-09-16T11:56:55.235701+00:00",
+          "workspace": "/private/tmp/gateway-v6-xiaoyuan-20260916/hermes-chat",
+          "phase": "finished",
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_s": 153.51,
+          "finished_at": "2026-09-16T11:59:28.756523+00:00",
+          "changed_files": [
+            "entry/src/main/ets/capabilities/Navigation.ets"
+          ],
+          "stdout_bytes": 108514,
+          "stderr_bytes": 113670
+        }
+      ],
+      "final_changed_files": [
+        "entry/src/main/ets/capabilities/Navigation.ets"
+      ],
+      "diff_numstat": "8\t5\tentry/src/main/ets/capabilities/Navigation.ets",
+      "review": "Native Hermes Chat protocol independently diagnosed, edited and built the historical Xiaoyuan App task through 4005.",
+      "quality_accepted_for_logout_scope": true,
+      "baseline_files_preserved": {
+        "entry/src/main/ets/network/HttpClient.ets": true,
+        "entry/src/main/ets/pages/Login/index.ets": true
+      },
+      "behavior": {
+        "scope": "execute transpiled Navigation with synthetic persistent-store and navigation adapters; not HarmonyOS device UI",
+        "workspace": "/private/tmp/gateway-v6-xiaoyuan-20260916/hermes-chat",
+        "checks": {
+          "login_state_removed": true,
+          "user_approval_filter_removed": true,
+          "cleanup_before_navigation": true,
+          "other_routes_preserve_login": true,
+          "unrelated_preferences_preserved": true
+        },
+        "pass": true
+      },
+      "unsigned_hap_build_pass": true,
+      "final_build_duration": "3 s 108 ms ",
+      "build_after_last_source_edit": true,
+      "build_log_sha256": "0be4b5f2524ae31a30f7840896a61e257f8ad97af5fa95b9f2f14cf1c6dd8b95",
+      "hap_sha256": "f3b20094b525d7a5ea9935fb65eb6599ec19f570a70f16cad2e6edf7f62d531a",
+      "hap_bytes": 7909164,
+      "patch_sha256": "8368a366831911fda2a0fff49645aa81d758a4bcd00ea209853fc11fa6f0c7fb",
+      "patch_bytes": 1501,
+      "workflow_pass": true,
+      "device_tested": false,
+      "artifacts_directory": "/private/tmp/gateway-v6-xiaoyuan-20260916/hermes-chat"
+    }
+  ]
+}

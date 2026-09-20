@@ -1,0 +1,280 @@
+{
+  "checked_at": "2026-09-16T08:30:16.347292+00:00",
+  "scope": "Native clients independently diagnose, edit and build the actual pre-fix Xiaoyuan project through gateway 4004; review follow-ups use the same respective native clients.",
+  "original_app_worktree_clean": true,
+  "parent_agent_edited_app_source": false,
+  "all_four_workflows_pass": true,
+  "gateway_versions": {
+    "opencode": "r7 with original 3s Guard budget",
+    "hermes": "r7 with original 3s Guard budget; one recovered failure",
+    "claude": "r7 first run; r7-budget review follow-up",
+    "codex": "r7-budget first successful run and review follow-up"
+  },
+  "limits": [
+    "One historical logout defect, one authorized API Key, isolated unsigned builds.",
+    "Behavior adapters are synthetic; no connected HarmonyOS device or simulator UI.",
+    "No evidence for all client features, all models, highest effort, multi-user traffic or production cutover."
+  ],
+  "results": [
+    {
+      "client": "opencode",
+      "native_version": "1.18.4",
+      "runs": [
+        {
+          "client": "opencode",
+          "session": "xiaoyuan-opencode-160225",
+          "run_id": "opencode-160225",
+          "at": "2026-09-16T08:02:25.932783+00:00",
+          "workspace": "/private/tmp/gateway-xiaoyuan-20260916/opencode",
+          "phase": "finished",
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_s": 225.46,
+          "finished_at": "2026-09-16T08:06:11.392672+00:00",
+          "changed_files": [
+            "entry/src/main/ets/capabilities/Navigation.ets"
+          ],
+          "stdout_bytes": 215298,
+          "stderr_bytes": 0
+        }
+      ],
+      "final_changed_files": [
+        "entry/src/main/ets/capabilities/Navigation.ets"
+      ],
+      "diff_numstat": "4\t1\tentry/src/main/ets/capabilities/Navigation.ets",
+      "review": "No additional review correction required; minimal historical fix reproduced.",
+      "quality_accepted_for_logout_scope": true,
+      "baseline_files_preserved": {
+        "entry/src/main/ets/network/HttpClient.ets": true,
+        "entry/src/main/ets/pages/Login/index.ets": true
+      },
+      "behavior": {
+        "scope": "execute transpiled Navigation with synthetic persistent-store and navigation adapters; not HarmonyOS device UI",
+        "workspace": "/private/tmp/gateway-xiaoyuan-20260916/opencode",
+        "checks": {
+          "login_state_removed": true,
+          "user_approval_filter_removed": true,
+          "cleanup_before_navigation": true,
+          "other_routes_preserve_login": true,
+          "unrelated_preferences_preserved": true
+        },
+        "pass": true
+      },
+      "unsigned_hap_build_pass": true,
+      "final_build_duration": "22 s 183 ms ",
+      "build_after_last_source_edit": true,
+      "build_log_sha256": "125e2d2736c5f855d2d536041c09eaa850b2f8fcf8890133342ed359b96fd85e",
+      "hap_sha256": "ae4c75324b047f302b8b2e2b597c8ea074e3b42d18967b31c5c5c07ace25389d",
+      "hap_bytes": 10395055,
+      "patch_sha256": "4b0bee92dc3cf1a0ed665b454a3468f1127365690ef8868ce36ca83388ab4492",
+      "patch_bytes": 1024,
+      "workflow_pass": true,
+      "device_tested": false,
+      "artifacts_directory": "/private/tmp/gateway-xiaoyuan-20260916/opencode"
+    },
+    {
+      "client": "hermes",
+      "native_version": "0.21.0",
+      "runs": [
+        {
+          "client": "hermes",
+          "session": "xiaoyuan-hermes-160227",
+          "run_id": "hermes-160227",
+          "at": "2026-09-16T08:02:27.731219+00:00",
+          "workspace": "/private/tmp/gateway-xiaoyuan-20260916/hermes",
+          "phase": "finished",
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_s": 248.04,
+          "finished_at": "2026-09-16T08:06:35.774988+00:00",
+          "changed_files": [
+            "entry/src/main/ets/capabilities/Navigation.ets"
+          ],
+          "stdout_bytes": 167607,
+          "stderr_bytes": 2130615
+        }
+      ],
+      "final_changed_files": [
+        "entry/src/main/ets/capabilities/Navigation.ets"
+      ],
+      "diff_numstat": "13\t6\tentry/src/main/ets/capabilities/Navigation.ets",
+      "review": "Native client corrected its ArkTS overload-order build error; one earlier 3-second Guard failure recovered before final completion.",
+      "quality_accepted_for_logout_scope": true,
+      "baseline_files_preserved": {
+        "entry/src/main/ets/network/HttpClient.ets": true,
+        "entry/src/main/ets/pages/Login/index.ets": true
+      },
+      "behavior": {
+        "scope": "execute transpiled Navigation with synthetic persistent-store and navigation adapters; not HarmonyOS device UI",
+        "workspace": "/private/tmp/gateway-xiaoyuan-20260916/hermes",
+        "checks": {
+          "login_state_removed": true,
+          "user_approval_filter_removed": true,
+          "cleanup_before_navigation": true,
+          "other_routes_preserve_login": true,
+          "unrelated_preferences_preserved": true
+        },
+        "pass": true
+      },
+      "unsigned_hap_build_pass": true,
+      "final_build_duration": "10 s 416 ms ",
+      "build_after_last_source_edit": true,
+      "build_log_sha256": "1cf85d15e8e26235289f2e6b5100a4c24c01d53fa39757ff921b19bb8152de0e",
+      "hap_sha256": "6ea77a57c1b206daf9caeab3ec5865457588a1bcc6aa09fc2bf61e26b0f9bf15",
+      "hap_bytes": 10395327,
+      "patch_sha256": "fa09e19df5bd69c2f8525af190d6eca00d37ddfa2677a2f65e2274a6f961e886",
+      "patch_bytes": 1605,
+      "workflow_pass": true,
+      "device_tested": false,
+      "artifacts_directory": "/private/tmp/gateway-xiaoyuan-20260916/hermes"
+    },
+    {
+      "client": "claude",
+      "native_version": "2.1.233",
+      "runs": [
+        {
+          "client": "claude",
+          "session": "xiaoyuan-claude-160228",
+          "run_id": "claude-160228",
+          "at": "2026-09-16T08:02:28.215616+00:00",
+          "workspace": "/private/tmp/gateway-xiaoyuan-20260916/claude",
+          "phase": "finished",
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_s": 267.4,
+          "finished_at": "2026-09-16T08:06:55.614723+00:00",
+          "changed_files": [
+            "entry/src/main/ets/capabilities/Navigation.ets",
+            "entry/src/main/ets/pages/Login/index.ets"
+          ],
+          "stdout_bytes": 389038,
+          "stderr_bytes": 71
+        },
+        {
+          "client": "claude",
+          "session": "xiaoyuan-claude-162201",
+          "run_id": "claude-162201",
+          "at": "2026-09-16T08:22:01.281158+00:00",
+          "workspace": "/private/tmp/gateway-xiaoyuan-20260916/claude",
+          "phase": "finished",
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_s": 140.93,
+          "finished_at": "2026-09-16T08:24:22.223184+00:00",
+          "changed_files": [
+            "entry/src/main/ets/capabilities/Navigation.ets"
+          ],
+          "stdout_bytes": 238881,
+          "stderr_bytes": 71
+        }
+      ],
+      "final_changed_files": [
+        "entry/src/main/ets/capabilities/Navigation.ets"
+      ],
+      "diff_numstat": "5\t1\tentry/src/main/ets/capabilities/Navigation.ets",
+      "review": "Native review follow-up removed added push stop/resume behavior and restored Login to its baseline.",
+      "quality_accepted_for_logout_scope": true,
+      "baseline_files_preserved": {
+        "entry/src/main/ets/network/HttpClient.ets": true,
+        "entry/src/main/ets/pages/Login/index.ets": true
+      },
+      "behavior": {
+        "scope": "execute transpiled Navigation with synthetic persistent-store and navigation adapters; not HarmonyOS device UI",
+        "workspace": "/private/tmp/gateway-xiaoyuan-20260916/claude",
+        "checks": {
+          "login_state_removed": true,
+          "user_approval_filter_removed": true,
+          "cleanup_before_navigation": true,
+          "other_routes_preserve_login": true,
+          "unrelated_preferences_preserved": true
+        },
+        "pass": true
+      },
+      "unsigned_hap_build_pass": true,
+      "final_build_duration": "3 s 563 ms ",
+      "build_after_last_source_edit": true,
+      "build_log_sha256": "01ed2982023221f279a082076018995a676117d1a18b98eb172bcf90805f1101",
+      "hap_sha256": "2111afd8d50a3e5f45206b23cba83c11640ade99c3d1333ae4eb80cf034a8169",
+      "hap_bytes": 10395073,
+      "patch_sha256": "222a3b5c0573a8e1f39f3fca4b256904490448a48fbf94796b845ead8c973994",
+      "patch_bytes": 1112,
+      "workflow_pass": true,
+      "device_tested": false,
+      "artifacts_directory": "/private/tmp/gateway-xiaoyuan-20260916/claude"
+    },
+    {
+      "client": "codex",
+      "native_version": "0.154.0",
+      "runs": [
+        {
+          "client": "codex",
+          "session": "xiaoyuan-codex-161537",
+          "run_id": "codex-161537",
+          "at": "2026-09-16T08:15:37.134236+00:00",
+          "workspace": "/private/tmp/gateway-xiaoyuan-20260916/codex",
+          "phase": "finished",
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_s": 346.78,
+          "finished_at": "2026-09-16T08:21:23.913612+00:00",
+          "changed_files": [
+            "entry/src/main/ets/capabilities/Navigation.ets",
+            "entry/src/main/ets/network/HttpClient.ets"
+          ],
+          "stdout_bytes": 226518,
+          "stderr_bytes": 4026
+        },
+        {
+          "client": "codex",
+          "session": "xiaoyuan-codex-162243",
+          "run_id": "codex-162243",
+          "at": "2026-09-16T08:22:43.151588+00:00",
+          "workspace": "/private/tmp/gateway-xiaoyuan-20260916/codex",
+          "phase": "finished",
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_s": 195.01,
+          "finished_at": "2026-09-16T08:25:58.173542+00:00",
+          "changed_files": [
+            "entry/src/main/ets/capabilities/Navigation.ets"
+          ],
+          "stdout_bytes": 66144,
+          "stderr_bytes": 3700
+        }
+      ],
+      "final_changed_files": [
+        "entry/src/main/ets/capabilities/Navigation.ets"
+      ],
+      "diff_numstat": "19\t7\tentry/src/main/ets/capabilities/Navigation.ets",
+      "review": "Native review follow-up restored independent HttpClient unauthorized cleanup and removed added push changes. Navigation cleanup also handles missing stack and per-key failures.",
+      "quality_accepted_for_logout_scope": true,
+      "baseline_files_preserved": {
+        "entry/src/main/ets/network/HttpClient.ets": true,
+        "entry/src/main/ets/pages/Login/index.ets": true
+      },
+      "behavior": {
+        "scope": "execute transpiled Navigation with synthetic persistent-store and navigation adapters; not HarmonyOS device UI",
+        "workspace": "/private/tmp/gateway-xiaoyuan-20260916/codex",
+        "checks": {
+          "login_state_removed": true,
+          "user_approval_filter_removed": true,
+          "cleanup_before_navigation": true,
+          "other_routes_preserve_login": true,
+          "unrelated_preferences_preserved": true
+        },
+        "pass": true
+      },
+      "unsigned_hap_build_pass": true,
+      "final_build_duration": "11 s 427 ms ",
+      "build_after_last_source_edit": true,
+      "build_log_sha256": "fdbcf235b1e35db444e816f78d80a29c7909ff0785a189b820e8f3191174bc1c",
+      "hap_sha256": "38cd58b4cbcab9bcf919f36138ba118fb4f814efe27b7be3acee4f3c5519a739",
+      "hap_bytes": 10395541,
+      "patch_sha256": "ee9d0ebe17b200fc70c779b483f71316708a1877a86228ecc0e80019186dff36",
+      "patch_bytes": 1776,
+      "workflow_pass": true,
+      "device_tested": false,
+      "artifacts_directory": "/private/tmp/gateway-xiaoyuan-20260916/codex"
+    }
+  ]
+}

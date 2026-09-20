@@ -1,0 +1,33 @@
+{
+  "schema": "work-observation-semantic-preview-candidate-deployed-v1",
+  "scope": "gpu_isolated_preview_only",
+  "host": "qiyuan-gpu",
+  "binary": "/data/work-observation-lab/candidate-r2/bin/auto-server",
+  "binary_sha256": "6f45e9407189de7d9a25b97336efcec40d753b8c904a75596d0ff36306218687",
+  "checks": {
+    "go_test": "passed",
+    "go_test_race": "passed",
+    "go_vet": "passed",
+    "static_build": "passed",
+    "tokyo_service": "active",
+    "us_service": "active",
+    "tokyo_health_http": 200,
+    "us_health_http": 200,
+    "tokyo_route_http": 200,
+    "us_route_http": 200,
+    "tokyo_effective_model": "deepseek-flash",
+    "us_effective_model": "deepseek-flash",
+    "tokyo_preflight": "allow",
+    "us_preflight": "allow",
+    "restart_recovery": true,
+    "ua_shapes_exercised": ["Codex/0.154.0", "OpenCode/1.18.4"],
+    "ua_forwarding_contract_regression": "passed_in_go_test",
+    "formal_8093_8094_changed": false,
+    "employee_content_sent": false
+  },
+  "notes": [
+    "Synthetic hello route only; this is not a production cutover or task-quality result.",
+    "The candidate services replace only the loopback 8095/8096 preview services and are independently rollbackable.",
+    "No credential values are stored in this evidence."
+  ]
+}

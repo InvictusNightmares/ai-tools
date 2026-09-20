@@ -1,0 +1,40 @@
+[
+  {
+    "region": "tokyo",
+    "passed": true,
+    "session_local_tables_only": true,
+    "result": {
+      "business": {
+        "requests": 2,
+        "events": 3,
+        "attempts": 2,
+        "input_tokens": 20,
+        "output_tokens": 4,
+        "failures": 1,
+        "response_cache_hits": 1,
+        "api_key_id": 777
+      },
+      "security_unavailable": 1,
+      "events": 5
+    }
+  },
+  {
+    "region": "us",
+    "passed": true,
+    "session_local_tables_only": true,
+    "result": {
+      "business": {
+        "requests": 2,
+        "events": 3,
+        "attempts": 2,
+        "input_tokens": 20,
+        "output_tokens": 4,
+        "failures": 1,
+        "response_cache_hits": 1,
+        "api_key_id": 777
+      },
+      "security_unavailable": 1,
+      "events": 5
+    }
+  }
+]

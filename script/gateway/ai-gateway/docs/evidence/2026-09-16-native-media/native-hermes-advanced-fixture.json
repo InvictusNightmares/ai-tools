@@ -1,0 +1,44 @@
+{
+  "scope": "native Hermes PTY to local deterministic provider fixture; no gateway or real model",
+  "checks": [
+    {
+      "check": "initial_marker",
+      "passed": true
+    },
+    {
+      "check": "native_compress",
+      "passed": true,
+      "new_requests": 2
+    },
+    {
+      "check": "recall_after_compress",
+      "passed": true
+    },
+    {
+      "check": "multiple_native_tools",
+      "passed": true,
+      "tool_count": 2
+    },
+    {
+      "check": "native_child_session",
+      "passed": true,
+      "child_sessions": 1
+    },
+    {
+      "check": "native_cancel_process_alive",
+      "passed": true
+    },
+    {
+      "check": "resume_after_cancel",
+      "passed": true
+    }
+  ],
+  "region": "fixture",
+  "request_count": 20,
+  "session_header_names": [],
+  "cancel_evidence": {
+    "cli_interrupt_feedback": true,
+    "fixture_observed_disconnect": true
+  },
+  "fixture_script_sha256": "9f7aa167bc1d1925256b71cadb7f97805bef6480ce483214652f3861783186ce"
+}

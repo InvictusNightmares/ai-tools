@@ -1,0 +1,116 @@
+[
+  {
+    "region": "tokyo",
+    "since": "2026-09-16T14:06:30+00:00",
+    "attempts": 3,
+    "sub2api_rows": 24,
+    "matched": 3,
+    "matches": [
+      {
+        "purpose": "business",
+        "model": "gpt-5.6-luna",
+        "gateway_input": 4459,
+        "sub2api_input": 619,
+        "gateway_output": 112,
+        "sub2api_output": 112,
+        "gateway_cached": 3840,
+        "sub2api_cached": 3840,
+        "sub2api_cache_write": 0,
+        "output_equal": true,
+        "input_total_equal": true,
+        "input_raw_equal": false,
+        "cache_equal": true
+      },
+      {
+        "purpose": "classification",
+        "model": "gpt-5.6-luna",
+        "gateway_input": 928,
+        "sub2api_input": 928,
+        "gateway_output": 82,
+        "sub2api_output": 82,
+        "gateway_cached": 0,
+        "sub2api_cached": 0,
+        "sub2api_cache_write": 0,
+        "output_equal": true,
+        "input_total_equal": true,
+        "input_raw_equal": true,
+        "cache_equal": true
+      },
+      {
+        "purpose": "business",
+        "model": "gpt-5.6-luna",
+        "gateway_input": 4546,
+        "sub2api_input": 706,
+        "gateway_output": 15,
+        "sub2api_output": 15,
+        "gateway_cached": 3840,
+        "sub2api_cached": 3840,
+        "sub2api_cache_write": 0,
+        "output_equal": true,
+        "input_total_equal": true,
+        "input_raw_equal": false,
+        "cache_equal": true
+      }
+    ],
+    "unmatched": [],
+    "token_mismatch": [],
+    "passed": true
+  },
+  {
+    "region": "us",
+    "since": "2026-09-16T14:08:46+00:00",
+    "attempts": 3,
+    "sub2api_rows": 21,
+    "matched": 3,
+    "matches": [
+      {
+        "purpose": "business",
+        "model": "gpt-5.6-luna",
+        "gateway_input": 4459,
+        "sub2api_input": 619,
+        "gateway_output": 79,
+        "sub2api_output": 79,
+        "gateway_cached": 3840,
+        "sub2api_cached": 3840,
+        "sub2api_cache_write": 0,
+        "output_equal": true,
+        "input_total_equal": true,
+        "input_raw_equal": false,
+        "cache_equal": true
+      },
+      {
+        "purpose": "classification",
+        "model": "gpt-5.6-luna",
+        "gateway_input": 896,
+        "sub2api_input": 896,
+        "gateway_output": 82,
+        "sub2api_output": 82,
+        "gateway_cached": 0,
+        "sub2api_cached": 0,
+        "sub2api_cache_write": 0,
+        "output_equal": true,
+        "input_total_equal": true,
+        "input_raw_equal": true,
+        "cache_equal": true
+      },
+      {
+        "purpose": "business",
+        "model": "gpt-5.6-luna",
+        "gateway_input": 4513,
+        "sub2api_input": 673,
+        "gateway_output": 15,
+        "sub2api_output": 15,
+        "gateway_cached": 3840,
+        "sub2api_cached": 3840,
+        "sub2api_cache_write": 0,
+        "output_equal": true,
+        "input_total_equal": true,
+        "input_raw_equal": false,
+        "cache_equal": true
+      }
+    ],
+    "unmatched": [],
+    "token_mismatch": [],
+    "passed": true
+  }
+]

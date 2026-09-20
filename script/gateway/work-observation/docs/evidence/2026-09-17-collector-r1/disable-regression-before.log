@@ -1,0 +1,5 @@
+--- FAIL: TestDisableStopsExistingExchangeAndDoesNotResumeAcrossGap (0.00s)
+    runtime_test.go:117: capture continued after disabling an existing exchange
+FAIL
+FAIL	local/work-observation/source/capture	0.003s
+FAIL

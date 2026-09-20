@@ -1,0 +1,31 @@
+{
+  "observed_at": "2026-09-15T19:07:00+08:00",
+  "region": "tokyo",
+  "source": "admin/usage model mapping table",
+  "window": "Admin UI near 7 days; exact inclusive date boundaries not extracted",
+  "whole_window_requests": 96877,
+  "mappings": [
+    {
+      "requested": "claude-opus-5",
+      "upstream": "gpt-5.6-sol",
+      "requests": 3480
+    },
+    {
+      "requested": "claude-sonnet-5",
+      "upstream": "gpt-5.6-terra",
+      "requests": 1523
+    },
+    {
+      "requested": "claude-haiku-4-5-20251001",
+      "upstream": "gpt-5.6-luna",
+      "requests": 110
+    }
+  ],
+  "observed_ingress": "/v1/messages",
+  "client": "claude-cli/2.1.266 (external, claude-vscode, agent-sdk/0.3.266)",
+  "sample_stream_modes": [
+    "streaming",
+    "non_streaming"
+  ],
+  "limits": "Usage UI records do not establish original prompt or actual tool-result shapes. US not verified."
+}

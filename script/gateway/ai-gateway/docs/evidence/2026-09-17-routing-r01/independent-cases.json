@@ -1,0 +1,451 @@
+{
+  "version": "routing-r01-independent-v1",
+  "frozen_at": "2026-09-17T03:55:31.196147+00:00",
+  "label_basis": "Implementer-assigned synthetic regression targets, frozen after r2 prompt and before any run; not independent human adjudication. No private repo paths or content.",
+  "cases": [
+    {
+      "id": "diff-summary",
+      "source": "new-fully-synthetic-after-r2-policy-before-run",
+      "split": "holdout",
+      "expected_task": "summary",
+      "reviewer_complexity": "simple",
+      "protocol": "chat",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "读一下仓库所有文件改动，总结修改、删除和新增了什么。只总结，不修改或审计。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Read all repository file changes and summarize modifications, deletions, and additions. Only summarize; do not edit or audit."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "读一下 repository 的所有 changes，总结 modified、deleted、untracked；只总结，不做 audit 或修改。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "distributed-doc-summary",
+      "source": "new-fully-synthetic-after-r2-policy-before-run",
+      "split": "holdout",
+      "expected_task": "summary",
+      "reviewer_complexity": "simple",
+      "protocol": "chat",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "阅读这份分布式事务和一致性证明文档，概述作者提出了哪些方案，不判断证明是否成立。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Read this document about distributed transactions and consistency proofs and summarize the proposed approaches, without judging whether the proofs hold."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "阅读 distributed transactions 和 consistency proofs 文档，总结作者的方案，不判断 proof 是否成立。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "extract-logs",
+      "source": "new-fully-synthetic-after-r2-policy-before-run",
+      "split": "holdout",
+      "expected_task": "extraction",
+      "reviewer_complexity": "simple",
+      "protocol": "chat",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "从提供的日志提取所有请求编号、HTTP状态和耗时，按表格列出，不分析原因。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Extract all request IDs, HTTP statuses, and durations from the supplied logs into a table, without diagnosing causes."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "从 supplied logs 提取 request ID、HTTP status 和 duration，列成表，不做 root-cause 分析。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "release-notes",
+      "source": "new-fully-synthetic-after-r2-policy-before-run",
+      "split": "holdout",
+      "expected_task": "summary",
+      "reviewer_complexity": "simple",
+      "protocol": "chat",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "根据现有 diff 写一份给用户看的更新说明，包含新增和修复项目，不评估代码质量。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Write user-facing release notes from the existing diff, covering additions and fixes without assessing code quality."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "根据 existing diff 写 user-facing release notes，列新增和 fixes，不做 code-quality review。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "translate-incident",
+      "source": "new-fully-synthetic-after-r2-policy-before-run",
+      "split": "holdout",
+      "expected_task": "translation",
+      "reviewer_complexity": "simple",
+      "protocol": "chat",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "把这份并发死锁故障报告翻译为英文，保留原有结论，不重新调查。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Translate this concurrency deadlock incident report into English, preserving its conclusions without reinvestigating."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "把 concurrency deadlock incident report 翻译成 English，保持原结论，不重新 investigate。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "format-config",
+      "source": "new-fully-synthetic-after-r2-policy-before-run",
+      "split": "holdout",
+      "expected_task": "formatting",
+      "reviewer_complexity": "simple",
+      "protocol": "chat",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "将给出的配置列表改成Markdown表格，保持每个值完全不变。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Convert the supplied configuration list to a Markdown table, keeping every value exactly unchanged."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "把 supplied config list 转成 Markdown table，每个 value 保持不变。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "summary-audit",
+      "source": "new-fully-synthetic-after-r2-policy-before-run",
+      "split": "holdout",
+      "expected_task": "audit",
+      "reviewer_complexity": "multi_step",
+      "protocol": "chat",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "总结本次跨模块鉴权改动，并检查登录、刷新令牌和重试之间是否有权限绕过，给出可运行的验证。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Summarize these cross-module authentication changes and audit login, token refresh, and retries for authorization bypasses, with runnable validation."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "总结 cross-module auth changes，同时 audit login、token refresh、retry 是否绕过权限，给出 runnable validation。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "summary-implement",
+      "source": "new-fully-synthetic-after-r2-policy-before-run",
+      "split": "holdout",
+      "expected_task": "coding",
+      "reviewer_complexity": "bounded",
+      "protocol": "chat",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "先总结这个按钮组件，再按已给规格将禁用态颜色改为灰色，补对应的单元测试。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Summarize this button component, then change its disabled color to gray according to the supplied specification and add the corresponding unit test."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "先 summary 这个 button component，再按 specification 将 disabled color 改为 gray，补 unit test。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "uncertain-deadlock",
+      "source": "new-fully-synthetic-after-r2-policy-before-run",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "complex",
+      "protocol": "chat",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "根据三台节点的日志定位偶发死锁，锁顺序、超时和回滚彼此交互，原因尚未确定；修复并验证并发安全。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Diagnose an intermittent deadlock from logs across three nodes, with interacting lock order, timeouts, and rollback and no known cause; fix it and validate concurrency safety."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "用 three-node logs 定位 intermittent deadlock，lock order、timeouts、rollback 相互影响且 root cause 未知；修复并验证 concurrency safety。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "known-null",
+      "source": "new-fully-synthetic-after-r2-policy-before-run",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "bounded",
+      "protocol": "chat",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "已定位崩溃为此函数在返回值为null时直接取name。增加空值保护，并补这个分支的测试。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "The crash is already traced to this function reading name from a null return value. Add the null guard and a test for this branch."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Crash 已定位为此 function 对 null return 直接读 name。加 null guard 和该 branch test。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "cross-component-trace",
+      "source": "new-fully-synthetic-after-r2-policy-before-run",
+      "split": "holdout",
+      "expected_task": "debugging",
+      "reviewer_complexity": "multi_step",
+      "protocol": "chat",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "对照客户端请求、网关转发和服务端状态码，确定在哪一层丢掉了重试标记，并修复字段传递。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Compare client requests, gateway forwarding, and server status codes to locate where the retry marker is dropped and fix field propagation."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "对照 client request、gateway forwarding、server status，定位 retry marker 在哪层丢失并修复 propagation。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "migration-rollback",
+      "source": "new-fully-synthetic-after-r2-policy-before-run",
+      "split": "holdout",
+      "expected_task": "architecture",
+      "reviewer_complexity": "complex",
+      "protocol": "chat",
+      "variants": {
+        "zh": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "设计新旧服务并行期间缓存数据格式迁移方案，保证回滚后旧版本仍可读，处理已经写入的新格式状态并验证兼容性。"
+            }
+          ]
+        },
+        "en": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Design a cache-format migration while old and new services run concurrently, ensuring old versions can read after rollback and handling already-written new-format state with compatibility validation."
+            }
+          ]
+        },
+        "mixed": {
+          "model": "auto",
+          "messages": [
+            {
+              "role": "user",
+              "content": "设计 old/new services 并行时的 cache-format migration，rollback 后旧版仍能读，处理已写 new-format state 并验证 compatibility。"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

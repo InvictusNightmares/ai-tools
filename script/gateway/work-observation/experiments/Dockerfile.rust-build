@@ -1,0 +1,6 @@
+FROM rust:bookworm@sha256:9a73a5088750b4c95158ab26629c854c3d6fc4b173cb7bc8079ad252d8ed7bfa
+ARG DEBIAN_MIRROR=deb.debian.org
+RUN sed -i "s|http://deb.debian.org|https://${DEBIAN_MIRROR}|g" /etc/apt/sources.list.d/debian.sources \
+    && apt-get -o Acquire::https::Timeout=30 -o Acquire::Retries=2 update \
+    && apt-get -o Acquire::https::Timeout=30 -o Acquire::Retries=2 install -y --no-install-recommends cmake \
+    && rm -rf /var/lib/apt/lists/*

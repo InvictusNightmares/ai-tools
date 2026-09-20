@@ -1,0 +1,95 @@
+[
+  {
+    "kind": "direct_provider_diagnostic_not_guard_auto_acceptance",
+    "protocol": "chat",
+    "requested_model": "gpt-6-astra",
+    "requested_effort": "xhigh",
+    "at_epoch": 1789468198.333805,
+    "status": 200,
+    "content_type": "application/json; charset=utf-8",
+    "upstream_request_id": "4ceca92b-8025-4af1-854f-2b518d2ea12a",
+    "body_bytes": 321,
+    "body_sha256": "b8caf6b358989b2ee26c0f4dfb1c84b54e21b01f9f8c3f36bed9ba0287d392ea",
+    "response_model": "gpt-6-astra",
+    "response_id": "resp_01cad3775e8d004a016aa91e27511487d094db978107e0d8ed",
+    "usage": {
+      "prompt_tokens": 10,
+      "completion_tokens": 5,
+      "total_tokens": 15
+    },
+    "response_status": null,
+    "finish": [
+      "stop"
+    ],
+    "latency_ms": 1874
+  },
+  {
+    "kind": "direct_provider_diagnostic_not_guard_auto_acceptance",
+    "protocol": "responses",
+    "requested_model": "gpt-6-astra",
+    "requested_effort": "xhigh",
+    "at_epoch": 1789468200.2079942,
+    "status": 200,
+    "content_type": "application/json; charset=utf-8",
+    "upstream_request_id": "ba64c7cd-636c-4813-b938-6c0054b19feb",
+    "body_bytes": 23605,
+    "body_sha256": "7310ebb57dcbbbf4ce1f7c2d2e7c23f75e1ef66661108cea80ea920501c705dd",
+    "response_model": "gpt-6-astra",
+    "response_id": "resp_0d20224b329636e6016aa91e29178487d0a135e5207df17268",
+    "usage": {
+      "attribution": {
+        "items": {
+          "msg_0d20224b329636e6016aa91e2920cc87d082ae4aa9ae350d17": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0,
+            "content": [
+              {
+                "cache_write_tokens": 0,
+                "cached_tokens": 0,
+                "input_tokens": 8,
+                "output_tokens": 0
+              }
+            ],
+            "input_tokens": 8,
+            "output_tokens": 0
+          },
+          "msg_0d20224b329636e6016aa91e2a2d0487d0bc538fb3d3fb0e17": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0,
+            "content": [
+              {
+                "cache_write_tokens": 0,
+                "cached_tokens": 0,
+                "input_tokens": 2,
+                "output_tokens": 5
+              }
+            ],
+            "input_tokens": 2,
+            "output_tokens": 5
+          }
+        },
+        "request_fields": {
+          "instructions": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 3968,
+            "input_tokens": 4114,
+            "output_tokens": 0
+          }
+        }
+      },
+      "input_tokens": 4124,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3968
+      },
+      "output_tokens": 5,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 4129
+    },
+    "response_status": "completed",
+    "finish": [],
+    "latency_ms": 1932
+  }
+]

@@ -1,0 +1,186 @@
+{
+  "timers": {
+    "gateway-ops@tokyo.timer": "active",
+    "gateway-usage@tokyo.timer": "active",
+    "gateway-ops@us.timer": "active",
+    "gateway-usage@us.timer": "active"
+  },
+  "regions": {
+    "tokyo": {
+      "health": {
+        "region": "tokyo",
+        "at": "2026-09-17T02:42:41.209429+00:00",
+        "components": {
+          "auto": {
+            "active_requests": 0,
+            "draining": false,
+            "version": {
+              "config_schema": "gateway-config-v1",
+              "release_id": "candidate-20260917-r15-native-v24",
+              "source_sha256": "abcee81cade22028a4aa325e27612cd0f534b699d9545a69fec6c9bc64ec0ffe",
+              "state_schema": "session-json-v1"
+            }
+          },
+          "guard": {
+            "active_requests": 0,
+            "draining": false,
+            "version": {
+              "config_schema": "gateway-config-v1",
+              "release_id": "candidate-20260917-r17-native-v26",
+              "source_sha256": "c99fd5ea6382c0b9fd711691516061df828b04a30606edb11ce7c88688af110b",
+              "state_schema": "session-json-v1"
+            }
+          }
+        },
+        "metrics": {
+          "preflight_requests_total": 11.0,
+          "preflight_history_messages_total": 321.0,
+          "preflight_history_reused_messages_total": 240.0,
+          "preflight_decisions_total{decision=\"allow\"}": 10.0,
+          "preflight_decisions_total{decision=\"block\"}": 1.0,
+          "preflight_decisions_total{decision=\"unavailable\"}": 0.0,
+          "preflight_queue_active": 0.0,
+          "preflight_queue_capacity": 128.0,
+          "preflight_latency_ms_bucket{le=\"+Inf\"}": 11.0,
+          "preflight_latency_ms_count": 11.0,
+          "preflight_queue_wait_ms_bucket{le=\"+Inf\"}": 11.0,
+          "preflight_queue_wait_ms_count": 11.0,
+          "preflight_latency_ms_bucket{le=\"50\"}": 1.0,
+          "preflight_queue_wait_ms_bucket{le=\"50\"}": 11.0,
+          "preflight_latency_ms_bucket{le=\"100\"}": 3.0,
+          "preflight_queue_wait_ms_bucket{le=\"100\"}": 11.0,
+          "preflight_latency_ms_bucket{le=\"200\"}": 4.0,
+          "preflight_queue_wait_ms_bucket{le=\"200\"}": 11.0,
+          "preflight_latency_ms_bucket{le=\"300\"}": 4.0,
+          "preflight_queue_wait_ms_bucket{le=\"300\"}": 11.0,
+          "preflight_latency_ms_bucket{le=\"1000\"}": 9.0,
+          "preflight_queue_wait_ms_bucket{le=\"1000\"}": 11.0,
+          "preflight_latency_ms_bucket{le=\"5000\"}": 11.0,
+          "preflight_queue_wait_ms_bucket{le=\"5000\"}": 11.0,
+          "preflight_latency_ms_bucket{le=\"10000\"}": 11.0,
+          "preflight_queue_wait_ms_bucket{le=\"10000\"}": 11.0,
+          "preflight_latency_ms_bucket{le=\"30000\"}": 11.0,
+          "preflight_queue_wait_ms_bucket{le=\"30000\"}": 11.0
+        },
+        "guard_p95_upper_bound_ms": null,
+        "queue_p95_upper_bound_ms": null,
+        "disk_free_bytes": 1015121485824,
+        "alerts": [],
+        "usage_sync": {
+          "region": "tokyo",
+          "imported": 0,
+          "exported": 0,
+          "remaining": 0,
+          "key_mappings": 144,
+          "partial_spools": 0,
+          "status": "completed",
+          "last_completed_at": "2026-09-17T02:41:39.856700+00:00",
+          "at": "2026-09-17T02:41:39.856722+00:00"
+        },
+        "logs": {
+          "rotated": 0,
+          "expired": 0,
+          "deleted": 0,
+          "retention_days": null,
+          "applied": true
+        }
+      },
+      "usage": {
+        "region": "tokyo",
+        "imported": 0,
+        "exported": 0,
+        "remaining": 0,
+        "key_mappings": 144,
+        "partial_spools": 0,
+        "status": "completed",
+        "last_completed_at": "2026-09-17T02:43:09.434693+00:00",
+        "at": "2026-09-17T02:43:09.434712+00:00"
+      }
+    },
+    "us": {
+      "health": {
+        "region": "us",
+        "at": "2026-09-17T02:42:45.173074+00:00",
+        "components": {
+          "auto": {
+            "active_requests": 0,
+            "draining": false,
+            "version": {
+              "config_schema": "gateway-config-v1",
+              "release_id": "candidate-20260917-r15-native-v24",
+              "source_sha256": "abcee81cade22028a4aa325e27612cd0f534b699d9545a69fec6c9bc64ec0ffe",
+              "state_schema": "session-json-v1"
+            }
+          },
+          "guard": {
+            "active_requests": 0,
+            "draining": false,
+            "version": {
+              "config_schema": "gateway-config-v1",
+              "release_id": "candidate-20260917-r17-native-v26",
+              "source_sha256": "c99fd5ea6382c0b9fd711691516061df828b04a30606edb11ce7c88688af110b",
+              "state_schema": "session-json-v1"
+            }
+          }
+        },
+        "metrics": {
+          "preflight_requests_total": 5.0,
+          "preflight_history_messages_total": 3.0,
+          "preflight_history_reused_messages_total": 0.0,
+          "preflight_decisions_total{decision=\"allow\"}": 4.0,
+          "preflight_decisions_total{decision=\"block\"}": 1.0,
+          "preflight_decisions_total{decision=\"unavailable\"}": 0.0,
+          "preflight_queue_active": 0.0,
+          "preflight_queue_capacity": 128.0,
+          "preflight_latency_ms_bucket{le=\"+Inf\"}": 5.0,
+          "preflight_latency_ms_count": 5.0,
+          "preflight_queue_wait_ms_bucket{le=\"+Inf\"}": 5.0,
+          "preflight_queue_wait_ms_count": 5.0,
+          "preflight_latency_ms_bucket{le=\"50\"}": 1.0,
+          "preflight_queue_wait_ms_bucket{le=\"50\"}": 5.0,
+          "preflight_latency_ms_bucket{le=\"100\"}": 1.0,
+          "preflight_queue_wait_ms_bucket{le=\"100\"}": 5.0,
+          "preflight_latency_ms_bucket{le=\"200\"}": 5.0,
+          "preflight_queue_wait_ms_bucket{le=\"200\"}": 5.0,
+          "preflight_latency_ms_bucket{le=\"300\"}": 5.0,
+          "preflight_queue_wait_ms_bucket{le=\"300\"}": 5.0,
+          "preflight_latency_ms_bucket{le=\"1000\"}": 5.0,
+          "preflight_queue_wait_ms_bucket{le=\"1000\"}": 5.0,
+          "preflight_latency_ms_bucket{le=\"5000\"}": 5.0,
+          "preflight_queue_wait_ms_bucket{le=\"5000\"}": 5.0,
+          "preflight_latency_ms_bucket{le=\"10000\"}": 5.0,
+          "preflight_queue_wait_ms_bucket{le=\"10000\"}": 5.0,
+          "preflight_latency_ms_bucket{le=\"30000\"}": 5.0,
+          "preflight_queue_wait_ms_bucket{le=\"30000\"}": 5.0
+        },
+        "guard_p95_upper_bound_ms": null,
+        "queue_p95_upper_bound_ms": null,
+        "disk_free_bytes": 1015121457152,
+        "alerts": [],
+        "usage_sync": {
+          "region": "us",
+          "imported": 0,
+          "exported": 0,
+          "remaining": 0,
+          "key_mappings": 89,
+          "partial_spools": 0,
+          "status": "completed",
+          "last_completed_at": "2026-09-17T02:42:06.191663+00:00",
+          "at": "2026-09-17T02:42:06.191681+00:00"
+        },
+        "logs": {
+          "rotated": 0,
+          "expired": 0,
+          "deleted": 0,
+          "retention_days": null,
+          "applied": true
+        }
+      },
+      "usage": {
+        "status": "running",
+        "at": "2026-09-17T02:43:11.485954+00:00",
+        "last_completed_at": "2026-09-17T02:42:06.191663+00:00"
+      }
+    }
+  }
+}

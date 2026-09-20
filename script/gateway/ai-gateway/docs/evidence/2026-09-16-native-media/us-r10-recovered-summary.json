@@ -1,0 +1,8 @@
+{
+  "at": "2026-09-16T11:16:06.638567+00:00",
+  "phase": "guard-recovered",
+  "checks": 1,
+  "passed": 1,
+  "real_authorized_keys_tested": 1,
+  "raw_requests_or_responses_retained": false
+}

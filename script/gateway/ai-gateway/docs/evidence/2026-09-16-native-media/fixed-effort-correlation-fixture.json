@@ -1,0 +1,49 @@
+{
+  "recorded_at": "2026-09-17T03:49:00+08:00",
+  "scope": "Private fixed-effort probe correlation only; synthetic backend changes supplied UUID; no real model calls or production change",
+  "source_evidence": "Sub2API middleware/client_request_id.go creates a response UUID and does not consume the request header",
+  "before": {
+    "scope": "synthetic Sub2API changes incoming correlation UUID; no real model calls",
+    "results": [
+      {
+        "script": "gateway-highest-effort-probe.py",
+        "requests": 12,
+        "response_id_mismatches": 12,
+        "sent_id_separately_matched": 0,
+        "passed": false
+      },
+      {
+        "script": "gateway-additional-effort-probe.py",
+        "requests": 8,
+        "response_id_mismatches": 8,
+        "sent_id_separately_matched": 0,
+        "passed": false
+      }
+    ],
+    "passed": false
+  },
+  "after": {
+    "scope": "synthetic Sub2API changes incoming correlation UUID; no real model calls",
+    "results": [
+      {
+        "script": "gateway-highest-effort-probe.py",
+        "requests": 12,
+        "response_id_mismatches": 0,
+        "sent_id_separately_matched": 12,
+        "passed": true
+      },
+      {
+        "script": "gateway-additional-effort-probe.py",
+        "requests": 8,
+        "response_id_mismatches": 0,
+        "sent_id_separately_matched": 8,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "scripts": {
+    "gateway-highest-effort-probe.py": "69e8ca632b5df77b910c25c558aeeb21405b82138226ad8502feda823f7c93e3",
+    "gateway-additional-effort-probe.py": "82479f18aa3165236731ce11dad23c6f5d39e43a231b2ceeab944ca8136499cc"
+  }
+}

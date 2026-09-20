@@ -1,0 +1,10 @@
+{
+  "client": "codex",
+  "region": "tokyo",
+  "run_id": "codex-ws-tokyo-203919",
+  "exit_code": 0,
+  "seconds": 11.43,
+  "http_fallback": false,
+  "model_catalog_warning": true,
+  "answer_correct": true
+}

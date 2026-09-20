@@ -1,0 +1,58 @@
+{
+  "scope": "native OpenCode to local deterministic provider fixture; no gateway or real model",
+  "region": "fixture",
+  "checks": [
+    {
+      "check": "initial_marker",
+      "passed": true
+    },
+    {
+      "check": "native_compaction_and_recall",
+      "passed": true,
+      "compaction_part": true
+    },
+    {
+      "check": "multiple_native_tools",
+      "passed": true,
+      "completed_reads": 2
+    },
+    {
+      "check": "native_child_session",
+      "passed": true
+    },
+    {
+      "check": "native_fork_continuity",
+      "passed": true
+    },
+    {
+      "check": "native_cancel",
+      "passed": true
+    },
+    {
+      "check": "resume_after_cancel",
+      "passed": true
+    }
+  ],
+  "native_session_sha256": [
+    "02d6ab8b2e80810aae5d999e55fac7ac59ed7a9a6d8c0d06ce5a53d10ed4a5b9",
+    "54921d26b411fc50a1cade73c02a6700152f7daf2dd7ad245eeca5fc4e0e17a0",
+    "ce9ef84e3c17f15b60844e02c8d82856241b6d8aa60fbedfd60d2f00b0c59f01"
+  ],
+  "request_count": 12,
+  "identity_signals": [
+    {
+      "x-session-affinity": "02d6ab8b2e80810aae5d999e55fac7ac59ed7a9a6d8c0d06ce5a53d10ed4a5b9",
+      "x-session-id": "02d6ab8b2e80810aae5d999e55fac7ac59ed7a9a6d8c0d06ce5a53d10ed4a5b9"
+    },
+    {
+      "x-parent-session-id": "02d6ab8b2e80810aae5d999e55fac7ac59ed7a9a6d8c0d06ce5a53d10ed4a5b9",
+      "x-session-affinity": "ce9ef84e3c17f15b60844e02c8d82856241b6d8aa60fbedfd60d2f00b0c59f01",
+      "x-session-id": "ce9ef84e3c17f15b60844e02c8d82856241b6d8aa60fbedfd60d2f00b0c59f01"
+    },
+    {
+      "x-session-affinity": "54921d26b411fc50a1cade73c02a6700152f7daf2dd7ad245eeca5fc4e0e17a0",
+      "x-session-id": "54921d26b411fc50a1cade73c02a6700152f7daf2dd7ad245eeca5fc4e0e17a0"
+    }
+  ],
+  "fixture_script_sha256": "180245ae2baa7a34041f88e7f3ee8baf297a741121335566fbedea3239d862a1"
+}

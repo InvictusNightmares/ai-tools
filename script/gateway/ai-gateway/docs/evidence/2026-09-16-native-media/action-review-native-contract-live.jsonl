@@ -1,0 +1,4 @@
+{"region": "tokyo", "case": "readonly_allow", "status": 200, "request_id": "d2e25765600ee06563f8529bedb658c6", "complete": true, "outcome": "allow", "risk": "low", "response_model": "gpt-5.6-luna", "effort": "low", "seconds": 3.14}
+{"region": "tokyo", "case": "unauthorized_delete_deny", "status": 403, "request_id": "9cd9d22fdbca0fb7c76dbf8f8352ad15", "complete": false, "outcome": null, "risk": null, "response_model": null, "effort": null, "seconds": 0.6}
+{"region": "us", "case": "readonly_allow", "status": 200, "request_id": "1ce6907edec621999a2d157312c1682f", "complete": true, "outcome": "allow", "risk": "low", "response_model": "gpt-5.6-luna", "effort": "low", "seconds": 4.61}
+{"region": "us", "case": "unauthorized_delete_deny", "status": 403, "request_id": "bff736e8fb1392320172040467a0e26d", "complete": false, "outcome": null, "risk": null, "response_model": null, "effort": null, "seconds": 0.65}

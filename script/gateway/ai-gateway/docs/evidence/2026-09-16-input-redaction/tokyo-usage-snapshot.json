@@ -1,0 +1,161 @@
+{
+  "window_start": "2026-09-16 11:20:00+08",
+  "window_end": "2026-09-16T11:49:51.835289+08:00",
+  "api_key_id": 141,
+  "groups": [
+    {
+      "model": "deepseek-flash",
+      "requested_model": "deepseek-flash",
+      "upstream_model": "deepseek-flash",
+      "inbound_endpoint": "/v1/chat/completions",
+      "requested_reasoning_effort": "none",
+      "reasoning_effort": "none",
+      "requests": 5,
+      "input_tokens": 167,
+      "output_tokens": 733
+    },
+    {
+      "model": "deepseek-flash",
+      "requested_model": "deepseek-flash",
+      "upstream_model": "deepseek-flash",
+      "inbound_endpoint": "/v1/messages",
+      "requested_reasoning_effort": "none",
+      "reasoning_effort": "none",
+      "requests": 6,
+      "input_tokens": 176,
+      "output_tokens": 1215
+    },
+    {
+      "model": "deepseek-flash",
+      "requested_model": "deepseek-flash",
+      "upstream_model": "deepseek-flash",
+      "inbound_endpoint": "/v1/responses",
+      "requested_reasoning_effort": null,
+      "reasoning_effort": null,
+      "requests": 7,
+      "input_tokens": 391,
+      "output_tokens": 2476
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "requested_model": "gpt-5.6-luna",
+      "upstream_model": "gpt-5.6-luna",
+      "inbound_endpoint": "/v1/chat/completions",
+      "requested_reasoning_effort": "low",
+      "reasoning_effort": "low",
+      "requests": 1,
+      "input_tokens": 607,
+      "output_tokens": 410
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "requested_model": "gpt-5.6-luna",
+      "upstream_model": "gpt-5.6-luna",
+      "inbound_endpoint": "/v1/messages",
+      "requested_reasoning_effort": "low",
+      "reasoning_effort": "low",
+      "requests": 1,
+      "input_tokens": 699,
+      "output_tokens": 190
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "requested_model": "gpt-5.6-luna",
+      "upstream_model": "gpt-5.6-luna",
+      "inbound_endpoint": "/v1/responses",
+      "requested_reasoning_effort": "low",
+      "reasoning_effort": "low",
+      "requests": 1,
+      "input_tokens": 957,
+      "output_tokens": 135
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "requested_model": "gpt-5.6-sol",
+      "upstream_model": "gpt-5.6-sol",
+      "inbound_endpoint": "/v1/chat/completions",
+      "requested_reasoning_effort": "high",
+      "reasoning_effort": "high",
+      "requests": 1,
+      "input_tokens": 3109,
+      "output_tokens": 6628
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "requested_model": "gpt-5.6-sol",
+      "upstream_model": "gpt-5.6-sol",
+      "inbound_endpoint": "/v1/chat/completions",
+      "requested_reasoning_effort": "none",
+      "reasoning_effort": "none",
+      "requests": 31,
+      "input_tokens": 36366,
+      "output_tokens": 2542
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "requested_model": "gpt-5.6-sol",
+      "upstream_model": "gpt-5.6-sol",
+      "inbound_endpoint": "/v1/responses",
+      "requested_reasoning_effort": "high",
+      "reasoning_effort": "high",
+      "requests": 1,
+      "input_tokens": 906,
+      "output_tokens": 2864
+    },
+    {
+      "model": "gpt-5.6-terra",
+      "requested_model": "gpt-5.6-terra",
+      "upstream_model": "gpt-5.6-terra",
+      "inbound_endpoint": "/v1/chat/completions",
+      "requested_reasoning_effort": "medium",
+      "reasoning_effort": "medium",
+      "requests": 1,
+      "input_tokens": 955,
+      "output_tokens": 2150
+    },
+    {
+      "model": "gpt-5.6-terra",
+      "requested_model": "gpt-5.6-terra",
+      "upstream_model": "gpt-5.6-terra",
+      "inbound_endpoint": "/v1/responses",
+      "requested_reasoning_effort": "medium",
+      "reasoning_effort": "medium",
+      "requests": 1,
+      "input_tokens": 1110,
+      "output_tokens": 174
+    },
+    {
+      "model": "gpt-6-astra",
+      "requested_model": "gpt-6-astra",
+      "upstream_model": "gpt-6-astra",
+      "inbound_endpoint": "/v1/chat/completions",
+      "requested_reasoning_effort": "low",
+      "reasoning_effort": "low",
+      "requests": 4,
+      "input_tokens": 16788,
+      "output_tokens": 328
+    },
+    {
+      "model": "gpt-6-astra",
+      "requested_model": "gpt-6-astra",
+      "upstream_model": "gpt-6-astra",
+      "inbound_endpoint": "/v1/chat/completions",
+      "requested_reasoning_effort": "xhigh",
+      "reasoning_effort": "high",
+      "requests": 1,
+      "input_tokens": 6085,
+      "output_tokens": 6374
+    },
+    {
+      "model": "gpt-6-astra",
+      "requested_model": "gpt-6-astra",
+      "upstream_model": "gpt-6-astra",
+      "inbound_endpoint": "/v1/responses",
+      "requested_reasoning_effort": "xhigh",
+      "reasoning_effort": "high",
+      "requests": 1,
+      "input_tokens": 1974,
+      "output_tokens": 5603
+    }
+  ]
+}

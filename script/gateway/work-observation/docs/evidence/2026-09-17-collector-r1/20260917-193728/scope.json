@@ -1,0 +1,25 @@
+{
+  "version": "observation-dev.7",
+  "only": "ws",
+  "extended": true,
+  "rounds": 3,
+  "capture_memory_mib": 512,
+  "scenarios": [
+    [
+      "ws",
+      4096,
+      0,
+      80,
+      4,
+      10
+    ],
+    [
+      "ws",
+      65536,
+      0,
+      80,
+      4,
+      10
+    ]
+  ]
+}

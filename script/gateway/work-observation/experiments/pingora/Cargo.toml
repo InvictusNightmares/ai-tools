@@ -1,0 +1,19 @@
+[package]
+name = "observation-proxy-bench"
+version = "0.0.1"
+edition = "2021"
+publish = false
+
+[dependencies]
+async-trait = "0.1"
+bytes = "1"
+pingora-core = { version = "=0.9.0", default-features = false }
+pingora-proxy = { version = "=0.9.0", default-features = false }
+pingora-http = "=0.9.0"
+sha2 = "0.10"
+serde_json = "1"
+
+[profile.release]
+codegen-units = 1
+lto = "thin"
+

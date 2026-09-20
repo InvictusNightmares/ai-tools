@@ -1,0 +1,30 @@
+[Unit]
+Description=Work observation collector candidate-r3 (%i)
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart=/opt/work-observation/candidate-r3/deploy/run-collector-sidecar-candidate-r3.sh %i
+ExecStop=-/usr/bin/docker stop --time 30 work-observation-collector-%i-candidate-r3
+Restart=on-failure
+RestartSec=3s
+TimeoutStartSec=30s
+TimeoutStopSec=45s
+UMask=0077
+# Deliberately omit host-level NoNewPrivileges: Docker may need an
+# SELinux/domain transition when recreating the container after Nginx changes.
+# The container invocation still has --security-opt=no-new-privileges.
+PrivateTmp=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ProtectSystem=strict
+ProtectHome=true
+ReadOnlyPaths=/opt/work-observation/candidate-r3
+ReadWritePaths=/data/work-observation/tokyo /data/work-observation/us
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

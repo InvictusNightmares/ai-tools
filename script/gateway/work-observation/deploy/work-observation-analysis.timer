@@ -1,0 +1,11 @@
+[Unit]
+Description=Check collection every five minutes and run due incremental analysis
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=5min
+AccuracySec=15s
+Unit=work-observation-analysis.service
+
+[Install]
+WantedBy=timers.target

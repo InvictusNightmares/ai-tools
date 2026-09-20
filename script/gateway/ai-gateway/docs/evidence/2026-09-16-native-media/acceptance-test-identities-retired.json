@@ -1,0 +1,45 @@
+{
+  "rows": [
+    {
+      "region": "tokyo",
+      "group_id": 729,
+      "group_status": "disabled",
+      "key_statuses": [
+        "disabled",
+        "disabled"
+      ],
+      "user_statuses": [
+        "disabled",
+        "disabled"
+      ],
+      "preserved_usage_rows": 49,
+      "source_group_unchanged": true,
+      "retired_key_http_statuses": [
+        401,
+        401
+      ],
+      "passed": true
+    },
+    {
+      "region": "us",
+      "group_id": 704,
+      "group_status": "disabled",
+      "key_statuses": [
+        "disabled",
+        "disabled"
+      ],
+      "user_statuses": [
+        "disabled",
+        "disabled"
+      ],
+      "preserved_usage_rows": 49,
+      "source_group_unchanged": true,
+      "retired_key_http_statuses": [
+        401,
+        401
+      ],
+      "passed": true
+    }
+  ],
+  "passed": true
+}
