@@ -1,0 +1,13 @@
+{
+  "schema": "work-observation-semantic-r9",
+  "at": "2026-09-21",
+  "release": "observation-review-20260921-v9",
+  "semantic_sha256": "aa4cdc72b2e6777f9c0d244845402cd77386839f03e155b699f712ad32441e17",
+  "rolling_sha256": "f6a0303ee85acbe683c3370e67f01b01a56d3622c76eb7e5618f86953fbebf6c",
+  "limits": {"max_jobs": 80, "max_workers": 4, "stage_reuse_ttl_seconds": 3600},
+  "latest_batch": {"processed": 80, "complete": 35, "unavailable": 45, "pending": 9965},
+  "collector_routes": {"tokyo": "4000->18400", "us": "4001->18401"},
+  "collector_fatal_counters": {"dropped": 0, "truncated": 0, "write_errors": 0},
+  "semantic_error": "classifier_unavailable",
+  "content_or_credentials_in_evidence": false
+}

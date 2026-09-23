@@ -1,0 +1,10 @@
+[Unit]
+Description=Refresh offline Auto review tokens
+
+[Timer]
+OnCalendar=*:0/10
+Persistent=true
+Unit=work-observation-analysis-token-sync.service
+
+[Install]
+WantedBy=timers.target

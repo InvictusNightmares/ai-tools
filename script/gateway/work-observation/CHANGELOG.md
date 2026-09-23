@@ -2,6 +2,66 @@
 
 ## Unreleased
 
+### 2026-09-23 / 固定 200 条诊断集首轮只读归因
+
+- 对已固定的 200 条做只读元数据对账，并在 GPU 受限目录内仅计算消息/工具数量；没有新增 Guard/Auto 回放、人工标签、正文或凭据归档。报告见[诊断证据](docs/evidence/2026-09-23-diagnostic-200-review/README.md)。
+- 155 条有历史语义结果、45 条未分析；Guard 放行的 86 条中仅 53 条有模型结果，4 条二次预检 403，29 条技术不可用。78 条历史 Auto 不可用细分为身份检查 503×44、分类器 503×20、无 HTTP 响应/超时×14；Guard 非放行仍有 Auto 结果的 69 条不进入线上选型指标。
+- Guard 的 58 条拦截中有 47 条 `request_shape_limit`，其中 12 条仅因离线输入混入模型回复而触发形状限制。23 条 Auto 403 均为 `preflight_blocked`，不能称作 Auto 模型拒绝。人工标签库仍为空，误拦率和选型正确率不可计算。
+- 本轮仅新增证据与状态说明；GPU 分析 timer/service 仍暂停，复核页继续运行，四个业务入口未改。后续需先拆分输入 Guard 与回复观察、补阶段错误子码、逐条人工标注，再用相同样本比较候选策略。
+
+### 2026-09-22 / 首批 200 条诊断集
+
+- 新增 `tools/diagnostic_set.py`：从已校验的 `http_exchange` 索引和源记录中按固定 seed 选择 200 条代表性样本，Tokyo/US 各 100 条；每地覆盖 Guard 拦截、技术失败、业务失败、长上下文/工具、客户端/协议差异和正常基线。
+- 诊断清单只保存事件标识、时间、入口、模型、Guard/Auto 状态、选择桶和大小/工具等特征，不保存 `source_path`、请求正文或回复正文；生成过程不调用 Guard/Auto，也不启动 semantic worker。GPU 清单为 `diagnostic-200-20260922`，权限 `0600`。
+- 独立复核页新增“诊断集 200”视图，明确显示 200 条、两页各 100 条；打开单条时才按区域根目录和 SHA 校验源记录。GPU dashboard 已发布 `observation-review-20260922-v12-diagnostic`，4000/4001、4004/4005 和采集器未改动。
+
+### 2026-09-22 / v12 收敛版与正式采集恢复
+
+- `tools/semantic.py` 现在先记录 Guard 执行状态，再决定是否运行 Auto：Guard 明确拦截或没有结论时，Auto 写入 `not_run`，不会把“未执行”统计成模型选错；技术失败仍保持 `unavailable`，不生成安全结论。
+- 语义任务新增有界重试（默认最多 3 次）。达到上限的任务进入 `deferred`，不会无限占用队列；复核页把技术失败和暂停重试单独展示。`rolling.py` 同步记录 `semantic_deferred` 并限制离线批次为 `max_jobs=20`、`max_workers=1`。
+- GPU 已发布分析专用 release `observation-review-20260922-v12.1-convergence`，service 路径和配置哈希已核对；配置原子替换后补回 `root:work-observation`、`0640` 权限。v12.1 还修正了“启动前已达到重试上限的任务”在批次计数中漏报 deferred 的问题。当前按采集隐私边界暂停 `work-observation-analysis.timer`，没有把这次 v12.1 当作真实训练或线上切换验收。
+- 复核过程中发现 US watchdog 曾回退 4001→18401，已恢复 US live watchdog。当前 Tokyo/US `capture_enabled=true`，15 秒观察新增 captured/written 分别为 `3/3`、`17/120`，`dropped/write_errors/loss_persist_errors` 均为 0；两地 4000/4001 和命名空间内 18400/18401 探针均 HTTP 200。采集器、4000/4001、4004/4005 均未改业务代码或路由策略。
+- 中止语义 worker 后，将 20 个未提交的 `running` claim 恢复为 `pending`，另将达到 3 次上限的 8 个 pending 标为 `deferred`；分析库只变更元数据状态，没有复制正文。
+- 本地 work-observation 回归、Python 编译、前端语法检查和 `git diff --check` 通过；真实样本的 v12 语义批次尚未签收，后续需在明确允许离线正文回放后再启动 timer。
+
+### 2026-09-22 / 复核队列连续处理
+
+- 复核队列支持每页 50/100 条切换、详情上一条/下一条、`J/K` 键盘连续浏览，以及“保存并下一条”“跳过并下一条”；每次标签仍按单条写入，避免人工结论被批量套用到不同任务。
+- GPU 已发布 dashboard-only release `observation-review-20260922-v11-dashboard` 并通过健康接口、页面资源 hash、分页/连续复核控件和端口不变复核；保留 systemd 回退副本，未重启或修改采集器、分析 worker、4000/4001 和4004/4005。
+
+### 2026-09-21 / 复核结果状态分层
+- 默认“Guard 待复核”队列现在只保留尚未人工处理的明确拦截；保存结论后该条会从当前队列和待复核计数中移出，但仍可用人工状态筛选查看历史记录。分页增加首页、末页、页码跳转和明确的当前范围，详情列继续使用固定高度内部滚动。
+- 复核页现在把 Guard 明确拦截、Auto 离线已返回、技术失败和待分析积压拆成独立视图；`classifier_unavailable`、超时、HTTP失败和无效结果不会再混入 Guard 拦截队列或 Auto 模型选择统计。
+- 每条结果同时展示离线 Auto 状态与线上 Guard→Auto 路径：Guard 拦截时，即使离线候选为了评估而返回了模型，也明确标为“线上未执行”，避免把离线候选误认为正式选型。
+- Dashboard 增加 `/healthz`，并将摘要中的模型统计限制为实际返回模型的离线 Auto 结果；新增技术失败、Auto 已返回和 Guard 技术失败计数。
+- 本地复核回归保持通过；该改动只影响离线分析索引和独立复核页，不改变4000/4001、4004/4005或正式Guard/Auto路径。
+
+### 2026-09-21 / 语义复核阶段复用与队列恢复
+
+- `semantic.py` 为 Guard/Auto 分别保存阶段时间、来源摘要和端点/协议版本指纹；默认 1 小时 TTL。Guard 已完成而 Auto 不可用时，后续只重试 Auto；反向情况只重试 Guard；来源摘要、版本或端点改变会强制两阶段重跑。结果仍只写元数据，不复制正文。
+- 待复核队列增加区域公平和有限的单阶段失败优先级：同一阶段连续失败 3 次后让出给新任务，避免坏端点饿死新流量。新增回归覆盖阶段优先级与让出规则；本地 Python 回归为 78 项通过、1 项跳过。
+- GPU 分析 worker 已切换到可回退 release `observation-review-20260921-v9`，`max_jobs=80`、`max_workers=4`、阶段 TTL `3600s`；v9 的两个脚本 SHA 记录在 `docs/evidence/2026-09-21-semantic-r9/`。4000/4001 采集器、Nginx 和正式业务路由未改动。
+- 运行验证：v9 批次可稳定处理 80 条，最近批次 35/80 完成、45/80 暂不可用；待复核约 9965 条。两地候选 Auto 健康端点均200，但审计仍累计 `classifier_unavailable`，因此这些任务保持 pending，不伪造模型选择；分类器兼容性仍是下一项问题。
+- 部署过程中发现并修复分析配置原子替换丢失 `root:work-observation` 组权限的问题；配置已恢复 `0640`，v5-v8 release 和 systemd 回退副本保留。
+
+### 2026-09-20 / 大上下文 Auto 离线回放边界
+
+- Auto 离线回放现在只取已校验事件的请求上下文，保留 system/developer 指令和最近 10 轮；单条消息、消息总量、工具 schema 和最终 envelope 都有字节上限。超出范围会写入显式截断标记和 `metadata.replay=bounded_request_context`，Guard 仍使用原有完整归一化内容。
+- 三种协议分别生成合法的 Chat Completions、Responses、Anthropic envelope；工具 schema 按结构裁剪，不把 JSON 截成非法后缀。无可识别请求字段的旧记录才使用带 metadata 标记的兼容 fallback。
+- 新增大请求、响应不进入正常回放、三协议工具形状和最终大小上限回归；阶段复用与队列优先级加入后当前 Python 回归为 78 项通过、1 项跳过。该边界用于提高离线 Auto 可用率，不等同于完整上下文线上决策或训练结论。
+
+### 2026-09-20 / 独立 Auto+Guard 人工复核页
+
+- 新增独立无登录复核服务 `tools/review_dashboard.py` 与 `review/` 静态页面：读取只读分析索引和经校验的采集源记录，展示 Guard 决策、Auto 模型/effort/分类理由、任务上下文、完整性状态和最新滚动批次。
+- 人工结论写入独立 `review-labels.sqlite`，支持 Guard（放行/拦截是否正确）和 Auto（模型合理/过强/过弱/不合适）标签及备注；分析索引与采集事件不被回写，分析库不保存正文副本。
+- 固定区域映射：Tokyo 样本对应灰度入口 4004，US West 样本对应灰度入口 4005。复核页默认监听 `127.0.0.1:8765`，不监听或代理 4000/4001/4004/4005；新增 `deploy/work-observation-review-dashboard.service` 模板。
+- 滚动 worker 新增受限 `runs.jsonl` 批次元数据（仅时间、计数、状态和待复核数量，自动保留最近1000条），供页面显示每次分析执行结果；写入失败不影响采集或分析。
+- 语义复核队列现在只接收完整 `http_exchange`；WebSocket 消息碎片继续保留在证据/统计中，但不再被当成独立任务反复送入 Auto/Guard。
+- 验证：72项 Python 回归（含复核页、WebSocket碎片、旧协议降级和有界 Auto 回放测试，受沙箱限制跳过真实监听测试）、Python 编译和前端 `node --check` 通过。GPU 已安装并启用独立 `work-observation-analysis.timer`（每5分钟）和无登录复核页（`192.168.64.16:8765`，仅受控内网）；页面不监听或代理 4000/4001/4004/4005。
+- GPU 首次实样本复核已落库：Tokyo/US 共 3,188 条完整 `http_exchange` 事件进入任务队列，当前已有 20 条 Auto+Guard 终态结果（15 条选择 `deepseek-flash`，5 条 Auto route 返回 403）；其余保持待复核或不可用，另有 16 条因候选端点瞬时超时保留 pending。该数字是当前批次快照，不代表训练集或质量结论。
+- 发现并修复旧事件 `protocol=other` 导致 Auto route-preview 400 的问题：仅在离线回放时将完整对话降级为 chat envelope；WebSocket 连接/消息仍保留证据但不进入语义任务队列。GPU 4004/4005 仍分别是 Tokyo/US 的 Auto+Guard 灰度入口，页面和分析服务均不占用这两个入口。
+- 复核正式运行态时发现 US watchdog 曾因旧版本窗口策略回退并留下旧 network namespace；重启 US sidecar 使其重新附着当前 Nginx namespace，再重启 watchdog 后 4001→18401 恢复、服务 `active`，验证窗口内 `capture_enabled=true`、`dropped/truncated/projection_errors/write_errors=0`、4001 HTTP 200。单条 projection/truncated 仍作为数据质量告警记录，不再误触发整条采集回退。
+
 ### 2026-09-20 / 正式入口持续采集恢复并固定
 
 - candidate-r3 已在 GPU 正式接入 4000/4001：Nginx 内部路由分别为 `127.0.0.1:18400` 与 `127.0.0.1:18401`，Tokyo/US 两个 sidecar 与长期 live watchdog 均由 enabled systemd 实例托管；watchdog 使用 `--seconds 0 --interval 5 --max-5xx -1`，上游 5xx 只记录、不把业务失败误判为采集器故障。

@@ -1,10 +1,9 @@
 [Unit]
-Description=Check collection every five minutes and run due incremental analysis
+Description=Run work-observation rolling analysis every five minutes
 
 [Timer]
-OnBootSec=1min
-OnUnitActiveSec=5min
-AccuracySec=15s
+OnCalendar=*:0/5
+Persistent=true
 Unit=work-observation-analysis.service
 
 [Install]

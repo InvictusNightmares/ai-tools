@@ -1,0 +1,20 @@
+[Unit]
+Description=Sync dedicated offline Auto review tokens for work-observation
+Before=work-observation-analysis.service
+After=local-fs.target
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+UMask=0077
+ExecStart=/bin/sh -c 'set -eu; install -d -o work-observation -g work-observation -m 0750 /run/work-observation-analysis; install -o work-observation -g work-observation -m 0600 /run/work-observation/auto-route-tokyo.token /run/work-observation-analysis/auto-route-tokyo.token; install -o work-observation -g work-observation -m 0600 /run/work-observation/auto-route-us.token /run/work-observation-analysis/auto-route-us.token'
+NoNewPrivileges=true
+ProtectHome=true
+ProtectSystem=strict
+PrivateTmp=true
+ReadWritePaths=/run/work-observation-analysis
+ReadOnlyPaths=/run/work-observation/auto-route-tokyo.token /run/work-observation/auto-route-us.token
+
+[Install]
+WantedBy=multi-user.target

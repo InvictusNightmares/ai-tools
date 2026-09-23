@@ -47,6 +47,8 @@ https://raw.githubusercontent.com/InvictusNightmares/ai-tools/main/config/clash/
 
 Clash Verge 2.5.2 最终以界面的 `mode`、顶层 `ipv6` 等设置为准，Merge 中的同名值不能代替第 3 步。开启“DNS 覆写”时，界面的 `dns.ipv6` 也会被恢复；并不是所有 DNS 字段都比 Merge 优先。[客户端合并源码](https://github.com/clash-verge-rev/clash-verge-rev/blob/v2.5.2/src-tauri/src/enhance/mod.rs)
 
+若在 Clash Verge Rev 2.5.5 中选择保留 DNS 覆写，并遇到扩展字段被应用设置接管的警告，参考 [2.5.5 本机设置样例](dmit-verge-2.5.5-example.md)。该样例把冲突字段放在客户端设置页，与上面的 2.5.2 Merge 配置方式不要混用。
+
 DNS 沿用现有选择：国外 DoH、直连目标使用国内 DNS、代理节点用国内 DNS 解析；本次没有将国内 UDP DNS 改为 DoH。不固定 `dns.listen`，保留 `fallback: []`，省略因未启用 fallback 而无效的 `fallback-filter`。
 
 ## 更新和换机

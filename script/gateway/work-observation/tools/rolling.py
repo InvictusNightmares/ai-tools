@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""Bounded local analysis ticks. No network, model, or business-tool execution.
+"""Bounded local analysis and optional offline replay ticks.
 
-Read final immutable records directly, verify their digest, keep only metadata
-and evidence references in a private analysis DB. Never export body duplicates.
+Read final immutable records directly, verify their digest, and keep only
+metadata and evidence references in a private analysis DB.  When explicitly
+configured, ``semantic.py`` may call private offline Guard/Auto preview
+endpoints; it never executes production tools or changes production routing.
 """
 import argparse
 from collections import Counter
@@ -24,6 +26,47 @@ import semantic
 
 MAX_RECORD = 256 << 20
 PREFIX = re.compile(r'^\s*\{"sha256":"([a-f0-9]{64})","event":')
+DEFAULT_INGEST_INTERVAL_SECONDS = 300
+MAX_INGEST_INTERVAL_SECONDS = 24 * 60 * 60
+
+
+def _run_id(now):
+    """Stable human-facing batch id; contains no source or account data."""
+    return now.astimezone(timezone.utc).strftime('%Y%m%d-%H%M%S')
+
+
+def _record_run(root, result):
+    """Append bounded body-free metadata for the standalone review page.
+
+    The rolling worker's existing ``tick.json`` is intentionally a latest
+    snapshot.  This small JSONL ledger lets an operator see each analysis
+    tick without opening the source store or copying request/response text.
+    A write failure never changes the analysis result or forwarding path.
+    """
+    path = root / 'runs.jsonl'
+    allowed = ('run_id', 'at', 'status', 'reason', 'scanned', 'review_jobs_added', 'review_pending',
+               'review_deferred', 'semantic_review', 'semantic_reviewed', 'semantic_processed',
+               'semantic_complete', 'semantic_unavailable', 'semantic_failed',
+               'semantic_pending', 'semantic_deferred', 'semantic_guard_reused', 'semantic_auto_reused',
+               'invalid_sources', 'body_copies_created')
+    row = {key: result[key] for key in allowed if key in result}
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        with path.open('a', encoding='utf-8') as stream:
+            os.chmod(path, 0o600)
+            stream.write(json.dumps(row, ensure_ascii=False, separators=(',', ':')) + '\n')
+            stream.flush()
+            os.fsync(stream.fileno())
+        # Keep the ledger bounded even if a timer is left running for months.
+        if path.stat().st_size > 2 << 20:
+            lines = path.read_text(encoding='utf-8').splitlines()[-1000:]
+            temporary = path.with_suffix('.tmp')
+            temporary.write_text('\n'.join(lines) + ('\n' if lines else ''), encoding='utf-8')
+            os.chmod(temporary, 0o600)
+            os.replace(temporary, path)
+    except (OSError, ValueError, TypeError):
+        return False
+    return True
 
 
 def read_record(path):
@@ -95,7 +138,9 @@ def ingest_batch(db, stores, now, max_events=1000, seconds=20, review_limit=1000
     result = Counter()
     deadline = time.monotonic() + seconds
     cutoff = (now - timedelta(days=30)).isoformat()
-    pending = db.execute("SELECT COUNT(*) FROM review_jobs WHERE state='pending'").fetchone()[0]
+    pending = db.execute("""SELECT COUNT(*) FROM review_jobs j JOIN events e
+        ON e.region=j.region AND e.id=j.event_id
+        WHERE j.state='pending' AND e.kind='http_exchange'""").fetchone()[0]
     # Rotate the first store to avoid one busy region starving the other.
     order = list(stores)
     last = db.execute("SELECT at FROM ticks WHERE name='store_rotation'").fetchone()
@@ -136,7 +181,11 @@ def ingest_batch(db, stores, now, max_events=1000, seconds=20, review_limit=1000
                     db.execute('INSERT OR REPLACE INTO sources VALUES (?,?,?,?,?,?,?)',
                                (str(path), info.st_size, info.st_mtime_ns, digest, event['region'], event['id'], at))
                     db.execute('DELETE FROM source_failures WHERE path=?', (str(path),))
-                    if event['kind'] != 'websocket_connection':
+                    # A websocket message is a transport fragment, not a
+                    # complete task.  Queue only completed HTTP exchanges for
+                    # semantic replay; the raw websocket records remain in
+                    # the evidence store and continue to count in reports.
+                    if event['kind'] == 'http_exchange':
                         if pending < review_limit:
                             cursor = db.execute('INSERT OR IGNORE INTO review_jobs(region,event_id,source_path,sha,at) VALUES (?,?,?,?,?)',
                                                 (event['region'], event['id'], str(path), digest, at))
@@ -166,7 +215,7 @@ def replenish_review_queue(db, limit):
             SELECT s.region,s.event_id,s.path,s.sha,s.at FROM sources s
             JOIN events e ON e.region=s.region AND e.id=s.event_id
             LEFT JOIN review_jobs j ON j.region=s.region AND j.event_id=s.event_id
-            WHERE j.event_id IS NULL AND e.kind!='websocket_connection' ORDER BY s.at LIMIT ?''', (available,))
+            WHERE j.event_id IS NULL AND e.kind='http_exchange' ORDER BY s.at LIMIT ?''', (available,))
 
 
 def prune(db, now):
@@ -220,22 +269,40 @@ def tick(config, now=None, force=False):
         # Dedicated bounded analysis allocation, separate from collector buffers.
         analysis_bytes = sum(p.stat().st_size for p in root.iterdir() if p.is_file())
         if analysis_bytes >= config['analysis_bytes'] or shutil.disk_usage(root).free < 64 << 20:
-            result = {'at': now.isoformat(), 'status': 'degraded', 'reason': 'analysis_capacity_exhausted', 'complete_analysis_claim': False}
+            result = {'run_id': _run_id(now), 'at': now.isoformat(), 'status': 'degraded', 'reason': 'analysis_capacity_exhausted', 'complete_analysis_claim': False}
             health.atomic_json(root / 'tick.json', result)
+            _record_run(root, result)
             return result
         db = analyze.connect(root / 'index.sqlite')
         try:
             setup(db)
-            result = {'at': now.isoformat(), 'plane': 'actual', 'status': 'ok', 'body_copies_created': 0}
+            result = {'run_id': _run_id(now), 'at': now.isoformat(), 'plane': 'actual', 'status': 'ok', 'body_copies_created': 0}
             result['pruned'] = prune(db, now)
-            if due(db, 'hourly', now, timedelta(hours=1), force):
+            # The collector is continuous.  Index each new bounded slice on
+            # the same five-minute timer as the semantic worker instead of
+            # waiting for the old hourly catch-up window.  The scan cursor
+            # and ingest budget still make this safe when a store is busy.
+            ingest_interval = timedelta(seconds=config.get('ingest_interval_seconds', DEFAULT_INGEST_INTERVAL_SECONDS))
+            if due(db, 'ingest', now, ingest_interval, force):
                 result['incremental'] = ingest_batch(db, config['stores'], now, config['max_events'], config['max_seconds'], config['review_queue_limit'])
                 replenish_review_queue(db, config['review_queue_limit'])
-                # Continue budget-limited catch-up next five-minute tick.
+                # Continue budget-limited catch-up on the next five-minute
+                # tick.  A failed store must remain due so we do not silently
+                # advance the cursor and claim that the queue is current.
                 if not result['incremental'].get('budget_exhausted') and not result['incremental'].get('stores_unavailable'):
-                    mark(db, 'hourly', now)
+                    mark(db, 'ingest', now)
                 result['recent'] = analyze.report(db, now, 1)
-                health.atomic_json(root / 'hourly.json', result['recent'])
+                health.atomic_json(root / 'incremental.json', result['recent'])
+                # Flatten only body-free counters into the run ledger/UI.
+                result['scanned'] = result['incremental'].get('scanned', 0)
+                result['review_jobs_added'] = result['incremental'].get('review_jobs_added', 0)
+            # Keep the hourly report as a compatibility/reporting cadence. It
+            # no longer controls ingestion, so a slow or skipped report cannot
+            # delay new samples reaching the bounded semantic queue.
+            if due(db, 'hourly_report', now, timedelta(hours=1), force):
+                hourly = result.get('recent') or analyze.report(db, now, 1)
+                health.atomic_json(root / 'hourly.json', hourly)
+                mark(db, 'hourly_report', now)
             # Semantic replay is deliberately after ingestion and before the
             # daily report. It has its own bounded queue and can only call the
             # explicitly configured private Guard/Auto route-preview services.
@@ -249,21 +316,33 @@ def tick(config, now=None, force=False):
                     'semantic_auth_error': semantic_result.get('auth_error'),
                     'task_type_coverage': 'unknown'})
                 mark(db, 'daily', now)
-            result['review_pending'] = db.execute("SELECT COUNT(*) FROM review_jobs WHERE state='pending'").fetchone()[0]
+            result['review_pending'] = db.execute("""SELECT COUNT(*) FROM review_jobs j JOIN events e
+                ON e.region=j.region AND e.id=j.event_id
+                WHERE j.state='pending' AND e.kind='http_exchange'""").fetchone()[0]
             result['review_deferred'] = db.execute('''SELECT COUNT(*) FROM sources s JOIN events e ON e.region=s.region AND e.id=s.event_id
-                LEFT JOIN review_jobs j ON j.region=s.region AND j.event_id=s.event_id WHERE j.event_id IS NULL AND e.kind!='websocket_connection' ''').fetchone()[0]
+                LEFT JOIN review_jobs j ON j.region=s.region AND j.event_id=s.event_id WHERE j.event_id IS NULL AND e.kind='http_exchange' ''').fetchone()[0]
             result['invalid_sources'] = db.execute('SELECT COUNT(*) FROM source_failures').fetchone()[0]
             result['semantic_review'] = semantic_result['status']
             result['semantic_reviewed'] = semantic_result.get('complete', 0)
+            result['semantic_processed'] = semantic_result.get('processed', 0)
+            result['semantic_complete'] = semantic_result.get('complete', 0)
+            result['semantic_unavailable'] = semantic_result.get('unavailable', 0)
+            result['semantic_failed'] = semantic_result.get('failed', 0)
             result['semantic_pending'] = semantic_result.get('pending', 0)
+            result['semantic_deferred'] = semantic_result.get('deferred', 0)
+            result['semantic_guard_reused'] = semantic_result.get('guard_reused', 0)
+            result['semantic_auto_reused'] = semantic_result.get('auto_reused', 0)
             if semantic_result.get('auth_error'):
                 result['semantic_auth_error'] = semantic_result['auth_error']
+            if semantic_result.get('failed') or semantic_result.get('deferred'):
+                result['status'] = 'degraded'
             result['complete_analysis_claim'] = False
             if result['invalid_sources'] or result['review_deferred'] or any(r['status'] != 'ok' for r in health_reports):
                 result['status'] = 'degraded'
             db.commit()
             db.execute('PRAGMA wal_checkpoint(TRUNCATE)')
             health.atomic_json(root / 'tick.json', result)
+            _record_run(root, result)
             return result
         finally:
             db.close()
@@ -276,16 +355,30 @@ def read_config(path):
         config.setdefault(key, value)
         if type(config[key]) is not int or not 1 <= config[key] <= value:
             raise ValueError('invalid_analysis_limit')
+    config.setdefault('ingest_interval_seconds', DEFAULT_INGEST_INTERVAL_SECONDS)
+    if (type(config['ingest_interval_seconds']) is not int or
+            not 1 <= config['ingest_interval_seconds'] <= MAX_INGEST_INTERVAL_SECONDS):
+        raise ValueError('invalid_ingest_interval')
     semantic_config = config.setdefault('semantic', {})
     if not isinstance(semantic_config, dict):
         raise ValueError('invalid_semantic_config')
     semantic_config.setdefault('enabled', False)
     semantic_config.setdefault('timeout_seconds', 3)
     semantic_config.setdefault('max_jobs', 20)
+    semantic_config.setdefault('max_workers', semantic.DEFAULT_MAX_WORKERS)
+    semantic_config.setdefault('max_attempts', semantic.DEFAULT_MAX_ATTEMPTS)
+    semantic_config.setdefault('stage_reuse_ttl_seconds', semantic.DEFAULT_STAGE_REUSE_TTL_SECONDS)
     if type(semantic_config['enabled']) is not bool:
         raise ValueError('invalid_semantic_enabled')
     if type(semantic_config['max_jobs']) is not int or not 1 <= semantic_config['max_jobs'] <= 1000:
         raise ValueError('invalid_semantic_limit')
+    if type(semantic_config['max_workers']) is not int or not 1 <= semantic_config['max_workers'] <= semantic.MAX_WORKERS:
+        raise ValueError('invalid_semantic_workers')
+    if type(semantic_config['max_attempts']) is not int or not 1 <= semantic_config['max_attempts'] <= semantic.MAX_ATTEMPTS:
+        raise ValueError('invalid_max_attempts')
+    if (type(semantic_config['stage_reuse_ttl_seconds']) is not int or
+            not 0 <= semantic_config['stage_reuse_ttl_seconds'] <= semantic.MAX_STAGE_REUSE_TTL_SECONDS):
+        raise ValueError('invalid_stage_reuse_ttl')
     if type(semantic_config['timeout_seconds']) not in (int, float) or not 0.1 <= semantic_config['timeout_seconds'] <= 30:
         raise ValueError('invalid_semantic_timeout')
     if semantic_config['enabled']:
@@ -304,6 +397,9 @@ def read_config(path):
                 resolved.update(override)
                 if not resolved.get('guard_url') or not resolved.get('auto_url'):
                     raise ValueError('semantic_region_endpoints_required')
+                if (type(resolved.get('stage_reuse_ttl_seconds')) is not int or
+                        not 0 <= resolved['stage_reuse_ttl_seconds'] <= semantic.MAX_STAGE_REUSE_TTL_SECONDS):
+                    raise ValueError('invalid_stage_reuse_ttl')
                 semantic._local_url(resolved['guard_url'])
                 semantic._local_url(resolved['auto_url'])
                 for role in ('guard', 'auto'):

@@ -3,6 +3,7 @@
   "analysis_bytes": 2147483648,
   "max_events": 1000,
   "max_seconds": 20,
+  "ingest_interval_seconds": 300,
   "review_queue_limit": 10000,
   "semantic": {
     "enabled": false,
@@ -27,7 +28,10 @@
       }
     },
     "timeout_seconds": 3,
-    "max_jobs": 20
+    "max_jobs": 20,
+    "max_workers": 1,
+    "max_attempts": 3,
+    "stage_reuse_ttl_seconds": 3600
   },
   "stores": [
     {

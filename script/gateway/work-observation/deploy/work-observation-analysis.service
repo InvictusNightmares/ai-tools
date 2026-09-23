@@ -1,28 +1,25 @@
 [Unit]
-Description=Local work observation analysis (no network or business tools)
+Description=Work-observation rolling metadata and semantic review worker
+After=work-observation-analysis-token-sync.service
+Requires=work-observation-analysis-token-sync.service
 
 [Service]
 Type=oneshot
 User=work-observation
 Group=work-observation
-ExecStart=/usr/bin/python3 /opt/work-observation/current/tools/rolling.py --config /etc/work-observation/rolling.json
 UMask=0077
-Nice=15
-CPUQuota=25%
-MemoryMax=512M
-TasksMax=16
-TimeoutStartSec=90
-IOSchedulingClass=idle
+WorkingDirectory=/opt/work-observation/current
+ExecStart=/usr/bin/python3.11 /opt/work-observation/current/tools/rolling.py --config /etc/work-observation/rolling.json
 NoNewPrivileges=true
-ProtectSystem=strict
 ProtectHome=true
+ProtectSystem=strict
 PrivateTmp=true
 PrivateNetwork=false
-ReadOnlyPaths=/data/work-observation/tokyo /data/work-observation/us
-ReadWritePaths=/data/work-observation/analysis
-# The worker may call only loopback semantic-preview endpoints. The deny rule
-# keeps the analysis process from reaching public or production networks.
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
 IPAddressAllow=127.0.0.0/8
 IPAddressDeny=any
-RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
-LockPersonality=true
+ReadOnlyPaths=/etc/work-observation/rolling.json /data/work-observation/tokyo /data/work-observation/us /opt/work-observation/current
+ReadWritePaths=/data/work-observation/analysis
+
+[Install]
+WantedBy=multi-user.target

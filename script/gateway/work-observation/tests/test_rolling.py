@@ -10,6 +10,7 @@ from datetime import datetime, timedelta, timezone
 
 sys.path.insert(0, str(Path(__file__).parents[1] / 'tools'))
 import rolling as r
+import semantic
 
 
 class Rolling(unittest.TestCase):
@@ -58,6 +59,9 @@ class Rolling(unittest.TestCase):
         self.assertEqual(second['recent']['evidence_quality'], {'unknown': 1})
         self.assertEqual(second['recent']['cost_unknown_events'], 1)
         self.assertEqual(second['body_copies_created'], 0)
+        runs = (self.analysis / 'runs.jsonl').read_text()
+        self.assertIn('run_id', runs)
+        self.assertNotIn('RAW_BODY_NOT_IN_METADATA_DB', runs)
         db = self.db()
         try:
             self.assertNotIn('RAW_BODY_NOT_IN_METADATA_DB', ''.join(db.iterdump()))
@@ -96,6 +100,27 @@ class Rolling(unittest.TestCase):
         self.assertEqual(result['invalid_sources'], 2)
         self.assertEqual(result['recent']['events'], 0)
 
+    def test_websocket_fragments_are_kept_as_evidence_but_not_review_jobs(self):
+        self.record('ws-fragment', kind='websocket_message', outcome='observed')
+        result = r.tick(self.config, self.now)
+        self.assertEqual(result['review_pending'], 0)
+        db = self.db()
+        try:
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM events').fetchone()[0], 1)
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM review_jobs').fetchone()[0], 0)
+        finally:
+            db.close()
+
+    def test_auto_preview_normalizes_legacy_unknown_protocol_to_chat(self):
+        event = {
+            'protocol': 'other',
+            'request': {'raw_provider_field': 'ignored'},
+            'response': None,
+        }
+        payload = semantic.auto_payload(event)
+        self.assertEqual(payload['protocol'], 'chat')
+        self.assertEqual(payload['body']['messages'][0]['role'], 'user')
+
     def test_bounded_queue_deferred_without_losing_source_references(self):
         self.config['review_queue_limit'] = 1
         self.record('a')
@@ -125,14 +150,51 @@ class Rolling(unittest.TestCase):
         self.assertEqual(expired['review_pending'], 0)
         self.assertEqual(expired['pruned']['events'], 2)
 
-    def test_hourly_daily_cadence_and_concurrent_worker_lock(self):
+    def test_five_minute_ingest_and_hourly_report_cadence(self):
         self.record()
-        r.tick(self.config, self.now)
+        first = r.tick(self.config, self.now)
+        self.assertIn('incremental', first)
         second = r.tick(self.config, self.now + timedelta(minutes=5))
-        self.assertNotIn('incremental', second)
+        # Ingestion follows the five-minute timer.  The hourly report remains
+        # independently throttled and therefore is not rewritten here.
+        self.assertIn('incremental', second)
+        self.assertIn('recent', second)
+        db = self.db()
+        try:
+            self.assertEqual(db.execute("SELECT at FROM ticks WHERE name='hourly_report'").fetchone()[0], self.now.isoformat())
+        finally:
+            db.close()
         with (self.analysis / 'worker.lock').open('a') as lock:
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
             self.assertEqual(r.tick(self.config, self.now)['status'], 'already_running')
+
+    def test_ingest_interval_can_be_shortened_for_a_controlled_replay(self):
+        self.config['ingest_interval_seconds'] = 1
+        self.record()
+        first = r.tick(self.config, self.now)
+        self.record('late', at=(self.now + timedelta(seconds=2)).isoformat())
+        second = r.tick(self.config, self.now + timedelta(seconds=2))
+        self.assertEqual(first['review_pending'], 1)
+        self.assertEqual(second['review_pending'], 2)
+
+    def test_read_config_validates_continuous_ingest_interval(self):
+        path = self.root / 'rolling.json'
+        path.write_text(json.dumps(self.config))
+        loaded = r.read_config(path)
+        self.assertEqual(loaded['ingest_interval_seconds'], r.DEFAULT_INGEST_INTERVAL_SECONDS)
+        self.assertEqual(loaded['semantic']['max_workers'], semantic.DEFAULT_MAX_WORKERS)
+        invalid = dict(self.config, ingest_interval_seconds=0)
+        path.write_text(json.dumps(invalid))
+        with self.assertRaisesRegex(ValueError, 'invalid_ingest_interval'):
+            r.read_config(path)
+        invalid_semantic = dict(self.config, semantic={'enabled': False, 'max_workers': r.semantic.MAX_WORKERS + 1})
+        path.write_text(json.dumps(invalid_semantic))
+        with self.assertRaisesRegex(ValueError, 'invalid_semantic_workers'):
+            r.read_config(path)
+        invalid_ttl = dict(self.config, semantic={'enabled': False, 'stage_reuse_ttl_seconds': -1})
+        path.write_text(json.dumps(invalid_ttl))
+        with self.assertRaisesRegex(ValueError, 'invalid_stage_reuse_ttl'):
+            r.read_config(path)
 
     def test_time_bounded_scan_resumes_past_known_prefix_and_revisits_late_files(self):
         for n in range(9):self.record(f'known{n}')

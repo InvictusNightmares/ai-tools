@@ -1,14 +1,16 @@
 # 智能网关与 Guard 分阶段实施总计划
 
-文档更新：2026-09-20（R05/R06诊断；两地仍release v31，Auto v31/semantic-v10-r4，Guard复用v29/r19；work-observation candidate-r3 已仅作为采集旁路接入4000/4001）
+文档更新：2026-09-23（R05/R06诊断；两地仍release v31，Auto v31/semantic-v10-r4，Guard复用v29/r19；work-observation candidate-r3 已作为采集旁路接入4000/4001，离线复核页运行，分析 timer 暂停）
+
+**work-observation 固定集首轮归因（2026-09-23，只读）：** [200 条诊断报告](../../work-observation/docs/evidence/2026-09-23-diagnostic-200-review/README.md)已区分旧版离线 Auto 观测与 Guard→Auto 有效路径：155 条有结果，45 条未分析；Guard 放行 86 条中 Auto 返回模型 53、二次预检 403 有 4、技术不可用 29。历史 Auto 不可用 78 条的阶段错误为身份检查 503×44、分类器 503×20、无响应超时×14；Guard 非放行却仍带 Auto 结果的 69 条不得进入线上选型指标。Guard 拦截 58 条中，至少 12 条形状限制由离线请求混入模型回复触发；人工标签为 0，误拦和模型选型正确率尚不可计算。当前只继续采集与人工复核，不恢复全量语义回放、不训练或切换正式路由。
 
 **入口定位（2026-09-17 用户确认）：4004/4005 是可随时修改的多人测试入口。部分人员试用不代表正式切流；按发现问题→复现→修复→回归→更新测试入口持续迭代，保留失败证据和可回退制品，不额外等待正式入口审批。**
 
 **当前入口：东京4004、美西4005均已部署 Auto+Guard。4000/4001/4003及原Guard8011/vLLM8001的业务路由保持；4000/4001另有独立 work-observation 旁路采集，4000→18400、4001→18401，不改变Sub2API鉴权或Auto/Guard决策。**
 
-**2026-09-17新增已批准实施项：** 在不改变4000/4001业务鉴权及选型的前提下增加持续采集与滚动分析，独立放在[work-observation](../../work-observation/README.md)。用户后续明确改选GPU独立采集代理，Sub2API源码/镜像/升级流程不改；原两地缓冲和正文传输取消。用户最新确认：原始文本正文不脱敏、不做落盘加密，鉴权头不采集；正文30天滚动保留、附件仅元数据、GPU受限明文存储200GiB上限。采集核心是让Guard/Auto还原用户请求、模型回复、工具过程和后续纠正，开展完整上下文分析，不能以模型占比统计替代；内容契约见work-observation文档。5分钟检查、小时增量和每日报告。隔离验证和回退链路完成后，2026-09-20 已将采集旁路接到4000/4001内部转发，客户端地址不变；这仍不是正式Auto/Guard业务切流，semantic worker和训练调度保持关闭。
+**2026-09-17新增已批准实施项：** 在不改变4000/4001业务鉴权及选型的前提下增加持续采集与滚动分析，独立放在[work-observation](../../work-observation/README.md)。用户后续明确改选GPU独立采集代理，Sub2API源码/镜像/升级流程不改；原两地缓冲和正文传输取消。用户最新确认：原始文本正文不脱敏、不做落盘加密，鉴权头不采集；正文30天滚动保留、附件仅元数据、GPU受限明文存储200GiB上限。采集核心是让Guard/Auto还原用户请求、模型回复、工具过程和后续纠正，开展完整上下文分析，不能以模型占比统计替代；内容契约见work-observation文档。5分钟检查、小时增量和每日报告。隔离验证和回退链路完成后，2026-09-20 已将采集旁路接到4000/4001内部转发，客户端地址不变；2026-09-21 起 GPU 独立 semantic worker 与分析 timer 仅在离线平面运行，人工标签仍需独立验证后才能形成训练候选，绝不改变正式 Auto/Guard 业务切流。
 
-用户进一步要求**运行性能优先，不限定Go**。Rust/Pingora与Go代理基础对照已完成，完整采集的流式协议、p95、CPU、内存及丢失仍需验收；当前正式运行的是已通过隔离与回退验证的dev.9 candidate-r3，性能门槛仍未签收。[选型依据](../../work-observation/docs/性能选型.md)区分基础实验和完整采集验收。独立采集器的Go测试、race/vet和`CGO_ENABLED=0` Linux构建已在GPU隔离目录完成，详见[Go验证证据](../../work-observation/docs/evidence/2026-09-17-collector-r1/dev9-go-validation.json)。真实GPU smoke与Auto预览证据仍属于隔离分析平面；本地Guard/Auto语义worker默认关闭，正式8093/8094不承接采集流量。5分钟检查/小时增量/每日趋势模板未正式安装，正式200GiB同卷管理/导出生命周期、可靠完整上下文、WS远端压缩组合及发布回退仍需补齐。当前已有正式入口采集，但没有真实员工语义分析或训练结果，详见[work-observation阶段证据](../../work-observation/docs/evidence/2026-09-18-collector-r2/README.md)。
+用户进一步要求**运行性能优先，不限定Go**。Rust/Pingora与Go代理基础对照已完成，完整采集的流式协议、p95、CPU、内存及丢失仍需验收；当前正式运行的是已通过隔离与回退验证的dev.9 candidate-r3，性能门槛仍未签收。[选型依据](../../work-observation/docs/性能选型.md)区分基础实验和完整采集验收。独立采集器的Go测试、race/vet和`CGO_ENABLED=0` Linux构建已在GPU隔离目录完成，详见[Go验证证据](../../work-observation/docs/evidence/2026-09-17-collector-r1/dev9-go-validation.json)。真实GPU smoke与Auto预览证据仍属于隔离分析平面；仓库示例的Guard/Auto语义worker默认关闭，GPU正式配置通过5分钟分析 timer运行，正式8093/8094不承接采集流量。长期性能、正式200GiB同卷管理/导出生命周期、可靠完整上下文、WS远端压缩组合及发布回退仍需补齐。当前已有正式入口采集和离线语义分析，但没有自动训练或真实业务切流结论，详见[work-observation阶段证据](../../work-observation/docs/evidence/2026-09-18-collector-r2/README.md)。
 
 **当前新发现的未完成问题：** [R06](evidence/2026-09-17-guard-r06/README.md)付晓镇正常安装包分析被Qwen判为medium/Political，真实原请求复现；随后23次由24小时会话隔离直接拒绝。争议结果自动本地独立复核仅为待确认、待验证方案，尚未修复、部署或解除隔离。[R05](evidence/2026-09-17-codex-r05/README.md)夏斯建Windows CLI0.146.0超时仍未定位；health可达，同版macOS两种传输原生成功，不能替本人环境闭环。下述历史工作包通过范围不覆盖这两项新问题。
 

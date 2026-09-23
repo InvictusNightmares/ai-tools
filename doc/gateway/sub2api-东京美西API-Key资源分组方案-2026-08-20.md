@@ -9,6 +9,7 @@
 > 东京全量再分组：2026-09-15 17:31，Asia/Shanghai；4 个 20X、4 个 5X，112 人分入 8 组，25 个 Key 保留于 `codex-unused`
 > 美西新增 Key：2026-09-16，Key 87（王鑫，研发）已在 `codex-H`（group ID 450）
 > 东京新增统计 Key：2026-09-17，Key 144（曹敏敏，产品）已在 `codex-D`（group ID 200）
+> 东京新增 Key：2026-09-21，Key 147（谷甜颍）已在 `codex-C-4`；赵礼远沿用原有 Key 139
 > 数据窗口：最近 7 天与最近 30 天滚动窗口  
 > 数据来源：美西、东京 Sub2API PostgreSQL 线上只读查询  
 > 隐私边界：只使用账号 ID、Key ID、Key 名称和非敏感配置字段；未读取或记录 API Key、OAuth Token、账号密码、代理密码  
@@ -45,7 +46,7 @@ API Key
 | 节点 | 生产组 | 生产 Key | 隔离组 | 隔离 Key | 旧组 |
 | --- | --- | ---: | --- | ---: | --- |
 | 美西 | `codex-A` 至 `codex-H` | 74 | `codex-I`、`codex-J`、`codex-unused` | 2 | I/J 已停用；`codex-unused` 另有 2 个 active Key；旧组不参与路由 |
-| 东京 | `codex-A`、`codex-B`、`codex-C-1` 至 `codex-C-4`、`codex-D`、`codex-E` | 113 | `codex-unused` | 25 | 原 `codex-C` 与 8 个部门组 inactive |
+| 东京 | `codex-A`、`codex-B`、`codex-C-1` 至 `codex-C-4`、`codex-D`、`codex-E` | 114 | `codex-unused` | 25 | 原 `codex-C` 与 8 个部门组 inactive |
 
 初次分组回滚备份位于两台服务器的 `/opt/sub2api-deploy/backups/sub2api-grouping-20260820-1455/`。2026-08-24 美西再分组备份位于 `/opt/sub2api-deploy/backups/sub2api-grouping-20260824-144930/`。备份只包含分组、账号关联、OAuth 账号非敏感状态和 Key ID/分组/状态映射，不包含 Key 值或 OAuth 凭据。
 
@@ -76,7 +77,7 @@ API Key
 | 生产 OAuth | 8 个：20X/`pro` 账号 8、16、20、28；5X/`prolite` 账号 24、25、26、27，均 active、可调度 |
 | 新增账号 | 28，绑定新建 `codex-E`（group ID 728） |
 | 共享 API 模型账号 | 22、23，保留在各生产组与 `codex-unused` |
-| 当前 active Key | 138 个：生产 113，`codex-unused` 25 |
+| 当前 active Key | 139 个：生产 114，`codex-unused` 25 |
 | 本次隔离 | 6 个最近 30 天无成功记录的 Key，以及用户指定的 `test`（141）；均保留 active |
 | 原隔离 Key | 18 个继续保留；其中 4、78 仅有共享模型成功记录，不自动恢复 Codex 分配 |
 | 账号关系 | 每个生产组只有 1 个独立 OAuth；原 `codex-C` 仍 inactive、无账号关联 |
@@ -224,7 +225,7 @@ API Key
 
 ## 7. 东京 Key 明细映射（2026-09-15 手动调整后）
 
-按 2026-09-15 17:51 东京后台分组同步成员名单；2026-09-17 增量加入 Key 144（曹敏敏，产品）到 `codex-D`；其他章节的负载方案保留原测算。
+按 2026-09-15 17:51 东京后台分组同步成员名单；2026-09-17 增量加入 Key 144（曹敏敏，产品）到 `codex-D`；2026-09-21 增量加入 Key 147（谷甜颍）到 `codex-C-4`，赵礼远沿用原有 Key 139；其他章节的负载方案保留原测算。
 
 ### codex-A → OAuth 账号 8（23 人）
 
@@ -246,9 +247,9 @@ API Key
 
 `30` 李章飞、`36` 邓杰、`65` 王汉东、`86` 顾亚辉、`93` 刘小龙。
 
-### codex-C-4 → OAuth 账号 27（5 人）
+### codex-C-4 → OAuth 账号 27（6 人）
 
-`28` 张森、`68` 章浩、`100` 梁波、`121` 万文珺、`136` 李鹏。
+`28` 张森、`68` 章浩、`100` 梁波、`121` 万文珺、`136` 李鹏、`147` 谷甜颍。
 
 ### codex-D → OAuth 账号 20（23 人）
 
@@ -356,7 +357,7 @@ API Key
 - 每个生产 Key 的 Codex/GPT 请求只能出现在本组唯一 OAuth `account_id` 中。
 - 同一 Key 使用 DeepSeek/其他模型而命中共享 API 账号不算“一个人用多个 Codex 账号”。
 - 美西可用 Pro 组的规划负载按近 7/30 天窗口复核；当前 C/D/F 各 10 个 Key、H 为 11 个，其余可用组为 8、8、9、8；H 组超过此前 10 人的建议上限，下一次复核时优先评估。
-- 东京当前生产组 Key 数为 A/B/C-1/C-2/C-3/C-4/D/E：23/23/6/6/5/5/23/22；全部生产组只有一个 OAuth，25 个 active Key 保留在 `codex-unused`。
+- 东京当前生产组 Key 数为 A/B/C-1/C-2/C-3/C-4/D/E：23/23/6/6/5/6/23/22；全部生产组只有一个 OAuth，25 个 active Key 保留在 `codex-unused`。
 - 除明确隔离的 `codex-unused` 外，本次 I/J 已无 active Key；仍有历史 active Key 74、81 指向 inactive 的 `研发Codex`、`研发Grok`，需单独清理；`codex-unused` 的共享 API 账号关联也需单独清理。
 - 共享 API 账号不能接收 GPT/Codex；需要检查模型路由和实际 `usage_logs.account_id`。
 - 实时复核为美西 `codex-unused` 2 个 active Key（46、52）、东京 25 个；两地均仍有共享 API 账号关联，清理完成后才满足“无账号隔离组”。

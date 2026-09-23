@@ -1,0 +1,34 @@
+[Unit]
+Description=Standalone work-observation human review dashboard
+After=work-observation-analysis.timer
+Wants=work-observation-analysis.timer
+
+[Service]
+Type=simple
+User=work-observation
+Group=work-observation
+UMask=0077
+ExecStart=/usr/bin/python3.11 /opt/work-observation/current/tools/review_dashboard.py \
+  --analysis-db /data/work-observation/analysis/index.sqlite \
+  --store tokyo=/data/work-observation/tokyo \
+  --store us=/data/work-observation/us \
+  --gray-lane tokyo=4004 \
+  --gray-lane us=4005 \
+  --static-root /opt/work-observation/current/review \
+  --host 127.0.0.1 --port 8765
+Restart=on-failure
+RestartSec=3s
+TimeoutStartSec=20s
+NoNewPrivileges=true
+ProtectHome=true
+ProtectSystem=strict
+PrivateTmp=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+IPAddressAllow=127.0.0.0/8
+IPAddressDeny=any
+ReadOnlyPaths=/data/work-observation/tokyo /data/work-observation/us /data/work-observation/analysis/index.sqlite /opt/work-observation/current/review
+ReadWritePaths=/data/work-observation/analysis
+LockPersonality=true
+
+[Install]
+WantedBy=multi-user.target

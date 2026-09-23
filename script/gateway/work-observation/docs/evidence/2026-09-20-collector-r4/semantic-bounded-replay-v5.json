@@ -1,0 +1,42 @@
+{
+  "schema": "work-observation-semantic-bounded-replay-v5",
+  "at": "2026-09-20",
+  "plane": "offline_analysis",
+  "release": "/opt/work-observation/releases/observation-review-20260920-v5",
+  "semantic_sha256": "5dad38212846626768a80fd38faff6f6a69bb3117fd5262369f785a5e0d657cf",
+  "replay": {
+    "mode": "bounded_request_context",
+    "max_message_bytes": 49152,
+    "max_messages_bytes": 327680,
+    "max_tools_bytes": 49152,
+    "max_structured_bytes": 32768,
+    "max_envelope_bytes": 393216,
+    "response_in_normal_request_replay": false,
+    "legacy_empty_request_fallback": "event_messages_with_explicit_metadata",
+    "protocols": ["chat", "responses", "anthropic"]
+  },
+  "validation": {
+    "python_tests_passed": 72,
+    "python_tests_skipped": 1,
+    "node_check": "passed",
+    "py_compile": "passed",
+    "git_diff_check": "passed"
+  },
+  "batches": [
+    {"run_id": "20260920-093946", "processed": 20, "complete": 13, "unavailable": 7, "failed": 0},
+    {"run_id": "20260920-094500", "processed": 20, "complete": 10, "unavailable": 10, "failed": 0},
+    {"run_id": "20260920-095000", "processed": 20, "complete": 13, "unavailable": 7, "failed": 0},
+    {"run_id": "20260920-095500", "processed": 20, "complete": 11, "unavailable": 9, "failed": 0}
+  ],
+  "private_endpoints": {
+    "tokyo_guard": {"url": "127.0.0.1:8013", "health_http": 200},
+    "us_guard": {"url": "127.0.0.1:8014", "health_http": 200},
+    "tokyo_auto_preview": {"url": "127.0.0.1:8095", "health_http": 200},
+    "us_auto_preview": {"url": "127.0.0.1:8096", "health_http": 200}
+  },
+  "formal_lanes_unchanged": {
+    "tokyo": {"ingress": 4000, "collector_namespace_probe": 18400, "health_http": 200},
+    "us": {"ingress": 4001, "collector_namespace_probe": 18401, "health_http": 200}
+  },
+  "content_or_credentials_in_evidence": false
+}
