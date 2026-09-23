@@ -21,6 +21,12 @@ func TestPolicyUpdateRollbackSchemaBoundary(t *testing.T) {
 	}
 	require.True(t, policyRollbackCompatible("0.2.4+policy-log.9", "0.2.4+policy-log.8"))
 	require.True(t, policyRollbackCompatible("0.2.1+policy-log.7", "0.2.0+policy-log.6"))
+	for _, target := range []string{"0.2.4+policy-log.8", "0.2.5+policy-log.9"} {
+		require.False(t, policyRollbackCompatible("0.2.7+policy-log.9", target))
+		s := NewUpdateService(nil, nil, "0.2.7+policy-log.9", "release")
+		require.ErrorContains(t, s.installPolicyUpdate(context.Background(), target), "数据库")
+	}
+	require.True(t, policyRollbackCompatible("0.2.7+policy-log.10", "0.2.7+policy-log.9"))
 }
 
 func policyFixture(t *testing.T) (string, string, policyRelease) {

@@ -145,9 +145,13 @@ func (s *UpdateService) policyRollbackVersions() ([]RollbackVersion, error) {
 	return result, nil
 }
 
-// Migration 235 renames the group model column. Older binaries cannot read the
-// upgraded schema; restoring them requires an operator-led database restore.
+// Migration 235 renames the group model column. Migration 238 adds OpenCode GO
+// platform constraints and removes unlimited quota rows. Binary-only rollback
+// across either boundary is unverified; restore the matching database as well.
 func policyRollbackCompatible(current, target string) bool {
+	if comparePolicyVersions(current, "0.2.7+policy-log.0") >= 0 {
+		return comparePolicyVersions(target, "0.2.7+policy-log.0") >= 0
+	}
 	return comparePolicyVersions(current, "0.2.4+policy-log.0") < 0 ||
 		comparePolicyVersions(target, "0.2.4+policy-log.0") >= 0
 }

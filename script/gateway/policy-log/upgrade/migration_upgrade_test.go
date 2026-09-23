@@ -36,6 +36,15 @@ func TestPolicyMigrationUpgradeFrom020(t *testing.T) {
 		VALUES ('policy-upgrade-fixture', '{"enabled":false,"models":["fixture-model"]}'),
 		('policy-enabled-fixture', '{"enabled":true,"models":["gpt-5.6-sol","gpt-image-2"]}')`)
 	require.NoError(t, err)
+	var fixtureUserID int64
+	require.NoError(t, db.QueryRowContext(ctx, `INSERT INTO users (email, password_hash)
+		VALUES ('policy-migration@example.invalid', 'fixture') RETURNING id`).Scan(&fixtureUserID))
+	_, err = db.ExecContext(ctx, `INSERT INTO user_platform_quotas
+		(user_id, platform, daily_limit_usd, weekly_limit_usd, deleted_at)
+		VALUES ($1, 'openai', NULL, NULL, NULL),
+		       ($1, 'anthropic', 0, NULL, NULL),
+		       ($1, 'gemini', NULL, 1, NOW())`, fixtureUserID)
+	require.NoError(t, err)
 	var before string
 	require.NoError(t, db.QueryRowContext(ctx, `SELECT models_list_config::text FROM groups WHERE name='policy-upgrade-fixture'`).Scan(&before))
 	require.NoError(t, ApplyMigrations(ctx, db))
@@ -62,4 +71,23 @@ func TestPolicyMigrationUpgradeFrom020(t *testing.T) {
 	var minimaxAllowed bool
 	require.NoError(t, db.QueryRowContext(ctx, `SELECT position('minimax' IN pg_get_constraintdef(oid)) > 0 FROM pg_constraint WHERE conname='user_platform_quotas_platform_check'`).Scan(&minimaxAllowed))
 	require.True(t, minimaxAllowed)
+	var upgradedConstraints int
+	require.NoError(t, db.QueryRowContext(ctx, `SELECT COUNT(*) FROM pg_constraint WHERE conname IN
+		('user_platform_quotas_platform_check', 'composite_model_routes_target_platform_check',
+		 'channel_monitors_provider_check', 'channel_monitor_request_templates_provider_check')
+		AND position('opencode_go' IN pg_get_constraintdef(oid)) > 0`).Scan(&upgradedConstraints))
+	require.Equal(t, 4, upgradedConstraints)
+	var applied238 int
+	require.NoError(t, db.QueryRowContext(ctx, `SELECT COUNT(*) FROM schema_migrations WHERE filename IN
+		('238_opencode_go_platform.sql', '238_purge_unlimited_user_platform_quotas.sql')`).Scan(&applied238))
+	require.Equal(t, 2, applied238)
+	var unlimited, disabled, softDeleted int
+	require.NoError(t, db.QueryRowContext(ctx, `SELECT
+		COUNT(*) FILTER (WHERE platform='openai'),
+		COUNT(*) FILTER (WHERE platform='anthropic' AND daily_limit_usd=0),
+		COUNT(*) FILTER (WHERE platform='gemini' AND weekly_limit_usd=1 AND deleted_at IS NOT NULL)
+		FROM user_platform_quotas WHERE user_id=$1`, fixtureUserID).Scan(&unlimited, &disabled, &softDeleted))
+	require.Zero(t, unlimited, "only rows with all three limits NULL are purged")
+	require.Equal(t, 1, disabled, "an explicit zero limit remains")
+	require.Equal(t, 1, softDeleted, "historical rows with a limit remain")
 }
