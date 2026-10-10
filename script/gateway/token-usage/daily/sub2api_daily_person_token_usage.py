@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Generate the daily AI gateway business-group and person token workbook.
 
-Current resource groups no longer represent the reporting organization,
-so API Key IDs are joined to a separately maintained business-group mapping.
+West personal-account usage belongs to 研发, independently of resource groups.
+Tokyo and legacy administrator-owned Keys use the maintained business mapping.
 API Key secrets are never selected, stored, or exported.
 
 The default report covers yesterday in Asia/Shanghai, excludes 张成 and the
@@ -48,10 +48,16 @@ class ServerConfig:
     postgres_container: str = "sub2api-postgres"
     postgres_user: str = "sub2api"
     postgres_database: str = "sub2api"
+    personal_accounts: bool = False
 
 
 SERVERS = {
-    "west": ServerConfig("west", "美西", "qiyuan-us"),
+    "west": ServerConfig(
+        "west", "美西", "qiyuan-us",
+        postgres_container="sub2api-next-postgres",
+        postgres_database="sub2api_next",
+        personal_accounts=True,
+    ),
     "tokyo": ServerConfig("tokyo", "东京", "qiyuan-tokyo"),
 }
 
@@ -65,6 +71,15 @@ TOKEN_COLUMNS = (
     "total_tokens",
     "total_tokens_with_image",
 )
+USAGE_COLUMNS = (
+    "usage_date", "api_key_id", "person_name", "person_user_id", "key_name",
+    "models", "request_count", *TOKEN_COLUMNS, "actual_cost",
+)
+PERSON_DEFINITION = (
+    "美西按用量记录的个人账号归属汇总，统一归入研发；东京沿用 Key 姓名及业务组映射。"
+    "同组同名跨节点合并；美西同名不同账号分别统计。"
+)
+MAPPING_SOURCE = "美西个人账号统一归入研发；历史管理员 Key 和东京沿用人员业务组映射"
 
 BUSINESS_GROUP_ALIASES = {"研发Codex": "研发"}
 ALWAYS_EXCLUDED_GROUPS = ("研发Claude",)
@@ -125,7 +140,7 @@ def parse_args() -> argparse.Namespace:
         action="append",
         default=[],
         metavar="NAME",
-        help="额外按 API Key 显示名称精确排除人员；可重复，始终排除张成。",
+        help="额外按人员姓名精确排除；美西取账号姓名、东京取 Key 姓名，始终排除张成。",
     )
     parser.add_argument(
         "--exclude-group",
@@ -226,6 +241,8 @@ def build_usage_sql(
     end_date: str,
     timezone: str,
     excluded_people: list[str],
+    *,
+    server: ServerConfig,
 ) -> str:
     """Build a read-only grouped query; raw request rows stay on the server."""
 
@@ -233,9 +250,23 @@ def build_usage_sql(
     end_exclusive = (date.fromisoformat(end_date) + timedelta(days=1)).isoformat()
     end_literal = sql_literal(end_exclusive)
     timezone_literal = sql_literal(timezone)
-    person_expression = (
+    key_name_expression = (
         "COALESCE(NULLIF(BTRIM(k.name), ''), 'key-' || ul.api_key_id::text)"
     )
+    person_expression = key_name_expression
+    person_user_id_expression = "NULL::bigint"
+    user_join = ""
+    if server.personal_accounts:
+        # The ledger owner also preserves history when a Key is deleted or moved.
+        # Legacy administrator-owned rows still use their historical Key mapping.
+        user_join = "\nLEFT JOIN public.users AS u ON u.id = ul.user_id"
+        person_expression = (
+            "CASE WHEN u.role = 'user' THEN "
+            "COALESCE(NULLIF(BTRIM(u.username), ''), "
+            "NULLIF(split_part(u.email, '@', 1), ''), 'user-' || u.id::text) "
+            f"ELSE {key_name_expression} END"
+        )
+        person_user_id_expression = "CASE WHEN u.role = 'user' THEN u.id END"
     exclude_clause = ""
     if excluded_people:
         excluded_sql = ", ".join(sql_literal(name) for name in excluded_people)
@@ -246,6 +277,8 @@ SELECT
     (ul.created_at AT TIME ZONE {timezone_literal})::date AS usage_date,
     ul.api_key_id,
     {person_expression} AS person_name,
+    {person_user_id_expression} AS person_user_id,
+    {key_name_expression} AS key_name,
     COALESCE(
         string_agg(
             DISTINCT COALESCE(
@@ -285,10 +318,10 @@ SELECT
     ), 0)::bigint AS total_tokens_with_image,
     COALESCE(SUM(ul.actual_cost), 0)::numeric AS actual_cost
 FROM public.usage_logs AS ul
-LEFT JOIN public.api_keys AS k ON k.id = ul.api_key_id
+LEFT JOIN public.api_keys AS k ON k.id = ul.api_key_id{user_join}
 WHERE ul.created_at >= (DATE {start_literal} AT TIME ZONE {timezone_literal})
   AND ul.created_at < (DATE {end_literal} AT TIME ZONE {timezone_literal}){exclude_clause}
-GROUP BY 1, 2, 3
+GROUP BY 1, 2, 3, 4, 5
 ORDER BY usage_date, person_name, api_key_id
 ) TO STDOUT WITH (FORMAT CSV, HEADER true);
 """
@@ -337,11 +370,18 @@ def query_server(
         )
 
     try:
-        rows = list(csv.DictReader(io.StringIO(completed.stdout)))
+        reader = csv.DictReader(io.StringIO(completed.stdout), strict=True)
+        if tuple(reader.fieldnames or ()) != USAGE_COLUMNS:
+            # The SSH bastion can return exit 0 with a one-line Docker error on
+            # stdout. Even a genuine empty day must contain the complete header.
+            raise RuntimeError(
+                f"{server.display_name} 未返回有效用量 CSV 表头，不能按零用量处理。"
+            )
+        rows = list(reader)
     except csv.Error as exc:
         raise RuntimeError(f"解析 {server.display_name} 的 CSV 结果失败：{exc}") from exc
-    if rows and "usage_date" not in rows[0]:
-        raise RuntimeError(f"{server.display_name} 返回结果缺少 usage_date 列。")
+    if any(None in row or any(value is None for value in row.values()) for row in rows):
+        raise RuntimeError(f"{server.display_name} 的用量 CSV 行不完整，不能生成报表。")
     return server, rows
 
 
@@ -424,13 +464,26 @@ def build_reports(
 ) -> dict[str, Any]:
     summary_groups: dict[str, dict[str, Any]] = {}
     business_groups: dict[tuple[str, str], dict[str, Any]] = {}
-    person_groups: dict[tuple[str, str], dict[str, Any]] = {}
+    person_groups: dict[tuple[str, ...], dict[str, Any]] = {}
+    key_daily: list[dict[str, Any]] = []
     unmapped: dict[tuple[str, str], dict[str, str]] = {}
     name_mismatches: dict[tuple[str, str], dict[str, str]] = {}
     excluded_group_usage: dict[str, Any] = {
         "_key_ids": set(),
         **new_metric_bucket(),
     }
+
+    # Keep the existing cross-region person totals, but never merge two West
+    # accounts merely because their display names happen to be identical.
+    owners_by_name: dict[tuple[str, str], set[tuple[str, str]]] = {}
+    for server_key, (server, rows) in server_rows.items():
+        if not server.personal_accounts:
+            continue
+        for source in rows:
+            owner_id = str(source.get("person_user_id") or "").strip()
+            if owner_id:
+                name = source.get("person_name", "").strip()
+                owners_by_name.setdefault(("研发", name), set()).add((server_key, owner_id))
 
     for server_key, (server, _) in server_rows.items():
         summary_groups[server_key] = {
@@ -449,7 +502,12 @@ def build_reports(
             )
             key_identity = (server_key, api_key_id)
             mapping_row = mapping.get(key_identity)
+            owner_id = (
+                str(source.get("person_user_id") or "").strip()
+                if server.personal_accounts else ""
+            )
             historical_group = (
+                "研发" if owner_id else
                 mapping_row["business_group"] if mapping_row else "未映射"
             )
             business_group = BUSINESS_GROUP_ALIASES.get(
@@ -462,18 +520,22 @@ def build_reports(
                 "api_key_id": api_key_id,
                 "person_name": person_name,
                 "business_group": business_group,
+                "person_user_id": owner_id,
+                "usage_date": source.get("usage_date", ""),
+                "key_name": source.get("key_name", person_name),
+                "models": source.get("models", ""),
             }
             for field in ("request_count", *TOKEN_COLUMNS):
                 typed[field] = integer(source, field)
             typed["actual_cost"] = decimal(source, "actual_cost")
 
-            if mapping_row is None:
+            if not owner_id and mapping_row is None:
                 unmapped[key_identity] = {
                     "server": server.display_name,
                     "api_key_id": api_key_id,
                     "person_name": person_name,
                 }
-            elif mapping_row["person_name"] != person_name:
+            elif not owner_id and mapping_row["person_name"] != person_name:
                 name_mismatches[key_identity] = {
                     "server": server.display_name,
                     "api_key_id": api_key_id,
@@ -486,10 +548,20 @@ def build_reports(
                 add_metrics(excluded_group_usage, typed)
                 continue
 
+            key_daily.append(typed)
+
+            matching_owners = owners_by_name.get((business_group, person_name), set())
+            if owner_id:
+                person_key = ("user", server_key, owner_id)
+            elif len(matching_owners) == 1:
+                person_key = ("user", *next(iter(matching_owners)))
+            else:
+                person_key = ("legacy", business_group, person_name)
+
             summary = summary_groups[server_key]
             summary["_groups"].add(business_group)
             summary["_key_ids"].add(key_identity)
-            summary["_people"].add(person_name)
+            summary["_people"].add(person_key)
             add_metrics(summary, typed)
 
             group_key = (server_key, business_group)
@@ -504,10 +576,9 @@ def build_reports(
                 },
             )
             group["_key_ids"].add(key_identity)
-            group["_people"].add(person_name)
+            group["_people"].add(person_key)
             add_metrics(group, typed)
 
-            person_key = (business_group, person_name)
             person = person_groups.setdefault(
                 person_key,
                 {
@@ -550,6 +621,7 @@ def build_reports(
         "summary": summary,
         "per_group": per_group,
         "per_person": per_person,
+        "key_daily": key_daily,
         "unmapped": list(unmapped.values()),
         "name_mismatches": list(name_mismatches.values()),
         "excluded_group_usage": excluded_group_usage,
@@ -1053,18 +1125,18 @@ def main() -> int:
     print(f"业务组映射: {len(mapping)} 个 Key", file=sys.stderr)
 
     servers = selected_servers(args.server)
-    sql = build_usage_sql(
-        args.start_date,
-        args.end_date,
-        args.timezone,
-        args.exclude_person,
-    )
-
     results: dict[str, tuple[ServerConfig, list[dict[str, str]]]] = {}
     errors: dict[str, str] = {}
     with ThreadPoolExecutor(max_workers=len(servers)) as executor:
         futures = {
-            executor.submit(query_server, server, sql, args.timeout_seconds): server
+            executor.submit(
+                query_server, server,
+                build_usage_sql(
+                    args.start_date, args.end_date, args.timezone,
+                    args.exclude_person, server=server,
+                ),
+                args.timeout_seconds,
+            ): server
             for server in servers
         }
         for future in as_completed(futures):
@@ -1111,12 +1183,9 @@ def main() -> int:
         "group_aliases": BUSINESS_GROUP_ALIASES,
         "mapping_file": str(args.mapping_file.expanduser().resolve()),
         "mapping_key_count": len(mapping),
-        "mapping_source": (
-            "qiyuan-us / qiyuan-tokyo business-group mapping backup snapshot "
-            "2026-08-20"
-        ),
+        "mapping_source": MAPPING_SOURCE,
         "template_url": "https://docs.qq.com/sheet/DVndmU1dRZmNJdm1w?tab=000001",
-        "person_definition": "按 API Key 显示名称识别人；同名 Key 合并",
+        "person_definition": PERSON_DEFINITION,
         "token_definition": {
             "total_tokens": "input + output + cache_creation + cache_read",
             "total_tokens_with_image": "total_tokens + image_input + image_output",
@@ -1143,6 +1212,7 @@ def main() -> int:
         "summary": reports["summary"],
         "per_group": reports["per_group"],
         "per_person": reports["per_person"],
+        "key_daily": reports["key_daily"],
     }
     write_workbook(payload, output_path)
     print(f"已写入 {output_path}", file=sys.stderr)

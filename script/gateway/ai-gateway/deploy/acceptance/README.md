@@ -7,7 +7,7 @@
 | 东京 | 192.168.64.16:4004 | 8093 / 8013 | 106.14.254.110:9881 | /data/ai-gateway/acceptance-tokyo |
 | 美西 | 192.168.64.16:4005 | 8094 / 8014 | 106.14.254.110:9880 | /data/ai-gateway/acceptance-us |
 
-当前两地release、Auto/Guard各自二进制版本及区域验收结果以总计划和运行目录current-release.json为准；Guard规则修复仅重建Guard，复用未变化的Auto。两地上游既有23:00–06:30停用策略保持。当前验收进度与制品哈希见总计划及CHANGELOG。
+当前两地release、Auto/Guard各自二进制版本及区域验收结果以总计划和运行目录current-release.json为准；Guard规则修复仅重建Guard，复用未变化的Auto。2026-10-10 起，美西 Sub2API 上游全天开放，继续执行鉴权和个人额度；东京上游仍按北京时间 23:00–次日 06:30 限制普通 Key，林枝 Key 9 保留全天例外。当前验收进度与制品哈希见总计划及CHANGELOG。
 
 ## 认证与缓存
 

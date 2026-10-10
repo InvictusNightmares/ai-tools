@@ -25,6 +25,12 @@ AI Gateway 的统一变更账本。当前状态和待办见[实施总计划](智
 
 ## Unreleased
 
+### 2026-10-10 09:55 / 美西上游取消夜间限制，已生效
+
+- 用户要求美西个人额度启用后全天可用。仅将美西 `/opt/sub2api-next/gateway/nginx.conf` 的夜间判定改为恒定关闭并热加载；东京 4000 的 23:00–次日 06:30 限制及林枝 Key 9 的全天例外保持。GPU 转发配置、Auto/Guard 二进制、业务路由、缓存、原生鉴权和额度均未修改。
+- 隔离模拟 23:30：美西普通有效 Key 从夜间 503 变为模型目录 200，无 Key／伪造 Key 为 401；东京普通 Key 仍为 503，林枝 Bearer／X-API-Key 均为 200，06:30 普通 Key 恢复 200。`nginx -t`、正式 GPU 4000／4001 的健康、登录页、公开设置和无 Key 鉴权检查通过；东京配置及林枝名单校验值未变，正式容器均未因本次操作重启。
+- 仅验证时段、模型目录鉴权和入口连通，没有新增模型推理、额度写入或 Go 回归。回退该配置会恢复美西夜间 503，不涉及数据库或缓存迁移；临时测试容器与本次配置回退副本验收后清理，保留美西 `ops/night-access-policy-20261010.json` 脱敏摘要。本项无待完成部署动作。
+
 ### 2026-09-18 / 独立采集 dev.9 GPU Go 回归
 
 - 缺失账本改动已同步到 GPU 隔离目录；`golang:1.27.1-bookworm` 中的 gofmt、`go test -race ./source/... ./cmd/...`、`go vet ./source/... ./cmd/...` 和 `CGO_ENABLED=0 go build` 全部通过，远端退出标记为 `__WO_EXIT__=0`。证据见 [`dev9-go-validation.json`](../../work-observation/docs/evidence/2026-09-17-collector-r1/dev9-go-validation.json)，未接入4000/4001、4004/4005或Sub2API。

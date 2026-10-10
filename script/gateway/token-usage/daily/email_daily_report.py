@@ -40,6 +40,8 @@ from sub2api_daily_person_token_usage import (
     ALWAYS_EXCLUDED_GROUPS,
     BUSINESS_GROUP_ALIASES,
     DEFAULT_MAPPING_FILE,
+    MAPPING_SOURCE,
+    PERSON_DEFINITION,
     SERVERS,
     build_reports,
     build_usage_sql,
@@ -818,10 +820,8 @@ def _metadata_payload(
         "excluded_groups": list(ALWAYS_EXCLUDED_GROUPS),
         "group_aliases": BUSINESS_GROUP_ALIASES,
         "mapping_key_count": len(mapping),
-        "mapping_source": (
-            "2026-08-20 business-group mapping backup snapshot; "
-            "maintained west/86 闫志豪→研发Codex"
-        ),
+        "mapping_source": MAPPING_SOURCE,
+        "person_definition": PERSON_DEFINITION,
         "servers": [
             {
                 "key": server.key,
@@ -854,14 +854,20 @@ def main() -> int:
 
     mapping = load_group_mapping(args.mapping_file)
     servers = list(SERVERS.values())
-    sql = build_usage_sql(args.start_date, args.end_date, args.timezone, ["张成"])
     results: dict[str, tuple[Any, list[dict[str, str]]]] = {}
     errors: dict[str, str] = {}
     from concurrent.futures import ThreadPoolExecutor, as_completed
 
     with ThreadPoolExecutor(max_workers=len(servers)) as executor:
         futures = {
-            executor.submit(_query_with_retry, server, sql, args.timeout_seconds): server
+            executor.submit(
+                _query_with_retry, server,
+                build_usage_sql(
+                    args.start_date, args.end_date, args.timezone,
+                    ["张成"], server=server,
+                ),
+                args.timeout_seconds,
+            ): server
             for server in servers
         }
         for future in as_completed(futures):
@@ -887,6 +893,7 @@ def main() -> int:
         "summary": reports["summary"],
         "per_group": reports["per_group"],
         "per_person": reports["per_person"],
+        "key_daily": reports["key_daily"],
     }
     print(
         f"业务映射：{len(mapping)} 条；未映射有用量 Key：{len(reports['unmapped'])}；"
