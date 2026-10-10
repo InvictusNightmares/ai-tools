@@ -14,7 +14,7 @@ installer_spec.loader.exec_module(installer)
 
 
 class MergeTests(unittest.TestCase):
-    def test_each_node_receives_package_without_peer_dependency(self):
+    def test_only_tokyo_receives_package_after_west_retirement(self):
         import tarfile
         with tempfile.TemporaryDirectory() as tmp:
             home = Path(tmp)
@@ -22,7 +22,7 @@ class MergeTests(unittest.TestCase):
             binary.mkdir()
             (binary / 'sub2api').write_bytes(b'verified binary fixture')
             (binary / 'release.json').write_text('{}')
-            for failed_node in (None, 'qiyuan-us'):
+            for failed_node in (None, 'qiyuan-tokyo'):
                 calls = []
                 def send(args, **kwargs):
                     self.assertIn('stdin', kwargs, 'each node receives its own package via SSH')
@@ -38,7 +38,7 @@ class MergeTests(unittest.TestCase):
                             builder.stage(home, {'status':'ready','releases':[]}, binary, {})
                     else:
                         builder.stage(home, {'status':'ready','releases':[]}, binary, {})
-                self.assertEqual(calls, ['qiyuan-us', 'qiyuan-tokyo'])
+                self.assertEqual(calls, ['qiyuan-tokyo'])
 
     def test_incomplete_catalog_refresh_keeps_previously_delivered_artifacts(self):
         import io

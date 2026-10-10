@@ -1,0 +1,101 @@
+{
+  "date": "2026-10-10",
+  "archive_sha256": "3170d715bfdc110f90045c600704f2c6c378235b66b953bcf15ca53233ab98bd",
+  "source_manifest_sha256": "2c59e09794ffe741205968bc746a6ab265a460e99649ee1e27fe3cc27d8a0fda",
+  "tests": {
+    "go_vet": "passed",
+    "go_race_including_subtests": 738,
+    "linux_builds": 6,
+    "python": 46,
+    "policy_builder_python": 14,
+    "postgres_temp_table_replay": "passed",
+    "live_model_calls": 0
+  },
+  "restoration": {
+    "events": 39392,
+    "event_ids_equal": true,
+    "daily_buckets": 110,
+    "every_daily_bucket_equal": true,
+    "input_tokens": 249158099,
+    "cache_hit_tokens": 13270385,
+    "cache_miss_tokens": 229032053,
+    "output_tokens": 290741,
+    "foreign_events": 0,
+    "local_fixtures_retained": 7,
+    "local_payloads_unchanged": true,
+    "remaining": 0
+  },
+  "protected": {
+    "gpu": {
+      "protected_containers_unchanged": true,
+      "changed_files": [
+        "/data/sub2api-policy-build/policy-log/upgrade/build.py"
+      ]
+    },
+    "tokyo": {
+      "protected_containers_unchanged": true,
+      "changed_files": []
+    },
+    "west": {
+      "protected_containers_unchanged": true,
+      "changed_files": []
+    }
+  },
+  "formal_http": {
+    "4000/health": 200,
+    "4000/login": 200,
+    "4000/v1/models": 401,
+    "4001/health": 200,
+    "4001/login": 200,
+    "4001/v1/models": 401
+  },
+  "nginx_test": {
+    "tokyo": true,
+    "us": true
+  },
+  "api_release": "candidate-20260917-r19-native-v31",
+  "operations_bundle": "usage-sync-us-20261010-r1",
+  "disabled_autostarts": 8,
+  "builder_nodes": [
+    "qiyuan-tokyo"
+  ],
+  "manual_cycle_completed": "2026-10-10T03:13:51.912723+00:00",
+  "completed_at": "2026-10-10T03:19:01.264292+00:00",
+  "automatic_cycles": [
+    {
+      "triggered_at": "2026-10-10 11:14:52 CST",
+      "completed_at": "2026-10-10T03:15:25.814584+00:00",
+      "status": "completed",
+      "remaining": 0,
+      "imported": 0,
+      "exported": 0
+    },
+    {
+      "triggered_at": "2026-10-10 11:16:29 CST",
+      "completed_at": "2026-10-10T03:16:58.188599+00:00",
+      "status": "completed",
+      "remaining": 0,
+      "imported": 0,
+      "exported": 0
+    }
+  ],
+  "usage_pending_alert_cleared": true,
+  "events_after_automatic_cycles": 39392,
+  "temporary_backups_and_validation_removed": true,
+  "protected_config_sha256": {
+    "gpu": {
+      "/data/ai-gateway/operations/run-current.py": "c58eff483e362af80e5e4228b35a476338482827267efd5094fa7d59b771ec49",
+      "/data/tokyo-sub2api-proxy/nginx.conf": "fe9013286c40a65d6e6530d7999913c427f76475a4c496f71e59ab16723fe756",
+      "/data/us-sub2api-proxy/nginx.conf": "7ed0ddff41a89da3e23938ccd9b76d8defe83a36c0a8c107e19c798442501237",
+      "/etc/cron.d/ai-gateway-token-usage": "ba75450583c39057be3d894f691c3419689f18f2fc998773638a768d86c5f676"
+    },
+    "tokyo": {
+      "/opt/sub2api-deploy/gateway/linzhi-allow.conf": "4715d01fe98a041e0096299c5f92f5224fb8ebbff203a2bebb004206743573fa",
+      "/opt/sub2api-deploy/gateway/nginx.conf": "27268030ce1ea9f344a8aae4dc6b11a8fc0bab9c148dcf11bc853481116cdea3"
+    },
+    "west": {
+      "/opt/sub2api-next/gateway/all-hours-api-keys.conf": "ee15f053a953bc0414bff95db0d56af72b4006a82707cae1cb5a0393f01b710b",
+      "/opt/sub2api-next/gateway/nginx.conf": "7e304782921a0186848bbb315b6d420903c1793c17db476666391e6479792a99"
+    }
+  }
+}

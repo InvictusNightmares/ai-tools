@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### 2026-10-10 / 旧采集与分析自启动退役，已部署
+
+- 正式 4000/4001 已直接转发前置地址，但失败的 live-capture、离线 collector 和旧预览实例仍 enabled，分析 timer 也可在重启后恢复。按用户要求禁用两地 `live-capture-candidate-r3`、`collector-candidate-r3`、旧 `semantic-preview` 实例及 `analysis` / `analysis-token-sync` 两个 timer，共 8 项；停止两个脱离业务路径的采集器。失败 watchdog 未调用停止回退钩子，避免改写 Nginx。
+- 八项均复核为 disabled/inactive；collector 停止时留下的 failed 退出状态已在确认 MainPID=0 后清除。GPU 正式两入口配置 SHA 不变；历史受限数据、复核 dashboard 和已经运行的 candidate 预览服务保留，未重建失效 Key、回放正文或启动语义分析。
+- 仅修改运行时启用状态与文档，不修改采集协议、正文、缓存或业务服务。回退自启动必须重新取得采集授权并验证完整采集链路，不能直接批量 enable。长期性能及历史离线分析的未完成验收不因本次清理而关闭。
+
 ### 2026-09-23 / 固定 200 条诊断集首轮只读归因
 
 - 对已固定的 200 条做只读元数据对账，并在 GPU 受限目录内仅计算消息/工具数量；没有新增 Guard/Auto 回放、人工标签、正文或凭据归档。报告见[诊断证据](docs/evidence/2026-09-23-diagnostic-200-review/README.md)。

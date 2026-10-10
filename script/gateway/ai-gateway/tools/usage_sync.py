@@ -7,6 +7,7 @@ identifiers only. Sub2API tables are read-only; gateway_usage holds our tables.
 """
 import argparse
 import csv
+import fcntl
 import hashlib
 import io
 import json
@@ -20,13 +21,16 @@ import sys
 from usage_ledger import Ledger
 
 HOSTS = {'tokyo': 'qiyuan-tokyo', 'us': 'qiyuan-us'}
+DATABASE_TARGETS = {'tokyo': ('sub2api-postgres', 'sub2api'),
+                    'us': ('sub2api-next-postgres', 'sub2api_next')}
 DB = 'gateway_usage'
 
 # This code runs at the regional host. Key values stay in that host's memory.
-KEYMAP_HELPER = '''import sys,json,subprocess,hmac,hashlib
+KEYMAP_HELPER = 'TARGETS = ' + repr(DATABASE_TARGETS) + '\n' + '''import sys,json,subprocess,hmac,hashlib
 request=json.load(sys.stdin)
+container,database=TARGETS[request['region']]
 sql="SELECT COALESCE(json_agg(json_build_object('id',id,'key',key)),'[]'::json) FROM api_keys;"
-p=subprocess.run(['docker','exec','-i','sub2api-postgres','psql','-X','-v','ON_ERROR_STOP=1','-U','sub2api','-d','sub2api','-At'],input=sql,universal_newlines=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+p=subprocess.run(['docker','exec','-i',container,'psql','-X','-v','ON_ERROR_STOP=1','-U','sub2api','-d',database,'-At'],input=sql,universal_newlines=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
 if p.returncode: raise SystemExit('regional_key_mapping_query_failed')
 rows=json.loads(p.stdout)
 out=[]
@@ -57,7 +61,7 @@ def ssh(region, command, data, timeout=90):
 def psql(region, script, database=DB):
     if database not in (DB, 'postgres'):
         raise ValueError('business database writes forbidden')
-    command = shlex.join(['docker', 'exec', '-i', 'sub2api-postgres', 'psql', '-X', '-q', '-v', 'ON_ERROR_STOP=1',
+    command = shlex.join(['docker', 'exec', '-i', DATABASE_TARGETS[region][0], 'psql', '-X', '-q', '-v', 'ON_ERROR_STOP=1',
                           '-U', 'sub2api', '-d', database, '-At'])
     return ssh(region, command, script)
 
@@ -149,7 +153,9 @@ def export_batch(region, ledger, mapping, limit=500):
     return len(rows)
 
 
-def run(region, root, initialize_db=False):
+def run(region, root, initialize_db=False, replay_all=False):
+    if replay_all and not initialize_db:
+        raise ValueError('full replay requires explicit database initialization')
     root = Path(root)
     secret = (root/'secrets/cache-secret').read_text().strip()
     mapping = json.loads(ssh(region, 'python3 -c ' + shlex.quote(KEYMAP_HELPER), json.dumps({'region':region,'secret':secret})))
@@ -158,6 +164,15 @@ def run(region, root, initialize_db=False):
     ledger = Ledger(root/'ops/usage-ledger.sqlite')
     try:
         ledger.map_keys(mapping)
+        # Retain mappings for deleted historical Keys. No Key is recreated and
+        # nothing is written to the Sub2API business database.
+        mapping = [dict(region=row[0], key_hash=row[1], api_key_id=row[2]) for row in
+                   ledger.db.execute('SELECT region,key_hash,api_key_id FROM key_mapping WHERE region=?', (region,))]
+        if replay_all:
+            # Idempotent remote inserts make an interrupted restore retryable.
+            # Only this region is reset; local synthetic fixtures stay local.
+            with ledger.db:
+                ledger.db.execute('UPDATE events SET exported=0 WHERE region=?', (region,))
         imported = []
         for folder, filename in [('auto','usage.jsonl'),('guard','security-usage.jsonl'),('guard','security-decisions.jsonl')]:
             for path in sorted((root/'logs'/folder).glob(filename+'*')):
@@ -170,7 +185,7 @@ def run(region, root, initialize_db=False):
             exported += amount
             if amount < 500:
                 break
-        remaining = ledger.db.execute('SELECT COUNT(*) FROM events WHERE exported=0').fetchone()[0]
+        remaining = ledger.db.execute('SELECT COUNT(*) FROM events WHERE exported=0 AND region=?', (region,)).fetchone()[0]
         return {'region':region,'imported':sum(row['inserted'] for row in imported),'exported':exported,'remaining':remaining,
                 'key_mappings':len(mapping),'partial_spools':sum(row['partial_tail'] for row in imported)}
     finally:
@@ -183,9 +198,13 @@ if __name__ == '__main__':
     parser.add_argument('--region', choices=tuple(HOSTS), required=True)
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--initialize', action='store_true')
+    parser.add_argument('--replay-all', action='store_true', help='with --initialize, re-export this region including previously exported history')
     args = parser.parse_args()
     try:
-        print(json.dumps(run(args.region,args.root,args.initialize)))
+        # Share the scheduled exporter's lock for manual initialization/replay.
+        with (args.root/'ops/usage-export.lock').open('a') as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            print(json.dumps(run(args.region,args.root,args.initialize,args.replay_all)))
     except Exception as error:
         print(json.dumps({'region':args.region,'status':'failed','error_type':type(error).__name__}), file=sys.stderr)
         raise SystemExit(1)

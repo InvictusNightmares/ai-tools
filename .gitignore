@@ -17,7 +17,6 @@ script/sub2api/token-usage/daily/.env.email
 script/sub2api/token-usage/daily/email-runs/
 /.agentbox-staging/
 
-# Private Sub2API account handoff material; publish code and synthetic tests only.
-/doc/gateway/sub2api-west-allocation-2026-10-09.csv
-/doc/gateway/sub2api-美西个人账号与GPT资源分配最终方案-2026-10-09.md
+# Private Sub2API account handoff originals and runtime credentials.
+/doc/gateway/private/
 /script/gateway/sub2api-next/customer-passwords*.json

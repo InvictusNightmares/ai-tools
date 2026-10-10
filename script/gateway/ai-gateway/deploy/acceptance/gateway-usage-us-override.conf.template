@@ -1,0 +1,4 @@
+# Only gateway-usage@us.service. Remove/revalidate on regional API upgrade.
+[Service]
+ExecStart=
+ExecStart=@GATEWAY_PYTHON@ -B @GATEWAY_USAGE_BUNDLE@/run-usage-override.py

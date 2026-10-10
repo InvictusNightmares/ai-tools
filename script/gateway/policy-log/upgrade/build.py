@@ -27,7 +27,7 @@ import uuid
 REPO = "Wei-Shaw/sub2api"
 DEFAULT_HOME = Path("/data/sub2api-policy-build")
 FEATURES = ["policy-requests-v1", "policy-update-v1"]
-NODES = ("qiyuan-us", "qiyuan-tokyo")
+NODES = ("qiyuan-tokyo",)
 NODE_ROOT = "/opt/sub2api-deploy/policy-releases"
 REVISION = 9
 NODE_IMAGE = "node:24-bookworm-slim@sha256:ba849c60be29959425b8734d57b8b4b7d56f98edd9504c9af091d5281095a71e"
