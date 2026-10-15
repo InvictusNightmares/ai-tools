@@ -4,6 +4,12 @@
 
 正式实例使用 `/opt/sub2api-next`，数据库容器为 `sub2api-next-postgres`，库名为 `sub2api_next`。应用不发布宿主机端口，由 `sub2api-next-proxy` 提供 8080；客户继续通过 GPU 4001 访问。旧预览端口 18080 已关闭。
 
+2026-10-15 已将美西原 8080 入口切为 HTTPS，支持 TLS 1.2/1.3，原 HTTP 请求会被拒绝。证书和私钥以只读目录 `/opt/sub2api-next/gateway/tls` 挂载到网关；CA 公钥证书为该目录下的 `ca.crt`，固定 TLS 名称为 `qiyuan-us-gateway.internal`。使用私有 CA 的连接端需显式信任该 CA 并校验证书。美西变更备份及验收记录位于服务器 `ops/https-8080/20261015-140238/`，应用和数据容器未重启。
+
+GA 原 9880 监听已重建为 TCP 透传，映射到美西 8080，健康检查使用 TCP 8080；重建节点组后需将其当前回源出口 IP 加入美西安全组的 8080 白名单。GPU `us-sub2api-proxy` 保留客户端 HTTP 4001 入口，上游已切为 HTTPS，启用 `proxy_ssl_verify on`、SNI 和固定证书名称校验。GPU CA 公钥位于 `/data/us-sub2api-proxy/tls/ca.crt`，以只读目录挂载到容器 `/etc/nginx/tls`；请求和响应缓冲均保持 `off`。GPU 变更备份、回退工具及验收记录位于 `/data/us-sub2api-proxy/ops/https-upstream/20261015-144150/`，旧代理容器已停止并保留作回退。
+
+已通过 GPU 本机 4001 验证健康接口、无 Key 鉴权、430,337 字节和 2,300,000 字节合成正文，以及 2,300,000 字节分块上传；合成请求故意省略模型，完整读取后返回 `model is required`，不调用推理模型。隔离验证还确认错误的证书名称会被拒绝。以上是代理链路验收，员工原报错会话持续运行仍需客户端复测。
+
 ## 代码与私有输入
 
 仓库包含脚本、合成数据测试，以及[账号分配 CSV](../../../doc/gateway/sub2api-west-allocation-2026-10-09.csv)和[最终方案](../../../doc/gateway/sub2api-美西个人账号与GPT资源分配最终方案-2026-10-09.md)的脱敏版本。公开文件使用匿名客户编号和 `example.invalid` 邮箱，保留分组、额度和维护用数据库 ID，不包含真实登录账号、密码或生成规则、管理 Key、客户会话及数据库备份；不能把公开 CSV 用作线上导入文件。
