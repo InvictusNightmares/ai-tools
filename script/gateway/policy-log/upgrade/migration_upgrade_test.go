@@ -47,6 +47,19 @@ func TestPolicyMigrationUpgradeFrom020(t *testing.T) {
 	require.NoError(t, err)
 	var before string
 	require.NoError(t, db.QueryRowContext(ctx, `SELECT models_list_config::text FROM groups WHERE name='policy-upgrade-fixture'`).Scan(&before))
+	// Exercise the actual serving baseline before upgrading to the new release.
+	require.NoError(t, applyMigrationsFS(ctx, db, os.DirFS("/src/migration-previous")))
+	_, err = db.ExecContext(ctx, `UPDATE groups SET model_pricing =
+		'[{"model":"legacy","max_reasoning_effort_multiplier":2},
+		  {"model":"cleared","max_reasoning_effort_multiplier":3,"reasoning_effort_multipliers":{}}]'
+		WHERE name='policy-upgrade-fixture'`)
+	require.NoError(t, err)
+	var fixtureChannelID int64
+	require.NoError(t, db.QueryRowContext(ctx, `INSERT INTO channels (name)
+		VALUES ('policy-migration-channel') RETURNING id`).Scan(&fixtureChannelID))
+	_, err = db.ExecContext(ctx, `INSERT INTO channel_model_pricing (channel_id, models, max_reasoning_effort_multiplier)
+		VALUES ($1, '["legacy"]', 2), ($1, '["default"]', NULL)`, fixtureChannelID)
+	require.NoError(t, err)
 	require.NoError(t, ApplyMigrations(ctx, db))
 	require.NoError(t, ApplyMigrations(ctx, db), "restart must not rerun or corrupt migrations")
 	var after string
@@ -68,15 +81,15 @@ func TestPolicyMigrationUpgradeFrom020(t *testing.T) {
 	// Old binaries query the removed column. The updater must forbid binary-only rollback.
 	_, err = db.ExecContext(ctx, `SELECT models_list_config FROM groups LIMIT 0`)
 	require.ErrorContains(t, err, "models_list_config")
-	var minimaxAllowed bool
-	require.NoError(t, db.QueryRowContext(ctx, `SELECT position('minimax' IN pg_get_constraintdef(oid)) > 0 FROM pg_constraint WHERE conname='user_platform_quotas_platform_check'`).Scan(&minimaxAllowed))
-	require.True(t, minimaxAllowed)
 	var upgradedConstraints int
 	require.NoError(t, db.QueryRowContext(ctx, `SELECT COUNT(*) FROM pg_constraint WHERE conname IN
-		('user_platform_quotas_platform_check', 'composite_model_routes_target_platform_check',
-		 'channel_monitors_provider_check', 'channel_monitor_request_templates_provider_check')
+		('channel_monitors_provider_check', 'channel_monitor_request_templates_provider_check')
 		AND position('opencode_go' IN pg_get_constraintdef(oid)) > 0`).Scan(&upgradedConstraints))
-	require.Equal(t, 4, upgradedConstraints)
+	require.Equal(t, 2, upgradedConstraints)
+	var removedConstraints int
+	require.NoError(t, db.QueryRowContext(ctx, `SELECT COUNT(*) FROM pg_constraint WHERE conname IN
+		('user_platform_quotas_platform_check', 'composite_model_routes_target_platform_check')`).Scan(&removedConstraints))
+	require.Zero(t, removedConstraints, "platform validation now belongs to the application registry")
 	var applied238 int
 	require.NoError(t, db.QueryRowContext(ctx, `SELECT COUNT(*) FROM schema_migrations WHERE filename IN
 		('238_opencode_go_platform.sql', '238_purge_unlimited_user_platform_quotas.sql')`).Scan(&applied238))
@@ -90,4 +103,23 @@ func TestPolicyMigrationUpgradeFrom020(t *testing.T) {
 	require.Zero(t, unlimited, "only rows with all three limits NULL are purged")
 	require.Equal(t, 1, disabled, "an explicit zero limit remains")
 	require.Equal(t, 1, softDeleted, "historical rows with a limit remain")
+	var groupPricingOK, channelPricingOK, newSchemaOK bool
+	require.NoError(t, db.QueryRowContext(ctx, `SELECT
+		model_pricing = '[{"model":"legacy","reasoning_effort_multipliers":{"max":2}},
+		{"model":"cleared","reasoning_effort_multipliers":{}}]'::jsonb AND i18n = '{}'::jsonb
+		FROM groups WHERE name='policy-upgrade-fixture'`).Scan(&groupPricingOK))
+	require.True(t, groupPricingOK, "legacy pricing is migrated and an explicitly empty map stays empty")
+	require.NoError(t, db.QueryRowContext(ctx, `SELECT bool_and(reasoning_effort_multipliers =
+		CASE WHEN models='["legacy"]'::jsonb THEN '{"max":2}'::jsonb ELSE '{}'::jsonb END)
+		FROM channel_model_pricing WHERE channel_id=$1`, fixtureChannelID).Scan(&channelPricingOK))
+	require.True(t, channelPricingOK)
+	require.NoError(t, db.QueryRowContext(ctx, `SELECT
+		(SELECT COUNT(*) FROM information_schema.columns WHERE table_schema='public' AND
+		 ((table_name='content_moderation_logs' AND column_name='engine_meta') OR
+		  (table_name='payment_orders' AND column_name='bonus_amount') OR
+		  (table_name='user_affiliate_ledger' AND column_name='operation_id') OR
+		  (table_name='gemini_cached_contents' AND column_name IN ('channel_usage','mutation_token','mutation_lease_until'))))=6
+		AND (SELECT indisvalid FROM pg_index WHERE indexrelid='idx_gemini_cached_contents_pending_mutation'::regclass)
+		AND (SELECT indisvalid FROM pg_index WHERE indexrelid='idx_user_affiliate_ledger_operation_id'::regclass)`).Scan(&newSchemaOK))
+	require.True(t, newSchemaOK)
 }

@@ -29,12 +29,14 @@ DEFAULT_HOME = Path("/data/sub2api-policy-build")
 FEATURES = ["policy-requests-v1", "policy-update-v1"]
 NODES = ("qiyuan-tokyo",)
 NODE_ROOT = "/opt/sub2api-deploy/policy-releases"
-REVISION = 9
+REVISION = 10
 NODE_IMAGE = "node:24-bookworm-slim@sha256:ba849c60be29959425b8734d57b8b4b7d56f98edd9504c9af091d5281095a71e"
 GO_IMAGE = "golang:1.27.1-bookworm@sha256:648f440f42a0958804efb24df176f806f9d353b41f1c0627f666428e40310f6b"
 POSTGRES_IMAGE = "postgres:18-alpine@sha256:d3e1620b530c944afa6e887d22eb899824da68e19c52024bf98f5220c88a65b2"
 MIGRATION_BASE_COMMIT = "aa236488351eb71e120fc2b6fb32e36b0374c918"
 MIGRATION_BASE_SHA256 = "0535674a97117289b871efccbb012835f2135631622b70133f187cecccc4825d"
+MIGRATION_PREVIOUS_COMMIT = "aea725f2ea644d5592d0bbb1d63b607efa7e200a"
+MIGRATION_PREVIOUS_SHA256 = "d8d93308ed40fdd0bf08fdf3e1d593b1bc56bef800f8ffac2b402ec9387fe017"
 
 
 class CompatibilityError(RuntimeError):
@@ -212,14 +214,22 @@ def compile_release(home, root, version, commit, bundle):
     with tempfile.TemporaryDirectory(prefix="migration-base-", dir=home) as tmp:
         extract(base_archive, Path(tmp))
         shutil.copytree(Path(tmp) / "backend/migrations", root / "migration-base")
+    previous_archive = home / "archives" / (MIGRATION_PREVIOUS_COMMIT + ".tar.gz")
+    if not previous_archive.exists():
+        fetch(f"https://codeload.github.com/{REPO}/tar.gz/{MIGRATION_PREVIOUS_COMMIT}", previous_archive)
+    if digest(previous_archive) != MIGRATION_PREVIOUS_SHA256:
+        raise RuntimeError("Previous migration fixture archive checksum mismatch")
+    with tempfile.TemporaryDirectory(prefix="migration-previous-", dir=home) as tmp:
+        extract(previous_archive, Path(tmp))
+        shutil.copytree(Path(tmp) / "backend/migrations", root / "migration-previous")
     container(home, NODE_IMAGE, root, "frontend",
               "export COREPACK_HOME=/cache/corepack; corepack enable; corepack prepare pnpm@9.12.3 --activate; "
               "pnpm config set store-dir /cache/pnpm; pnpm install --frozen-lockfile; "
               "pnpm exec vitest run src/views/admin/__tests__/PolicyRequestsView.spec.ts src/components/common/__tests__/VersionBadge.policy.spec.ts; pnpm run build", "node")
     container(home, GO_IMAGE, root, "backend",
-              "export GOPATH=/cache/gopath GOCACHE=/cache/gobuild GOMAXPROCS=8 GOPROXY=https://goproxy.cn,https://proxy.golang.org,direct; "
+              "export GOTOOLCHAIN=go1.27.2 GOPATH=/cache/gopath GOCACHE=/cache/gobuild GOMAXPROCS=8 GOPROXY=https://goproxy.cn,https://proxy.golang.org,direct; "
               "go test -race ./internal/requestcontent; "
-              "go test -race -tags unit ./internal/service -run '^(TestPolicy|TestUpdateService|TestOpenAIImages|TestBuildOpenAIImages|TestAccountTest.*Image)'; "
+              "go test -race -tags unit ./internal/service -run '^(TestPolicy|TestUpdateService|TestOpenAIImages|TestBuildOpenAIImages|TestAccountTest.*Image|TestOAuthWebSearchHistory|TestEnsureOpenAIOAuthWebSearch|TestForward_OAuthWebSearchHistory)'; "
               "go test -race ./internal/handler -run '^(TestPolicyRequestRecorder|TestClearCyberPolicy|TestOpenAIResponsesWebSocket.*Cyber)'; "
               "go test -race ./internal/handler/admin -run '^TestPolicyRequests'; "
               "go test -race ./migrations; "
@@ -300,7 +310,7 @@ def verify_cached_update_flow(home, bundle, meta, record, result_dir):
         shutil.copy2(result_dir / "sub2api", root / "sub2api")
         shutil.copy2(bundle / "upgrade/persistent_update_test.go", root / "backend/internal/service/policy_upgrade_flow_test.go")
         container(home, GO_IMAGE, root, "backend",
-                  "export GOPATH=/cache/gopath GOCACHE=/cache/gobuild GOMAXPROCS=8 GOPROXY=https://goproxy.cn,https://proxy.golang.org,direct; "
+                  "export GOTOOLCHAIN=go1.27.2 GOPATH=/cache/gopath GOCACHE=/cache/gobuild GOMAXPROCS=8 GOPROXY=https://goproxy.cn,https://proxy.golang.org,direct; "
                   "go test -c -tags unit -o /src/policy-updater-test ./internal/service", "go")
         verify_user_update_flow(root)
     record["persistent_update_verified"] = True

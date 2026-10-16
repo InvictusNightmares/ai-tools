@@ -145,10 +145,14 @@ func (s *UpdateService) policyRollbackVersions() ([]RollbackVersion, error) {
 	return result, nil
 }
 
-// Migration 235 renames the group model column. Migration 238 adds OpenCode GO
-// platform constraints and removes unlimited quota rows. Binary-only rollback
-// across either boundary is unverified; restore the matching database as well.
+// Migration 235 renames the group model column. Migration 238 removes unlimited
+// quota rows. The 0.2.16 baseline also migrates group pricing and moves platform
+// validation into the application. Restore the matching database when crossing
+// these boundaries; an old binary alone cannot restore the previous semantics.
 func policyRollbackCompatible(current, target string) bool {
+	if comparePolicyVersions(current, "0.2.16+policy-log.0") >= 0 {
+		return comparePolicyVersions(target, "0.2.16+policy-log.0") >= 0
+	}
 	if comparePolicyVersions(current, "0.2.7+policy-log.0") >= 0 {
 		return comparePolicyVersions(target, "0.2.7+policy-log.0") >= 0
 	}
