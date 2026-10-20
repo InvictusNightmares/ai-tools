@@ -8,7 +8,8 @@ Workers:
 
 Usage:
   agent-run <worker> <task-card.md> [--dir DIR] [--mode rw|ro|cu] [--name NAME]
-            [--test CMD] [--timeout SEC] [--model MODEL]
+            [--test CMD] [--timeout SEC] [--model MODEL] [--net] [--add-dir DIR]
+            [--apps APP,APP] [--skip-app-check] [--auto-approve]
 
 Modes:
   rw  (default) if DIR is a git repo: new worktree + branch agent/<worker>/<name> from HEAD;
@@ -17,6 +18,20 @@ Modes:
   cu  computer use (desktop apps, browser, GUI). codex only. Runs in a scratch dir inside the
       run dir; the worker drives the real desktop through codex's computer-use plugins.
 
+Permissions are declared at dispatch time so codex never stalls on an approval mid-run:
+  --net          codex only: allow network for the worker's shell commands
+  --add-dir DIR  codex only: extra writable directory (repeatable)
+  --apps A,B     cu only: apps the task will drive. Each must already be approved for codex
+                 computer use (learned in ~/.agent-runs/approved-apps.json from earlier runs);
+                 unknown apps stop the run (exit 3) and print the command the user runs once
+                 in a terminal to approve them. --skip-app-check runs anyway.
+  After a cu run, apps codex could open are added to approved-apps.json and apps it was
+  refused are reported as blocked_apps with the approval command.
+
+--auto-approve (codex only, rw/cu): run codex with --approve-for-me, so approval requests
+  (sandbox escalations, computer-use app access) are decided by codex's own reviewer instead
+  of failing. Implies the workspace-write sandbox.
+
 Every run gets ~/.agent-runs/<stamp>-<name>-<worker>/ with task.md, report.md (worker's
 final message), worker.out/.err, test.log and meta.json. The last stdout line is the meta path.
 """
@@ -24,6 +39,7 @@ import argparse, datetime, json, os, re, shutil, subprocess, sys, time
 from pathlib import Path
 
 RUNS_ROOT = Path.home() / ".agent-runs"
+APPROVED_APPS = RUNS_ROOT / "approved-apps.json"
 CLAUDE = str(Path.home() / ".local/bin/claude")
 CLEAN_PATH = f"/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/homebrew/bin:{Path.home()}/.local/bin"
 
@@ -74,6 +90,39 @@ def gateway_env():
     return url.strip(), key.strip()
 
 
+def load_approved():
+    try:
+        return json.loads(APPROVED_APPS.read_text())
+    except (OSError, json.JSONDecodeError):
+        return {}
+
+
+def approve_cmd(apps):
+    return f'codex "用 computer use 依次打开 {"、".join(apps)}，确认能访问后立即关闭它们，不做其他操作"'
+
+
+def scan_app_access(out_text):
+    """Apps codex opened via computer use, and apps it was refused, from its --json events."""
+    ok, blocked = set(), set()
+    for line in out_text.splitlines():
+        try:
+            ev = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        it = ev.get("item") or {}
+        if ev.get("type") != "item.completed" or it.get("type") != "mcp_tool_call":
+            continue
+        args = it.get("arguments")
+        code = args.get("code", "") if isinstance(args, dict) else str(args or "")
+        result = json.dumps(it.get("result") or "", ensure_ascii=False)
+        refused = {m.strip() for m in re.findall(r"not approved to use ([^\\\"\n.]+)", result)}
+        blocked |= refused
+        for app in re.findall(r"getApp\(\s*[\"']([^\"']+)[\"']", code):
+            if app not in refused:
+                ok.add(app)
+    return sorted(ok - blocked), sorted(blocked)
+
+
 def is_git(d):
     return subprocess.run(["git", "-C", str(d), "rev-parse", "--is-inside-work-tree"],
                           capture_output=True).returncode == 0
@@ -109,10 +158,15 @@ def build_codex(args, workdir, prompt, run):
     env = {"HOME": str(Path.home()), "USER": os.environ.get("USER", ""), "TERM": "xterm",
            "PATH": path, "LANG": "en_US.UTF-8"}
     cmd = [codex, "exec", "--json", "-C", str(workdir),
-           "-s", "read-only" if args.mode == "ro" else "workspace-write",
+           *(["--approve-for-me"] if args.auto_approve
+             else ["-s", "read-only" if args.mode == "ro" else "workspace-write"]),
            "-o", str(run / "report.md"), "--skip-git-repo-check", "--color", "never"]
     if args.model:
         cmd += ["-m", args.model]
+    if args.net:
+        cmd += ["-c", "sandbox_workspace_write.network_access=true"]
+    for d in args.add_dir:
+        cmd += ["--add-dir", str(Path(d).resolve())]
     cmd.append(prompt)
     return cmd, env
 
@@ -155,10 +209,33 @@ def main():
     p.add_argument("--test", help="acceptance command run by agent-run in the workdir after the worker exits")
     p.add_argument("--timeout", type=int, default=1800)
     p.add_argument("--model", help="override worker model")
+    p.add_argument("--net", action="store_true", help="codex only: allow network in the sandbox")
+    p.add_argument("--add-dir", action="append", default=[], help="codex only: extra writable dir (repeatable)")
+    p.add_argument("--apps", help="cu only: comma-separated apps the task will drive")
+    p.add_argument("--skip-app-check", action="store_true", help="cu only: run even if --apps has unapproved apps")
+    p.add_argument("--auto-approve", action="store_true",
+                   help="codex only: let codex's reviewer approve escalations instead of failing")
     args = p.parse_args()
     if args.mode == "cu" and args.worker != "codex":
         raise SystemExit("agent-run: computer-use tasks (--mode cu) go to codex only")
-
+    if args.auto_approve and (args.worker != "codex" or args.mode == "ro"):
+        raise SystemExit("agent-run: --auto-approve is for codex in rw or cu mode only")
+    if args.mode != "cu" and not Path(args.dir).is_dir():
+        raise SystemExit(f"agent-run: --dir {args.dir} is not a directory")
+    if (args.net or args.add_dir) and (args.worker != "codex" or args.mode == "ro"):
+        raise SystemExit("agent-run: --net/--add-dir are for codex in rw or cu mode only")
+    if args.apps and args.mode != "cu":
+        raise SystemExit("agent-run: --apps only applies to --mode cu")
+    apps = [a.strip() for a in (args.apps or "").split(",") if a.strip()]
+    if apps and not args.skip_app_check:
+        known = {k.lower() for k in load_approved()}
+        unknown = [a for a in apps if a.lower() not in known]
+        if unknown:
+            print(json.dumps({"preflight": "unapproved_apps", "apps": unknown,
+                              "approve_cmd": approve_cmd(unknown)}, ensure_ascii=False))
+            print(f"agent-run: not yet approved for codex computer use: {', '.join(unknown)}. "
+                  "The user must run approve_cmd once in a terminal and choose always allow.", file=sys.stderr)
+            sys.exit(3)
 
     card = sys.stdin.read() if args.card == "-" else Path(args.card).read_text()
     name = re.sub(r"[^A-Za-z0-9._-]+", "-", args.name or Path(args.card).stem if args.card != "-" else args.name or "task").strip("-") or "task"
@@ -169,7 +246,8 @@ def main():
 
     src = Path(args.dir).resolve()
     meta = {"worker": args.worker, "name": name, "mode": args.mode, "src": str(src),
-            "run_dir": str(run), "started": stamp}
+            "run_dir": str(run), "started": stamp, "auto_approve": args.auto_approve,
+            "net": args.net, "add_dir": args.add_dir, "apps": apps}
 
     workdir, branch, base = src, None, None
     if args.mode == "cu":
@@ -208,6 +286,17 @@ def main():
     if not (run / "report.md").exists():
         (run / "report.md").write_text("")
 
+    if args.mode == "cu":
+        ok_apps, blocked_apps = scan_app_access(out)
+        if ok_apps:
+            approved = load_approved()
+            for a in ok_apps:
+                approved.setdefault(a, stamp)
+            APPROVED_APPS.write_text(json.dumps(approved, ensure_ascii=False, indent=2))
+        meta.update(apps_ok=ok_apps, blocked_apps=blocked_apps)
+        if blocked_apps:
+            meta["approve_cmd"] = approve_cmd(blocked_apps)
+
     if args.test:
         t = subprocess.run(["zsh", "-c", args.test], cwd=workdir, stdin=subprocess.DEVNULL, capture_output=True, text=True,
                            env={**env, "ANTHROPIC_AUTH_TOKEN": ""})
@@ -227,7 +316,8 @@ def main():
 
     (run / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2))
     print(json.dumps({k: meta.get(k) for k in ["worker", "name", "exit", "duration_s", "test", "branch",
-                                                 "changed_files", "permission_denials"]}, ensure_ascii=False))
+                                                 "changed_files", "permission_denials", "blocked_apps",
+                                                 "approve_cmd"] if meta.get(k) is not None}, ensure_ascii=False))
     print(run / "meta.json")
 
 

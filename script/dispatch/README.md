@@ -35,5 +35,15 @@ export GATEWAY_API_KEY='<your-key>'
 ```bash
 agent-run deepseek card.md --dir <repo> --test "python3 -m pytest -q"
 agent-run codex card.md --dir <repo> --mode ro
-agent-run codex card.md --mode cu --test "test -s result.txt"
+agent-run codex card.md --dir <repo> --net
+agent-run codex card.md --mode cu --apps Calculator --test "test -s result.txt"
 ```
+
+## 权限在派活时决定
+
+codex 在 `exec` 模式下遇到授权不会弹窗，只会失败，所以权限要在派活时就给好：
+
+- `--net`：允许工人的命令联网（默认沙盒不能联网）。
+- `--add-dir DIR`：额外的可写目录。
+- `--apps A,B`：computer use 要操作的 App。必须已经授权过（记录在本机 `~/.agent-runs/approved-apps.json`），否则 `agent-run` 不启动并以退出码 3 结束，打印 `approve_cmd`。在终端里运行一次这条命令（交互式 codex），选择始终允许即可。跑完后能打开的 App 会自动记入已授权列表。
+- `--auto-approve`：codex 的 `--approve-for-me`，由 codex 的审核模型代批越权请求。默认不用：它不覆盖 computer use 的 App 授权。
