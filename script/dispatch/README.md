@@ -12,6 +12,8 @@ Claude Code 总调度：Claude 拆任务、写任务卡，用 `agent-run` 派给
 | `deepseek` | Claude Code（`claude -p`，开启沙盒） | `deepseek-flash`，经兼容 Anthropic 的网关 |
 | `codex` | 官方 `codex exec`（`workspace-write` 沙盒） | codex 默认模型，ChatGPT 账号登录 |
 
+涉及 computer use（操作桌面 App、浏览器、GUI）的任务一律交给 codex：`--mode cu`，依赖 codex 的 computer-use 插件；`agent-run` 拒绝把 `cu` 任务派给 deepseek。
+
 ## 安装
 
 ```bash
@@ -33,4 +35,5 @@ export GATEWAY_API_KEY='<your-key>'
 ```bash
 agent-run deepseek card.md --dir <repo> --test "python3 -m pytest -q"
 agent-run codex card.md --dir <repo> --mode ro
+agent-run codex card.md --mode cu --test "test -s result.txt"
 ```

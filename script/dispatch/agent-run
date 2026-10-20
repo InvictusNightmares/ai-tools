@@ -7,13 +7,15 @@ Workers:
   codex     official codex CLI (ChatGPT login)
 
 Usage:
-  agent-run <worker> <task-card.md> [--dir DIR] [--mode rw|ro] [--name NAME]
+  agent-run <worker> <task-card.md> [--dir DIR] [--mode rw|ro|cu] [--name NAME]
             [--test CMD] [--timeout SEC] [--model MODEL]
 
 Modes:
   rw  (default) if DIR is a git repo: new worktree + branch agent/<worker>/<name> from HEAD;
       the worker's changes are committed there for review. Otherwise runs in DIR in place.
   ro  runs in DIR itself with read-only tools / sandbox.
+  cu  computer use (desktop apps, browser, GUI). codex only. Runs in a scratch dir inside the
+      run dir; the worker drives the real desktop through codex's computer-use plugins.
 
 Every run gets ~/.agent-runs/<stamp>-<name>-<worker>/ with task.md, report.md (worker's
 final message), worker.out/.err, test.log and meta.json. The last stdout line is the meta path.
@@ -42,6 +44,16 @@ WORKER_PREAMBLE = """You are a worker agent dispatched by an orchestrator. Rules
 <open issues, risks, or "无">
 
 --- TASK CARD ---
+"""
+
+CU_RULES = """Computer-use rules (you are controlling the user's real desktop):
+- Do only what the task card asks, in the apps it names. Do not open unrelated apps, files or sites.
+- Never purchase, pay, transfer money, send messages/emails, post or publish anything.
+- Never type passwords, keys, or payment/ID numbers, and never sign in or create accounts.
+- Never delete files or data, change system/security settings, or accept terms/permissions dialogs.
+- If any step needs one of the above or an unexpected dialog appears, stop and report it.
+- Leave apps you opened the way the card says (close them if it says nothing).
+
 """
 
 
@@ -138,12 +150,15 @@ def main():
     p.add_argument("worker", choices=["deepseek", "codex"])
     p.add_argument("card", help="task card markdown file, or - for stdin")
     p.add_argument("--dir", default=".", help="repo or directory to work in (default: cwd)")
-    p.add_argument("--mode", choices=["rw", "ro"], default="rw")
+    p.add_argument("--mode", choices=["rw", "ro", "cu"], default="rw")
     p.add_argument("--name", help="short task slug (default: card filename)")
     p.add_argument("--test", help="acceptance command run by agent-run in the workdir after the worker exits")
     p.add_argument("--timeout", type=int, default=1800)
     p.add_argument("--model", help="override worker model")
     args = p.parse_args()
+    if args.mode == "cu" and args.worker != "codex":
+        raise SystemExit("agent-run: computer-use tasks (--mode cu) go to codex only")
+
 
     card = sys.stdin.read() if args.card == "-" else Path(args.card).read_text()
     name = re.sub(r"[^A-Za-z0-9._-]+", "-", args.name or Path(args.card).stem if args.card != "-" else args.name or "task").strip("-") or "task"
@@ -157,6 +172,9 @@ def main():
             "run_dir": str(run), "started": stamp}
 
     workdir, branch, base = src, None, None
+    if args.mode == "cu":
+        workdir = run / "cu"
+        workdir.mkdir()
     if args.mode == "rw" and is_git(src):
         top = Path(sh(["git", "-C", str(src), "rev-parse", "--show-toplevel"]))
         rel = src.relative_to(top)
@@ -168,7 +186,7 @@ def main():
         meta.update(repo=str(top), branch=branch, base=base, worktree=str(wt))
     meta["workdir"] = str(workdir)
 
-    prompt = WORKER_PREAMBLE + card
+    prompt = WORKER_PREAMBLE + (CU_RULES if args.mode == "cu" else "") + card
     builder = build_deepseek if args.worker == "deepseek" else build_codex
     cmd, env = builder(args, workdir, prompt, run)
 
@@ -191,7 +209,7 @@ def main():
         (run / "report.md").write_text("")
 
     if args.test:
-        t = subprocess.run(["zsh", "-c", args.test], cwd=workdir, capture_output=True, text=True,
+        t = subprocess.run(["zsh", "-c", args.test], cwd=workdir, stdin=subprocess.DEVNULL, capture_output=True, text=True,
                            env={**env, "ANTHROPIC_AUTH_TOKEN": ""})
         (run / "test.log").write_text(f"$ {args.test}\n{t.stdout}{t.stderr}")
         meta["test"] = {"cmd": args.test, "exit": t.returncode, "passed": t.returncode == 0}
