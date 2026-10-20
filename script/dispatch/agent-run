@@ -1,0 +1,217 @@
+#!/usr/bin/env python3
+"""agent-run: dispatch one task card to a worker agent and collect a verifiable result.
+
+Workers:
+  deepseek  Claude Code harness, model deepseek-flash via an Anthropic-compatible gateway
+            (GATEWAY_BASE_URL and GATEWAY_API_KEY must be exported in ~/.zshrc)
+  codex     official codex CLI (ChatGPT login)
+
+Usage:
+  agent-run <worker> <task-card.md> [--dir DIR] [--mode rw|ro] [--name NAME]
+            [--test CMD] [--timeout SEC] [--model MODEL]
+
+Modes:
+  rw  (default) if DIR is a git repo: new worktree + branch agent/<worker>/<name> from HEAD;
+      the worker's changes are committed there for review. Otherwise runs in DIR in place.
+  ro  runs in DIR itself with read-only tools / sandbox.
+
+Every run gets ~/.agent-runs/<stamp>-<name>-<worker>/ with task.md, report.md (worker's
+final message), worker.out/.err, test.log and meta.json. The last stdout line is the meta path.
+"""
+import argparse, datetime, json, os, re, shutil, subprocess, sys, time
+from pathlib import Path
+
+RUNS_ROOT = Path.home() / ".agent-runs"
+CLAUDE = str(Path.home() / ".local/bin/claude")
+CLEAN_PATH = f"/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/homebrew/bin:{Path.home()}/.local/bin"
+
+WORKER_PREAMBLE = """You are a worker agent dispatched by an orchestrator. Rules:
+- Work only inside the current working directory. Do not touch files outside it.
+- Never run git commit, git push, git reset, git checkout of other branches, or delete the repo's history.
+- Do not modify tests you were told not to modify. Do not weaken tests to make them pass.
+- If something blocks you, stop and say exactly what is blocking; do not guess.
+- Finish with a report in exactly this shape (Chinese is fine):
+
+## 结论
+<one or two sentences: done / partially done / blocked>
+## 改动
+<files changed and why, or "无">
+## 运行的命令
+<commands you ran and their outcome>
+## 未解决
+<open issues, risks, or "无">
+
+--- TASK CARD ---
+"""
+
+
+def sh(cmd, cwd=None, check=True):
+    r = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True)
+    if check and r.returncode != 0:
+        raise SystemExit(f"agent-run: {' '.join(cmd)} failed: {r.stderr.strip()}")
+    return r.stdout.strip()
+
+
+def gateway_env():
+    # Read gateway URL and key from the user's shell config so neither lives in this repo.
+    r = subprocess.run(["zsh", "-ic", 'printf "%s\\n%s" "$GATEWAY_BASE_URL" "$GATEWAY_API_KEY"'],
+                       capture_output=True, text=True, env={"HOME": str(Path.home()), "PATH": CLEAN_PATH})
+    url, _, key = r.stdout.partition("\n")
+    if not url.strip() or not key.strip():
+        raise SystemExit("agent-run: export GATEWAY_BASE_URL and GATEWAY_API_KEY in ~/.zshrc")
+    return url.strip(), key.strip()
+
+
+def is_git(d):
+    return subprocess.run(["git", "-C", str(d), "rev-parse", "--is-inside-work-tree"],
+                          capture_output=True).returncode == 0
+
+
+def build_deepseek(args, workdir, prompt, run):
+    model = args.model or "deepseek-flash"
+    base_url, key = gateway_env()
+    env = {"HOME": str(Path.home()), "USER": os.environ.get("USER", ""), "TERM": "xterm",
+           "PATH": CLEAN_PATH, "LANG": "en_US.UTF-8",
+           "ANTHROPIC_BASE_URL": base_url, "ANTHROPIC_AUTH_TOKEN": key,
+           "ANTHROPIC_MODEL": model, "ANTHROPIC_DEFAULT_OPUS_MODEL": model,
+           "ANTHROPIC_DEFAULT_SONNET_MODEL": model, "ANTHROPIC_DEFAULT_HAIKU_MODEL": model,
+           "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"}
+    settings = {"sandbox": {"enabled": True, "autoAllowBashIfSandboxed": True,
+                            "allowUnsandboxedCommands": False}}
+    cmd = [CLAUDE, "-p", prompt, "--output-format", "json", "--settings", json.dumps(settings)]
+    if args.mode == "ro":
+        cmd += ["--allowedTools", "Read Grep Glob Bash(grep:*) Bash(find:*) Bash(ls:*) Bash(head:*) Bash(wc:*) Bash(cat:*)",
+                "--disallowedTools", "Edit Write NotebookEdit WebFetch WebSearch"]
+    else:
+        cmd += ["--permission-mode", "acceptEdits", "--allowedTools", "Read Write Edit Glob Grep Bash",
+                "--disallowedTools", "WebFetch WebSearch"]
+    return cmd, env
+
+
+def build_codex(args, workdir, prompt, run):
+    codex = shutil.which("codex")
+    node = shutil.which("node")
+    if not codex or not node:
+        raise SystemExit("agent-run: codex or node not found on PATH")
+    path = os.pathsep.join(dict.fromkeys([str(Path(codex).parent), str(Path(node).parent), CLEAN_PATH]))
+    env = {"HOME": str(Path.home()), "USER": os.environ.get("USER", ""), "TERM": "xterm",
+           "PATH": path, "LANG": "en_US.UTF-8"}
+    cmd = [codex, "exec", "--json", "-C", str(workdir),
+           "-s", "read-only" if args.mode == "ro" else "workspace-write",
+           "-o", str(run / "report.md"), "--skip-git-repo-check", "--color", "never"]
+    if args.model:
+        cmd += ["-m", args.model]
+    cmd.append(prompt)
+    return cmd, env
+
+
+def parse_usage(worker, out_text, run):
+    meta = {}
+    if worker == "deepseek":
+        try:
+            d = json.loads(out_text)
+        except json.JSONDecodeError:
+            return {"parse_error": True}
+        (run / "report.md").write_text(d.get("result") or "")
+        meta = {"is_error": d.get("is_error"), "num_turns": d.get("num_turns"),
+                "session_id": d.get("session_id"),
+                "permission_denials": len(d.get("permission_denials") or []),
+                "tokens": {m: {"in": u.get("inputTokens"), "out": u.get("outputTokens"),
+                               "cache_read": u.get("cacheReadInputTokens")}
+                           for m, u in (d.get("modelUsage") or {}).items()}}
+    else:
+        usage, thread = None, None
+        for line in out_text.splitlines():
+            try:
+                ev = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            thread = ev.get("thread_id") or thread
+            if ev.get("usage"):
+                usage = ev["usage"]
+        meta = {"thread_id": thread, "tokens": usage}
+    return meta
+
+
+def main():
+    p = argparse.ArgumentParser(prog="agent-run")
+    p.add_argument("worker", choices=["deepseek", "codex"])
+    p.add_argument("card", help="task card markdown file, or - for stdin")
+    p.add_argument("--dir", default=".", help="repo or directory to work in (default: cwd)")
+    p.add_argument("--mode", choices=["rw", "ro"], default="rw")
+    p.add_argument("--name", help="short task slug (default: card filename)")
+    p.add_argument("--test", help="acceptance command run by agent-run in the workdir after the worker exits")
+    p.add_argument("--timeout", type=int, default=1800)
+    p.add_argument("--model", help="override worker model")
+    args = p.parse_args()
+
+    card = sys.stdin.read() if args.card == "-" else Path(args.card).read_text()
+    name = re.sub(r"[^A-Za-z0-9._-]+", "-", args.name or Path(args.card).stem if args.card != "-" else args.name or "task").strip("-") or "task"
+    stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    run = RUNS_ROOT / f"{stamp}-{name}-{args.worker}"
+    run.mkdir(parents=True)
+    (run / "task.md").write_text(card)
+
+    src = Path(args.dir).resolve()
+    meta = {"worker": args.worker, "name": name, "mode": args.mode, "src": str(src),
+            "run_dir": str(run), "started": stamp}
+
+    workdir, branch, base = src, None, None
+    if args.mode == "rw" and is_git(src):
+        top = Path(sh(["git", "-C", str(src), "rev-parse", "--show-toplevel"]))
+        rel = src.relative_to(top)
+        base = sh(["git", "-C", str(top), "rev-parse", "HEAD"])
+        branch = f"agent/{args.worker}/{name}-{stamp}"
+        wt = run / "worktree"
+        sh(["git", "-C", str(top), "worktree", "add", "-q", "-b", branch, str(wt), base])
+        workdir = wt / rel
+        meta.update(repo=str(top), branch=branch, base=base, worktree=str(wt))
+    meta["workdir"] = str(workdir)
+
+    prompt = WORKER_PREAMBLE + card
+    builder = build_deepseek if args.worker == "deepseek" else build_codex
+    cmd, env = builder(args, workdir, prompt, run)
+
+    t0 = time.time()
+    try:
+        r = subprocess.run(cmd, cwd=workdir, env=env, stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=args.timeout)
+        out, err, code = r.stdout, r.stderr, r.returncode
+    except OSError as e:
+        out, err, code = "", f"agent-run: failed to start worker: {e}", "start_failed"
+    except subprocess.TimeoutExpired as e:
+        out = e.stdout.decode() if isinstance(e.stdout, bytes) else (e.stdout or "")
+        err = (e.stderr.decode() if isinstance(e.stderr, bytes) else (e.stderr or "")) + "\nagent-run: TIMEOUT"
+        code = "timeout"
+    meta["duration_s"] = round(time.time() - t0, 1)
+    meta["exit"] = code
+    (run / "worker.out").write_text(out)
+    (run / "worker.err").write_text(err)
+    meta.update(parse_usage(args.worker, out, run))
+    if not (run / "report.md").exists():
+        (run / "report.md").write_text("")
+
+    if args.test:
+        t = subprocess.run(["zsh", "-c", args.test], cwd=workdir, capture_output=True, text=True,
+                           env={**env, "ANTHROPIC_AUTH_TOKEN": ""})
+        (run / "test.log").write_text(f"$ {args.test}\n{t.stdout}{t.stderr}")
+        meta["test"] = {"cmd": args.test, "exit": t.returncode, "passed": t.returncode == 0}
+
+    if branch:
+        wt = Path(meta["worktree"])
+        status = sh(["git", "-C", str(wt), "status", "--porcelain"])
+        head_now = sh(["git", "-C", str(wt), "rev-parse", "HEAD"])
+        meta["worker_committed"] = head_now != base
+        if status:
+            sh(["git", "-C", str(wt), "add", "-A"])
+            sh(["git", "-C", str(wt), "commit", "-q", "-m", f"agent-run({args.worker}): {name}"])
+        meta["diffstat"] = sh(["git", "-C", str(wt), "diff", "--stat", base, "HEAD"])
+        meta["changed_files"] = sh(["git", "-C", str(wt), "diff", "--name-only", base, "HEAD"]).splitlines()
+
+    (run / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2))
+    print(json.dumps({k: meta.get(k) for k in ["worker", "name", "exit", "duration_s", "test", "branch",
+                                                 "changed_files", "permission_denials"]}, ensure_ascii=False))
+    print(run / "meta.json")
+
+
+if __name__ == "__main__":
+    main()
