@@ -1,0 +1,22 @@
+{
+  "checkedOn": "2026-10-21",
+  "pluginVersion": "1.1.47",
+  "hostVersion": "0.2.1-rc.2",
+  "hostPlatform": "macOS official desktop",
+  "method": "Read-only patchStatus on a temporary extraction of the installed app.asar; no patches applied.",
+  "runtimeValidated": false,
+  "counts": {
+    "pending": 47,
+    "applied": 7,
+    "na": 7,
+    "skipped": 4
+  },
+  "nonOptionalUnmatched": [
+    {
+      "id": 40,
+      "name": "COMPLETE_PROMPT_KEEP_INJECT",
+      "status": "skipped"
+    }
+  ],
+  "interpretation": "These are matcher labels, not evidence that patches were applied or that a desktop session works."
+}
