@@ -11,3 +11,5 @@
 智能网关从 [AI Gateway 项目入口](ai-gateway/README.md) 阅读。原 `auto-gateway/`、`guard-gateway/` 和 `doc/gateway` 中的智能网关总计划、evidence 已统一迁入该项目。
 
 Sub2API 异常记录插件的构建、升级仍见 [policy-log 技术文档](policy-log/技术文档.md)，不与 Auto/Guard 的运行服务混为一套版本。
+
+正式入口的 TLS 配置与回退记录：[东京 4000 / GA 9881](tokyo-https-2026-10-22.md)；[美西 4001 / GA 9880](sub2api-next/README.md)。

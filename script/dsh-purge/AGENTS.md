@@ -1,6 +1,6 @@
 # dsh-purge 本地维护
 
-- 本目录是 ai-tools 中的维护源；先读 `MAINTENANCE.md`。上游 README 保留原文，版本和 profile 示例可能不适用于本机。
+- 本目录保留原版 1.1.47 的历史基线；先读 `MAINTENANCE.md`。当前社区版维护源是 `../dsh-purge-community`。上游 README 保留原文，版本和 profile 示例可能不适用于本机。
 - `upstream.json` 记录导入基线及原文件哈希，不随本地修改重写；更换上游基线时明确记录版本、来源和差异。
 - 保留原作者署名、LICENSE 和上游来源；本地行为修改使用可区分的版本并更新维护记录。
 - 不把 Downloads、`~/.dsh/plugins` 或 profile 下的 `node_modules` 当作源码修改位置。

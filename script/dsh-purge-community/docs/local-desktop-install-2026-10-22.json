@@ -1,0 +1,116 @@
+{
+  "date": "2026-10-22",
+  "hostVersion": "0.2.1-rc.2",
+  "profile": "desktop",
+  "pluginVersion": "1.6.41",
+  "selected": true,
+  "installerBackupId": "2026-10-22T01-33-30-883Z-f4479e6f",
+  "autoCheck": false,
+  "autoInstall": false,
+  "hostPatchesAppliedThisRun": false,
+  "applicationRestartedThisRun": false,
+  "runtimeSessionVerified": false,
+  "verification": {
+    "hostFilesChecked": 18365,
+    "hostChanged": [],
+    "hostMissing": [],
+    "hostAdded": [],
+    "packageFilesChecked": 206,
+    "packageMismatches": [],
+    "otherDependenciesPreserved": true,
+    "otherBundlesPreserved": true
+  },
+  "selfcheck": {
+    "state": "broken",
+    "level": "qualified",
+    "patch": {
+      "applied": 47,
+      "total": 73,
+      "all": 80,
+      "na": 6,
+      "skipped": 4,
+      "missing_file": 0,
+      "off": 0,
+      "not_applicable": 7
+    },
+    "summary": {
+      "host": {
+        "ok": false,
+        "passed": 11,
+        "total": 22
+      },
+      "runtime": {
+        "ok": true,
+        "passed": 1,
+        "total": 1
+      },
+      "config": {
+        "ok": false,
+        "passed": 0,
+        "total": 1
+      },
+      "layout": {
+        "ok": true,
+        "passed": 1,
+        "total": 1
+      },
+      "pending": {
+        "layers": 7,
+        "patches": 12
+      },
+      "uncertain": {
+        "layers": 2
+      },
+      "broken": {
+        "layers": 3
+      }
+    }
+  },
+  "diagnose": {
+    "checked": 80,
+    "requiredAnchorDrift": [],
+    "optionalAnchorDrift": [
+      {
+        "id": 84,
+        "name": "DESKTOP_HOST_CLOSE_CODE0_NO_FAIL"
+      },
+      {
+        "id": 56,
+        "name": "REWIND_HIDE_CUT_ONLY"
+      }
+    ],
+    "chained": [
+      {
+        "id": 88,
+        "name": "HUNG_PROMPT_STRICT_NEEDLE",
+        "after": 87
+      }
+    ],
+    "missing": [
+      {
+        "id": 71,
+        "name": "LIANGSHEN_IDENTITY_LINE",
+        "layer": "提示词",
+        "optional": false,
+        "status": "unknown",
+        "anchors": [],
+        "reason": "target_file_missing"
+      }
+    ]
+  },
+  "cliLauncherRepair": {
+    "path": "/Applications/DeepSeek Harness.app/Contents/Resources/runtime/cli/bin/dsh",
+    "change": "Prefer app.asar when present; otherwise use the unpacked app directory.",
+    "verifiedCommands": [
+      "dsh --version",
+      "dsh plugin --profile desktop list"
+    ]
+  },
+  "freshModuleImport": {
+    "runtime": "Desktop bundled Electron / Node",
+    "name": "dsh-purge-community",
+    "applyExport": "function",
+    "isolatedHome": true,
+    "passed": true
+  }
+}

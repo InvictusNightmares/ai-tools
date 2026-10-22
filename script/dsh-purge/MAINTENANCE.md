@@ -1,6 +1,12 @@
 # dsh-purge 在 ai-tools 中的维护
 
-这里是本项目后续修改、修复和更新 dsh-purge 的源码位置。原作者的 `README.md`、`README.zh-CN.md` 和 `LICENSE` 保持原样；本机安装和维护以本文为准。
+本目录保留原版 dsh-purge 1.1.47 的历史源码和导入基线。原作者的 `README.md`、`README.zh-CN.md` 和 `LICENSE` 保持原样。
+
+## 当前维护入口（2026-10-22）
+
+用户指定改装 [kingcharleslzy-ai/dsh-purge](https://github.com/kingcharleslzy-ai/dsh-purge) 社区版。本机 desktop 已安装并选入 `dsh-purge-community@1.6.41`；本目录的原版包在此次安装前已不在 desktop 依赖中。社区版源码和当前维护说明位于 [../dsh-purge-community/LOCAL-MAINTENANCE.md](../dsh-purge-community/LOCAL-MAINTENANCE.md)。
+
+下文是 2026-10-21 的原版导入记录，不能作为当前安装状态。旧 `local-install-desktop.sh` 只服务原版，不用于更新社区版；其安装入口基于当时的 `app.asar` 布局。不要把两种包混装，或用原版覆盖当前社区版。原始 `upstream.json` 与兼容检查记录继续保留。
 
 ## 导入来源
 
@@ -15,7 +21,7 @@
 
 `upstream.json` 保存原始 102 个文件的 SHA-256。导入时没有修改插件运行代码。上游 GitHub 仓库和 npm 同名包在 2026-10-21 的实时查询中均返回 404；这是当次检查结果，不表示永久不可用。
 
-## 本机状态与兼容边界
+## 原版安装时的状态与兼容边界（2026-10-21）
 
 - 宿主：macOS 官方 DeepSeek Harness `0.2.1-rc.2`，profile 是 `desktop`。上游旧 README 中的 `default` 示例不适用于这台机器。
 - 插件已安装，保持未选入 `dsh.profile.bundles`，因此尚未启用；没有应用宿主补丁。
@@ -55,3 +61,4 @@ bash script/dsh-purge/scripts/local-install-desktop.sh --install
 ## 本地维护记录
 
 - 2026-10-21：导入 1.1.47 原始源码及文件哈希；增加本机同步脚本、接手规则和兼容状态记录。插件代码未修复，保持未启用。
+- 2026-10-22：本机按用户指定安装社区版 1.6.41，维护源转到 `../dsh-purge-community`；本目录保留原版历史基线，不再代表当前安装。
