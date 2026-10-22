@@ -39,6 +39,15 @@ agent-run codex card.md --dir <repo> --net
 agent-run codex card.md --mode cu --apps Calculator --test "test -s result.txt"
 ```
 
+## 实时查看
+
+`agent-run` 边跑边把工人的事件翻译成可读进度写进运行目录的 `live.log`（命令与退出码、工具调用/computer use 每一步、文件改动、工人的消息）；直接在终端里跑时也会实时打印。另开终端跟踪：
+
+```bash
+agent-run watch <name>      # 跟踪指定任务，结束后打印结果摘要并退出
+agent-run watch             # 跟踪最新的任务
+```
+
 ## 权限在派活时决定
 
 codex 在 `exec` 模式下遇到授权不会弹窗，只会失败，所以权限要在派活时就给好：

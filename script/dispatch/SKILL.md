@@ -38,8 +38,9 @@ agent-run <deepseek|codex> <card.md> --dir <repo> [--mode rw|ro|cu] [--name slug
   - deepseek gets none of these; give network/GUI work to codex.
   - `--auto-approve` exists (codex `--approve-for-me`) but is off by default: it does not cover computer-use app approvals, and codex rarely asks to escalate on its own. Don't use it unless the user asks.
 - `--test`: acceptance command that agent-run itself runs in the workdir after the worker exits. Always pass one when the task is checkable — it is the evidence, not the worker's report.
-- Output: one JSON summary line, then the path to `meta.json`. The run dir (`~/.agent-runs/<stamp>-<name>-<worker>/`) holds `task.md`, `report.md`, `worker.out/.err`, `test.log`, `meta.json`.
-- Run workers with Bash `run_in_background: true`; you are notified on exit. Never poll. Independent cards run in parallel; cards that touch the same files run one after another.
+- Output: one JSON summary line, then the path to `meta.json`. The run dir (`~/.agent-runs/<stamp>-<name>-<worker>/`) holds `task.md`, `report.md`, `worker.out/.err`, `live.log` (readable progress, streamed), `test.log`, `meta.json`.
+- Run workers with Bash `run_in_background: true`; you are notified on exit. Never poll. Independent cards run in parallel; cards that touch the same files run one after another. Always pass a short unique `--name`. Call `agent-run` directly — no wrapper scripts — so the user's `Bash(agent-run:*)` rule applies.
+- **Let the user watch every worker live.** Right after dispatching, open a Terminal-panel tab per worker with `mcp__terminal__run_in_terminal` running `agent-run watch <name>`, and link the tab in your message. It streams the worker's commands, tool calls (each computer-use step), file edits and messages from `live.log`, then prints the result summary and exits. Don't run the worker itself in the terminal tab — keep it in Bash background so you get the exit notification.
 
 ## Task card
 
@@ -63,7 +64,7 @@ agent-run prepends worker rules (stay in workdir, no git commit/push, report for
 ## Loop
 
 1. Plan: split the request into independent cards. Say in one line which card goes to which worker and why.
-2. Dispatch with `agent-run` in the background, with `--test` whenever possible.
+2. Dispatch with `agent-run` in the background, with `--test` whenever possible, and open an `agent-run watch <name>` terminal tab for each worker.
 3. Verify each result yourself: read `meta.json` (exit, test.passed, changed_files, permission_denials), read `report.md`, and review the diff: `git -C <repo> diff <base>..<branch>`. Changes outside 允许改动, weakened tests, or claims the test log doesn't back up → reject.
 4. Rejected → re-dispatch once with a sharper card (quote the failure), or switch worker, or do it yourself. Don't loop more than twice; tell the user.
 5. Accepted → merge into the user's branch (`git merge --no-ff <branch>` or cherry-pick), run the project's tests once more on the merged result, then clean up: `git worktree remove <worktree>` and `git branch -D <branch>`.

@@ -33,9 +33,14 @@ Permissions are declared at dispatch time so codex never stalls on an approval m
   of failing. Implies the workspace-write sandbox.
 
 Every run gets ~/.agent-runs/<stamp>-<name>-<worker>/ with task.md, report.md (worker's
-final message), worker.out/.err, test.log and meta.json. The last stdout line is the meta path.
+final message), worker.out/.err (raw, streamed), live.log (readable progress, streamed),
+test.log and meta.json. The last stdout line is the meta path. When stderr is a terminal the
+progress is also printed live.
+
+Watching:
+  agent-run watch [NAME|RUN_DIR]   follow a run's live.log until it finishes (default: newest run)
 """
-import argparse, datetime, json, os, re, shutil, subprocess, sys, time
+import argparse, datetime, json, os, re, shutil, subprocess, sys, threading, time
 from pathlib import Path
 
 RUNS_ROOT = Path.home() / ".agent-runs"
@@ -139,7 +144,8 @@ def build_deepseek(args, workdir, prompt, run):
            "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"}
     settings = {"sandbox": {"enabled": True, "autoAllowBashIfSandboxed": True,
                             "allowUnsandboxedCommands": False}}
-    cmd = [CLAUDE, "-p", prompt, "--output-format", "json", "--settings", json.dumps(settings)]
+    cmd = [CLAUDE, "-p", prompt, "--output-format", "stream-json", "--verbose",
+           "--settings", json.dumps(settings)]
     if args.mode == "ro":
         cmd += ["--allowedTools", "Read Grep Glob Bash(grep:*) Bash(find:*) Bash(ls:*) Bash(head:*) Bash(wc:*) Bash(cat:*)",
                 "--disallowedTools", "Edit Write NotebookEdit WebFetch WebSearch"]
@@ -174,9 +180,15 @@ def build_codex(args, workdir, prompt, run):
 def parse_usage(worker, out_text, run):
     meta = {}
     if worker == "deepseek":
-        try:
-            d = json.loads(out_text)
-        except json.JSONDecodeError:
+        d = None
+        for line in out_text.splitlines():
+            try:
+                ev = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if ev.get("type") == "result":
+                d = ev
+        if d is None:
             return {"parse_error": True}
         (run / "report.md").write_text(d.get("result") or "")
         meta = {"is_error": d.get("is_error"), "num_turns": d.get("num_turns"),
@@ -199,7 +211,140 @@ def parse_usage(worker, out_text, run):
     return meta
 
 
+def _short(s, n=160):
+    s = " ".join(str(s or "").split())
+    return s if len(s) <= n else s[: n - 1] + "…"
+
+
+def _result_text(result):
+    if isinstance(result, dict):
+        texts = [c["text"] for c in result.get("content") or [] if isinstance(c, dict) and c.get("text")]
+        # computer-use results carry the tool's own instructions as a separate text block
+        texts = [t for t in texts if not t.lstrip().startswith("## Computer Use")] or texts
+        if texts:
+            return texts[0]
+    return result if isinstance(result, str) else json.dumps(result or "", ensure_ascii=False)
+
+
+def render_codex(ev):
+    """Readable progress lines for one `codex exec --json` event."""
+    t, it = ev.get("type"), ev.get("item") or {}
+    kind = it.get("type")
+    if t == "item.started":
+        if kind == "command_execution":
+            return [f"$ {_short(it.get('command'), 200)}"]
+        if kind == "mcp_tool_call":
+            a = it.get("arguments")
+            label = (a.get("title") if isinstance(a, dict) else None) or f"{it.get('server')}.{it.get('tool')}"
+            return [f"⚙ {_short(label, 160)} …"]
+        return []
+    if t == "item.completed":
+        if kind == "command_execution":
+            out = (it.get("aggregated_output") or "").strip().splitlines()
+            lines = [f"  ↳ exit {it.get('exit_code')}"] + [f"    {_short(l)}" for l in out[:4]]
+            if len(out) > 4:
+                lines.append(f"    … {len(out) - 4} more lines")
+            return lines
+        if kind == "mcp_tool_call":
+            failed = it.get("error") or it.get("status") == "failed"
+            return [f"  ↳ {'failed' if failed else 'ok'}: {_short(_result_text(it.get('error') or it.get('result')), 160)}"]
+        if kind == "agent_message":
+            return [f"💬 {_short(it.get('text'), 600)}"]
+        if kind == "reasoning":
+            return [f"… {_short(it.get('text'), 200)}"]
+        if kind == "file_change":
+            return [f"✎ {c.get('kind')} {c.get('path')}" for c in it.get("changes") or []]
+        if kind == "web_search":
+            return [f"🔎 {_short(it.get('query'))}"]
+        if kind == "error":
+            return [f"! {_short(it.get('message'), 200)}"]
+        return []
+    if t == "turn.completed" and ev.get("usage"):
+        u = ev["usage"]
+        return [f"Σ tokens in {u.get('input_tokens')} (cached {u.get('cached_input_tokens')}) out {u.get('output_tokens')}"]
+    if t in ("turn.failed", "error"):
+        return [f"! {_short(json.dumps(ev, ensure_ascii=False), 200)}"]
+    return []
+
+
+def render_claude(ev):
+    """Readable progress lines for one `claude -p --output-format stream-json` event."""
+    t = ev.get("type")
+    if t == "system" and ev.get("subtype") == "init":
+        return [f"model {ev.get('model')}"]
+    if t == "assistant":
+        lines = []
+        for c in (ev.get("message") or {}).get("content") or []:
+            if c.get("type") == "text" and (c.get("text") or "").strip():
+                lines.append(f"💬 {_short(c['text'], 600)}")
+            elif c.get("type") == "thinking" and c.get("thinking"):
+                lines.append(f"… {_short(c['thinking'], 200)}")
+            elif c.get("type") == "tool_use":
+                inp = c.get("input") or {}
+                if c.get("name") == "Bash":
+                    lines.append(f"$ {_short(inp.get('command'), 200)}")
+                else:
+                    arg = inp.get("file_path") or inp.get("pattern") or inp.get("path") or json.dumps(inp, ensure_ascii=False)
+                    lines.append(f"⚙ {c.get('name')} {_short(arg, 160)}")
+        return lines
+    if t == "user":
+        lines = []
+        for c in (ev.get("message") or {}).get("content") or []:
+            if isinstance(c, dict) and c.get("type") == "tool_result":
+                body = c.get("content")
+                if isinstance(body, list):
+                    body = " ".join(x.get("text", "") for x in body if isinstance(x, dict))
+                lines.append(f"  ↳ {'error' if c.get('is_error') else 'ok'}: {_short(body)}")
+        return lines
+    if t == "result":
+        return [f"Σ {ev.get('num_turns')} turns · {ev.get('subtype')}"]
+    return []
+
+
+def watch(argv):
+    target = argv[0] if argv else None
+    if target and Path(target).is_dir():
+        candidates = lambda: [Path(target)]
+    else:
+        pat = re.compile(rf"\d{{8}}-\d{{6}}-{re.escape(target)}-(codex|deepseek)") if target else None
+        candidates = lambda: sorted(
+            (d for d in (RUNS_ROOT.iterdir() if RUNS_ROOT.exists() else [])
+             if d.is_dir() and (d / "task.md").exists() and (not pat or pat.fullmatch(d.name))),
+            key=lambda d: d.name)
+    run, deadline = None, time.time() + 20
+    while run is None and time.time() < deadline:
+        running = [d for d in candidates() if not (d / "meta.json").exists()]
+        run = running[-1] if running else None
+        if run is None:
+            time.sleep(1)
+    if run is None:
+        found = candidates()
+        if not found:
+            raise SystemExit(f"agent-run watch: no run matching {target or '(any)'}")
+        run = found[-1]
+    print(f"== {run.name}", flush=True)
+    log, pos = run / "live.log", 0
+    while True:
+        done = (run / "meta.json").exists()
+        if log.exists():
+            with open(log) as f:
+                f.seek(pos)
+                chunk = f.read()
+                pos = f.tell()
+            if chunk:
+                print(chunk, end="", flush=True)
+        if done:
+            break
+        time.sleep(0.5)
+    meta = json.loads((run / "meta.json").read_text())
+    print("== " + json.dumps({k: meta.get(k) for k in ["exit", "duration_s", "test", "branch", "changed_files",
+                                                        "blocked_apps"] if meta.get(k) is not None},
+                             ensure_ascii=False), flush=True)
+
+
 def main():
+    if len(sys.argv) > 1 and sys.argv[1] == "watch":
+        return watch(sys.argv[2:])
     p = argparse.ArgumentParser(prog="agent-run")
     p.add_argument("worker", choices=["deepseek", "codex"])
     p.add_argument("card", help="task card markdown file, or - for stdin")
@@ -268,20 +413,46 @@ def main():
     builder = build_deepseek if args.worker == "deepseek" else build_codex
     cmd, env = builder(args, workdir, prompt, run)
 
-    t0 = time.time()
+    live = open(run / "live.log", "a", buffering=1)
+    echo = sys.stderr.isatty()
+
+    def emit(lines):
+        for ln in lines:
+            s = f"{time.strftime('%H:%M:%S')} {ln}"
+            live.write(s + "\n")
+            if echo:
+                print(s, file=sys.stderr, flush=True)
+
+    render = render_codex if args.worker == "codex" else render_claude
+    emit([f"▶ {args.worker} · {args.mode} · {name} · {workdir}"])
+    t0, out_lines, code = time.time(), [], None
     try:
-        r = subprocess.run(cmd, cwd=workdir, env=env, stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=args.timeout)
-        out, err, code = r.stdout, r.stderr, r.returncode
+        with open(run / "worker.out", "w") as fout, open(run / "worker.err", "w") as ferr:
+            proc = subprocess.Popen(cmd, cwd=workdir, env=env, stdin=subprocess.DEVNULL,
+                                    stdout=subprocess.PIPE, stderr=ferr, text=True, bufsize=1)
+            fired = []
+            timer = threading.Timer(args.timeout, lambda: (fired.append(1), proc.kill()))
+            timer.start()
+            for line in proc.stdout:
+                fout.write(line)
+                fout.flush()
+                out_lines.append(line)
+                try:
+                    emit(render(json.loads(line)))
+                except Exception:
+                    pass
+            code = proc.wait()
+            timer.cancel()
+            if fired:
+                code = "timeout"
+                ferr.write("\nagent-run: TIMEOUT\n")
     except OSError as e:
-        out, err, code = "", f"agent-run: failed to start worker: {e}", "start_failed"
-    except subprocess.TimeoutExpired as e:
-        out = e.stdout.decode() if isinstance(e.stdout, bytes) else (e.stdout or "")
-        err = (e.stderr.decode() if isinstance(e.stderr, bytes) else (e.stderr or "")) + "\nagent-run: TIMEOUT"
-        code = "timeout"
+        code = "start_failed"
+        (run / "worker.err").write_text(f"agent-run: failed to start worker: {e}")
+    out = "".join(out_lines)
     meta["duration_s"] = round(time.time() - t0, 1)
     meta["exit"] = code
-    (run / "worker.out").write_text(out)
-    (run / "worker.err").write_text(err)
+    emit([f"■ worker exit {code} · {meta['duration_s']}s"])
     meta.update(parse_usage(args.worker, out, run))
     if not (run / "report.md").exists():
         (run / "report.md").write_text("")
@@ -302,6 +473,7 @@ def main():
                            env={**env, "ANTHROPIC_AUTH_TOKEN": ""})
         (run / "test.log").write_text(f"$ {args.test}\n{t.stdout}{t.stderr}")
         meta["test"] = {"cmd": args.test, "exit": t.returncode, "passed": t.returncode == 0}
+        emit([f"✓ test passed: {args.test}" if t.returncode == 0 else f"✗ test failed (exit {t.returncode}): {args.test}"])
 
     if branch:
         wt = Path(meta["worktree"])
@@ -314,6 +486,12 @@ def main():
         meta["diffstat"] = sh(["git", "-C", str(wt), "diff", "--stat", base, "HEAD"])
         meta["changed_files"] = sh(["git", "-C", str(wt), "diff", "--name-only", base, "HEAD"]).splitlines()
 
+    if meta.get("blocked_apps"):
+        emit([f"! apps not approved: {', '.join(meta['blocked_apps'])} → {meta['approve_cmd']}"])
+    if meta.get("diffstat"):
+        emit([f"✎ {l}" for l in meta["diffstat"].splitlines()])
+    emit([f"● done → {run / 'meta.json'}"])
+    live.close()
     (run / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2))
     print(json.dumps({k: meta.get(k) for k in ["worker", "name", "exit", "duration_s", "test", "branch",
                                                  "changed_files", "permission_denials", "blocked_apps",
