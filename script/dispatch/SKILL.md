@@ -39,8 +39,13 @@ agent-run <deepseek|codex> <card.md> --dir <repo> [--mode rw|ro|cu] [--name slug
   - `--auto-approve` exists (codex `--approve-for-me`) but is off by default: it does not cover computer-use app approvals, and codex rarely asks to escalate on its own. Don't use it unless the user asks.
 - `--test`: acceptance command that agent-run itself runs in the workdir after the worker exits. Always pass one when the task is checkable — it is the evidence, not the worker's report.
 - Output: one JSON summary line, then the path to `meta.json`. The run dir (`~/.agent-runs/<stamp>-<name>-<worker>/`) holds `task.md`, `report.md`, `worker.out/.err`, `live.log` (readable progress, streamed), `test.log`, `meta.json`.
-- Run workers with Bash `run_in_background: true`; you are notified on exit. Never poll. Independent cards run in parallel; cards that touch the same files run one after another. Always pass a short unique `--name`. Call `agent-run` directly — no wrapper scripts — so the user's `Bash(agent-run:*)` rule applies.
-- **Let the user watch every worker live.** Right after dispatching, open a Terminal-panel tab per worker with `mcp__terminal__run_in_terminal` running `agent-run watch <name>`, and link the tab in your message. It streams the worker's commands, tool calls (each computer-use step), file edits and messages from `live.log`, then prints the result summary and exits. Don't run the worker itself in the terminal tab — keep it in Bash background so you get the exit notification.
+- Run workers with Bash `run_in_background: true`; you are notified on exit. Never poll (no sleep loops, no `while ! test -f meta.json`). Independent cards run in parallel; cards that touch the same files run one after another. Always pass a short unique `--name`. Call `agent-run` directly — no wrapper scripts — so the user's `Bash(agent-run:*)` rule applies.
+- **Let the user watch every worker live — this is required, not optional.** Do exactly these two calls per worker:
+  1. Bash, `run_in_background: true`: `agent-run codex /abs/card.md --dir /abs/repo --name <name> ...` (one line, nothing else in the command).
+  2. `mcp__terminal__run_in_terminal` with command `agent-run watch <name>` and title `watch <name>`, then link the tab in your message.
+
+  The watch tab streams the worker's commands, tool calls (each computer-use step), file edits and messages from `live.log`, then prints the result summary and exits.
+  **Never** write a `dispatch_*.sh` or any wrapper script, never `cd`/`tee`/`echo DONE` around agent-run, and never run the worker itself in a terminal tab and then poll for it: the user sees nothing useful that way and you lose the exit notification. If you need a log of the run, it is already in the run dir.
 
 ## Task card
 

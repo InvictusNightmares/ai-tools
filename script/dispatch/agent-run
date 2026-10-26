@@ -34,13 +34,14 @@ Permissions are declared at dispatch time so codex never stalls on an approval m
 
 Every run gets ~/.agent-runs/<stamp>-<name>-<worker>/ with task.md, report.md (worker's
 final message), worker.out/.err (raw, streamed), live.log (readable progress, streamed),
-test.log and meta.json. The last stdout line is the meta path. When stderr is a terminal the
-progress is also printed live.
+test.log and meta.json. The last stdout line is the meta path. Progress is also printed live
+to stderr when it is a terminal or a pipe (e.g. `| tee`), but not when it is a file (how Claude's
+Bash tool runs it); --live / --quiet force it on or off.
 
 Watching:
   agent-run watch [NAME|RUN_DIR]   follow a run's live.log until it finishes (default: newest run)
 """
-import argparse, datetime, json, os, re, shutil, subprocess, sys, threading, time
+import argparse, datetime, json, os, re, shutil, stat, subprocess, sys, threading, time
 from pathlib import Path
 
 RUNS_ROOT = Path.home() / ".agent-runs"
@@ -358,6 +359,8 @@ def main():
     p.add_argument("--add-dir", action="append", default=[], help="codex only: extra writable dir (repeatable)")
     p.add_argument("--apps", help="cu only: comma-separated apps the task will drive")
     p.add_argument("--skip-app-check", action="store_true", help="cu only: run even if --apps has unapproved apps")
+    p.add_argument("--live", action="store_true", help="always print progress to stderr")
+    p.add_argument("--quiet", action="store_true", help="never print progress to stderr (live.log is still written)")
     p.add_argument("--auto-approve", action="store_true",
                    help="codex only: let codex's reviewer approve escalations instead of failing")
     args = p.parse_args()
@@ -414,7 +417,14 @@ def main():
     cmd, env = builder(args, workdir, prompt, run)
 
     live = open(run / "live.log", "a", buffering=1)
-    echo = sys.stderr.isatty()
+    try:
+        stderr_is_stream = sys.stderr.isatty() or stat.S_ISFIFO(os.fstat(2).st_mode)
+    except OSError:
+        stderr_is_stream = False
+    echo = args.live or (stderr_is_stream and not args.quiet)
+    if echo:
+        print(f"agent-run: live progress below (also in {run / 'live.log'}; "
+              f"follow from another terminal with: agent-run watch {name})", file=sys.stderr, flush=True)
 
     def emit(lines):
         for ln in lines:
