@@ -23,6 +23,9 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
 
+      - name: Test provider update guards
+        run: python3 script/clash/test-johnshall-shadowrocket-ad.py
+
       - name: Convert latest upstream rules
         run: bash script/clash/update-johnshall-shadowrocket-ad.sh
 

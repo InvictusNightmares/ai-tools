@@ -134,8 +134,11 @@ awk -F',' -v payload_file="${payload_file}" -v stats_file="${stats_file}" '
 
 read -r raw_count domain_count ip_count unique_count unique_domain_count unique_ip_count duplicate_count < "${stats_file}"
 
-if (( raw_count < 50000 || domain_count < 50000 || ip_count < 1 )); then
-  printf 'Unexpected rule counts: total=%s domain=%s ip=%s\n' "${raw_count}" "${domain_count}" "${ip_count}" >&2
+# Check the rules we actually publish: IP rules count too, duplicates do not.
+# Keep rejecting incomplete upstream builds without requiring 50,000 domains.
+if (( unique_count < 50000 || unique_domain_count < 1 || unique_ip_count < 1 )); then
+  printf 'Unexpected rule counts: effective_total=%s domain=%s ip=%s (minimum 50000 effective rules; raw_total=%s)\n' \
+    "${unique_count}" "${unique_domain_count}" "${unique_ip_count}" "${raw_count}" >&2
   exit 1
 fi
 
