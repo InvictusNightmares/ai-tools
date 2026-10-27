@@ -114,6 +114,34 @@ python3 snatch.py run --at 10:00:00 --burst 3
 
 今天这批已经放过了，正好从明天开始把窗口摸出来。
 
+## 服务器已部署（ctyun）
+
+- 主机：`ctyun` → `100.121.133.84`（root）
+- 目录：`/root/hw-coupon`
+- 服务：systemd `hwcoupon`，已 `enable`（开机自启），失败 15s 自动重试
+- 日志：`/root/hw-coupon/run.log`（服务内 `TZ=Asia/Shanghai`，北京时间）
+- 库存记录：`/root/hw-coupon/stock_log.csv`
+
+```bash
+systemctl status hwcoupon
+systemctl restart hwcoupon
+journalctl -u hwcoupon -f
+tail -f /root/hw-coupon/run.log
+```
+
+更新登录态（Cookie 过期后）：
+
+```bash
+# 本机
+python3 snatch.py export-cookie
+scp cookie.txt ctyun:/root/hw-coupon/cookie.txt
+ssh ctyun 'systemctl restart hwcoupon'
+```
+
+排障记录：Chrome 里同一个 Cookie 名（尤其 `HWWAFSESID`）会出现在多个域下，
+简单按名字去重会拿到别的子域的 WAF session，服务器表现为 `403 not login`。
+`hw_cookies.py` 已按 `devdata > developer > .huaweicloud.com` 的优先级去重。
+
 ## 注意
 
 - 券规则写死：单用户每天限兑 1 张，200 元券全年最多 2 张；兑换前需完成实名认证。

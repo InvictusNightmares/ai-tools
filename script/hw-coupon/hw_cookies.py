@@ -24,6 +24,14 @@ HOSTS = [
 # 只带这些域名的 cookie 给 devdata API
 API_HOSTS = {".huaweicloud.com", "developer.huaweicloud.com", "devdata.huaweicloud.com"}
 
+# 同名 cookie 跨域冲突时的优先级（数字越小越优先）
+HOST_PRIORITY = {
+    "devdata.huaweicloud.com": 0,
+    "developer.huaweicloud.com": 1,
+    ".huaweicloud.com": 2,
+    "auth.huaweicloud.com": 3,
+}
+
 PROFILE = os.path.expanduser(
     os.environ.get("CHROME_PROFILE", "~/Library/Application Support/Google/Chrome/Default")
 )
@@ -100,11 +108,14 @@ def read_jar(profile=PROFILE):
         if host not in API_HOSTS:
             continue
         v = value if value else _decrypt(enc, key)
-        if v:
-            jar[name] = v
+        if not v:
+            continue
+        old = jar.get(name)
+        if old is None or HOST_PRIORITY.get(host, 99) < HOST_PRIORITY.get(old[0], 99):
+            jar[name] = (host, v)
     if "SessionID" not in jar and "HWS_ID" not in jar:
         raise RuntimeError("没有解出华为云登录态（Chrome 里可能未登录 developer.huaweicloud.com）")
-    return jar
+    return {k: v for k, (_, v) in jar.items()}
 
 
 def cookie_header(profile=PROFILE):
