@@ -24,6 +24,20 @@ test('upgrade strips only the exact old shim and preserves unrelated edits',()=>
  const old=legacyInject(modern)+'\n// another plugin';const migrated=applyReplacementsToText(old,patch);
  assert.equal(migrated.text,applyReplacementsToText(modern,patch).text+'\n// another plugin');
 });
+test('historical #42 shim generations migrate instead of failing',()=>{
+ const expected=applyReplacementsToText(modern,patch).text;
+ const canonical=legacyInject(modern);
+ const resolved89='\t\tconst resolved = plainConfig(schema(mergeLayers(options?.base ?? {}, user ?? {}))); // [dsh-purge] #86 plainConfig before validate + #89 ?? {} 兜 over=undefined 丢 base';
+ const next89='\t\tconst next = plainConfig(registration.schema(mergeLayers(registration.base ?? {}, user ?? {}))); // [dsh-purge] #86 plainConfig before validate + #89 ?? {} 兜 over=undefined 丢 base';
+ const resolved86='\t\tconst resolved = plainConfig(schema(mergeLayers(options?.base, user))); // [dsh-purge] #86 plainConfig before validate';
+ const next86='\t\tconst next = plainConfig(registration.schema(mergeLayers(registration.base, user))); // [dsh-purge] #86 plainConfig before validate';
+ const variants=[
+  canonical.replace(resolved89,resolved86).replace(next89,next86),
+  canonical.replace(resolved89,'\t\tconst resolved = schema(mergeLayers(options?.base, user));').replace(next89,'\t\tconst next = registration.schema(mergeLayers(registration.base, user));').split('applyPathOp(section, op)').join('legacyApplyPath(section, op)'),
+  canonical.split('applyPathOp(section, op)').join('legacyApplyPath(section, op)'),
+ ];
+ for(const old of variants){const migrated=applyReplacementsToText(old,patch);assert.equal(migrated.text,expected);assert.doesNotMatch(migrated.text,/legacyRegistrations|legacyApplyPath/);}
+});
 test('unknown modified shim fails before writing instead of clobbering it',()=>{
  const old=legacyInject(modern).replace('const stored = this.legacyDocument[ns];','const stored = customStorage(ns);');assert.throws(()=>applyReplacementsToText(old,patch),/historical shim differs/);
 });

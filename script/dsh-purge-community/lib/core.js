@@ -6700,9 +6700,34 @@ const MODERN_SETTINGS_MARKER = "[dsh-purge] modern settings events";
 function modernSettingsApi(source) {
   return /^\t(?:async )?describe\(/m.test(source) && /^\t(?:async )?replace\(/m.test(source);
 }
+// #42 的旧兼容层跨了三代：1.1.47 的原始 mergeLayers、#86 的 plainConfig、
+// #89 的 base/user 兜底。宿主 0.2.x 已删除 legacyApplyPath，老产物如果停在
+// 1.1.47/#86，直接用当前模板逆向匹配会失败并留下 legacyRegistrations。
+// 这里只把兼容层内部三行已知历史写法规范成当前模板，再走精确逆向。
+const SETTINGS_SHIM_RESOLVED =
+  "\t\tconst resolved = plainConfig(schema(mergeLayers(options?.base ?? {}, user ?? {}))); // [dsh-purge] #86 plainConfig before validate + #89 ?? {} 兜 over=undefined 丢 base";
+const SETTINGS_SHIM_NEXT =
+  "\t\tconst next = plainConfig(registration.schema(mergeLayers(registration.base ?? {}, user ?? {}))); // [dsh-purge] #86 plainConfig before validate + #89 ?? {} 兜 over=undefined 丢 base";
+const HISTORICAL_SETTINGS_RESOLVED = [
+  "\t\tconst resolved = schema(mergeLayers(options?.base, user));",
+  "\t\tconst resolved = plainConfig(schema(mergeLayers(options?.base, user))); // [dsh-purge] #86 plainConfig before validate",
+];
+const HISTORICAL_SETTINGS_NEXT = [
+  "\t\tconst next = registration.schema(mergeLayers(registration.base, user));",
+  "\t\tconst next = plainConfig(registration.schema(mergeLayers(registration.base, user))); // [dsh-purge] #86 plainConfig before validate",
+];
+function normalizeHistoricalSettingsShim(source) {
+  if (!source.includes("legacyRegistrations") || !source.includes("register(ns, schema, options) {")) return source;
+  let out = source;
+  for (const legacy of HISTORICAL_SETTINGS_RESOLVED) out = out.split(legacy).join(SETTINGS_SHIM_RESOLVED);
+  for (const legacy of HISTORICAL_SETTINGS_NEXT) out = out.split(legacy).join(SETTINGS_SHIM_NEXT);
+  return out
+    .split("(ops ?? []).reduce((section, op) => legacyApplyPath(section, op), user ?? {})")
+    .join("(ops ?? []).reduce((section, op) => applyPathOp(section, op), user ?? {})");
+}
 function modernSettingsPatch(text, patch) {
   const crlf = text.includes("\r\n");
-  let source = asLf(text);
+  let source = normalizeHistoricalSettingsShim(asLf(text));
   // Reverse only the six exact shim edits owned by #42; never restore a whole
   // backup over another plugin's changes or touch either settings document.
   for (const { pattern, replace } of patch.replacements.slice(0, 6).reverse()) {
