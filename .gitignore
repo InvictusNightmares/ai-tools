@@ -20,3 +20,10 @@ script/sub2api/token-usage/daily/email-runs/
 # Private Sub2API account handoff originals and runtime credentials.
 /doc/gateway/private/
 /script/gateway/sub2api-next/customer-passwords*.json
+
+# hw-coupon: 登录态与本地产物，不入库
+script/hw-coupon/cookie*.txt
+script/hw-coupon/stock_log.csv
+script/hw-coupon/exchange_log.txt
+script/hw-coupon/run.log
+script/hw-coupon/launchd.*.log
