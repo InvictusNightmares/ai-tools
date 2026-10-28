@@ -81,6 +81,7 @@ class Api:
         self.csrf = self._csrf()
         self.offset = 0.0
         self._bean_cache = (0, 0)
+        self._last_refresh_msg = 0.0
 
     def _load_cookie(self):
         if self.cookie_file:
@@ -97,7 +98,9 @@ class Api:
 
     def refresh(self):
         """重新读取登录态（本地 Chrome 或 cookie 文件）并刷新 CSRF。"""
-        print(f"[{now()}] 刷新登录态 ...")
+        if time.time() - self._last_refresh_msg > 60:
+            print(f"[{now()}] 刷新登录态 ...")
+            self._last_refresh_msg = time.time()
         self.cookie = self._load_cookie()
         self.s.headers["Cookie"] = self.cookie
         self.csrf = self._csrf()
@@ -353,12 +356,26 @@ def cmd_run(args):
 
     last_state = None
     last_beat = 0
+    auth_fails = 0
     while True:
         try:
             d = api.detail(pid)
+            auth_fails = 0
         except Exception as e:
-            print(f"[{now()}] 轮询失败: {e}")
-            time.sleep(1.5)
+            if "登录态失效" in str(e):
+                auth_fails += 1
+                if auth_fails == 1 or auth_fails % 30 == 0:
+                    print(f"[{now()}] 登录态失效（第 {auth_fails} 次）：Cookie 已过期，"
+                          f"请重新 export-cookie 并同步到服务器")
+                if auth_fails >= 5:
+                    print(f"[{now()}] 连续失效，暂停 5 分钟后再试")
+                    time.sleep(300)
+                    auth_fails = 0
+                else:
+                    time.sleep(3)
+            else:
+                print(f"[{now()}] 轮询失败: {e}")
+                time.sleep(2)
             continue
         beans = api.beans(ttl=30)
         state = (str(d.get("has_stock")), d.get("remain_number"), d.get("version"))
