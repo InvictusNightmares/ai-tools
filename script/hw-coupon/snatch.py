@@ -202,6 +202,24 @@ def make_api(args):
     return Api(cookie_file=getattr(args, "cookie_file", None))
 
 
+def resolve_target(api, args):
+    """登录态失效/网络抖动时等待重试，避免 systemd 崩溃循环。"""
+    while True:
+        try:
+            return find_target(api, args.value, args.name)
+        except SystemExit:
+            raise
+        except Exception as e:
+            print(f"[{now()}] 初始化失败: {e}")
+            print(f"[{now()}] 可能是登录态过期或网络问题，30s 后重试；"
+                  f"若持续出现请重新 export-cookie")
+            time.sleep(30)
+            try:
+                api.refresh()
+            except Exception as e2:
+                print(f"[{now()}] 刷新登录态失败: {e2}")
+
+
 def cmd_check(args):
     api = make_api(args)
     api.server_offset()
@@ -281,7 +299,7 @@ def try_exchange(api, pid, bonus, attempts=8):
 def cmd_monitor(args):
     api = make_api(args)
     api.server_offset()
-    prize, cid, items = find_target(api, args.value, args.name)
+    prize, cid, items = resolve_target(api, args)
     pid = prize["id"]
     bonus = int(prize.get("bonus") or 0)
     print(f"目标: {prize['name']} id={pid} 积分={bonus} 当前库存={prize.get('remain_number')} "
@@ -302,9 +320,12 @@ def cmd_monitor(args):
                   f"version={d.get('version')} beans={beans}")
             log_stock(d, beans, state)
             last_state = state
-        elif time.time() - last_beat > 300:
-            print(f"[{now()}] 心跳 remain={d.get('remain_number')} version={d.get('version')} beans={beans}")
-            log_stock(d, beans, state)
+            last_beat = time.time()
+        elif args.verbose:
+            print(f"[{now()}] poll remain={d.get('remain_number')} version={d.get('version')} beans={beans}")
+        elif time.time() - last_beat > args.heartbeat:
+            print(f"[{now()}] 心跳 remain={d.get('remain_number')} version={d.get('version')} "
+                  f"beans={beans}（无变化）")
             last_beat = time.time()
         if is_stock(d) and not args.no_alert:
             notify("有货了", f"{prize['name']} 剩余 {d.get('remain_number')}")
@@ -317,7 +338,7 @@ def cmd_monitor(args):
 def cmd_run(args):
     api = make_api(args)
     api.server_offset()
-    prize, cid, items = find_target(api, args.value, args.name)
+    prize, cid, items = resolve_target(api, args)
     pid = prize["id"]
     bonus = int(prize.get("bonus") or 0)
     beans = api.beans(ttl=0)
@@ -346,8 +367,12 @@ def cmd_run(args):
                   f"version={d.get('version')} beans={beans}")
             log_stock(d, beans, state)
             last_state = state
-        elif time.time() - last_beat > 300:
-            log_stock(d, beans, state)
+            last_beat = time.time()
+        elif args.verbose:
+            print(f"[{now()}] poll remain={d.get('remain_number')} version={d.get('version')} beans={beans}")
+        elif time.time() - last_beat > args.heartbeat:
+            print(f"[{now()}] 心跳 remain={d.get('remain_number')} version={d.get('version')} "
+                  f"beans={beans}（无变化）")
             last_beat = time.time()
 
         if is_stock(d):
@@ -401,6 +426,8 @@ def main():
     m.add_argument("--poll-min", type=float, default=0.8)
     m.add_argument("--poll-max", type=float, default=1.3)
     m.add_argument("--no-alert", action="store_true")
+    m.add_argument("--heartbeat", type=float, default=60, help="无变化时每隔多少秒打一行心跳")
+    m.add_argument("--verbose", action="store_true", help="每轮都打印")
     m.set_defaults(func=cmd_monitor)
 
     r = sub.add_parser("run", parents=[common], help="监听并自动兑换")
@@ -411,6 +438,8 @@ def main():
     r.add_argument("--burst", type=int, default=2)
     r.add_argument("--at", default=None, help="HH:MM[:SS] 服务器时间起跑")
     r.add_argument("--prefire", type=float, default=0.4)
+    r.add_argument("--heartbeat", type=float, default=60, help="无变化时每隔多少秒打一行心跳")
+    r.add_argument("--verbose", action="store_true", help="每轮都打印")
     r.set_defaults(func=cmd_run)
 
     e = sub.add_parser("export-cookie", help="导出 Cookie 文件给服务器用")

@@ -1,6 +1,7 @@
 #!/bin/bash
 # 常驻跑：macOS 用 caffeinate 防睡眠；Linux 直接跑。崩溃自动重启，抢到后正常退出
 cd "$(dirname "$0")" || exit 1
+set -o pipefail
 
 ARGS=("$@")
 if [ ${#ARGS[@]} -eq 0 ]; then
@@ -14,7 +15,7 @@ fi
 
 while true; do
   echo "$(date '+%F %T') 启动: python3 snatch.py ${ARGS[*]}" >> run.log
-  "${RUN[@]}" python3 snatch.py "${ARGS[@]}"
+  "${RUN[@]}" python3 -u snatch.py "${ARGS[@]}" 2>&1 | tee -a run.log
   rc=$?
   if [ "$rc" -eq 0 ]; then
     echo "$(date '+%F %T') 已成功抢到，退出" >> run.log
