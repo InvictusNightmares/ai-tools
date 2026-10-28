@@ -29,7 +29,7 @@ https://raw.githubusercontent.com/InvictusNightmares/ai-tools/main/config/clash/
 
 首次拉取是异步的，缓存尚未准备好或下载失败时，订阅可能暂时只有默认规则；稍后更新订阅，并检查生成配置是否包含 `Auto`（隐藏组）、`PROXY`、广告 provider 和末尾的 `MATCH,PROXY`。不能仅凭“保存成功”认定规则已下发。[远程加载源码](https://github.com/MHSanaei/3x-ui/blob/v3.7.0/internal/sub/remote_routing.go)
 
-主选择组必须使用全大写 `PROXY`，广告 provider 的 `proxy` 和最终 `MATCH` 也要引用同名组。远程模式按区分大小写的名称合并，使用 `PROXY` 才能覆盖面板默认组；写成 `Proxy` 会让两组同时保留。正常情况下，代理页只显示一个主选择组 `PROXY`，内含 `Auto` 及实际匹配到的 `Hysteria2` / `Vless` 节点。[分组合并源码](https://github.com/MHSanaei/3x-ui/blob/v3.7.0/internal/sub/clash_service.go#L1021-L1062)
+主选择组必须使用全大写 `PROXY`，广告 provider 的 `proxy` 和最终 `MATCH` 也要引用同名组。远程模式按区分大小写的名称合并，使用 `PROXY` 才能覆盖面板默认组；写成 `Proxy` 会让两组同时保留。代理页只显示一个主选择组 `PROXY`，内含 `Auto`、`US-Hysteria2` / `US-Vless`，以及合并订阅后可手动选择的 `SG-Hysteria2` / `SG-Vless`。筛选同时兼容旧名称 `Hysteria2` / `Vless`，避免分批改名时漏掉节点。[分组合并源码](https://github.com/MHSanaei/3x-ui/blob/v3.7.0/internal/sub/clash_service.go#L1021-L1062)
 
 从旧配置更新后，在 `PROXY` 中手动选择一次 `Auto`。`store-selected: true` 会恢复以前同名组的选择，因此旧的 `Vless` 选择可能覆盖 `default-selected: Auto`；不需要清空缓存。[选择恢复源码](https://github.com/MetaCubeX/mihomo/blob/v1.19.29/hub/executor/executor.go#L439-L467)
 
@@ -56,7 +56,7 @@ DNS 沿用现有选择：国外 DoH、直连目标使用国内 DNS、代理节�
 - 主规则：修改并发布 `dmit-rules.yaml` 后，3x-ui 重新拉取，客户端再更新用户订阅。v3.7 有 10 分钟缓存，并非实时同步；网络故障时可能继续使用上次成功缓存。
 - 广告规则：现有 GitHub Actions 负责更新转换后的 provider；客户端按 `interval: 86400` 拉取。工作流停用或失败、客户端离线都会延迟更新，不保证与上游发布同时生效。
 - 客户端配置：修改 `dmit-client.yaml` 后，需要重新复制到每台电脑的订阅扩展；不会通过 3x-ui 更新。换电脑时重复上面的“一次配置”步骤即可。
-- 节点选择：`Auto` 按名称引入 `Hysteria2`、`Vless`。Mihomo v1.19.29 会按名称排序，因此 Hysteria2 优先，Vless 备用。两者都没有匹配时使用 `REJECT`，不会自动变成直连。若 3x-ui 节点改名，需要同步修改两个组的 `filter`。[Mihomo 排序源码](https://github.com/MetaCubeX/mihomo/blob/v1.19.29/config/config.go)、[过滤与空组处理](https://github.com/MetaCubeX/mihomo/blob/v1.19.29/adapter/outboundgroup/parser.go)
+- 节点选择：`Auto` 只引入 `US-Hysteria2`、`US-Vless`（兼容旧名称 `Hysteria2`、`Vless`），SG 节点通过 `PROXY` 手动选择。Mihomo v1.19.29 会按名称排序，因此 Hysteria2 优先，Vless 备用。没有匹配的 US/旧名称节点时，`Auto` 使用 `REJECT`。若 3x-ui 节点改名，需要同步修改两个组的 `filter`。[Mihomo 排序源码](https://github.com/MetaCubeX/mihomo/blob/v1.19.29/config/config.go)、[过滤与空组处理](https://github.com/MetaCubeX/mihomo/blob/v1.19.29/adapter/outboundgroup/parser.go)
 
 ## 使用前检查
 

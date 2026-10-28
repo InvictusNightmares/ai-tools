@@ -1,4 +1,4 @@
-# 3x-ui v3.8 Clash/Mihomo remote HTTPS routing overlay.
+# 3x-ui v3.11 Clash/Mihomo remote HTTPS routing overlay.
 # 3x-ui supplies proxies dynamically; use PROXY to replace its default group.
 # Client-only DNS/IPv6 defaults are in dmit-client.yaml; see dmit-setup.md.
 
@@ -7,7 +7,7 @@ proxy-groups:
     hidden: true
     type: fallback
     include-all-proxies: true
-    filter: '^(Hysteria2|Vless)$'
+    filter: '^(US-)?(Hysteria2|Vless)$'
     empty-fallback: REJECT
     url: https://www.gstatic.com/generate_204
     interval: 30
@@ -18,7 +18,7 @@ proxy-groups:
     proxies:
       - Auto
     include-all-proxies: true
-    filter: '^(Vless|Hysteria2)$'
+    filter: '^((US|SG)-)?(Vless|Hysteria2)$'
     default-selected: Auto
 
 rule-providers:

@@ -96,12 +96,16 @@ begin
   check(names.uniq.length == names.length, 'duplicate remote proxy-group names')
 
   scenarios = {
-    'both nodes' => [%w[Vless Hysteria2 unrelated-node Hysteria2-copy Vless-copy], %w[Hysteria2 Vless]],
-    'Vless only' => [%w[Vless], %w[Vless]],
-    'Hysteria2 only' => [%w[Hysteria2], %w[Hysteria2]],
-    '3x-ui validation-node' => [%w[validation-node], %w[REJECT]]
+    'legacy nodes' => [%w[Vless Hysteria2 unrelated-node Hysteria2-copy Vless-copy], %w[Hysteria2 Vless], %w[Auto Hysteria2 Vless]],
+    'legacy Vless only' => [%w[Vless], %w[Vless], %w[Auto Vless]],
+    'legacy Hysteria2 only' => [%w[Hysteria2], %w[Hysteria2], %w[Auto Hysteria2]],
+    'US and SG nodes' => [%w[US-Vless US-Hysteria2 SG-Vless SG-Hysteria2 US-Vless-copy SG-Hysteria2-copy unrelated-node], %w[US-Hysteria2 US-Vless], %w[Auto SG-Hysteria2 SG-Vless US-Hysteria2 US-Vless]],
+    'US nodes only' => [%w[US-Vless US-Hysteria2], %w[US-Hysteria2 US-Vless], %w[Auto US-Hysteria2 US-Vless]],
+    'SG nodes only' => [%w[SG-Vless SG-Hysteria2], %w[REJECT], %w[Auto SG-Hysteria2 SG-Vless]],
+    'partial US rename' => [%w[US-Vless Hysteria2 SG-Vless SG-Hysteria2], %w[Hysteria2 US-Vless], %w[Auto Hysteria2 SG-Hysteria2 SG-Vless US-Vless]],
+    '3x-ui validation-node' => [%w[validation-node], %w[REJECT], %w[Auto]]
   }
-  scenarios.each do |scenario, (nodes, expected_auto)|
+  scenarios.each do |scenario, (nodes, expected_auto, expected_proxy)|
     config = merge_remote(overlay, nodes)
     merged_groups = config.fetch('proxy-groups')
     merged_names = merged_groups.map { |group| group.fetch('name') }
@@ -112,10 +116,9 @@ begin
     check(auto['hidden'] == true && proxy['hidden'] != true, "#{scenario}: only Auto must be hidden")
     check(auto['type'] == 'fallback' && auto['include-all-proxies'] == true && auto.fetch('proxies', []).empty?, "#{scenario}: Auto must dynamically include nodes, not hard-code them")
     check(auto['empty-fallback'] == 'REJECT', "#{scenario}: an empty Auto must REJECT, never go DIRECT")
-    check(candidates(auto, nodes) == expected_auto, "#{scenario}: Auto must prefer Hysteria2, then Vless, or REJECT when empty")
+    check(candidates(auto, nodes) == expected_auto, "#{scenario}: Auto must contain only US/legacy nodes in Hysteria2-first order, or REJECT when empty")
     check(proxy['type'] == 'select' && proxy.fetch('proxies', []).include?('Auto'), "#{scenario}: PROXY must offer Auto")
     check(proxy['default-selected'] == 'Auto', "#{scenario}: PROXY must default to Auto")
-    expected_proxy = ['Auto'] + (expected_auto == ['REJECT'] ? [] : expected_auto)
     check(candidates(proxy, nodes) == expected_proxy, "#{scenario}: PROXY must offer only Auto and matching nodes, never the default DIRECT candidate")
     check(config.fetch('rules').last == 'MATCH,PROXY', "#{scenario}: final rule must be MATCH,PROXY")
     puts "PASS: #{scenario}"
