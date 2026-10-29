@@ -100,6 +100,11 @@ begin
     'legacy Vless only' => [%w[Vless], %w[Vless], %w[Auto Vless]],
     'legacy Hysteria2 only' => [%w[Hysteria2], %w[Hysteria2], %w[Auto Hysteria2]],
     'US and SG nodes' => [%w[US-Vless US-Hysteria2 SG-Vless SG-Hysteria2 US-Vless-copy SG-Hysteria2-copy unrelated-node], %w[US-Hysteria2 US-Vless], %w[Auto SG-Vless US-Hysteria2 US-Vless]],
+    'zc with one server relay' => [
+      %w[US-Hysteria2 US-Vless SG-Vless US-Vless-SG-Hysteria2 US-Vless-iOS],
+      %w[US-Hysteria2 US-Vless],
+      %w[Auto SG-Vless US-Hysteria2 US-Vless US-Vless-SG-Hysteria2]
+    ],
     'seven direct and relay nodes' => [
       %w[US-Hysteria2 US-Vless SG-Vless US-Hysteria2-SG-Hysteria2 US-Vless-SG-Hysteria2 US-Hysteria2-SG-Vless US-Vless-SG-Vless SG-Hysteria2 US-Vless-SG-Vless-copy unrelated-node],
       %w[US-Hysteria2 US-Vless],
