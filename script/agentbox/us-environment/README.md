@@ -1,24 +1,24 @@
 # Agentbox US environment
 
 This opt-in profile is for the finalized Agentbox cloud computer. It keeps the
-DMIT **online subscription and its existing 720-minute refresh interval**.
+configured **online subscription and its existing 720-minute refresh interval**.
 The downloaded rules, rule providers and routing groups remain unchanged;
 desktop merge/scripts are skipped for this cloud profile. Local settings only
 adapt DNS, TUN and headless runtime ports.
 
-- `AGENTBOX-US` is an added DNS-only group using VLESS/Hysteria2 nodes from the configured DMIT IP. If a
+- `AGENTBOX-US` is an added DNS-only group using VLESS/Hysteria2 nodes from the privately configured proxy address. If a
   refresh contains no eligible node, compilation fails and keeps the current
   working configuration. DNS has no DIRECT fallback. Ordinary traffic follows
   the subscription's original DIRECT/REJECT/PROXY rules and their original order.
 - Public DNS uses Cloudflare (`https://1.1.1.1/dns-query`), Google
   (`https://8.8.8.8/dns-query`), and Quad9 (`tls://9.9.9.9`), all through that
   proxy group with normal certificate verification. Quad9 DoT is used because
-  its HTTPS endpoints timed out from the DMIT exit during live validation.
+  its HTTPS endpoints timed out from the configured proxy exit during live validation.
 - The host uses local DNS, and Docker uses the host's bridge address. Only the
   local machine and Agentbox egress bridge can reach the DNS listener; UFW
   retains its default deny inbound policy. Tailnet names use Tailscale MagicDNS.
 - The production TUN handles applications that do not honor HTTP proxy variables.
-  Tailscale, local networks, and the DMIT transport remain outside the TUN.
+  Tailscale, local networks, and the proxy transport remain outside the TUN.
   A separate nftables OUTPUT/FORWARD gate keeps ordinary processes behind the
   TUN and blocks external port 53/853 DNS bypasses. The `mihomo` service UID may
   reach public destinations directly when the subscription says DIRECT.
@@ -73,4 +73,4 @@ retain the current image, configuration, dependency files, and final reports.
 `fuck-claude` is a third-party heuristic, not an Anthropic acceptance test. Its
 Emoji item assigns Linux a small nonzero score solely from `navigator.platform`
 and the user agent. That score is not evidence of Chinese DNS, fonts, or locale.
-The physical cloud region and the DMIT datacenter IP classification are unchanged.
+The physical cloud region and the proxy endpoint classification are unchanged.

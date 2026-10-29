@@ -1,6 +1,6 @@
 # Agentbox site-check
 
-从 DMIT 的 `/root/site-check` 迁移 `playwright-core` 1.62.1 及其锁文件，为 Agentbox 补上可重复执行的公共网站环境检测入口。DMIT 原目录没有独立检测脚本；迁移保留该依赖环境，新增入口通过 Node 原生 WebSocket 直接使用 Chrome DevTools Protocol。
+使用固定版本的 `playwright-core` 1.62.1 及其锁文件，为 Agentbox 提供可重复执行的公共网站环境检测入口。检测入口通过 Node 原生 WebSocket 直接使用 Chrome DevTools Protocol。
 
 直接 CDP 采集是为了保留浏览器实际环境：Playwright 1.62.1 连接 Headless Chrome 时会设置默认字体，`noDefaults` 并不跳过该操作。本入口不设置时区、locale、UA、字体、视口或 WebRTC 模拟；浏览器启动仅沿用已部署 `client.env` 中的 7898 代理和语言参数。截图裁取不改变浏览器视口。
 
@@ -29,11 +29,11 @@ Compose 固定已验收镜像的摘要，并设置 `pull_policy: never`，缺少
     test-completion.mjs
     package.json
     package-lock.json
-    node_modules/          # DMIT 原有 Playwright 环境
+    node_modules/          # 由锁文件确定的 Playwright 环境
   output/                  # root:root，0750
 ```
 
-`app` 与配置归 root 管理、只读挂载。管理员从 DMIT 仅复制 `package.json`、`package-lock.json`、`node_modules`，再加入本目录入口文件；上传包需核对 SHA256 后安装。不得复制 DMIT 其他服务配置、账号或浏览器历史。以后需要重建依赖时，在独立暂存目录执行 `npm ci --ignore-scripts --omit=dev`，使用仓库锁文件，不运行 `npm update`。
+`app` 与配置归 root 管理、只读挂载。管理员从私有依赖环境仅复制 `package.json`、`package-lock.json`、`node_modules`，再加入本目录入口文件；上传包需核对 SHA256 后安装。不得复制来源服务器的其他服务配置、账号或浏览器历史。以后需要重建依赖时，在独立暂存目录执行 `npm ci --ignore-scripts --omit=dev`，使用仓库锁文件，不运行 `npm update`。
 
 容器从既有 `/srv/agentbox/headless-chrome/client.env` 读取 Browserless token；不要运行会展开秘密的 `docker compose config`（可用 `config --quiet`），不要打印容器完整环境或完整连接 URL。token 不进入网页，不写入检测结果。
 

@@ -1,6 +1,6 @@
 # CTYun Hermes
 
-使用官方 Docker 镜像运行个人助手，通过 DMIT CPA 调用模型，复用 CTYun 的代理和 Chrome。
+使用官方 Docker 镜像运行个人助手，通过配置的 CPA 上游调用模型，复用 CTYun 的代理和 Chrome。
 
 ## 固定版本与配置
 
@@ -18,7 +18,7 @@
 
 脱敏模板是 `.env.template`。当前本地 `.env.example` 由本人手动填写，已加入本目录 `.gitignore` 并设为 `0600`；不要加入 Git 或打入交付包。
 
-运行凭据放在 CTYun 的 `/srv/agentbox/hermes/data/.env`，权限 `0600`，属主 `10000:10000`。`CPA_API_KEY` 使用本人提供的 Key。上游 OAuth 文件留在 DMIT。
+运行凭据放在 CTYun 的 `/srv/agentbox/hermes/data/.env`，权限 `0600`，属主 `10000:10000`。`CPA_API_KEY` 使用本人提供的 Key。上游 OAuth 文件仅保存在私有上游服务中。
 
 `configure-credentials.py` 是本次首次部署的凭据导入辅助脚本：在 CTYun 以 root 运行，从标准输入接收凭据 JSON，先验证 CPA Key，再更新运行环境；飞书凭据先暂存到容器挂载范围外。当前运行凭据已启用，暂存文件已删除，无须再次运行该脚本。
 
@@ -34,7 +34,7 @@ ssh ctyun 'docker compose -f /srv/agentbox/hermes/compose.yaml restart hermes'
 ssh ctyun 'systemctl list-timers agentbox-hermes-backup.timer'
 ```
 
-模型可通过 `/model` 选择，或用命名 Provider 语法，例如 `/model custom:dmit-cpa:claude-opus-4-6`。修改 YAML 后重启 Hermes；修改 Compose 后执行 `up -d`。不要在运行中的容器内执行自更新，镜像版本由 Compose 管理。
+模型可通过 `/model` 选择，或用命名 Provider 语法，例如 `/model custom:<provider-name>:<model-name>`。修改 YAML 后重启 Hermes；修改 Compose 后执行 `up -d`。不要在运行中的容器内执行自更新，镜像版本由 Compose 管理。
 
 飞书使用国内 WebSocket，应用可用范围和 `FEISHU_ALLOWED_USERS` 均限制本人，群消息禁用。当前已接入本人创建的个人应用 `cli_aa15144968381d27`，归属 Feishu Personal Edition，`1.0.0` 已发布。本人已批准并添加五项应用身份权限：`im:message`、`im:message:send_as_bot`、`im:resource`、`im:chat:readonly`、`im:message.p2p_msg:readonly`。最后一项用于接收发给机器人的私聊事件。`im.message.receive_v1` 与 `card.action.trigger` 均使用长连接。个人账号的配对、附件往返、审批按钮及默认通知已通过验收，详见 `ACCEPTANCE.md`。原企业应用仍保留，但 Hermes 已不再连接它。
 

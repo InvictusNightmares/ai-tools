@@ -277,6 +277,6 @@ domain:ai.developer.meta.com
 
 ## 验证建议
 
-1. 将 `config/xray/ai-service-rules.json` 中的 TCP、UDP 两条 `routing.rules[]` field rule 合并到 3x-ui，入站标签对应 `in-443-tcp` 和 `in-443-udp`，保持现有普通流量 `direct`。
+1. 将 `config/xray/ai-service-rules.json` 中的 TCP、UDP 两条 `routing.rules[]` field rule 合并到 3x-ui，入站标签使用私有配置中的 `<TCP_INBOUND_TAG>` 和 `<UDP_INBOUND_TAG>`，保持现有普通流量 `direct`。
 2. Xray 开启 TLS/HTTP/QUIC sniffing，并确认 WebSocket Upgrade 和长连接不被代理层缓冲。
-3. 在 DMIT 上分别测试 API、网页、登录、上传、流式响应和语音/实时功能；检查 Xray 访问日志是否命中 `warp`（3x-ui 内置 WARP 出站标签）。
+3. 在配置的出口节点上分别测试 API、网页、登录、上传、流式响应和语音/实时功能；检查 Xray 访问日志是否命中 `warp`（3x-ui 内置 WARP 出站标签）。

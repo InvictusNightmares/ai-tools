@@ -33,7 +33,7 @@
 
 `Prepare-ProxyBootstrap.ps1` 会生成私密双代理包：7897 为静态保底节点，7898 为当前远程订阅经过完整 Merge/JavaScript/Rules/Proxies/Groups 增强后的生产配置。脚本会把生产关键区块与 Windows 当前 Clash Verge 渲染结果比较；任何差异都停止。该目录含订阅 URL、节点凭据和自定义规则，只能存在 `.agentbox-staging` 内，绝对不得提交、粘贴到聊天或发送给他人。
 
-安装引导阶段，7897 在 `MATCH,BOOTSTRAP` 前仅保留源配置中针对选中节点自身的精确 `DIRECT` 规则（IPv4 `/32`、IPv6 `/128` 或精确 `DOMAIN`）；不保留其他主机、网段或域名后缀的直连规则，也不创建源配置中不存在的直连策略。当 DMIT 同时提供代理和在线订阅时，删掉这条自身直连规则会让订阅下载绕回同一个代理节点而超时。7898 继续使用完整订阅规则，在线刷新仍固定通过 7897 下载。完成后若启用本文末尾的美国环境，7897 也切换为完整在线订阅规则，与 7898 同步刷新；静态保底规则只用于此前的安装引导阶段。
+安装引导阶段，7897 在 `MATCH,BOOTSTRAP` 前仅保留源配置中针对选中节点自身的精确 `DIRECT` 规则（IPv4 `/32`、IPv6 `/128` 或精确 `DOMAIN`）；不保留其他主机、网段或域名后缀的直连规则，也不创建源配置中不存在的直连策略。当同一代理服务同时提供在线订阅时，删掉这条自身直连规则会让订阅下载绕回同一个代理节点而超时。7898 继续使用完整订阅规则，在线刷新仍固定通过 7897 下载。完成后若启用本文末尾的美国环境，7897 也切换为完整在线订阅规则，与 7898 同步刷新；静态保底规则只用于此前的安装引导阶段。
 
 ## 1. 检查点 A：外部接管
 
@@ -404,4 +404,4 @@ curl --proxy http://127.0.0.1:7898 -I https://github.com/
 
 ### 美国使用环境与境外 DNS
 
-在已完成基础验收的云电脑上，可安装 [US environment](../../script/agentbox/us-environment/README.md)。云电脑原样使用在线订阅下发的分流规则、规则集和策略组，不套用桌面的 Merge/Script，也不把国内直连改为代理。额外策略仅保留 Cloudflare/Google DoH 和 Quad9 DoT 经 DMIT 解析，以及宿主机和容器的 TUN 接管；DNS 专用组不接管普通流量。防火墙允许 Mihomo 按订阅执行 DIRECT，仍禁止普通进程绕过 TUN 和外部 53/853 DNS。保持原 720 分钟订阅刷新、LA 时区和 SSH 密钥认证。实际检测使用 [site-check](../../script/agentbox/site-check/README.md)，完成后下载两站截图，再清理任务备份和临时文件。
+在已完成基础验收的云电脑上，可安装 [US environment](../../script/agentbox/us-environment/README.md)。云电脑原样使用在线订阅下发的分流规则、规则集和策略组，不套用桌面的 Merge/Script，也不把国内直连改为代理。额外策略仅保留 Cloudflare/Google DoH 和 Quad9 DoT 经配置的代理节点解析，以及宿主机和容器的 TUN 接管；DNS 专用组不接管普通流量。防火墙允许 Mihomo 按订阅执行 DIRECT，仍禁止普通进程绕过 TUN 和外部 53/853 DNS。保持原 720 分钟订阅刷新、LA 时区和 SSH 密钥认证。实际检测使用 [site-check](../../script/agentbox/site-check/README.md)，完成后下载两站截图，再清理任务备份和临时文件。
