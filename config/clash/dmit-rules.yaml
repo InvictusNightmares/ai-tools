@@ -18,7 +18,7 @@ proxy-groups:
     proxies:
       - Auto
     include-all-proxies: true
-    filter: '^((US|SG)-)?(Vless|Hysteria2)$'
+    filter: '^((US-)?(Hysteria2|Vless)|SG-Vless|US-(Hysteria2|Vless)-SG-(Hysteria2|Vless))$'
     default-selected: Auto
 
 rule-providers:

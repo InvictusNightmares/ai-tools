@@ -99,10 +99,16 @@ begin
     'legacy nodes' => [%w[Vless Hysteria2 unrelated-node Hysteria2-copy Vless-copy], %w[Hysteria2 Vless], %w[Auto Hysteria2 Vless]],
     'legacy Vless only' => [%w[Vless], %w[Vless], %w[Auto Vless]],
     'legacy Hysteria2 only' => [%w[Hysteria2], %w[Hysteria2], %w[Auto Hysteria2]],
-    'US and SG nodes' => [%w[US-Vless US-Hysteria2 SG-Vless SG-Hysteria2 US-Vless-copy SG-Hysteria2-copy unrelated-node], %w[US-Hysteria2 US-Vless], %w[Auto SG-Hysteria2 SG-Vless US-Hysteria2 US-Vless]],
+    'US and SG nodes' => [%w[US-Vless US-Hysteria2 SG-Vless SG-Hysteria2 US-Vless-copy SG-Hysteria2-copy unrelated-node], %w[US-Hysteria2 US-Vless], %w[Auto SG-Vless US-Hysteria2 US-Vless]],
+    'seven direct and relay nodes' => [
+      %w[US-Hysteria2 US-Vless SG-Vless US-Hysteria2-SG-Hysteria2 US-Vless-SG-Hysteria2 US-Hysteria2-SG-Vless US-Vless-SG-Vless SG-Hysteria2 US-Vless-SG-Vless-copy unrelated-node],
+      %w[US-Hysteria2 US-Vless],
+      %w[Auto SG-Vless US-Hysteria2 US-Hysteria2-SG-Hysteria2 US-Hysteria2-SG-Vless US-Vless US-Vless-SG-Hysteria2 US-Vless-SG-Vless]
+    ],
+    'relay nodes without US direct' => [%w[US-Hysteria2-SG-Hysteria2 US-Vless-SG-Vless], %w[REJECT], %w[Auto US-Hysteria2-SG-Hysteria2 US-Vless-SG-Vless]],
     'US nodes only' => [%w[US-Vless US-Hysteria2], %w[US-Hysteria2 US-Vless], %w[Auto US-Hysteria2 US-Vless]],
-    'SG nodes only' => [%w[SG-Vless SG-Hysteria2], %w[REJECT], %w[Auto SG-Hysteria2 SG-Vless]],
-    'partial US rename' => [%w[US-Vless Hysteria2 SG-Vless SG-Hysteria2], %w[Hysteria2 US-Vless], %w[Auto Hysteria2 SG-Hysteria2 SG-Vless US-Vless]],
+    'SG nodes only' => [%w[SG-Vless SG-Hysteria2], %w[REJECT], %w[Auto SG-Vless]],
+    'partial US rename' => [%w[US-Vless Hysteria2 SG-Vless SG-Hysteria2], %w[Hysteria2 US-Vless], %w[Auto Hysteria2 SG-Vless US-Vless]],
     '3x-ui validation-node' => [%w[validation-node], %w[REJECT], %w[Auto]]
   }
   scenarios.each do |scenario, (nodes, expected_auto, expected_proxy)|
