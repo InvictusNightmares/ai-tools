@@ -1,6 +1,18 @@
-# Clash Verge Rev 2.5.5：目标 本机设置样例
+# Clash Verge Rev 2.5.5 / 2.5.8：本机 DNS 覆写设置样例
 
-这个样例按 2026-09-23 截图中的 目标 订阅 Merge 改写：原配置有 9 条 `dns.fake-ip-filter` 和 2 条 `tun.route-exclude-address`。2.5.5 提示这些值被应用设置接管；需要把仍然需要的值填在对应的设置页，再从 Merge 中删除重复项。[2.5.5 配置合并源码](https://github.com/clash-verge-rev/clash-verge-rev/blob/v2.5.5/src-tauri/src/enhance/mod.rs)
+这个样例按 2026-09-23 截图中的订阅 Merge 改写：原配置有 9 条 `dns.fake-ip-filter` 和 2 条 `tun.route-exclude-address`。2.5.5 及以后（含 2.5.8）提示这些值被应用设置接管；需要把仍然需要的值填在对应的设置页，再从 Merge 中删除重复项。[2.5.5 配置合并源码](https://github.com/clash-verge-rev/clash-verge-rev/blob/v2.5.5/src-tauri/src/enhance/mod.rs)
+
+## 为什么会警告
+
+开启 DNS 覆写时，应用设置拥有 `dns.nameserver`、`dns.direct-nameserver`、`dns.fake-ip-filter`。如果订阅 Merge 也写了这些字段，Clash Verge 会提示“扩展配置或脚本写入了由应用设置接管的字段 … 这些值已被丢弃”。
+
+这不是 YAML 语法错误，而是优先级冲突：Merge 可以正常加载，只是这些 DNS 值不生效。
+
+正确结构：
+
+- DNS 值 → 应用 DNS 覆写页（本机设置）
+- Merge → 只保留 `mode`、`ipv6`、`profile` 等非 DNS 字段
+- `dmit-client.yaml` → 仅用于关闭 DNS 覆写的 2.5.2 模式，不要整份贴进 2.5.5+ 的 Merge
 
 下面是原 Merge 的**脱敏对照**，不是 2.5.5 中要再次粘贴的配置。两个内网地址和跳板机域名使用不能直接应用的占位符；其余 8 条过滤项与截图保持一致。填写界面时必须从原配置复制实际值，不要复制占位符，也不要把本机内网地址或公司域名提交到公开仓库。
 

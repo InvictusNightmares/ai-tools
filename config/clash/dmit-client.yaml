@@ -1,5 +1,7 @@
 # 客户端订阅扩展配置（Merge），不要填到 3x-ui，也不是独立订阅。
-# Clash Verge 2.5.2 的界面优先：仍需选择规则模式，并关闭全局 IPv6。
+# 适用于关闭“DNS 覆写”的 Clash Verge 2.5.2；2.5.5+（含 2.5.8）开启 DNS 覆写时，
+# 请把 DNS 值填到应用 DNS 页，并从 Merge 删除 dns 段，见 dmit-verge-2.5.5-example.md。
+# 仍需选择规则模式，并关闭全局 IPv6。
 mode: rule
 ipv6: false
 

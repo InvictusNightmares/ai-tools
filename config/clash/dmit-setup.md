@@ -77,9 +77,18 @@ https://raw.githubusercontent.com/InvictusNightmares/ai-tools/main/config/clash/
 
 Clash Verge 2.5.2 最终以界面的 `mode`、顶层 `ipv6` 等设置为准，Merge 中的同名值不能代替第 3 步。开启“DNS 覆写”时，界面的 `dns.ipv6` 也会被恢复；并不是所有 DNS 字段都比 Merge 优先。[客户端合并源码](https://github.com/clash-verge-rev/clash-verge-rev/blob/v2.5.2/src-tauri/src/enhance/mod.rs)
 
-若在 Clash Verge Rev 2.5.5 中选择保留 DNS 覆写，并遇到扩展字段被应用设置接管的警告，参考 [2.5.5 本机设置样例](dmit-verge-2.5.5-example.md)。该样例把冲突字段放在客户端设置页，与上面的 2.5.2 Merge 配置方式不要混用。
+若在 Clash Verge Rev 2.5.5 及以后（含 2.5.8）中选择保留 DNS 覆写，并遇到“扩展配置或脚本写入了由应用设置接管的字段 … 这些值已被丢弃”的警告，参考 [2.5.5/2.5.8 本机设置样例](dmit-verge-2.5.5-example.md)。这不是 YAML 语法错误，而是应用 DNS 覆写拥有 `dns.nameserver`、`dns.direct-nameserver`、`dns.fake-ip-filter`，Merge 中的同名值被丢弃。该样例把冲突字段放在客户端设置页，并从 Merge 删除 `dns` 段，与上面的 2.5.2 Merge 配置方式不要混用。
 
-DNS 沿用现有选择：国外 DoH、直连目标使用国内 DNS、代理节点用国内 DNS 解析；本次没有将国内 UDP DNS 改为 DoH。不固定 `dns.listen`，保留 `fallback: []`，省略因未启用 fallback 而无效的 `fallback-filter`。
+### DNS 覆写开启时的字段归属
+
+Clash Verge 2.5.5 及以后（含 2.5.8）开启 DNS 覆写时，应用设置拥有 `dns.nameserver`、`dns.direct-nameserver`、`dns.fake-ip-filter`。Merge 中的同名值会被丢弃，并提示“扩展配置或脚本写入了由应用设置接管的字段”。这不是 YAML 语法错误，而是优先级冲突。处理步骤：
+
+1. 在应用 DNS 页填写 `nameserver`、`direct-nameserver`、`fake-ip-filter`；
+2. 从当前订阅的 Merge 中删除整个 `dns:` 段，只保留 `mode`、`ipv6`、`profile` 等非 DNS 字段；
+3. 内网 fake-ip-filter 条目只放在应用 DNS 页，不写进仓库；
+4. 重载后检查生成的 `clash-verge.yaml` 或最终运行配置中的 DNS 值，不要只看 Merge。
+
+DNS 有两种模式，不要混用：关闭 DNS 覆写时使用 [dmit-client.yaml](dmit-client.yaml)（国外 DoH、直连目标使用国内 DNS、代理节点用国内 DNS 解析）；开启 DNS 覆写时（2.5.5+，含 2.5.8）把同样的值填到应用 DNS 页，并从 Merge 删除 `dns` 段。不固定 `dns.listen`，未启用 fallback 时保留 `fallback: []`，省略无效的 `fallback-filter`。
 
 ## 更新和换机
 
