@@ -5,12 +5,13 @@
 proxy-groups:
   - name: Auto
     hidden: true
-    type: fallback
+    type: url-test
     include-all-proxies: true
     filter: '^(US-)?(Hysteria2|Vless)$'
     empty-fallback: REJECT
     url: https://www.gstatic.com/generate_204
     interval: 30
+    tolerance: 50
     lazy: false
     expected-status: 204
   - name: PROXY

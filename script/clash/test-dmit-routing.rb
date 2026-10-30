@@ -125,7 +125,7 @@ begin
     auto = merged_groups.find { |group| group['name'] == 'Auto' }
     proxy = merged_groups.find { |group| group['name'] == 'PROXY' }
     check(auto['hidden'] == true && proxy['hidden'] != true, "#{scenario}: only Auto must be hidden")
-    check(auto['type'] == 'fallback' && auto['include-all-proxies'] == true && auto.fetch('proxies', []).empty?, "#{scenario}: Auto must dynamically include nodes, not hard-code them")
+    check(auto['type'] == 'url-test' && auto['include-all-proxies'] == true && auto.fetch('proxies', []).empty?, "#{scenario}: Auto must use url-test and dynamically include nodes, not hard-code them")
     check(auto['empty-fallback'] == 'REJECT', "#{scenario}: an empty Auto must REJECT, never go DIRECT")
     check(candidates(auto, nodes) == expected_auto, "#{scenario}: Auto must contain only US/legacy nodes in Hysteria2-first order, or REJECT when empty")
     check(proxy['type'] == 'select' && proxy.fetch('proxies', []).include?('Auto'), "#{scenario}: PROXY must offer Auto")
