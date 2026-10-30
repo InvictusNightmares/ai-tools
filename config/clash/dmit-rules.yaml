@@ -19,7 +19,7 @@ proxy-groups:
     proxies:
       - Auto
     include-all-proxies: true
-    filter: '^((US-)?(Hysteria2|Vless)|SG-Vless|US-(Hysteria2|Vless)-SG-(Hysteria2|Vless))$'
+    filter: '^((US-)?(Hysteria2|Vless)|SG-(Vless|Hysteria2)|US-(Hysteria2|Vless)-SG-(Hysteria2|Vless))$'
     default-selected: Auto
 
 rule-providers:
