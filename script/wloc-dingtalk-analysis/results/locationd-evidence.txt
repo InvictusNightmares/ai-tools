@@ -1,0 +1,20 @@
+# locationd Wi-Fi positioning evidence
+# Source: locationd-checkin-syslog.json
+# Date: 2026-11-05 16:31:41 - 16:31:52
+# Sanitized excerpt: no BSSID, SSID, coordinates, or device identifiers.
+
+2026-11-05 16:31:41.961723 locationd: IndoorOutdoor,probabilities,llr,0.490000,discordant,-1.000000,timeSinceStart,81382.715859,totalDistance,0.000000,gpsOutdoor,-1.000000,wifiIndoor,-1.000000,alsOutdoor,-1.000000,probability,0.500000,confidence,0,location,0
+2026-11-05 16:31:44.538618 locationd: IndoorOutdoor,WifiModel,context,<private>,scanRange,118.150787,distanceTraveled,0.000000,numAps,19,invalidResult,1,stationaryProbability,0.986250,wifiRssiModelIndoorProbability,-1.000000
+2026-11-05 16:31:44.541505 locationd: CL: CLWifiLocationProvider::onMotionNotification
+2026-11-05 16:31:44.542309 locationd: WifiTimer, nextscan, 15, haveLoc, 1, codepath, Frozen
+2026-11-05 16:31:45.178210 locationd: IndoorOutdoor,WifiModel,context,<private>,scanRange,118.150787,distanceTraveled,0.000000,numAps,19,invalidResult,1,stationaryProbability,0.986250,wifiRssiModelIndoorProbability,-1.000000
+2026-11-05 16:31:45.994288 locationd: @ClxWifi2, state, 0, request
+2026-11-05 16:31:45.994712 locationd: @ClxWifi2, Fix, 0, ll, N/A, force stop immediately
+2026-11-05 16:31:45.994926 locationd: CL: CLLocationController::onWifi2Notification
+2026-11-05 16:31:49.672564 locationd: IndoorOutdoor,WifiModel,context,<private>,scanRange,118.150787,distanceTraveled,0.000000,numAps,19,invalidResult,1,stationaryProbability,0.986250,wifiRssiModelIndoorProbability,-1.000000
+2026-11-05 16:31:49.679507 locationd: IndoorOutdoor,probabilities,llr,0.490000,discordant,-1.000000,timeSinceStart,81390.434290,totalDistance,0.000000,gpsOutdoor,-1.000000,wifiIndoor,-1.000000,alsOutdoor,-1.000000,probability,0.500000,confidence,0,location,0
+
+# Interpretation:
+# - 19 APs were scanned during the check-in window.
+# - The device was stationary indoors; no outdoor GPS signal.
+# - locationd was actively using the Wi-Fi location provider.

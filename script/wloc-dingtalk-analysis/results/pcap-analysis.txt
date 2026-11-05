@@ -1,0 +1,25 @@
+# DingTalk check-in pcap summary
+# Source: artifacts/dingtalk-checkin.pcap
+# Sanitized: no raw IP addresses or device identifiers.
+
+Capture format : pcapng
+Packet count   : 180
+Capture window : 2026-11-05 16:30:39 - 16:31:36
+
+TLS SNI observed:
+  down-sr.dingtalk.com
+  bird.cn-hangzhou.log.aliyuncs.com
+  px.effirst.com
+
+Transport note:
+  Most destinations were in the 198.18.0.0/15 range, which is the fake-IP
+  range of a TUN/proxy on the phone, not the real remote server address.
+
+Observations:
+  - No plaintext HTTP request or DNS payload was present in the capture.
+  - The DingTalk attendance API itself was TLS-encrypted and was not decrypted.
+  - The syslog is the stronger evidence for the location path; the pcap mainly
+    confirms the app's background network endpoints.
+
+Reproduce:
+  python scripts/analyze_pcap.py artifacts/dingtalk-checkin.pcap

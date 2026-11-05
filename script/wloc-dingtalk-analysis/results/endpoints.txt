@@ -1,0 +1,16 @@
+# Public endpoints observed during the DingTalk check-in capture
+# Date: 2026-11-05
+# No personal proxy server, BSSID, SSID, token, or account data is included.
+
+# TLS SNI observed in dingtalk-checkin.pcap
+down-sr.dingtalk.com
+bird.cn-hangzhou.log.aliyuncs.com
+px.effirst.com
+
+# AMap SDK endpoint / preference domains observed in DingTalk syslog
+dualstack-arestapi.amap.com
+com.autonavi.locationUserDefault
+amap_foundation_network_userdefault
+
+# App identity observed in syslog
+com.laiwang.DingTalk

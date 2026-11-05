@@ -1,0 +1,27 @@
+# Office AP data (tracked per user request)
+# Collected: 2026-11-05 from the Mac Wi-Fi menu and Apple WLOC lookup
+SSID=CPI-RHZL-OFFICE
+BSSID=20:20:27:83:eb:10
+BAND=5GHz
+CHANNEL=44
+WIDTH=40MHz
+SECURITY=WPA2 Personal
+RSSI=-54 dBm
+VENDOR=Shenzhen Sundray Technologies
+
+# Apple WLOC database result for the BSSID above
+APPLE_HOST=gs-loc.apple.com
+APPLE_LAT=31.19161987
+APPLE_LON=121.28696441
+APPLE_ADDRESS=上海市青浦区徐泾镇蟠瑞路
+
+# Nearby Apple-known BSSIDs (distance from the target above)
+# 2.1m   20:20:27:83:eb:01
+# 3.7m   20:20:27:83:eb:00
+# 5.9m   20:20:27:83:f2:01
+# 6.7m   20:20:27:83:f2:00
+# 10.3m  18:6f:2d:db:24:c0
+# 10.9m  18:6f:2d:db:24:c1
+# 10.9m  18:6f:2d:db:b9:40
+# 11.3m  18:6f:2d:db:b9:41
+CANDIDATE_BSSIDS="20:20:27:83:eb:10 20:20:27:83:eb:01 20:20:27:83:eb:00"
