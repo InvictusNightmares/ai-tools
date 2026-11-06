@@ -73,6 +73,10 @@ rules:
   - DOMAIN,analytics.strava.com,REJECT
   - RULE-SET,johnshall-shadowrocket-ad,REJECT
 
+  # DeepSeek 走代理，优先于国内域名与 IP 直连规则。
+  - DOMAIN-SUFFIX,deepseek.com,PROXY
+  - DOMAIN-SUFFIX,deepseeksvc.com,PROXY
+
   # 国内域名
   - GEOSITE,apple@cn,DIRECT
   - GEOSITE,apple-cn,DIRECT
