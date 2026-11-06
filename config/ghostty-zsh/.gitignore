@@ -1,0 +1,15 @@
+# Keep local state, credentials, and original-profile copies out of this module.
+backups/
+private/
+.zprofile
+.zsh_history
+.zcompdump*
+.env
+.env.*
+*.bak
+*.backup
+*.log
+*.local
+*.local.zsh
+*.private.*
+.DS_Store

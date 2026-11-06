@@ -1,0 +1,58 @@
+# Two-line One Dark Pro prompt with no special-font requirements.
+"$schema" = "https://starship.rs/config-schema.json"
+format = "$directory$git_branch$git_status$cmd_duration$status$line_break$character"
+right_format = ""
+add_newline = false
+palette = "one_dark_pro"
+scan_timeout = 30
+command_timeout = 500
+
+[palettes.one_dark_pro]
+blue = "#4aa5f0"
+purple = "#c162de"
+green = "#8cc265"
+yellow = "#d18f52"
+red = "#e05561"
+cyan = "#42b3c2"
+
+[directory]
+style = "bold blue"
+read_only = " ro"
+format = "[$path]($style)[$read_only]($read_only_style) "
+truncation_length = 3
+truncate_to_repo = true
+
+[git_branch]
+symbol = "git:"
+style = "purple"
+format = "[$symbol$branch]($style) "
+
+[git_status]
+style = "yellow"
+format = '([$all_status$ahead_behind]($style) )'
+conflicted = '=${count}'
+ahead = '^${count}'
+behind = 'v${count}'
+diverged = '^${ahead_count}v${behind_count}'
+untracked = '?${count}'
+stashed = 's${count}'
+modified = '!${count}'
+staged = '+${count}'
+renamed = 'r${count}'
+deleted = 'x${count}'
+
+[cmd_duration]
+min_time = 2000
+style = "yellow"
+format = "[took $duration]($style) "
+
+[status]
+disabled = false
+style = "red"
+symbol = ""
+format = "[exit $status]($style) "
+
+[character]
+success_symbol = "[>](bold green)"
+error_symbol = "[>](bold red)"
+vicmd_symbol = "[<](bold green)"

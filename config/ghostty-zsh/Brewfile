@@ -1,0 +1,10 @@
+# Developer-shell tools only. Existing language runtimes are managed separately.
+brew "starship"
+brew "fzf"
+brew "zoxide"
+brew "ripgrep"
+brew "fd"
+brew "bat"
+brew "eza"
+brew "zsh-autosuggestions"
+brew "zsh-syntax-highlighting"
