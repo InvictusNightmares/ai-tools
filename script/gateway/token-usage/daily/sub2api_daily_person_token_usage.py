@@ -243,6 +243,7 @@ def build_usage_sql(
     excluded_people: list[str],
     *,
     server: ServerConfig,
+    group_by_model: bool = False,
 ) -> str:
     """Build a read-only grouped query; raw request rows stay on the server."""
 
@@ -271,6 +272,15 @@ def build_usage_sql(
     if excluded_people:
         excluded_sql = ", ".join(sql_literal(name) for name in excluded_people)
         exclude_clause = f"\n      AND {person_expression} NOT IN ({excluded_sql})"
+    model_expression = (
+        "COALESCE(NULLIF(BTRIM(ul.requested_model), ''), "
+        "NULLIF(BTRIM(ul.model), ''), NULLIF(BTRIM(ul.upstream_model), ''))"
+    )
+    models_expression = (
+        f"COALESCE({model_expression}, '')" if group_by_model else
+        f"COALESCE(string_agg(DISTINCT {model_expression}, ', ' "
+        f"ORDER BY {model_expression}) FILTER (WHERE {model_expression} IS NOT NULL), '')"
+    )
 
     return f"""COPY (
 SELECT
@@ -279,27 +289,7 @@ SELECT
     {person_expression} AS person_name,
     {person_user_id_expression} AS person_user_id,
     {key_name_expression} AS key_name,
-    COALESCE(
-        string_agg(
-            DISTINCT COALESCE(
-                NULLIF(BTRIM(ul.requested_model), ''),
-                NULLIF(BTRIM(ul.model), ''),
-                NULLIF(BTRIM(ul.upstream_model), '')
-            ),
-            ', ' ORDER BY COALESCE(
-                NULLIF(BTRIM(ul.requested_model), ''),
-                NULLIF(BTRIM(ul.model), ''),
-                NULLIF(BTRIM(ul.upstream_model), '')
-            )
-        ) FILTER (
-            WHERE COALESCE(
-                NULLIF(BTRIM(ul.requested_model), ''),
-                NULLIF(BTRIM(ul.model), ''),
-                NULLIF(BTRIM(ul.upstream_model), '')
-            ) IS NOT NULL
-        ),
-        ''
-    ) AS models,
+    {models_expression} AS models,
     COUNT(*)::bigint AS request_count,
     COALESCE(SUM(ul.input_tokens::bigint), 0)::bigint AS input_tokens,
     COALESCE(SUM(ul.output_tokens::bigint), 0)::bigint AS output_tokens,
@@ -321,8 +311,8 @@ FROM public.usage_logs AS ul
 LEFT JOIN public.api_keys AS k ON k.id = ul.api_key_id{user_join}
 WHERE ul.created_at >= (DATE {start_literal} AT TIME ZONE {timezone_literal})
   AND ul.created_at < (DATE {end_literal} AT TIME ZONE {timezone_literal}){exclude_clause}
-GROUP BY 1, 2, 3, 4, 5
-ORDER BY usage_date, person_name, api_key_id
+GROUP BY 1, 2, 3, 4, 5{', 6' if group_by_model else ''}
+ORDER BY usage_date, person_name, api_key_id{', models' if group_by_model else ''}
 ) TO STDOUT WITH (FORMAT CSV, HEADER true);
 """
 

@@ -143,6 +143,65 @@ class IdentityTests(unittest.TestCase):
             self.assertEqual(sum(r["actual_cost"] for r in result[section]), Decimal("0.375"))
 
 
+class ModelSummaryTests(unittest.TestCase):
+    def test_mixed_models_on_one_key_preserve_totals_and_identity(self):
+        import email_daily_report as mail
+
+        reports = usage.build_reports(
+            {"west": (usage.SERVERS["west"], [
+                row(1, "甲", 11, models="gpt-5"),
+                row(1, "甲", 11, models="openai/gpt-6.1-sol"),
+                row(1, "甲", 11, models="codex-auto-review"),
+                row(1, "甲", 11, models="anthropic/claude-sonnet-5"),
+                row(1, "甲", 11, models="DeepSeek-V4", request_count="1",
+                    input_tokens="4", output_tokens="6", cache_read_tokens="3",
+                    image_input_tokens="5", total_tokens="13",
+                    total_tokens_with_image="18", actual_cost="0.075"),
+                row(79, "历史人员", models="gpt-5"),
+            ])},
+            {("west", "79"): {"person_name": "历史人员", "business_group": "研发Claude"}},
+            set(usage.ALWAYS_EXCLUDED_GROUPS),
+        )
+        models = mail.build_model_summary(reports["key_daily"])
+        by_family = {item["model_family"]: item for item in models}
+        self.assertEqual(set(by_family), {"GPT 系列", "DeepSeek"})
+        self.assertEqual(by_family["GPT 系列"]["total_tokens"], 56)
+        self.assertEqual(by_family["GPT 系列"]["request_count"], 8)
+        self.assertEqual(by_family["GPT 系列"]["actual_cost"], Decimal("0.500"))
+        self.assertEqual(by_family["DeepSeek"]["total_tokens_with_image"], 18)
+        self.assertEqual(mail._sum_rows(models), mail._sum_rows(reports["summary"]))
+        self.assertEqual(reports["summary"][0]["key_count"], 1)
+        self.assertEqual(reports["summary"][0]["person_count"], 1)
+        self.assertEqual(reports["per_person"][0]["total_tokens"], 69)
+
+    def test_unknown_models_remain_in_the_reconciled_total(self):
+        import email_daily_report as mail
+
+        records = [
+            {**row(1, "甲", models=""), "server": "美西", "business_group": "研发"},
+            {**row(2, "乙", models="future-model"), "server": "美西", "business_group": "研发"},
+            {**row(3, "丙", models="deepseek/chat"), "server": "东京", "business_group": "测试"},
+        ]
+        models = mail.build_model_summary(records)
+        self.assertEqual(mail._sum_rows(models), mail._sum_rows(records))
+        west = next(item for item in models if item["server"] == "美西")
+        self.assertEqual(west["model_family"], "其他")
+        self.assertEqual(west["total_tokens"], 28)
+
+    def test_incomplete_model_breakdown_stops_email_rendering(self):
+        import email_daily_report as mail
+
+        with tempfile.TemporaryDirectory() as directory:
+            payload = {
+                "summary": [{**row(1, "甲"), "server": "美西"}],
+                "per_model": [],
+            }
+            with patch.object(mail, "_draw_table") as draw:
+                with self.assertRaisesRegex(RuntimeError, "模型用量与节点总量不一致"):
+                    mail.render_report_images(payload, Path(directory))
+                draw.assert_not_called()
+
+
 class EmailFailureTests(unittest.TestCase):
     def test_query_failure_never_renders_or_sends_mail(self):
         import email_daily_report as mail

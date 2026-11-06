@@ -564,6 +564,30 @@ def _report_note(metadata: dict[str, Any], suffix: str = "") -> str:
     )
 
 
+def build_model_summary(key_daily: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Roll up model-granular rows after the report's person/group exclusions."""
+    groups: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    for row in key_daily:
+        model = str(row.get("models") or "").strip().lower().rsplit("/", 1)[-1]
+        # Reporting convention: Claude and Codex are included in the GPT bucket.
+        if model == "gpt" or model.startswith(("gpt-", "chatgpt-", "codex-", "claude")):
+            family = "GPT 系列"
+        elif model.startswith("deepseek"):
+            family = "DeepSeek"
+        else:
+            family = "其他"
+        groups.setdefault((row["server"], family), []).append(row)
+    return [
+        {
+            "server": server,
+            "model_family": family,
+            "group_count": len({row["business_group"] for row in rows}),
+            **_sum_rows(rows),
+        }
+        for (server, family), rows in sorted(groups.items())
+    ]
+
+
 def render_report_images(payload: dict[str, Any], output_dir: Path) -> list[Path]:
     output_dir.mkdir(parents=True, exist_ok=True)
     metadata = payload.get("metadata", {})
@@ -576,9 +600,27 @@ def render_report_images(payload: dict[str, Any], output_dir: Path) -> list[Path
         "server": "合计 / Total",
         "group_count": sum(int(row.get("group_count") or 0) for row in summary),
     })
+    per_model = list(payload["per_model"])
+    summary_display = []
+    for row in summary:
+        models = [item for item in per_model if item["server"] == row["server"]]
+        if _sum_rows(models) != _sum_rows([row]):
+            raise RuntimeError(f"{row['server']} 的模型用量与节点总量不一致，停止生成邮件。")
+        summary_display.append({**row, "model_family": "全部"})
+        families = {item["model_family"]: item for item in models}
+        for family in ("GPT 系列", "DeepSeek", "其他"):
+            if family == "其他" and family not in families:
+                continue
+            summary_display.append({
+                **families.get(family, _sum_rows([])),
+                "server": "",
+                "model_family": family,
+            })
+    summary_display.append({**summary_total, "model_family": "全部"})
     summary_rows = [
         [
             str(row.get("server", "")),
+            str(row["model_family"]),
             format_count(row.get("group_count")),
             format_count(row.get("request_count")),
             format_token(row.get("input_tokens")),
@@ -591,36 +633,22 @@ def render_report_images(payload: dict[str, Any], output_dir: Path) -> list[Path
             format_token(row.get("total_tokens_with_image")),
             format_cost(row.get("actual_cost")),
         ]
-        for row in summary
+        for row in summary_display
     ]
-    summary_rows.append([
-        summary_total["server"],
-        format_count(summary_total["group_count"]),
-        format_count(summary_total["request_count"]),
-        format_token(summary_total["input_tokens"]),
-        format_token(summary_total["output_tokens"]),
-        format_token(summary_total["cache_creation_tokens"]),
-        format_token(summary_total["cache_read_tokens"]),
-        format_token(summary_total["image_input_tokens"]),
-        format_token(summary_total["image_output_tokens"]),
-        format_token(summary_total["total_tokens"]),
-        format_token(summary_total["total_tokens_with_image"]),
-        format_cost(summary_total["actual_cost"]),
-    ])
     summary_path = output_dir / "01-summary.png"
     _draw_table(
         title="AI网关 Token 使用汇总",
         note=_report_note(metadata),
         headers=[
-            "服务器 / Server", "分组数 / Groups", "请求数 / Requests",
+            "服务器 / Server", "模型 / Model", "分组数 / Groups", "请求数 / Requests",
             "输入 Token / Input", "输出 Token / Output", "缓存创建 Token / Cache Creation",
             "缓存读取 Token / Cache Read", "图片输入 Token / Image Input",
             "图片输出 Token / Image Output", "总 Token / Total",
             "含图片总 Token / Total+Image", "Actual Cost",
         ],
         rows=summary_rows,
-        widths=[150, 140, 140, 180, 180, 220, 220, 200, 200, 180, 220, 155],
-        numeric_columns=set(range(1, 12)),
+        widths=[150, 170, 140, 140, 180, 180, 220, 220, 200, 200, 180, 220, 155],
+        numeric_columns=set(range(2, 13)),
         total_row=len(summary_rows) - 1,
         output_path=summary_path,
     )
@@ -864,7 +892,7 @@ def main() -> int:
                 _query_with_retry, server,
                 build_usage_sql(
                     args.start_date, args.end_date, args.timezone,
-                    ["张成"], server=server,
+                    ["张成"], server=server, group_by_model=True,
                 ),
                 args.timeout_seconds,
             ): server
@@ -875,7 +903,7 @@ def main() -> int:
             try:
                 completed_server, rows = future.result()
                 results[completed_server.key] = (completed_server, rows)
-                print(f"{completed_server.display_name}: {len(rows)} 条 Key-日期汇总记录")
+                print(f"{completed_server.display_name}: {len(rows)} 条 Key-日期-模型汇总记录")
             except Exception as exc:  # noqa: BLE001 - report the node and continue gathering.
                 errors[server.key] = str(exc)
                 print(f"{server.display_name}: 查询失败：{exc}", file=sys.stderr)
@@ -891,6 +919,7 @@ def main() -> int:
     payload = {
         "metadata": metadata,
         "summary": reports["summary"],
+        "per_model": build_model_summary(reports["key_daily"]),
         "per_group": reports["per_group"],
         "per_person": reports["per_person"],
         "key_daily": reports["key_daily"],
