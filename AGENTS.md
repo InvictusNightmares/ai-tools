@@ -13,3 +13,16 @@
   into tracked artifacts.
 - Preserve working routing and subscription behavior when editing documentation;
   never replace operational values with placeholders in live configuration.
+
+## Codex commit attribution
+
+- For every Git commit created or amended by Codex in this repository, retain
+  the user's Git author and committer identity and include this trailer exactly
+  once in the commit message:
+
+  ```text
+  Co-authored-by: Codex <noreply@openai.com>
+  ```
+
+- Separate the trailer block from the message body with a blank line, and
+  preserve existing co-author trailers.
