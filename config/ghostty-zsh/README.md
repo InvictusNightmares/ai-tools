@@ -1,6 +1,6 @@
 # Ghostty 与 zsh 开发环境
 
-这套配置用于 Apple Silicon Mac 的日常开发和 AI 编程工具：Ghostty 使用 One Dark Pro，zsh 提供补全、历史搜索、文件选择和项目跳转，非交互命令保持安静输出。它使用系统 zsh 和已有语言运行时，工具由 Homebrew 管理。
+这套配置用于 Apple Silicon Mac 的日常开发和 AI 编程工具：Ghostty 使用 One Dark Pro，zsh 提供补全、历史搜索、文件选择和项目跳转，非交互命令保持安静输出。它使用系统 zsh；shell 工具和开发运行时分别通过两个 Homebrew 清单管理。
 
 当前电脑已经配置完成。**仓库保存的是可复用模板，终端实际读取用户目录中的配置文件。** 修改本目录后，需要按下文同步到用户目录，再新开终端；本目录没有与用户配置建立符号链接。
 
@@ -21,8 +21,9 @@
 | 仓库文件 | 当前生效位置 | 内容 |
 | --- | --- | --- |
 | [Brewfile](Brewfile) | 通过 Homebrew 安装 | 9 个效率工具，不包含语言运行时和 AI CLI |
+| [Brewfile.runtimes](Brewfile.runtimes) | 通过 Homebrew 安装 | Node、Python 和 Ruby 开发运行时 |
 | [zsh/.zshenv](zsh/.zshenv) | `$HOME/.zshenv` | PATH 去重、补齐工具路径、沿用 Android SDK |
-| [zsh/zprofile.snippet.zsh](zsh/zprofile.snippet.zsh) | 合并进 `$HOME/.zprofile` | Homebrew 登录初始化片段 |
+| [zsh/zprofile.snippet.zsh](zsh/zprofile.snippet.zsh) | 合并进 `$HOME/.zprofile` | Homebrew 初始化与 Python 虚拟环境优先级 |
 | [zsh/.zshrc](zsh/.zshrc) | `$HOME/.zshrc` | 历史、补全、搜索、跳转、提示符和语法高亮 |
 | [starship/starship.toml](starship/starship.toml) | `$HOME/.config/starship.toml` | 两行提示符和 One Dark Pro 配色 |
 | [ghostty/config.ghostty](ghostty/config.ghostty) | `$HOME/Library/Application Support/com.mitchellh.ghostty/config.ghostty` | 字号、主题、边距和 shell 集成 |
@@ -156,7 +157,9 @@ git diff --check          # 检查差异中的空白问题
 | 登录 shell | `.zprofile` | 运行 `brew shellenv zsh`，沿用原有私有设置 |
 | 交互 shell | `.zshrc` | 配置历史；在终端 TTY 中加载交互功能 |
 
-`.zshenv` 不启动外部命令，不打印欢迎语。它将缺失目录追加到 PATH，保留继承环境中的路径优先级；macOS 登录阶段仍按系统和 Homebrew 的规则初始化 PATH。已经设置的 `ANDROID_SDK_ROOT` 会被沿用，否则在标准 SDK 目录存在时使用它。
+`.zshenv` 不启动外部命令，不打印欢迎语。它将 Homebrew 运行时放在系统默认命令之前，同时保留原本位于系统目录之前的项目或虚拟环境路径，并对 PATH 去重。已经设置的 `ANDROID_SDK_ROOT` 会被沿用，否则在标准 SDK 目录存在时使用它。
+
+macOS 的登录初始化和 Homebrew 可能重新排列 PATH。`.zprofile` 中的公开片段会在其后恢复已激活的 `VIRTUAL_ENV/bin` 优先级，因此 AI 使用登录 shell 执行命令时也能沿用该 Python 虚拟环境。
 
 `.zshrc` 只有在交互模式、输入输出连接终端且 `TERM` 不是 `dumb` 时才加载插件。AI 执行 `zsh -c`、`zsh -lc` 等命令时不会收到交互提示符或欢迎语，也不会被全局强制彩色和分页设置干扰。
 
@@ -226,6 +229,40 @@ brew bundle install --no-upgrade --file="$SHELL_CONFIG_DIR/Brewfile"
 
 `--no-upgrade` 避免主动升级已安装工具；安装缺失工具所需的依赖仍可能由 Homebrew 更新。本清单不安装 Ghostty 应用、Node、Python、Ruby 或 AI CLI，也不锁定工具版本。
 
+### 开发运行时
+
+开发运行时由 [Brewfile.runtimes](Brewfile.runtimes) 单独管理。2026 年 11 月 6 日的安装版本如下：
+
+| 组件 | 版本 | 默认命令 |
+| --- | --- | --- |
+| Homebrew | 7.0.12 | `brew` |
+| Node LTS | 26.13.0 | `node`，附带 npm 11.20.0 |
+| Python | 3.15.2 | `python`、`python3`、`pip`、`pip3` |
+| Ruby | 4.0.9 | `ruby`、`gem`、`bundle` |
+
+Node 使用 [LTS 发布分支](https://nodejs.org/en/about/previous-releases)。Python 和 Ruby 使用正式稳定版。Homebrew 自身通过 `brew update` 更新，运行时可在仓库根目录执行：
+
+```zsh
+SHELL_CONFIG_DIR="$PWD/config/ghostty-zsh"
+brew update
+brew bundle install --file="$SHELL_CONFIG_DIR/Brewfile.runtimes"
+```
+
+本机已有的 CocoaPods 随 Ruby 升级到 1.17.0，以匹配新 Ruby；Yarn Classic 1.22.22 和 Corepack 0.36.0 安装在 Homebrew Node 的全局目录中。Yarn 命令直接运行 Classic，Corepack 自身仍可用于项目所需的包管理器。
+
+Python 的无版本命令目录为 `/opt/homebrew/opt/python@3.15/libexec/bin`。Ruby 4.0 的 gem 命令目录为 `/opt/homebrew/lib/ruby/gems/4.0.0/bin`；这里的 `4.0.0` 是 API 兼容目录名，具体运行时版本以 `ruby --version` 为准。将来切换 Python 或 Ruby 的主次版本时，需要同步修改 `.zshenv` 中对应路径。
+
+在项目内安装 Python 依赖时，先创建并激活虚拟环境：
+
+```zsh
+python -m venv .venv
+source .venv/bin/activate
+python -m pip --version
+deactivate
+```
+
+旧版本清理针对用户安装的开发运行时。macOS、开发工具和应用自带的运行时由各自组件维护，项目虚拟环境和依赖目录也应保留。
+
 ### 同步配置文件
 
 下列命令会用仓库模板覆盖相应用户配置，适合重建本方案。已有自定义内容时，按文件对应表合并需要的部分。
@@ -245,7 +282,7 @@ install -m 644 "$SHELL_CONFIG_DIR/ghostty/themes/One Dark Pro" "$HOME/.config/gh
 chmod 600 "$HOME/.zsh_history"
 ```
 
-随后将 `zsh/zprofile.snippet.zsh` 中的初始化逻辑合并进已有 `.zprofile`。已有 Homebrew 初始化行时，更新为显式的 `shellenv zsh` 即可，不要重复添加或覆盖原文件。
+随后将 `zsh/zprofile.snippet.zsh` 中的初始化逻辑合并进已有 `.zprofile`。已有 Homebrew 初始化行时，更新为显式的 `shellenv zsh`，再合并其后的虚拟环境优先级逻辑；不要重复添加或覆盖原文件。
 
 Ghostty 设置按 `Cmd-Shift-,` 重新加载；部分窗口设置需要新建窗口才能生效。zsh 设置更新后新开终端即可，也可以在空闲 shell 中执行：
 

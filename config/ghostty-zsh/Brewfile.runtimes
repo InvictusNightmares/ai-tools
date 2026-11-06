@@ -1,0 +1,5 @@
+# User-managed development runtimes. Keep one installed version of each.
+# At setup, node is the current LTS branch (26).
+brew "node"
+brew "python@3.15"
+brew "ruby"
