@@ -77,6 +77,9 @@ rules:
   - DOMAIN-SUFFIX,deepseek.com,PROXY
   - DOMAIN-SUFFIX,deepseeksvc.com,PROXY
 
+  # 字节海外测速入口走代理，优先于国内域名直连规则。
+  - DOMAIN,perfops2.byte-test.com,PROXY
+
   # 国内域名
   - GEOSITE,apple@cn,DIRECT
   - GEOSITE,apple-cn,DIRECT
