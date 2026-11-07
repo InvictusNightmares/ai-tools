@@ -14,17 +14,15 @@
 - Preserve working routing and subscription behavior when editing documentation;
   never replace operational values with placeholders in live configuration.
 
-## Codex commit attribution
+## Agent commit attribution
 
-- Only commits created or amended by Codex carry an agent co-author trailer.
-  For those commits, retain the user's Git author and committer identity and
-  include this trailer exactly once in the commit message:
-
-  ```text
-  Co-authored-by: Codex <noreply@openai.com>
-  ```
-
-- Do not add an agent trailer to commits created or amended by DeepSeek,
-  Claude Code, other agents, or people.
+- Commits created or amended by an AI agent carry that agent's own co-author
+  trailer exactly once, while retaining the user's Git author and committer
+  identity:
+  - Codex: `Co-authored-by: Codex <noreply@openai.com>`
+  - Claude Code: its default Claude co-author trailer
+- DeepSeek commits and commits created or amended by people carry no agent
+  trailer.
+- Never attribute one agent's commit to another agent.
 - Separate the trailer block from the message body with a blank line, and
   preserve existing co-author trailers.
