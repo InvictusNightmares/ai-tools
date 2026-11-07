@@ -16,13 +16,15 @@
 
 ## Codex commit attribution
 
-- For every Git commit created or amended by Codex in this repository, retain
-  the user's Git author and committer identity and include this trailer exactly
-  once in the commit message:
+- Only commits created or amended by Codex carry an agent co-author trailer.
+  For those commits, retain the user's Git author and committer identity and
+  include this trailer exactly once in the commit message:
 
   ```text
   Co-authored-by: Codex <noreply@openai.com>
   ```
 
+- Do not add an agent trailer to commits created or amended by DeepSeek,
+  Claude Code, other agents, or people.
 - Separate the trailer block from the message body with a blank line, and
   preserve existing co-author trailers.
