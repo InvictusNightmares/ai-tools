@@ -202,6 +202,67 @@ class ModelSummaryTests(unittest.TestCase):
                 draw.assert_not_called()
 
 
+class SummaryDisplayTests(unittest.TestCase):
+    def display(self, west_rows, tokyo_rows):
+        import email_daily_report as mail
+
+        reports = usage.build_reports(
+            {
+                "west": (usage.SERVERS["west"], west_rows),
+                "tokyo": (usage.SERVERS["tokyo"], tokyo_rows),
+            },
+            {},
+            set(usage.ALWAYS_EXCLUDED_GROUPS),
+        )
+        per_model = mail.build_model_summary(reports["key_daily"])
+        total = mail._sum_rows(reports["summary"])
+        total.update({
+            "server": "合计 / Total",
+            "group_count": sum(
+                int(item.get("group_count") or 0) for item in reports["summary"]
+            ),
+        })
+        return mail._build_summary_display(reports["summary"], per_model, total)
+
+    def test_grand_total_is_followed_by_gpt_and_deepseek_rows(self):
+        display, total_row = self.display(
+            [
+                row(1, "甲", 11, models="gpt-5"),
+                row(2, "乙", 12, models="DeepSeek-V4"),
+            ],
+            [
+                row(3, "丙", models="openai/gpt-6.1-sol"),
+                row(4, "丁", models="DeepSeek-V4"),
+            ],
+        )
+        self.assertEqual(display[total_row]["model_family"], "全部")
+        self.assertEqual(display[total_row]["server"], "合计 / Total")
+        gpt = display[total_row + 1]
+        deepseek = display[total_row + 2]
+        self.assertEqual((gpt["model_family"], deepseek["model_family"]),
+                         ("GPT 系列", "DeepSeek"))
+        self.assertEqual((gpt["server"], deepseek["server"]), ("", ""))
+        self.assertEqual(
+            gpt["total_tokens"] + deepseek["total_tokens"],
+            display[total_row]["total_tokens"],
+        )
+        self.assertEqual(
+            gpt["actual_cost"] + deepseek["actual_cost"],
+            display[total_row]["actual_cost"],
+        )
+
+    def test_other_total_row_only_appears_when_models_are_unknown(self):
+        display, total_row = self.display(
+            [row(1, "甲", 11, models="gpt-5")],
+            [row(2, "乙", models="future-model")],
+        )
+        families = [item["model_family"] for item in display[total_row + 1:]]
+        self.assertEqual(families, ["GPT 系列", "DeepSeek", "其他"])
+        other = display[-1]
+        self.assertEqual(other["total_tokens"], display[total_row]["total_tokens"]
+                         - display[total_row + 1]["total_tokens"])
+
+
 class EmailFailureTests(unittest.TestCase):
     def test_query_failure_never_renders_or_sends_mail(self):
         import email_daily_report as mail

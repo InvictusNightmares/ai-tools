@@ -588,20 +588,18 @@ def build_model_summary(key_daily: list[dict[str, Any]]) -> list[dict[str, Any]]
     ]
 
 
-def render_report_images(payload: dict[str, Any], output_dir: Path) -> list[Path]:
-    output_dir.mkdir(parents=True, exist_ok=True)
-    metadata = payload.get("metadata", {})
-    summary = list(payload.get("summary", []))
-    per_group = list(payload.get("per_group", []))
-    per_person = list(payload.get("per_person", []))
+def _build_summary_display(
+    summary: list[dict[str, Any]],
+    per_model: list[dict[str, Any]],
+    summary_total: dict[str, Any],
+) -> tuple[list[dict[str, Any]], int]:
+    """Build summary rows and the index of the grand-total row.
 
-    summary_total = _sum_rows(summary)
-    summary_total.update({
-        "server": "合计 / Total",
-        "group_count": sum(int(row.get("group_count") or 0) for row in summary),
-    })
-    per_model = list(payload["per_model"])
-    summary_display = []
+    Each node keeps its own model-family breakdown; the grand total is followed
+    by two extra rows that split the whole report into GPT 系列 and DeepSeek.
+    """
+
+    summary_display: list[dict[str, Any]] = []
     for row in summary:
         models = [item for item in per_model if item["server"] == row["server"]]
         if _sum_rows(models) != _sum_rows([row]):
@@ -616,7 +614,42 @@ def render_report_images(payload: dict[str, Any], output_dir: Path) -> list[Path
                 "server": "",
                 "model_family": family,
             })
+
+    global_families: dict[str, list[dict[str, Any]]] = {}
+    for item in per_model:
+        global_families.setdefault(item["model_family"], []).append(item)
+
     summary_display.append({**summary_total, "model_family": "全部"})
+    summary_total_row = len(summary_display) - 1
+    for family in ("GPT 系列", "DeepSeek", "其他"):
+        if family == "其他" and family not in global_families:
+            continue
+        items = global_families.get(family, [])
+        summary_display.append({
+            "group_count": sum(int(item.get("group_count") or 0) for item in items),
+            **_sum_rows(items),
+            "server": "",
+            "model_family": family,
+        })
+    return summary_display, summary_total_row
+
+
+def render_report_images(payload: dict[str, Any], output_dir: Path) -> list[Path]:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    metadata = payload.get("metadata", {})
+    summary = list(payload.get("summary", []))
+    per_group = list(payload.get("per_group", []))
+    per_person = list(payload.get("per_person", []))
+
+    summary_total = _sum_rows(summary)
+    summary_total.update({
+        "server": "合计 / Total",
+        "group_count": sum(int(row.get("group_count") or 0) for row in summary),
+    })
+    per_model = list(payload["per_model"])
+    summary_display, summary_total_row = _build_summary_display(
+        summary, per_model, summary_total
+    )
     summary_rows = [
         [
             str(row.get("server", "")),
@@ -649,7 +682,7 @@ def render_report_images(payload: dict[str, Any], output_dir: Path) -> list[Path
         rows=summary_rows,
         widths=[150, 170, 140, 140, 180, 180, 220, 220, 200, 200, 180, 220, 155],
         numeric_columns=set(range(2, 13)),
-        total_row=len(summary_rows) - 1,
+        total_row=summary_total_row,
         output_path=summary_path,
     )
 
