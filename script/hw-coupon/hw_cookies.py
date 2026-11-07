@@ -21,15 +21,15 @@ HOSTS = [
     "auth.huaweicloud.com",
 ]
 
-# 只带这些域名的 cookie 给 devdata API
-API_HOSTS = {".huaweicloud.com", "developer.huaweicloud.com", "devdata.huaweicloud.com"}
+# 浏览器向 devdata API 实际只会发送：host-only 的 devdata cookie + .huaweicloud.com 域 cookie。
+# 不能带 developer.huaweicloud.com 的 host-only cookie（accountId/username/koocdp_sid 等），
+# 否则网关会判成 "not login"（2026-11 实测）。
+API_HOSTS = {".huaweicloud.com", "devdata.huaweicloud.com"}
 
 # 同名 cookie 跨域冲突时的优先级（数字越小越优先）
 HOST_PRIORITY = {
     "devdata.huaweicloud.com": 0,
-    "developer.huaweicloud.com": 1,
-    ".huaweicloud.com": 2,
-    "auth.huaweicloud.com": 3,
+    ".huaweicloud.com": 1,
 }
 
 PROFILE = os.path.expanduser(

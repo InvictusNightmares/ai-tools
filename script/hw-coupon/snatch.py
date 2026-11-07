@@ -41,8 +41,9 @@ from hw_cookies import cookie_header  # noqa: E402
 
 BASE = "https://devdata.huaweicloud.com"
 API = "/rest/developer/fwdu/rest/developer/user/hdcommunitysoservice/v1/growth"
+# 注意：网关按 Chrome 主版本分流，155 会被判成 404 no Route matched，156 正常（2026-11 实测）
 UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
-      "(KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36")
+      "(KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36")
 HERE = os.path.dirname(os.path.abspath(__file__))
 LOG_CSV = os.path.join(HERE, "stock_log.csv")
 EX_LOG = os.path.join(HERE, "exchange_log.txt")
@@ -57,7 +58,7 @@ def notify(title, msg):
     try:
         os.system(
             "osascript -e 'display notification %s with title %s sound name \"Glass\"'"
-            % (json.dumps(msg), json.dumps(title))
+            % (json.dumps(msg, ensure_ascii=False), json.dumps(title, ensure_ascii=False))
         )
         os.system("afplay /System/Library/Sounds/Glass.aiff >/dev/null 2>&1 &")
     except Exception:

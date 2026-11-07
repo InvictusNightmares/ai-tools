@@ -25,5 +25,5 @@ script/sub2api/token-usage/daily/email-runs/
 script/hw-coupon/cookie*.txt
 script/hw-coupon/stock_log.csv
 script/hw-coupon/exchange_log.txt
-script/hw-coupon/run.log
+script/hw-coupon/*.log
 script/hw-coupon/launchd.*.log

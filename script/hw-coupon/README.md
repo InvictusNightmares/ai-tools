@@ -140,9 +140,18 @@ scp cookie.txt ctyun:/root/hw-coupon/cookie.txt
 ssh ctyun 'systemctl restart hwcoupon'
 ```
 
-排障记录：Chrome 里同一个 Cookie 名（尤其 `HWWAFSESID`）会出现在多个域下，
-简单按名字去重会拿到别的子域的 WAF session，服务器表现为 `403 not login`。
-`hw_cookies.py` 已按 `devdata > developer > .huaweicloud.com` 的优先级去重。
+排障记录：
+
+- Chrome 里同一个 Cookie 名（尤其 `HWWAFSESID`）会出现在多个域下，简单按名字去重会拿到别的子域的 WAF session。
+- **2026-11-07 实测**：浏览器只会把 `devdata.huaweicloud.com` 的 host-only cookie 和 `.huaweicloud.com`
+  的域 cookie 发给 devdata；把 `developer.huaweicloud.com` 的 host-only cookie（`accountId`、`username`、
+  `koocdp_sid` 等）一起塞进请求头，网关会直接判 `403 not login`。`hw_cookies.py` 的 `API_HOSTS`
+  现在只保留前两类。
+- **2026-11-07 实测**：网关按 Chrome 主版本分流，`Chrome/155` 会被判成
+  `404 no Route matched with those values`，`Chrome/156` 正常。UA 已改为 `Chrome/156.0.0.0`；
+  本机 Chrome 大版本升级后可同步调高。
+- 正确的请求顺序：`GET /api/get-ainfo` 取响应头 `csrf` → 后续请求带 `csrf: <值>`；
+  只带 Cookie 不带 csrf 会返回 `403 no request_csrf found`，csrf 值不对会返回 `CSRF unequal`。
 
 ## 注意
 
