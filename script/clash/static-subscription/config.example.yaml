@@ -1,0 +1,21 @@
+# Copy outside the repository, replace placeholders, and chmod 600.
+base_url: https://<BASE_SUBSCRIPTION_HOST>/<PRIVATE_BASE_PATH>
+extra_url: https://<EXTRA_SUBSCRIPTION_HOST>/<PRIVATE_EXTRA_PATH>
+user_agent: ClashVerge
+nodes:
+  <SOURCE_NODE_A>: EXTRA-SS-01
+  <SOURCE_NODE_B>: EXTRA-SS-02
+group: PROXY
+protected_groups: [Auto]
+required_base_nodes: [<REQUIRED_BASE_NODE>]
+output_dir: <PRIVATE_PUBLISH_DIRECTORY>
+timeout_seconds: 20
+max_stale_seconds: 3600
+# Optional numeric group ID allowed to read generated files (directories 0750,
+# files 0640). Without it, directories are 0700 and files 0600.
+# reader_gid: <STATIC_FILE_READER_GROUP_ID>
+# Configure both commands when nginx includes current/headers.conf.
+# Arguments are executed directly, never through a shell.
+# The generator runs on the host and controls the existing nginx container.
+# nginx_check_command: [docker, exec, <GATEWAY_CONTAINER>, nginx, -t]
+# nginx_reload_command: [docker, exec, <GATEWAY_CONTAINER>, nginx, -s, reload]
