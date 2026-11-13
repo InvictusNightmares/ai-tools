@@ -1,0 +1,20 @@
+# Private deployment configuration and notification state.
+.env
+.env.*
+!.env.example
+.private/
+perkradar-notify.json
+perkradar-notify/
+
+# Upstream checkout and runtime data.
+source/
+data/
+
+# Deployment backups and temporary verification artifacts.
+backup*/
+verification*/
+*-backup
+*.log
+*.bak
+compose.before-*.yaml
+dedicated-bot-test.json

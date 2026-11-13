@@ -1,0 +1,86 @@
+name: perkradar
+
+services:
+  web:
+    build:
+      context: ./source
+      network: host
+    image: perkradar:2688cc5
+    container_name: perkradar
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: "1"
+      HOST: "0.0.0.0"
+      PORT: "38471"
+      DATA_DIR: /data
+      PERKRADAR_ACCESS_TOKEN: ${PERKRADAR_ACCESS_TOKEN:?access token required}
+      PERKRADAR_SECURE_COOKIE: "1"
+      DISABLE_SCHEDULER: "1"
+      NODE_USE_ENV_PROXY: "1"
+      HTTP_PROXY: ${PERKRADAR_FEED_PROXY_URL:?private feed proxy URL required}
+      HTTPS_PROXY: ${PERKRADAR_FEED_PROXY_URL:?private feed proxy URL required}
+      NO_PROXY: localhost,127.0.0.1,::1,perkradar,r.jina.ai,www.v2ex.com,store-site-backend-static.ak.epicgames.com,rss.nodeseek.com,www.ghxi.com
+    depends_on:
+      feed-egress:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:38471:38471"
+    volumes:
+      - ./data:/data
+    networks:
+      - qinglong
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://127.0.0.1:38471/api/health',{headers:{Authorization:'Bearer '+process.env.PERKRADAR_ACCESS_TOKEN}}).then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+  feed-egress:
+    image: perkradar:2688cc5
+    container_name: perkradar-feed-egress
+    restart: unless-stopped
+    entrypoint: ["/usr/local/bin/feed-egress"]
+    command: ["-d", "/tmp/egress", "-f", "/etc/feed-egress.json"]
+    environment:
+      FEED_PROXY_PORT: ${PERKRADAR_FEED_PROXY_PORT:?private feed proxy port required}
+    volumes:
+      - ${PERKRADAR_PROXY_BINARY:?installed proxy binary required}:/usr/local/bin/feed-egress:ro
+      - ${PERKRADAR_PROXY_CONFIG:?private feed proxy config required}:/etc/feed-egress.json:ro
+    read_only: true
+    tmpfs:
+      - /tmp:rw,nosuid,noexec,size=32m,mode=1777
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    networks:
+      - qinglong
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - const s=require('node:net').connect(Number(process.env.FEED_PROXY_PORT),'127.0.0.1');s.setTimeout(2000);s.on('connect',()=>{s.destroy();process.exit(0)});s.on('error',()=>process.exit(1));s.on('timeout',()=>process.exit(1))
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+networks:
+  qinglong:
+    external: true
+    name: ${PERKRADAR_NETWORK:?existing Qinglong network required}
