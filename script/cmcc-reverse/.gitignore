@@ -1,0 +1,11 @@
+out/
+captures/
+*.apk
+*.dex
+*.so
+*.log
+*.bundle.js
+*.json
+!package.json
+__pycache__/
+.DS_Store
