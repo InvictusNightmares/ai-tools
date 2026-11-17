@@ -4,9 +4,11 @@
 
 登录后功能、订阅来源链与遗漏修复见[后续复查](../../doc/domain-gateway/audit-followup.md)。页面返回成功不能代替应用内链接、外部订阅、分页读取和证书续期检查。
 
+代理、面板后端和订阅后端的证书迁移、共同重载及旧证书清理结果见[域名证书迁移](../../doc/domain-gateway/certificate-migration.md)。其中列明已完成的验收及仍存在的直连网络波动。
+
 原部署回滚备份已按用户要求删除，清理结果与当前备份状态见[三台主机清理记录](../../doc/domain-gateway/cleanup.md)。
 
-这些文件供核对、维护和重新部署使用。`render.py` 只生成候选文件，不能直接覆盖已有网关；现有认证规则、订阅精确路径和旧监听必须合并保留。参数化工具尚未替换服务器上原有的续期调度。
+这些文件供核对、维护和重新部署使用。`render.py` 只生成候选文件，不能直接覆盖已有网关；现有认证规则、订阅精确路径和旧监听必须合并保留。现用续期调度直接调用原 ACME 客户端，重载已使用 `reload_services.py`；`acme.py` 供维护和重新部署使用。
 
 ## 文件
 
@@ -15,9 +17,11 @@
 | `render.py` | 从私有参数生成单个模板，拒绝覆盖现有文件 |
 | `acme.py` | 注册、签发、安装与续期；默认只校验计划 |
 | `verify.py` | 验证可信 HTTPS、状态码和可选内容摘要，不跟随跳转 |
+| `reload_services.py` | 持有续期共用锁，验证证书后重新加载面板、代理和网页网关 |
 | `templates/public-*` | SNI 分流、来源地址传递及公网网关挂载 |
 | `templates/private-*` | 仅绑定 Tailscale 地址的网关及服务反向代理 |
 | `templates/renew.*`、`reload.*` | 定时续期与证书安装后的检查、重载 |
+| `templates/panel-host-renewal.patch` | 由宿主调度续期时，禁止面板启动脚本重新注册内部 ACME cron |
 | `*.example.json` | 只有示例域名和占位符的配置结构 |
 | `.private/` | 本地受控部署映射、一次性操作脚本；由 Git 忽略 |
 
@@ -95,6 +99,10 @@ python3 script/domain-gateway/acme.py renew --config '<PRIVATE_ACME_CONFIG>' --a
 ```
 
 `install` 安装独立的 key/fullchain，并记录 `reload_command` 参数数组。容器内 ACME 可通过共享目录中的 marker 通知宿主 `.path` 单元；宿主 ACME 可调用检查后重载脚本。必须使用 `--install-cert` 记录安装路径，不能只手工复制初次证书。
+
+同一证书供面板、原生订阅和代理共同使用时，只重载 Nginx 不足以完成更新。使用 `reload.example.json` 配置 `reload_services.py`，让续期单元与重载工具共用 `lock_file`。安装回调只更新 marker；path 单元和定时补偿调用重载工具，避免在容器内 ACME 尚未退出时重启容器。部署时同时复制其依赖 `common.py`。工具输出仅包含状态或错误类型；真实域名和路径只写入权限为 `0600` 的私有配置。
+
+若面板镜像启动时会自动注册 ACME cron，迁移到宿主调度后还需处理其启动逻辑，防止重建或重启恢复重复任务。`panel-host-renewal.patch` 只展示该段变更；应针对实际镜像的完整启动脚本应用并只读挂载，保留其他启动逻辑。每次升级镜像都须重新核对脚本和测试重启，不能盲目沿用旧脚本。
 
 测试签发使用 `server: "letsencrypt_test"` 和不同于生产 `home` 的独立 `config_home`。测试证书不投入服务。生产签发遇到配额限制时尊重返回的重试时间；更换签发机构和注册账号应先获得授权。
 

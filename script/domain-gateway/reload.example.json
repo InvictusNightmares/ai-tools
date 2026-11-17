@@ -1,0 +1,9 @@
+{
+  "certificate": "<INSTALLED_DOMAIN_FULLCHAIN>",
+  "private_key": "<INSTALLED_DOMAIN_PRIVATE_KEY>",
+  "domains": ["service.example.com"],
+  "panel_container": "<PANEL_CONTAINER>",
+  "gateway_container": "<GATEWAY_CONTAINER>",
+  "lock_file": "<SHARED_RENEWAL_LOCK>",
+  "state_file": "<PRIVATE_LOADED_CERTIFICATE_STATE>"
+}

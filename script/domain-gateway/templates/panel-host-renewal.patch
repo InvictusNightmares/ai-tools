@@ -1,0 +1,13 @@
+--- DockerEntrypoint.sh
++++ DockerEntrypoint.sh
+@@ -1,5 +1,9 @@
+ if [ -f /root/.acme.sh/acme.sh ]; then
+-    /root/.acme.sh/acme.sh --install-cronjob >/dev/null 2>&1
++    # A host unit owns renewal and shares a lock with certificate reload.
++    /root/.acme.sh/acme.sh --uninstall-cronjob >/dev/null 2>&1 || exit 1
++    if crontab -l 2>/dev/null | grep -Fq 'acme.sh'; then
++        exit 1
++    fi
+     crond
+ fi
+ 
