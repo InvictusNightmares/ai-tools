@@ -28,6 +28,7 @@ import argparse
 import csv
 import json
 import os
+import plistlib
 import random
 import sys
 import threading
@@ -41,9 +42,19 @@ from hw_cookies import cookie_header  # noqa: E402
 
 BASE = "https://devdata.huaweicloud.com"
 API = "/rest/developer/fwdu/rest/developer/user/hdcommunitysoservice/v1/growth"
-# 注意：网关按 Chrome 主版本分流，155 会被判成 404 no Route matched，156 正常（2026-11 实测）
+# 注意：网关按 Chrome 主版本分流，UA 主版本落后会返回 404 no Route matched（2026-11 实测：
+# 本机升到 157 后，Chrome/156 立即失效）。这里直接读本机 Chrome 的主版本，避免每次升级都要改代码。
+def _chrome_major():
+    try:
+        with open("/Applications/Google Chrome.app/Contents/Info.plist", "rb") as f:
+            v = plistlib.load(f).get("CFBundleShortVersionString", "")
+        return str(v).split(".")[0] or "157"
+    except Exception:
+        return "157"
+
+
 UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
-      "(KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36")
+      f"(KHTML, like Gecko) Chrome/{_chrome_major()}.0.0.0 Safari/537.36")
 HERE = os.path.dirname(os.path.abspath(__file__))
 LOG_CSV = os.path.join(HERE, "stock_log.csv")
 EX_LOG = os.path.join(HERE, "exchange_log.txt")
@@ -255,7 +266,7 @@ def _wait_until(api, at, prefire):
             time.sleep(0.05)
 
 
-def try_exchange(api, pid, bonus, attempts=8):
+def try_exchange(api, pid, bonus, attempts=8, name="代金券"):
     for i in range(attempts):
         try:
             d = api.detail(pid)
@@ -285,7 +296,7 @@ def try_exchange(api, pid, bonus, attempts=8):
         print(f"[{now()}] 返回: {code} {msg}")
 
         if msg == "SUCCESS":
-            notify("抢到了", f"200元代金券兑换成功")
+            notify("抢到了", f"{name}兑换成功")
             print("订单号/券请在 费用中心 > 优惠券 查看。")
             return True
         if code == "HD.67510027":       # 又没了
@@ -401,7 +412,7 @@ def cmd_run(args):
             def worker(idx):
                 if got[0] or got[-1]:
                     return
-                ok = try_exchange(api, pid, bonus)
+                ok = try_exchange(api, pid, bonus, name=prize.get("name") or "代金券")
                 if ok:
                     with lock:
                         got[0] = True

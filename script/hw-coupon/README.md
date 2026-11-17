@@ -147,9 +147,10 @@ ssh ctyun 'systemctl restart hwcoupon'
   的域 cookie 发给 devdata；把 `developer.huaweicloud.com` 的 host-only cookie（`accountId`、`username`、
   `koocdp_sid` 等）一起塞进请求头，网关会直接判 `403 not login`。`hw_cookies.py` 的 `API_HOSTS`
   现在只保留前两类。
-- **2026-11-07 实测**：网关按 Chrome 主版本分流，`Chrome/155` 会被判成
-  `404 no Route matched with those values`，`Chrome/156` 正常。UA 已改为 `Chrome/156.0.0.0`；
-  本机 Chrome 大版本升级后可同步调高。
+- **2026-11 实测**：网关按 Chrome 主版本分流，UA 落后会返回
+  `404 no Route matched with those values`（155→156、156→157 都复现过）。
+  `snatch.py` 现在用 `plistlib` 读取本机 Chrome 的 `CFBundleShortVersionString`
+  自动生成 UA 主版本，Chrome 升级后无需改代码。
 - 正确的请求顺序：`GET /api/get-ainfo` 取响应头 `csrf` → 后续请求带 `csrf: <值>`；
   只带 Cookie 不带 csrf 会返回 `403 no request_csrf found`，csrf 值不对会返回 `CSRF unequal`。
 
