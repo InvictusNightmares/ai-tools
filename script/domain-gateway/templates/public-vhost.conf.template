@@ -1,0 +1,8 @@
+server {
+    listen 127.0.0.1:{{TLS_PORT}} ssl proxy_protocol;
+    port_in_redirect off;
+    server_name {{WEB_DOMAIN}};
+    ssl_certificate /etc/nginx/domain-certs/fullchain.pem;
+    ssl_certificate_key /etc/nginx/domain-certs/privkey.pem;
+    include {{PRIVATE_LOCATIONS_INCLUDE}};
+}

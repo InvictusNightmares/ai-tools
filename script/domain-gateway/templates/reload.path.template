@@ -1,0 +1,9 @@
+[Unit]
+Description=Watch installed domain certificates
+
+[Path]
+PathChanged={{RELOAD_MARKER}}
+Unit={{RELOAD_SERVICE}}
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,16 @@
+{
+  "services": {
+    "gateway": {
+      "image": "{{NGINX_IMAGE}}",
+      "container_name": "{{CONTAINER_NAME}}",
+      "restart": "unless-stopped",
+      "network_mode": "host",
+      "volumes": [
+        "./nginx.conf:/etc/nginx/nginx.conf:ro",
+        "./sites:/etc/nginx/sites:ro",
+        "{{CERT_DIRECTORY}}:/etc/nginx/domain-certs:ro"
+      ],
+      "logging": {"driver": "local", "options": {"max-size": "10m", "max-file": "3"}}
+    }
+  }
+}

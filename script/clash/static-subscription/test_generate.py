@@ -81,6 +81,36 @@ class Fixture(unittest.TestCase):
 
 
 class MergeTests(Fixture):
+    def test_address_migration_preserves_tls_credentials_groups_and_other_nodes(self):
+        self.base["proxies"][0].update(type="vless", tls=True, servername="cover.example.invalid",
+                                        **{"reality-opts": {"public-key": "synthetic-public-key", "short-id": "abcd"}})
+        self.base["proxies"][1].update(type="hysteria2", sni="certificate.example.invalid")
+        original = copy.deepcopy(self.base)
+        settings = replace(self.settings, server_overrides={
+            node["name"]: {"from": node["server"], "to": "node.example.invalid"}
+            for node in self.base["proxies"][:2]
+        })
+        expected = subject.merge(self.base, self.extra, self.settings)
+        for node in expected["proxies"][:2]:
+            node["server"] = "node.example.invalid"
+        migrated = subject.merge(self.base, self.extra, settings)
+        self.assertEqual(migrated, expected)
+        self.assertEqual(self.base, original)
+        self.assertEqual(subject.merge(migrated, self.extra, settings), migrated)
+
+    def test_address_migration_rejects_missing_node_changed_source_or_implicit_sni(self):
+        cases = [
+            {"missing-node": {"from": "proxy.example.invalid", "to": "node.example.invalid"}},
+            {"BASE-SS-01": {"from": "unexpected.example.invalid", "to": "node.example.invalid"}},
+        ]
+        for overrides in cases:
+            with self.subTest(overrides=overrides), self.assertRaises(subject.Failure):
+                subject.merge(self.base, self.extra, replace(self.settings, server_overrides=overrides))
+        self.base["proxies"][0].update(type="vless", tls=True)
+        overrides = {"BASE-SS-01": {"from": "proxy.example.invalid", "to": "node.example.invalid"}}
+        with self.assertRaisesRegex(subject.Failure, "existing SNI"):
+            subject.merge(self.base, self.extra, replace(self.settings, server_overrides=overrides))
+
     def test_replaces_incomplete_nodes_preserving_base_rules_and_auto(self):
         original_base, original_extra = copy.deepcopy(self.base), copy.deepcopy(self.extra)
         merged = subject.merge(self.base, self.extra, self.settings)
@@ -246,6 +276,17 @@ class MetadataTests(unittest.TestCase):
 
 
 class SettingsTests(Fixture):
+    def test_address_overrides_load_only_explicit_hosts(self):
+        overrides = {"BASE-SS-01": {"from": "192.0.2.1", "to": "node.example.invalid"}}
+        self.assertEqual(subject.Settings.load(self.config(server_overrides=overrides)).server_overrides, overrides)
+        for value in ("https://node.example.invalid", "node.example.invalid:443", "host/path", "host\nname", "host..", ""):
+            with self.subTest(value=value), self.assertRaises(subject.Failure):
+                subject.Settings.load(self.config(server_overrides={"BASE-SS-01": {"from": "192.0.2.1", "to": value}}))
+        for overrides in (None, [], {"BASE-SS-01": "node.example.invalid"}, {"": {"from": "a", "to": "b"}},
+                          {"BASE-SS-01": {"from": "a", "to": "b", "sni": "changed"}}):
+            with self.subTest(overrides=overrides), self.assertRaises(subject.Failure):
+                subject.Settings.load(self.config(server_overrides=overrides))
+
     def test_private_config_loads(self):
         settings = subject.Settings.load(self.config())
         self.assertEqual(settings.nodes, self.settings.nodes)
@@ -376,6 +417,20 @@ class PublicationTests(Fixture):
 
 
 class PipelineTests(Fixture):
+    def test_address_mismatch_keeps_previous_publication_and_redacts_log(self):
+        previous = self.publish(now=1000)
+        overrides = {"BASE-SS-01": {"from": "private-mismatched-host.invalid", "to": "node.example.invalid"}}
+        output = io.StringIO()
+        settings = replace(self.settings, server_overrides=overrides)
+        with patch.object(subject.Settings, "load", return_value=settings), \
+             patch.object(subject, "fetch", side_effect=[(self.base, HEADER), (self.extra, "")]), \
+             patch.object(subject.time, "time", return_value=1001), contextlib.redirect_stderr(output):
+            self.assertEqual(subject.main(["--config", str(self.root / "private.yaml")]), 1)
+        self.assertEqual(subject.current_target(settings.output_dir), previous)
+        self.assertEqual((settings.output_dir / "current/subscription.yaml").read_bytes(), b"previous subscription\n")
+        self.assertNotIn("private-mismatched-host", output.getvalue())
+        self.assertNotIn("BASE-SS-01", output.getvalue())
+
     def test_dry_run_validates_without_publishing_or_reloading(self):
         with patch.object(subject, "fetch", side_effect=[(self.base, HEADER), (self.extra, "")]), \
              patch.object(subject, "run_command") as command, patch.object(subject, "publish") as publish:

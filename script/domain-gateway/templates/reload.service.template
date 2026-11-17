@@ -1,0 +1,8 @@
+[Unit]
+Description=Reload checked domain certificate configuration
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+ExecStart={{RELOAD_SCRIPT}}

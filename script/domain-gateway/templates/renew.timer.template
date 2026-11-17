@@ -1,0 +1,10 @@
+[Unit]
+Description=Check service domain certificate renewal
+
+[Timer]
+OnCalendar={{RENEW_CALENDAR}}
+RandomizedDelaySec=600
+Persistent=true
+
+[Install]
+WantedBy=timers.target

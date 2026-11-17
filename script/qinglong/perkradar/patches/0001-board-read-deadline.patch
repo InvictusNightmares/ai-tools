@@ -1,0 +1,13 @@
+diff --git a/src/components/deal-board.tsx b/src/components/deal-board.tsx
+--- a/src/components/deal-board.tsx
++++ b/src/components/deal-board.tsx
+@@ -112,7 +112,8 @@
+       if (stopped || document.visibilityState === "hidden" || inFlight) return;
+       const controller = new AbortController();
+       inFlight = controller;
+-      const timeout = setTimeout(() => controller.abort(), 15_000);
++      // readBoard loads all pages serially; allow time for the complete board.
++      const timeout = setTimeout(() => controller.abort(), 60_000);
+       try {
+         const next = await readBoard(controller.signal);
+         if (!stopped) { setBoard(next); setPollError(false); }

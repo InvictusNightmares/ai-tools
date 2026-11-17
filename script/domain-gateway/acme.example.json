@@ -1,0 +1,14 @@
+{
+  "acme_command": ["<ACME_EXECUTABLE_OR_CONTAINER_COMMAND>"],
+  "home": "<ABSOLUTE_ACME_HOME>",
+  "server": "zerossl",
+  "email": "<AUTHORIZED_ACCOUNT_EMAIL>",
+  "domains": ["private-app.example.net"],
+  "validation": "dns",
+  "challenge_alias": "validation.example.org",
+  "dns_env_file": "<PRIVATE_DNS_ENV_FILE>",
+  "key_file": "<ABSOLUTE_INSTALLED_KEY_FILE>",
+  "fullchain_file": "<ABSOLUTE_INSTALLED_CHAIN_FILE>",
+  "reload_command": ["<ABSOLUTE_RELOAD_SCRIPT>"],
+  "log_file": "<PRIVATE_OPERATION_LOG>"
+}

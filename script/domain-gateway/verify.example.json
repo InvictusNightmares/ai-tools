@@ -1,0 +1,7 @@
+{
+  "checks": [
+    {"label": "homepage", "url": "https://example.net/", "status": 200},
+    {"label": "api_auth", "url": "https://api.example.net/v1/models", "status": 401},
+    {"label": "private_login", "url": "https://private-app.example.net/", "status": 302}
+  ]
+}

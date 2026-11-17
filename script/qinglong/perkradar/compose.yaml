@@ -5,7 +5,7 @@ services:
     build:
       context: ./source
       network: host
-    image: perkradar:2688cc5
+    image: perkradar:2688cc5-board-read-60s
     container_name: perkradar
     restart: unless-stopped
     environment:

@@ -41,6 +41,7 @@ rules:
   - DOMAIN-SUFFIX,cpirhzl.com,DIRECT
   - DOMAIN-SUFFIX,rhecube.com,DIRECT
   - DOMAIN-SUFFIX,spicrhdk.com,DIRECT
+  - DOMAIN-SUFFIX,fable.loc.cc,DIRECT
 
   # 国内规则库漏项
   - DOMAIN,sms.imagetasks.com,DIRECT

@@ -4,7 +4,8 @@ PerkRadar 常驻独立容器；青龙用 `*/15 * * * *` 全天触发一次完整
 
 ## 文件与部署
 
-- `compose.yaml`：以固定上游提交 `2688cc5c396b318c4b2b151b98c0153b8bc514e0` 构建；从相邻 `source/` 目录读取源码，数据保存在相邻 `data/`。只绑定回环地址，并接入青龙现有 Docker 网络。`feed-egress` 是仅供指定 RSS 使用的网络辅助容器。
+- `compose.yaml`：以固定上游提交 `2688cc5c396b318c4b2b151b98c0153b8bc514e0` 加本目录补丁构建网页镜像；从相邻 `source/` 目录读取源码，数据保存在相邻 `data/`。只绑定回环地址，并接入青龙现有 Docker 网络。`feed-egress` 是仅供指定 RSS 使用的网络辅助容器，继续使用原基础镜像。
+- `patches/0001-board-read-deadline.patch`：将整批分页读取的总时限从 15 秒调整为 60 秒。保留页面关闭时取消、单次请求在途保护及原轮询间隔，不改变采集与通知逻辑。
 - `perkradar_notify.js`：采集、筛选、持久化去重和发送队列。
 - `perkradar_feishu.js`：使用专用飞书应用和接收人，也兼容青龙已有的共享通知配置。
 - `perkradar_notify.test.js`：去重、重试、部分失败和并发行为测试。
@@ -13,14 +14,18 @@ PerkRadar 常驻独立容器；青龙用 `*/15 * * * *` 全天触发一次完整
 
 小众软件与异次元 RSS 使用已授权的现有代理出口。辅助容器复用采集器基础镜像，挂载已有 Mihomo 二进制和私密配置，不发布宿主端口。私密 `.env` 还需设置 `PERKRADAR_FEED_PROXY_URL`、`PERKRADAR_FEED_PROXY_PORT`、`PERKRADAR_PROXY_BINARY` 和 `PERKRADAR_PROXY_CONFIG`。真实地址、路径、端口与凭据只保存在部署端。
 
-辅助代理配置须启用认证，只允许 `www.appinn.com`、`www.iplaysoft.com`、`feed.iplaysoft.com` 走既有出口，末尾使用 `MATCH,REJECT`。配置文件只读挂载，并仅向容器运行用户开放读取；其余五个来源和内部健康请求通过 `NO_PROXY` 保持原有路径。替换上游代理凭据时同步更新这份私密配置。采集器使用 Node 22.21+ 的[原生环境代理支持](https://nodejs.org/download/release/v22.23.0/docs/api/cli.html#node_use_env_proxy1)，保持官方源代码与来源地址。
+辅助代理配置须启用认证，只允许 `www.appinn.com`、`www.iplaysoft.com`、`feed.iplaysoft.com` 走既有出口，末尾使用 `MATCH,REJECT`。配置文件只读挂载，并仅向容器运行用户开放读取；其余五个来源和内部健康请求通过 `NO_PROXY` 保持原有路径。替换上游代理凭据时同步更新这份私密配置。采集器使用 Node 22.21+ 的[原生环境代理支持](https://nodejs.org/download/release/v22.23.0/docs/api/cli.html#node_use_env_proxy1)，来源地址及采集实现保持上游版本。
 
 容器网络若要求使用宿主提供的出网中继，在辅助配置中通过 `dialer-proxy` 连接该既有中继，再连接已授权的上游节点。不要为此放宽主机转发规则；先分别验证容器能否连接中继和抓取指定 RSS。中继地址与上游节点配置同样只保存在私密文件中。
 
 ```sh
+git -C source apply --check ../patches/0001-board-read-deadline.patch
+git -C source apply ../patches/0001-board-read-deadline.patch
 docker compose build web
 docker compose up -d
 ```
+
+补丁只应用一次；已应用时先用 `git -C source apply --reverse --check ../patches/0001-board-read-deadline.patch` 核对，不要重复叠加。升级上游时重新核对分页实现和时限。已有部署只更新网页服务时使用 `docker compose up -d --no-deps web`，保留现有网络辅助容器。
 
 上线验收须分别核对两个 RSS 的有效内容、其他来源的绕行规则、辅助代理认证和拒绝规则，再检查青龙完整采集与去重推送；进程健康不能代替这些检查。
 
@@ -39,6 +44,14 @@ docker compose up -d
 通过 `PERKRADAR_NOTIFY_CONFIG` 指定该文件路径；未设置时使用脚本中的青龙默认位置。配置权限为 `0600`。专用机器人在该私密 JSON 中增加 `feishu` 对象，字段为 `appId`、`appSecret`、`openId`；Open ID 必须属于这个新应用。凭据不加入版本控制或日志。
 
 未配置 `feishu` 时，兼容原有环境变量 `QL_FEISHU_APP_ID`、`QL_FEISHU_APP_SECRET`、`QL_FEISHU_OPEN_ID`。配置了专用机器人但字段不完整时任务报错，不退回共享机器人。切换机器人前确认没有未确认的旧消息，保留原去重数据库；原机器人已经推送的优惠不会因更换机器人重新发送。其他任务的共享飞书环境变量不需要更改。
+
+## 私网网页入口
+
+看板已通过私网 HTTPS 网关提供域名入口，访问方式为 `https://<COLLECTOR_DOMAIN>`；青龙入口为 `https://<SCHEDULER_DOMAIN>`。客户端必须连接 Tailscale，且属于已有的获准设备。应用继续使用原访问认证，采集器的宿主绑定仍为回环地址。
+
+网关仅绑定 Tailscale 地址，没有通过公网主机转发这些服务。DNS-01 证书验证也不需要公开应用。域名、证书、访问规则和客户端 DNS 的维护方式见[服务域名实施记录](../../../doc/domain-gateway/implementation.md)。后续复查覆盖原令牌登录、现有列表及来源筛选；没有为验收触发采集或发送通知。
+
+登录表单需要有效的同源 `Origin`。网关使用 `Referrer-Policy: same-origin`；`no-referrer` 会让此浏览器表单发送 `Origin: null`，被应用现有来源校验拒绝。不要通过删除来源校验或更换令牌处理此问题。网关同时压缩 JSON 响应；当列表需要多页时，总读取时限必须容纳完整分页序列，不能用单页耗时代替。实际测量与后续验收见[复查记录](../../../doc/domain-gateway/audit-followup.md)。
 
 ## 推送行为
 

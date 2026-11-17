@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import copy
 import fcntl
+import ipaddress
 import json
 import os
 from pathlib import Path
@@ -20,7 +21,7 @@ import urllib.parse
 import urllib.request
 import uuid
 from contextlib import contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import yaml
 
@@ -59,6 +60,18 @@ def positive_int(value, field):
     return value
 
 
+def valid_server_address(value):
+    if not isinstance(value, str) or not value or len(value) > 253 or "%" in value:
+        return False
+    try:
+        ipaddress.ip_address(value)
+        return True
+    except ValueError:
+        name = value[:-1] if value.endswith(".") else value
+        return all(re.fullmatch(r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?", label)
+                   for label in name.split("."))
+
+
 def yaml_map(data, label):
     try:
         value = yaml.safe_load(data)
@@ -83,6 +96,7 @@ class Settings:
     reader_gid: int | None = None
     nginx_check_command: tuple[str, ...] = ()
     nginx_reload_command: tuple[str, ...] = ()
+    server_overrides: dict[str, dict[str, str]] = field(default_factory=dict)
 
     @classmethod
     def load(cls, path: Path):
@@ -105,6 +119,14 @@ class Settings:
         require(all(isinstance(k, str) and k.strip() and isinstance(v, str) and v.strip()
                     for k, v in nodes.items()), "node names must be nonempty strings")
         require(len(set(nodes.values())) == len(nodes), "destination node names must be unique")
+        overrides = data.get("server_overrides", {})
+        require(isinstance(overrides, dict), "server_overrides must be a name mapping")
+        for name, change in overrides.items():
+            require(isinstance(name, str) and bool(name.strip()), "server override name is invalid")
+            require(isinstance(change, dict) and set(change) == {"from", "to"},
+                    "server override must contain only from and to")
+            require(all(valid_server_address(change[key]) for key in ("from", "to")),
+                    "server override requires a hostname or IP without URL or port")
         data["output_dir"] = absolute_path(data["output_dir"], "output_dir")
         outside_repository(data["output_dir"])
         for key in ("required_base_nodes", "protected_groups"):
@@ -257,6 +279,17 @@ def merge(base, extra, settings):
     require(not any(excluded_member(group, name, node["type"]) for name, node in replacements.items()),
             "destination group exclusions hide an added node")
     require(isinstance(merged.get("rules"), list) and bool(merged["rules"]), "base rules are missing")
+    merged_nodes = named_entries(merged, "proxies")
+    for name, change in settings.server_overrides.items():
+        require(name in merged_nodes, "server override target is missing")
+        node = merged_nodes[name]
+        require(node.get("server") in (change["from"], change["to"]),
+                "server override source changed; retain the previous subscription")
+        uses_tls = (node.get("tls") or node.get("reality-opts")
+                    or node.get("type") in ("trojan", "hysteria", "hysteria2", "hy2", "tuic"))
+        require(not uses_tls or bool(node.get("servername") or node.get("sni")),
+                "TLS server override requires an explicit existing SNI")
+        node["server"] = change["to"]
     return merged
 
 

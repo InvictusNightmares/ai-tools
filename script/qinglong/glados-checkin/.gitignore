@@ -1,0 +1,5 @@
+.env.local
+.curl.txt
+cookie*.txt
+logs/
+__pycache__/

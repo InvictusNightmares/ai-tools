@@ -8,6 +8,11 @@ nodes:
 group: PROXY
 protected_groups: [Auto]
 required_base_nodes: [<REQUIRED_BASE_NODE>]
+# Optional exact-name address migration. Keep the existing port, TLS/SNI and credentials.
+# server_overrides:
+#   <EXACT_NODE_NAME>:
+#     from: <EXPECTED_CURRENT_HOST_OR_IP>
+#     to: <NEW_NODE_DOMAIN>
 output_dir: <PRIVATE_PUBLISH_DIRECTORY>
 timeout_seconds: 20
 max_stale_seconds: 3600

@@ -1,0 +1,14 @@
+server {
+    listen {{PRIVATE_BIND_IP}}:{{HTTPS_PORT}} ssl;
+    server_name {{WEB_DOMAIN}};
+    ssl_certificate /etc/nginx/domain-certs/fullchain.pem;
+    ssl_certificate_key /etc/nginx/domain-certs/privkey.pem;
+    add_header X-Content-Type-Options nosniff always;
+    add_header Referrer-Policy same-origin always;
+    gzip on;
+    gzip_vary on;
+    gzip_comp_level 6;
+    gzip_min_length 1024;
+    gzip_types application/json text/css application/javascript text/javascript;
+    location / { proxy_pass {{PRIVATE_UPSTREAM}}; }
+}
