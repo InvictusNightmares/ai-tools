@@ -695,6 +695,16 @@ def run_account(idx, cookie, ua, domains, mode, check_only):
             "streak": streak, "detail": describe(result)}
 
 
+def should_notify(results):
+    """全部账号都是今日已签到时，默认不重复发通知。"""
+    statuses = {r["status"] for r in results}
+    if statuses <= {"repeat"}:
+        return os.environ.get("GLADOS_NOTIFY_REPEAT", "0").strip().lower() in (
+            "1", "true", "yes", "on",
+        )
+    return True
+
+
 def main(argv):
     if "--self-test" in argv:
         got = hashlib.sha256(PROOF_TEST_VECTOR.encode()).hexdigest()
@@ -761,7 +771,9 @@ def main(argv):
         body = time.strftime("%Y-%m-%d %H:%M") + "（北京时间）\n" + body
 
         log("----- 汇总 -----\n" + body)
-        if not send_push(title, body):
+        if not should_notify(results):
+            log("全部账号今日已签到，跳过重复通知（GLADOS_NOTIFY_REPEAT=1 可强制发送）")
+        elif not send_push(title, body):
             log("未配置可用的通知渠道（飞书 / PushPlus / ServerChan / Telegram）")
 
     ok_status = {"success", "repeat", "check-only"}

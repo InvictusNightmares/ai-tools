@@ -133,5 +133,22 @@ class CheckinFlowTests(unittest.TestCase):
         self.assertTrue(result.get("request_failed"))
 
 
+class NotifyTests(unittest.TestCase):
+    def test_all_repeat_is_silent_by_default(self):
+        with mock.patch.dict(os.environ, {}, clear=True):
+            self.assertFalse(g.should_notify([{"status": "repeat"}]))
+
+    def test_repeat_can_be_forced(self):
+        with mock.patch.dict(os.environ, {"GLADOS_NOTIFY_REPEAT": "1"}, clear=True):
+            self.assertTrue(g.should_notify([{"status": "repeat"}]))
+
+    def test_success_and_failure_notify(self):
+        with mock.patch.dict(os.environ, {}, clear=True):
+            self.assertTrue(g.should_notify([{"status": "success"}]))
+            self.assertTrue(g.should_notify([{"status": "turnstile"}]))
+            self.assertTrue(g.should_notify([{"status": "repeat"}, {"status": "auth"}]))
+            self.assertTrue(g.should_notify([{"status": "repeat"}, {"status": "success"}]))
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
