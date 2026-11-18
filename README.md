@@ -11,7 +11,7 @@
 | [浏览器登录入口迁移](doc/domain-gateway/browser-logins.md) | 本机保存的登录条目修改步骤与私有地址清单说明 |
 | [静态订阅生成器](script/clash/static-subscription/README.md) | 订阅合并、发布及故障回退 |
 | [Hermes](script/agentbox/hermes/README.md) | 私网助手与网页后台 |
-| [PerkRadar](script/qinglong/perkradar/README.md) | 采集任务与通知流程 |
+| [青龙脚本](script/qinglong/README.md) | GLaDOS、PerkRadar、江苏移动、顺丰等青龙任务与通知流程 |
 | [API 网关文档](doc/gateway/README.md) | 网关运维文档索引 |
 
 真实部署参数、账号、密钥与订阅入口只保存在受控私有配置中。公开文档使用角色和占位符；修改前阅读 [AGENTS.md](AGENTS.md)。

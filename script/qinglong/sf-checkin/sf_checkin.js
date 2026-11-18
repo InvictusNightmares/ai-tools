@@ -235,6 +235,13 @@ async function checkin(account, request = postJson, fetchImpl = fetch) {
       }
     } catch (error) { failures++; lines.push(`${name}：${error.message}`); }
   }
+  if (failures === 0) {
+    try {
+      const status = await request(BASE + '~memberNonactivity~integralSignV2Service~getTodaySign', signedHeaders(cookie, 'SFAPP'), {});
+      const days = Number(status?.obj?.dayCount);
+      if (status?.success === true && Number.isFinite(days)) lines.push(`已连续签到 ${days} 天`);
+    } catch { /* 连续天数查询失败不影响签到结果 */ }
+  }
   try {
     const points = await request(BASE + '~memberNonactivity~integralTaskStrategyService~queryPointTaskAndSignFromES', signedHeaders(cookie, 'MINI_PROGRAM'), { channelType: '1', deviceId: randomBytes(12).toString('hex') });
     if (points?.success === true && points.obj?.totalPoint !== undefined) lines.push(`当前积分：${points.obj.totalPoint}`);

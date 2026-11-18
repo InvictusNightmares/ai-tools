@@ -342,7 +342,7 @@ python -m unittest discover -s capture -p 'test_*.py' -v
 [mitmproxy 证书安装](https://docs.mitmproxy.org/stable/concepts/certificates/)、
 [WebView 调试前置条件](https://developer.chrome.com/docs/devtools/remote-debugging/webviews)。
 
-江苏活动的青龙适配器和无通知验收命令见 [qinglong/README.md](qinglong/README.md)。
+江苏活动的青龙适配器和无通知验收命令见 [script/qinglong/cmcc-checkin/README.md](../qinglong/cmcc-checkin/README.md)。
 它还不具备原生自动取票能力，不能把当前 Cookie 的活动访问测试当作长期续期验收。
 
 ### 顺丰会员登录与签到采集

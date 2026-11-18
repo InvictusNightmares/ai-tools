@@ -124,13 +124,16 @@ test('daily App mode checks login then uses the existing two sign-in endpoints',
   const result = await checkin(account(), async (url, headers) => {
     urls.push(url); assert.match(headers.Cookie, /SYNTHETIC_SESSION_1/);
     if (url.endsWith('/ifLogin')) return { success: true, obj: { loginStatus: 1 } };
+    if (url.endsWith('~getTodaySign')) return { success: true, obj: { signed: true, dayCount: 3 } };
     return { success: true, obj: {} };
   }, mock.fetch);
   assert.equal(result.ok, true);
   assert.match(result.lines[0], /App 自动取票并登录：成功/);
   assert.equal(urls.filter(url => url.endsWith('~sign')).length, 1);
   assert.equal(urls.filter(url => url.endsWith('~automaticSignFetchPackage')).length, 1);
-  assert.equal(urls.length, 4);
+  assert.equal(urls.filter(url => url.endsWith('~getTodaySign')).length, 1);
+  assert.ok(result.lines.includes('已连续签到 3 天'));
+  assert.equal(urls.length, 5);
 });
 
 test('status verification queries login and signed state without signing even if unsigned', async () => {
@@ -150,8 +153,15 @@ test('status verification queries login and signed state without signing even if
 test('Cookie mode keeps working without a native authentication request', async () => {
   const legacy = parseAccounts(`sessionId=SYNTHETIC_OLD; _login_user_id_=${userId}`)[0];
   const urls = [];
-  const result = await checkin(legacy, async url => { urls.push(url); return { success: true, obj: {} }; }, async () => { assert.fail('unexpected native request'); });
-  assert.equal(result.ok, true); assert.equal(urls.length, 3);
+  const result = await checkin(legacy, async url => {
+    urls.push(url);
+    if (url.endsWith('~getTodaySign')) return { success: true, obj: { signed: true, dayCount: 2 } };
+    return { success: true, obj: {} };
+  }, async () => { assert.fail('unexpected native request'); });
+  assert.equal(result.ok, true);
+  assert.equal(urls.filter(url => url.endsWith('~getTodaySign')).length, 1);
+  assert.ok(result.lines.includes('已连续签到 2 天'));
+  assert.equal(urls.length, 4);
 });
 
 test('dry-run takes priority over session verification and does not load the notification runner', async () => {
