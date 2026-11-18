@@ -47,7 +47,7 @@ func TestPolicyMigrationUpgradeFrom020(t *testing.T) {
 	require.NoError(t, err)
 	var before string
 	require.NoError(t, db.QueryRowContext(ctx, `SELECT models_list_config::text FROM groups WHERE name='policy-upgrade-fixture'`).Scan(&before))
-	// Exercise the actual serving baseline before upgrading to the new release.
+	// Apply the historical group and quota migrations before seeding legacy pricing.
 	require.NoError(t, applyMigrationsFS(ctx, db, os.DirFS("/src/migration-previous")))
 	_, err = db.ExecContext(ctx, `UPDATE groups SET model_pricing =
 		'[{"model":"legacy","max_reasoning_effort_multiplier":2},
@@ -59,6 +59,13 @@ func TestPolicyMigrationUpgradeFrom020(t *testing.T) {
 		VALUES ('policy-migration-channel') RETURNING id`).Scan(&fixtureChannelID))
 	_, err = db.ExecContext(ctx, `INSERT INTO channel_model_pricing (channel_id, models, max_reasoning_effort_multiplier)
 		VALUES ($1, '["legacy"]', 2), ($1, '["default"]', NULL)`, fixtureChannelID)
+	require.NoError(t, err)
+	require.NoError(t, applyMigrationsFS(ctx, db, os.DirFS("/src/migration-serving")))
+	_, err = db.ExecContext(ctx, `INSERT INTO groups (name, platform, allow_image_generation, force_openai_fast)
+		VALUES ('policy-gemini-fixture', 'gemini', false, false),
+		       ('policy-antigravity-fixture', 'antigravity', false, false),
+		       ('policy-composite-fixture', 'composite', false, false),
+		       ('policy-openai-fixture', 'openai', false, true)`)
 	require.NoError(t, err)
 	require.NoError(t, ApplyMigrations(ctx, db))
 	require.NoError(t, ApplyMigrations(ctx, db), "restart must not rerun or corrupt migrations")
@@ -122,4 +129,24 @@ func TestPolicyMigrationUpgradeFrom020(t *testing.T) {
 		AND (SELECT indisvalid FROM pg_index WHERE indexrelid='idx_gemini_cached_contents_pending_mutation'::regclass)
 		AND (SELECT indisvalid FROM pg_index WHERE indexrelid='idx_user_affiliate_ledger_operation_id'::regclass)`).Scan(&newSchemaOK))
 	require.True(t, newSchemaOK)
+
+	var imageSettingsPreserved bool
+	require.NoError(t, db.QueryRowContext(ctx, `SELECT count(*) = 4 AND bool_and(
+		allow_image_generation = (platform IN ('gemini', 'antigravity'))
+		AND force_openai_fast = (platform = 'openai')
+		AND NOT force_openai_ultrafast AND NOT image_count_billing)
+		FROM groups WHERE name IN ('policy-gemini-fixture', 'policy-antigravity-fixture',
+			'policy-composite-fixture', 'policy-openai-fixture')`).Scan(&imageSettingsPreserved))
+	require.True(t, imageSettingsPreserved, "only the intended image defaults change; existing Fast and other defaults are preserved")
+	var costIndexValid bool
+	require.NoError(t, db.QueryRowContext(ctx, `SELECT indisvalid FROM pg_index
+		WHERE indexrelid='idx_usage_logs_api_key_created_cost'::regclass`).Scan(&costIndexValid))
+	require.True(t, costIndexValid)
+	var migrationCount int
+	require.NoError(t, db.QueryRowContext(ctx, `SELECT count(*) FROM schema_migrations
+		WHERE filename IN ('246_enable_gemini_image_generation_groups.sql', '247_scoped_admin_api_keys.sql',
+			'248_group_image_count_billing.sql', '249_add_usage_logs_api_key_cost_index_notx.sql',
+			'249_mcp_oauth.sql', '250_openai_cache_write_ttl.sql',
+			'251_group_force_openai_ultrafast.sql', '251_group_usage_rollup_nonblocking_build.sql')`).Scan(&migrationCount))
+	require.Equal(t, 8, migrationCount)
 }

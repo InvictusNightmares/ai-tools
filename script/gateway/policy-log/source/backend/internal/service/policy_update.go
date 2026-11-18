@@ -147,9 +147,12 @@ func (s *UpdateService) policyRollbackVersions() ([]RollbackVersion, error) {
 
 // Migration 235 renames the group model column. Migration 238 removes unlimited
 // quota rows. The 0.2.16 baseline also migrates group pricing and moves platform
-// validation into the application. Restore the matching database when crossing
-// these boundaries; an old binary alone cannot restore the previous semantics.
+// validation into the application. Version 0.2.22 changes group image defaults
+// and usage rollup functions. Crossing a boundary requires the matching database.
 func policyRollbackCompatible(current, target string) bool {
+	if comparePolicyVersions(current, "0.2.22+policy-log.0") >= 0 {
+		return comparePolicyVersions(target, "0.2.22+policy-log.0") >= 0
+	}
 	if comparePolicyVersions(current, "0.2.16+policy-log.0") >= 0 {
 		return comparePolicyVersions(target, "0.2.16+policy-log.0") >= 0
 	}
