@@ -7,8 +7,8 @@
 | 场景 | 可行性 | 说明 |
 | --- | --- | --- |
 | 青龙 + 纯 API（`GLADOS_MODE=api`） | 视账号与出口 IP | 请求流程已完全还原，Cookie 与 UA 匹配时可直接签到；机房 IP / 高风险出口大概率被 Turnstile 拒 |
-| 青龙 + Playwright 浏览器（`GLADOS_MODE=browser`） | 需额外装浏览器 | 用真 Chrome/Edge 让页面自己过 Turnstile；无头 + 机房 IP 通过率低 |
-| 本机（家宽）+ 浏览器模式 | 推荐 | 与人工登录环境一致，失败率最低 |
+| 青龙 + 远程 Browserless（`GLADOS_MODE=browser` + WS） | 已验证可用 | 由脚本自动点击 Turnstile 复选框，机房出口也能完成签到 |
+| 本机 + Chrome/Edge | 可用 | 需本机有桌面；脚本同样自动点击 Turnstile 复选框 |
 | 旧脚本（`koa:sess` + `token=glados.one`） | 已失效 | 新版认证改用 `gld:sess`，签到要求 nonce + proof |
 
 签到成功与否不只看 HTTP 200，要看响应里的 `code` / `reason`：`code=0` 或 `code=1`（今日已签）都算完成；`reason=turnstile`、`device-mismatch` 是两类明确拒绝。
@@ -92,12 +92,15 @@ pip3 install playwright && playwright install chromium
 | `GLADOS_COOKIES` | 多账号必填 | 每行一个 Cookie，`#` 开头为注释 |
 | `GLADOS_USER_AGENT` | 强烈建议 | 登录该账号时浏览器的完整单行 UA；设备校验依赖它 |
 | `GLADOS_USER_AGENTS` | 多账号可选 | 每行一个 UA，按行与 `GLADOS_COOKIES` 对应 |
-| `GLADOS_MODE` | 否 | `auto`（默认）/ `api` / `browser` |
+| `GLADOS_MODE` | 否 | `auto`（默认，先 API 后浏览器）/ `api` / `browser` |
 | `GLADOS_BROWSER_HEADLESS` | 否 | 默认 `1`；本机有桌面时设 `0` 通过率更高 |
 | `GLADOS_BROWSER_TIMEOUT` | 否 | 点签到后的等待秒数，默认 `150` |
+| `GLADOS_BROWSER_WS` | 远程浏览器必填 | Browserless 的 Playwright 入口，如 `ws://<browserless-host>:3000/chrome/playwright` |
+| `GLADOS_BROWSER_TOKEN` | 远程浏览器必填 | Browserless 的 `TOKEN`；容器重建后需同步更新 |
 | `GLADOS_DOMAINS` | 否 | 默认 `https://glados.cloud,https://glados.rocks` |
 | `GLADOS_DELAY` | 否 | 多账号间隔，默认 `3` 秒 |
-| `PUSHPLUS_TOKEN` / `SERVERCHAN_SENDKEY` / `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID` | 否 | 推送渠道，配置任一即可 |
+| `QL_FEISHU_APP_ID` / `QL_FEISHU_APP_SECRET` / `QL_FEISHU_OPEN_ID` | 否 | 复用青龙现有飞书私聊机器人，与其他签到任务一致 |
+| `PUSHPLUS_TOKEN` / `SERVERCHAN_SENDKEY` / `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID` | 否 | 其他推送渠道，配置任一即可 |
 
 4. 新建定时任务：
 
@@ -111,7 +114,7 @@ pip3 install playwright && playwright install chromium
 
 ### 已验证的青龙运行环境
 
-已在现有青龙（Debian 镜像，Python 3.11 + requests）中验证：脚本放在 `data/scripts/glados-checkin/`，环境变量写入青龙面板，任务命令 `task glados-checkin/glados_checkin.py`，定时 `30 9 * * *`。通过青龙“运行一次”可正常读取账号信息并完成签到请求；日志位于 `data/log/glados_checkin/`。签到是否被 Turnstile 拦取决于当天出口 IP，见下文排障。
+已在现有青龙（Debian 镜像，Python 3.11 + requests + Playwright）中验证：脚本放在 `data/scripts/glados-checkin/`，环境变量写入青龙面板，任务命令 `task glados-checkin/glados_checkin.py`，定时 `30 9 * * *`，并配置 12:30 / 20:30 两个补签时段。远程 Browserless 通道（headed）可自动点击 Turnstile 复选框并完成签到；日志位于 `data/log/glados_checkin/`。
 
 ### 从本机 Chrome 导入 Cookie（macOS）
 
@@ -144,7 +147,13 @@ export GLADOS_BROWSER_HEADLESS=0
 python3 glados_checkin.py
 ```
 
-脚本会优先用系统 Chrome，其次 Edge，最后 Playwright Chromium；打开官方签到页并点击签到按钮，由页面自己完成 Turnstile。首次运行会弹出浏览器窗口，属正常现象。浏览器 profile 按账号隔离在 `~/.cache/glados-checkin/`，保留 `cf_clearance` 等状态。
+脚本会优先用系统 Chrome，其次 Edge，最后 Playwright Chromium。首次运行会弹出浏览器窗口，属正常现象。浏览器 profile 按账号隔离在 `~/.cache/glados-checkin/`。
+
+### Turnstile 处理
+
+页面把人机验证组件渲染在跨域 iframe 里，内部 DOM 不可读。脚本在点击签到后轮询 iframe 尺寸，找到可见的 300×65 组件后，按坐标点击左侧复选框；隐藏的 1×1 挑战帧会被跳过。点击通过后页面自己计算 proof 并提交签到。
+
+如果 Cloudflare 升级为图片选择题，脚本无法自动完成，本次会返回 `reason=turnstile`，等下一个补签时段重试即可。
 
 ## 验证
 
@@ -164,11 +173,13 @@ GLADOS_COOKIE='<cookie>' python3 glados_checkin.py           # 正式签到
 | --- | --- | --- |
 | `code=-2` / `没有权限` | Cookie 缺失、过期或域名不匹配 | 重新登录 `glados.cloud` 复制 `gld:sess` + `gld:sess.sig` |
 | `reason=device-mismatch` | UA 与登录设备不一致 | 把 `GLADOS_USER_AGENT` 设成登录时的完整 UA；必要时重新登录 |
-| `reason=turnstile` | Cloudflare 人机验证未过 | 换家宽出口；或本机 `GLADOS_MODE=browser`；机房无头浏览器通常无效 |
+| `reason=turnstile` | 人机验证未过或升级为图片题 | 等 12:30 / 20:30 补签；检查 `GLADOS_BROWSER_WS` / Token；远程浏览器需 `headless=false` |
 | `challenge-unavailable` / `challenge-expired` | challenge 获取失败或等待超时 | 稍后重试；避免并发运行 |
 | 浏览器找不到签到按钮 | 页面未登录 / 加载失败 | 检查 Cookie 是否注入成功；截图与页面日志需自行排查 |
 
 签到接口按“天”去重，重复提交只会返回今日已签；但网络超时属于结果未知，不要为了确认而并发或反复补签，先看官网积分流水。
+
+成功、今日已签、失败都会发送通知；成功时会带上当前积分、今日加分和“已连续签到 N 天”。
 
 ## 隐私
 

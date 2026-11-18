@@ -35,6 +35,7 @@ import os
 import re
 import sys
 import time
+import uuid
 from datetime import datetime
 from urllib.parse import urlsplit
 
@@ -300,11 +301,147 @@ def api_checkin(session, cookie, ua, domains):
     return result
 
 
-def browser_checkin(cookie, ua, domains, account_idx, user_agent_override=None):
-    """真浏览器兜底：注入 Cookie -> 打开签到页 -> 点击签到按钮。
+TURNSTILE_HOST = "challenges.cloudflare.com"
 
-    复用真实 Chrome/Edge 与持久化 profile，让页面自己完成 Turnstile。
-    青龙等无桌面环境默认无头；Turnstile 通过率取决于出口 IP 与浏览器环境。
+
+def _turnstile_widget_box(page):
+    """返回可见 Turnstile 组件的坐标；隐藏的 1x1 挑战帧会被跳过。"""
+    for frame in page.frames:
+        if TURNSTILE_HOST not in (frame.url or ""):
+            continue
+        try:
+            box = frame.frame_element().bounding_box()
+        except Exception:  # noqa: BLE001 - 跨域帧偶尔不可读
+            continue
+        if box and box.get("width", 0) > 10 and box.get("height", 0) > 10:
+            return box
+    return None
+
+
+def _click_turnstile(page):
+    """点击 Turnstile 复选框。页面把组件渲染在跨域 iframe 里，
+    内部 DOM 不可读，但按组件坐标点击左侧复选框区域即可。"""
+    box = _turnstile_widget_box(page)
+    if not box:
+        return False
+    page.mouse.click(box["x"] + 30, box["y"] + box["height"] / 2)
+    return True
+
+
+def _add_glados_cookies(context, cookie, domain):
+    for item in cookie.split(";"):
+        name, sep, value = item.strip().partition("=")
+        if not sep or not name:
+            continue
+        spec = {"name": name, "value": value, "url": domain + "/"}
+        if name.startswith("gld:") or name.startswith("koa:"):
+            spec.update({"secure": True, "httpOnly": True, "sameSite": "Lax"})
+        context.add_cookies([spec])
+
+
+def _apply_mac_ua_metadata(page, ua):
+    """远程 Linux Chrome 需要同时伪装 UA-CH，否则 Turnstile 易判环境不一致。"""
+    match = re.search(r"Chrome/(\d+)", ua or "")
+    if "Macintosh" not in (ua or "") or not match:
+        return
+    major = match.group(1)
+    try:
+        cdp = page.context.new_cdp_session(page)
+        cdp.send("Emulation.setUserAgentOverride", {
+            "userAgent": ua,
+            "acceptLanguage": "zh-CN,zh;q=0.9,en;q=0.8",
+            "platform": "MacIntel",
+            "userAgentMetadata": {
+                "brands": [
+                    {"brand": "Chromium", "version": major},
+                    {"brand": "Google Chrome", "version": major},
+                    {"brand": "Not_A Brand", "version": "99"},
+                ],
+                "fullVersionList": [
+                    {"brand": "Chromium", "version": f"{major}.0.0.0"},
+                    {"brand": "Google Chrome", "version": f"{major}.0.0.0"},
+                    {"brand": "Not_A Brand", "version": "99.0.0.0"},
+                ],
+                "fullVersion": f"{major}.0.0.0",
+                "platform": "macOS",
+                "platformVersion": "10.15.7",
+                "architecture": "x86",
+                "model": "",
+                "mobile": False,
+                "bitness": "64",
+                "wow64": False,
+            },
+        })
+    except Exception:  # noqa: BLE001 - 元数据伪装失败不阻断主流程
+        pass
+
+
+def _remote_browser(pw):
+    """连接 Browserless/远程 Chrome；未配置时返回 None。"""
+    ws = os.environ.get("GLADOS_BROWSER_WS", "").strip()
+    if not ws:
+        return None
+    token = os.environ.get("GLADOS_BROWSER_TOKEN", "").strip()
+    if token:
+        ws += ("&" if "?" in ws else "?") + "token=" + token
+    params = "headless=false&stealth=true&--disable-blink-features=AutomationControlled"
+    ws += ("&" if "?" in ws else "?") + params
+    return pw.chromium.connect(ws, timeout=60000)
+
+
+def _browser_flow(page, cookie, ua, domain, wait_seconds, remote):
+    """打开签到页 -> 点击签到 -> 点 Turnstile 复选框 -> 等 POST 响应。"""
+    if remote:
+        _apply_mac_ua_metadata(page, ua)
+    page.bring_to_front()
+    page.goto(domain + "/console/checkin", wait_until="domcontentloaded", timeout=60000)
+    page.wait_for_timeout(2500)  # 页面挂载时先取 challenge，给它一点时间渲染组件
+
+    button_re = re.compile(r"签到|check\s*in", re.IGNORECASE)
+    btn = None
+    deadline = time.monotonic() + 45
+    while time.monotonic() < deadline:
+        try:
+            candidate = page.get_by_role("button", name=button_re).first
+            if candidate.count() and not candidate.is_disabled():
+                btn = candidate
+                break
+        except Exception:  # noqa: BLE001
+            pass
+        page.wait_for_timeout(500)
+    if btn is None:
+        return None
+
+    captured = {}
+    page.on(
+        "response",
+        lambda resp: captured.update({"json": _safe_json(resp)}) if (
+            resp.url.startswith(domain)
+            and "/api/user/checkin" in resp.url
+            and resp.request.method == "POST"
+        ) else None,
+    )
+
+    log("    点击签到，等待页面完成验证……")
+    btn.click()
+    clicked_ts = False
+    deadline = time.monotonic() + wait_seconds
+    while time.monotonic() < deadline:
+        if captured.get("json"):
+            break
+        if not clicked_ts:
+            clicked_ts = _click_turnstile(page)
+            if clicked_ts:
+                log("    已点击 Turnstile 人机验证复选框")
+        page.wait_for_timeout(500)
+    return captured.get("json")
+
+
+def browser_checkin(cookie, ua, domains, account_idx, user_agent_override=None):
+    """浏览器签到：优先连接远程 Browserless，否则本机启动 Chrome/Edge。
+
+    远程模式需要 GLADOS_BROWSER_WS（如 ws://host:3000/chrome/playwright）
+    和 GLADOS_BROWSER_TOKEN；本机模式使用持久化 profile + 系统 Chrome。
     """
     try:
         from playwright.sync_api import sync_playwright
@@ -320,89 +457,57 @@ def browser_checkin(cookie, ua, domains, account_idx, user_agent_override=None):
         "profile-" + hashlib.sha1(cookie.encode()).hexdigest()[:10] + f"-{account_idx}",
     )
     os.makedirs(profile, exist_ok=True)
-    button_re = re.compile(r"签到|check\s*in", re.IGNORECASE)
-    captured = {"json": None, "domain": None}
 
     with sync_playwright() as pw:
-        context, channel = None, None
-        errors = []
-        for candidate in ("chrome", "msedge", None):
-            kwargs = {
-                "user_data_dir": profile,
-                "headless": headless,
-                "args": ["--disable-blink-features=AutomationControlled",
-                         "--no-first-run", "--no-default-browser-check"],
-            }
-            if candidate:
-                kwargs["channel"] = candidate
-            if user_agent_override:
-                kwargs["user_agent"] = user_agent_override
-            try:
-                context, channel = pw.chromium.launch_persistent_context(**kwargs), candidate
-                break
-            except Exception as exc:  # noqa: BLE001
-                errors.append(f"{candidate or 'chromium'}:{type(exc).__name__}")
-        if context is None:
-            return {"request_failed": True, "reason": "browser-unavailable",
-                    "detail": ";".join(errors)}
+        remote = False
+        browser = None
+        context = None
+        try:
+            browser = _remote_browser(pw)
+        except Exception as exc:  # noqa: BLE001
+            log(f"    远程浏览器连接失败：{type(exc).__name__}，回退本机")
 
-        log(f"    浏览器通道：{channel or 'chromium'}（headless={headless}）")
+        if browser is not None:
+            remote = True
+            context = browser.new_context(
+                user_agent=ua or None, locale="zh-CN", timezone_id="Asia/Shanghai",
+            )
+            log("    浏览器通道：远程 Browserless（headed）")
+        else:
+            channel = None
+            errors = []
+            for candidate in ("chrome", "msedge", None):
+                kwargs = {
+                    "user_data_dir": profile,
+                    "headless": headless,
+                    "ignore_default_args": ["--enable-automation"],
+                    "args": ["--disable-blink-features=AutomationControlled",
+                             "--no-first-run", "--no-default-browser-check"],
+                }
+                if candidate:
+                    kwargs["channel"] = candidate
+                if user_agent_override:
+                    kwargs["user_agent"] = user_agent_override
+                try:
+                    context, channel = pw.chromium.launch_persistent_context(**kwargs), candidate
+                    break
+                except Exception as exc:  # noqa: BLE001
+                    errors.append(f"{candidate or 'chromium'}:{type(exc).__name__}")
+            if context is None:
+                return {"request_failed": True, "reason": "browser-unavailable",
+                        "detail": ";".join(errors)}
+            log(f"    浏览器通道：{channel or 'chromium'}（headless={headless}）")
+
         try:
             for domain in domains:
                 page = None
                 try:
-                    for item in cookie.split(";"):
-                        name, sep, value = item.strip().partition("=")
-                        if not sep or not name:
-                            continue
-                        spec = {"name": name, "value": value, "url": domain + "/"}
-                        if name in ("gld:sess", "gld:sess.sig", "koa:sess", "koa:sess.sig"):
-                            spec.update({"secure": True, "httpOnly": True, "sameSite": "Lax"})
-                        context.add_cookies([spec])
-
+                    _add_glados_cookies(context, cookie, domain)
                     page = context.new_page()
-                    page.on(
-                        "response",
-                        lambda resp: captured.update({
-                            "json": _safe_json(resp),
-                            "domain": domain,
-                        }) if (
-                            resp.url.startswith(domain)
-                            and "/api/user/checkin" in resp.url
-                            and resp.request.method == "POST"
-                        ) else None,
-                    )
-                    page.goto(domain + "/console/checkin",
-                              wait_until="domcontentloaded", timeout=45000)
-
-                    btn = None
-                    deadline = time.monotonic() + 45
-                    while time.monotonic() < deadline and not captured["json"]:
-                        try:
-                            candidate = page.get_by_role("button", name=button_re).first
-                            if candidate.count() and not candidate.is_disabled():
-                                btn = candidate
-                                break
-                        except Exception:  # noqa: BLE001
-                            pass
-                        page.wait_for_timeout(500)
-
-                    if captured["json"]:
-                        return captured["json"]
-                    if btn is None:
-                        log(f"    {domain} 未找到可点击的签到按钮，尝试下一个域名")
-                        continue
-
-                    log("    点击签到，等待页面完成验证……")
-                    with page.expect_response(
-                        lambda r: r.url.startswith(domain)
-                        and "/api/user/checkin" in r.url
-                        and r.request.method == "POST",
-                        timeout=wait_seconds * 1000,
-                    ) as info:
-                        btn.click()
-                    result = _safe_json(info.value)
-                    return result or {"request_failed": True, "reason": "empty-response"}
+                    result = _browser_flow(page, cookie, ua, domain, wait_seconds, remote)
+                    if result:
+                        return result
+                    log(f"    {domain} 未拿到签到响应，尝试下一个域名")
                 finally:
                     if page:
                         try:
@@ -415,6 +520,11 @@ def browser_checkin(cookie, ua, domains, account_idx, user_agent_override=None):
                 context.close()
             except Exception:  # noqa: BLE001
                 pass
+            if browser is not None:
+                try:
+                    browser.close()
+                except Exception:  # noqa: BLE001
+                    pass
 
 
 def _safe_json(resp):
@@ -438,20 +548,68 @@ def account_overview(session, cookie, ua, domains):
     points_res, domain = call_with_domains(session, "GET", "/api/user/points", cookie, ua, domains)
     points = fmt_number(points_res.get("points", "?"))
     gain = today_gain(points_res)
-    return email, left_days, points, fmt_number(gain, signed=True) if gain is not None else None
+    streak = points_res.get("streak")
+    streak = int(streak) if isinstance(streak, (int, float)) and streak >= 0 else None
+    return email, left_days, points, fmt_number(gain, signed=True) if gain is not None else None, streak
+
+
+def send_feishu(title, content):
+    """通过青龙现有的飞书私聊应用发送文本消息。未配置时返回 None。"""
+    app_id = os.environ.get("QL_FEISHU_APP_ID", "").strip()
+    app_secret = os.environ.get("QL_FEISHU_APP_SECRET", "").strip()
+    open_id = os.environ.get("QL_FEISHU_OPEN_ID", "").strip()
+    if not (app_id and app_secret and open_id):
+        return None
+    if not re.match(r"^ou_[A-Za-z0-9]+$", open_id):
+        log("⚠️ 飞书通知跳过：QL_FEISHU_OPEN_ID 格式不正确")
+        return False
+    try:
+        auth = requests.post(
+            "https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal",
+            json={"app_id": app_id, "app_secret": app_secret}, timeout=15,
+        )
+        token = auth.json().get("tenant_access_token") if auth.ok else None
+        if not token:
+            log(f"⚠️ 飞书通知失败：未获取访问凭据（HTTP {auth.status_code}）")
+            return False
+        resp = requests.post(
+            "https://open.feishu.cn/open-apis/im/v1/messages?receive_id_type=open_id",
+            headers={"Authorization": f"Bearer {token}"},
+            json={
+                "receive_id": open_id,
+                "msg_type": "text",
+                "content": json.dumps({"text": f"{title}\n\n{content}"}, ensure_ascii=False),
+                "uuid": str(uuid.uuid4()),
+            },
+            timeout=15,
+        )
+        data = resp.json()
+        if data.get("code") == 0 and (data.get("data") or {}).get("message_id"):
+            return True
+        log(f"⚠️ 飞书通知失败：业务错误 {data.get('code')}")
+    except (requests.RequestException, ValueError) as exc:
+        log(f"⚠️ 飞书通知失败：{type(exc).__name__}")
+    return False
 
 
 def send_push(title, content):
+    """按已配置的渠道发送通知；任一成功即返回 True。"""
     ok = False
+    feishu = send_feishu(title, content)
+    if feishu is not None:
+        log("飞书通知已发送" if feishu else "飞书通知未送达")
+        ok = bool(feishu) or ok
+
     token = os.environ.get("PUSHPLUS_TOKEN", "").strip()
     if token:
         try:
             r = requests.post("https://www.pushplus.plus/send", json={
                 "token": token, "title": title, "content": content, "template": "html",
             }, timeout=10)
-            ok = r.status_code == 200
+            ok = r.status_code == 200 or ok
         except requests.RequestException:
             pass
+
     sendkey = os.environ.get("SERVERCHAN_SENDKEY", "").strip()
     if sendkey:
         try:
@@ -462,6 +620,7 @@ def send_push(title, content):
             ok = r.status_code == 200 or ok
         except requests.RequestException:
             pass
+
     tg_token = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
     tg_chat = os.environ.get("TELEGRAM_CHAT_ID", "").strip()
     if tg_token and tg_chat:
@@ -486,17 +645,19 @@ def run_account(idx, cookie, ua, domains, mode, check_only):
     log(f"===== {tag} 开始 =====")
     log(f"Cookie: {mask_cookie(cookie)}")
 
-    email, left_days, points, gain = account_overview(session, cookie, ua, domains)
+    email, left_days, points, gain, streak = account_overview(session, cookie, ua, domains)
     overview_ok = not (email == "?" and points == "?")
     if not overview_ok:
         log(f"{tag} 只读查询失败：Cookie 可能已过期，或 UA 与登录设备不一致")
     else:
         gain_text = f"，今日 {gain}" if gain else ""
-        log(f"{tag} {email} 剩余 {left_days} 天，当前积分 {points}{gain_text}")
+        streak_text = f"，已连续签到 {streak} 天" if streak is not None else ""
+        log(f"{tag} {email} 剩余 {left_days} 天，当前积分 {points}{gain_text}{streak_text}")
 
     if check_only:
         return {"tag": tag, "status": "check-only" if overview_ok else "auth",
-                "email": email, "days": left_days, "points": points, "gain": gain}
+                "email": email, "days": left_days, "points": points,
+                "gain": gain, "streak": streak}
 
     if mode == "browser":
         result = browser_checkin(cookie, ua, domains, idx)
@@ -514,9 +675,10 @@ def run_account(idx, cookie, ua, domains, mode, check_only):
         status = classify(result)
 
     if status in ("success", "repeat"):
-        email, left_days, points, gain = account_overview(session, cookie, ua, domains)
+        email, left_days, points, gain, streak = account_overview(session, cookie, ua, domains)
         gain_text = f"，今日 {gain}" if gain else ""
-        log(f"{tag} 签到成功（{status}），积分 {points}{gain_text}，剩余 {left_days} 天")
+        streak_text = f"，已连续签到 {streak} 天" if streak is not None else ""
+        log(f"{tag} 签到成功（{status}），积分 {points}{gain_text}{streak_text}，剩余 {left_days} 天")
     elif status == "turnstile":
         log(f"{tag} 被 Cloudflare Turnstile 拦截：{describe(result)}")
         log("    处理：换用住宅/家宽出口，或在本机有桌面环境用 GLADOS_MODE=browser")
@@ -530,7 +692,7 @@ def run_account(idx, cookie, ua, domains, mode, check_only):
 
     return {"tag": tag, "status": status, "email": email,
             "days": left_days, "points": points, "gain": gain,
-            "detail": describe(result)}
+            "streak": streak, "detail": describe(result)}
 
 
 def main(argv):
@@ -562,15 +724,45 @@ def main(argv):
             time.sleep(float(os.environ.get("GLADOS_DELAY", "3") or "3"))
 
     if not check_only:
+        labels = {
+            "success": "签到成功",
+            "repeat": "今日已签到",
+            "turnstile": "人机验证未通过",
+            "device-mismatch": "设备校验失败",
+            "auth": "Cookie 失效",
+            "failed": "签到失败",
+            "error": "运行异常",
+        }
         lines = []
         for r in results:
-            lines.append(
-                f"{r['tag']}: {r['status']} | 积分 {r.get('points', '?')} | "
-                f"今日 {r.get('gain') or '0'} | 剩余 {r.get('days', '?')} 天"
+            line = (
+                f"{r['tag']}：{labels.get(r['status'], r['status'])} | "
+                f"积分 {r.get('points', '?')} | 今日 {r.get('gain') or '0'} | "
+                f"剩余 {r.get('days', '?')} 天"
             )
+            if r.get("streak") is not None:
+                line += f" | 已连续签到 {r['streak']} 天"
+            if r.get("email") and r.get("email") != "?":
+                line += f" | {r['email']}"
+            if r["status"] not in ("success", "repeat") and r.get("detail"):
+                line += f"\n  原因：{str(r['detail'])[:200]}"
+            lines.append(line)
         body = "\n".join(lines)
+
+        statuses = {r["status"] for r in results}
+        if statuses <= {"success"}:
+            title = "GLaDOS 签到 · 成功"
+        elif statuses <= {"success", "repeat"}:
+            title = "GLaDOS 签到 · 已签到"
+        elif statuses & {"success", "repeat"}:
+            title = "GLaDOS 签到 · 部分成功"
+        else:
+            title = "GLaDOS 签到 · 失败"
+        body = time.strftime("%Y-%m-%d %H:%M") + "（北京时间）\n" + body
+
         log("----- 汇总 -----\n" + body)
-        send_push("GLaDOS 签到结果", body)
+        if not send_push(title, body):
+            log("未配置可用的通知渠道（飞书 / PushPlus / ServerChan / Telegram）")
 
     ok_status = {"success", "repeat", "check-only"}
     return 0 if all(r["status"] in ok_status for r in results) else 1
