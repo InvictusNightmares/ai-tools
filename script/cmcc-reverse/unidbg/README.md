@@ -103,3 +103,49 @@ Context.getPackageName / getApplicationContext / getFilesDir
 - `analysis/command_map_complete.md`
 - `analysis/architecture.md`
 - `tools/sg_avmp_gadget.c`
+
+## 32 位 v7a（2026-11-19）
+
+腾讯应用宝的 12.5.6 包只有 `armeabi-v7a`，需要按 ABI 解包：
+
+```bash
+SG_ABI=armeabi-v7a ./native/extract_securityguard.sh /path/to/mc10086-base.apk out
+```
+
+产物：
+
+```text
+out/securityguard/libsgmain.so
+out/securityguard/sgmain/lib/armeabi-v7a/libsgmainso-5.6.230509.so
+out/securityguard/sgmain/classes.dex
+```
+
+harness 现在支持 `SG_ABI`，32 位会自动使用 `AndroidEmulatorBuilder.for32Bit()`：
+
+```bash
+SG_ABI=armeabi-v7a \
+SG_APK=out/securityguard/libsgmain.so \
+SG_SO=out/securityguard/sgmain/lib/armeabi-v7a/libsgmainso-5.6.230509.so \
+SG_VERBOSE=0 \
+./mvnw -pl unidbg-android -am \
+  -Dmaven.test.skip=false -DskipTests=false \
+  -Dtest=cmcc.SecurityGuardHarnessTest -DfailIfNoTests=false test
+```
+
+把 `SecurityGuardHarness.java` 复制到 `unidbg-android/src/test/java/cmcc/` 时，类名改为
+`SecurityGuardHarnessTest`，否则 Surefire 默认不匹配。
+
+实测结果：
+
+```text
+JNI_OnLoad                  OK
+10101 init                  ret=null（不抛异常）
+10602 getAppKeyByIndex      SecException 106440105
+10401 sign                  返回 null
+```
+
+已穷举 `0F09868011039`、`jtztty_sdk#GD70958956615`、`jtztty_sdk#ZH46048899506`、
+`jtztty_sdk`、`zgydAppSDK`、`00000160`、`default`、`android` 与多组 authCode，
+仍无法让 `10602` 成功。独立插件缺少主 App 的运行时 `authCode` / 完整 Context。
+本目录的签到链路已改用 `autoLogin` 等价原生登录，不再依赖 `10401` 签名；
+详见 [../notes/jsyd-login-chain.md](../notes/jsyd-login-chain.md)。

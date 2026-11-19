@@ -1,0 +1,104 @@
+{
+  "note": "已脱敏；*** 表示敏感值已移除",
+  "request": {
+    "method": "POST",
+    "url": "https://client.app.coc.10086.cn/biz-orange/LN/uamonekeylogin/autoLogin",
+    "headers": {
+      "content-type": "application/Json",
+      "x-qen": "14",
+      "accept": "*/*",
+      "xs": "***",
+      "x-sign": "***",
+      "x-nonce": "17665658",
+      "x-token": "***",
+      "accept-encoding": "deflate",
+      "accept-language": "zh-Hans-CN;q=1, en-CN;q=0.9",
+      "x-time": "1795053684904",
+      "user-agent": "ChinaMobile/12.0.5 (iPhone; iOS 26.6.1; Scale/3.00)",
+      "content-length": "1452",
+      "priority": "u=3, i",
+      "cookie": ""
+    },
+    "body_plaintext": {
+      "tel": "***",
+      "sv": "26.6.1",
+      "nt": "-1",
+      "packageName": "com.jsmcc.ZP7267A6ES",
+      "prov": "250",
+      "t": "",
+      "sn": "iPhone16,2",
+      "imei": "***",
+      "city": "0512",
+      "ctid": "***",
+      "appKey": "00000160",
+      "sp": "1290x2796",
+      "en": "0",
+      "componentVersion": "1.0.0",
+      "reqBody": {
+        "cellNum": "***",
+        "channelId": "1",
+        "devToken": "***",
+        "imei": "***",
+        "pageUrl": "ZF10000",
+        "reqSource": "init",
+        "mnc1": "65535",
+        "sendSmsFlag": "0",
+        "mnc2": "65535",
+        "caid": "***"
+      },
+      "cid": "***",
+      "xk": "***",
+      "xc": "B2012",
+      "componentID": "BI2021SI000024",
+      "ak": "***",
+      "cv": "12.0.5",
+      "sb": "apple",
+      "baseFrameVersion": "1.0.0",
+      "st": 2
+    }
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "server": "openresty",
+      "date": "Thu, 19 Nov 2026 02:01:25 GMT",
+      "content-type": "text/json;charset=UTF-8",
+      "content-length": "492",
+      "set-cookie": [
+        "JSESSIONID=***; UID=***; Comment=***; Path=/; HTTPOnly; ticketID=***; Secure"
+      ],
+      "v6time": "2026-11-19-10-01",
+      "access-control-expose-headers": "v6addr, v6time, x-pen",
+      "x-pen": "14",
+      "r-token": "***",
+      "x-frame-options": "SAMEORIGIN",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "1; mode=block",
+      "x-dns-located": "POD9-client",
+      "access-control-allow-origin": "*.10086.cn",
+      "x-request-id": "***",
+      "connection": "Keep-alive",
+      "via": "***"
+    },
+    "body_plaintext": {
+      "retCode": "000000",
+      "retDesc": "SUCCESS",
+      "rspBody": {
+        "userName": "***",
+        "carrierOperator": "002",
+        "userBrand": "01",
+        "userLevel": "",
+        "userStatus": "00",
+        "provinceCode": "250",
+        "cityCode": "0512",
+        "provinceName": "***",
+        "cityName": "***",
+        "curTime": "2026-11-19 10:01:25",
+        "userType": "",
+        "openFamily": "0",
+        "nowTime": "1795053685736",
+        "validityTerm": "1810692085000"
+      }
+    }
+  }
+}

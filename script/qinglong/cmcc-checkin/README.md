@@ -1,52 +1,73 @@
 # 中国移动江苏 act2510 签到
 
-青龙脚本：`china_mobile_checkin.js`（活动层适配器）与 `china_mobile_act2510.js`。
+## 当前方案：`cmcc_auto.py`（会话自动续期）
 
-> 私有配置只放青龙环境变量 `chinaMobile`，不入库。部署路径为青龙 `data/scripts/`。
+`cmcc_auto.py` 不再依赖手工抓取的江苏活动 Cookie，也不再调用原生 `leadeon.getYDRZToken()`。每次运行自动重建活动会话：
 
-`china_mobile_checkin.js` 对应官方 App 中江苏 `act2510` 活动，替换旧 `qwhdhub` 接口实现。
-它先调用 `initIndexPage`；只有明确已登录、今日未签到时才调用一次 `doSign`。
-HTTP 200、`success:true` 或普通提示文字都不能单独视为签到成功。
+```text
+autoLogin（client.app.coc）       现签 App 会话
+→ appTokenLogin（qwhdsso）        换 QWHD 会话
+→ getYDRZToken(sourceId=039014)  换江苏 jtToken
+→ jtWx10086AuthLogin             换江苏活动 Cookie
+→ initIndexPage                  查登录 / 今日签到 / 本月签到
+→ doSign（仅未签到时）            完成签到
+```
 
-这是活动层适配器，尚未实现 `getYDRZToken` 的原生自动取票。活动 Cookie 过期时会明确失败，
-需要本人 App 更新会话。当前会话测试通过后可以按计划运行，但不代表可长期无人值守；
-必须另行验证正式取票和自然失效后的恢复，才能确认长期续期能力。
+### 私有配置
 
-配置沿用 `chinaMobile` 环境变量，值为 JSON 对象或对象数组。字段为：
+`/ql/data/config/cmcc_profile.json`，权限 `0600`，不进入仓库。字段：
 
-| 字段 | 来源 |
+| 字段 | 说明 |
 | --- | --- |
-| `cookie` | 本人成功登录江苏活动后，活动请求的完整 Cookie |
-| `fingerprint` | 同一活动请求的 `mywaytoopen`，与 `hgvhv` 请求头一致 |
-| `userAgent` | 同一活动请求的 User-Agent |
+| `auto_login_url` | `https://client.app.coc.10086.cn/biz-orange/LN/uamonekeylogin/autoLogin` |
+| `auto_login_template` | 从 App 冷启动抓包解密得到的 autoLogin 明文模板 |
+| `xk` | 模板里的 `xk`，会话签名需要 |
+| `phone` | 本人手机号，用于 `userCheckId` |
+| `province_code` / `city_code` | 江苏 / 苏州：`250` / `0512` |
+| `carrier_operator` | `002` |
+| `app_version_code` | App 版本，如 `12.5.6` |
+| `source_id` | 江苏活动 `039014` |
+| `mywaytoopen` | 江苏活动 H5 指纹，抓包值 |
+| `auto_login_user_agent` | 可选，autoLogin 的 UA |
+| `sso_user_agent` / `jsyd_user_agent` | 可选，SSO 与江苏页面 UA |
 
-不要将真实值放进仓库、命令行参数或日志。旧 `QWHD_SESSION_TOKEN` 不兼容此活动。
-配置只应存储在面板受控环境变量中，人工导入时避免复制其他应用的凭据。
+模板里的 `xk` / `cellNum` 由 App 运行时生成，不能离线伪造。首次需要从 App 冷启动抓一次 `autoLogin` 请求；之后每次运行都会重新现签，不需要反复抓包。
 
-运行模式：
-
-```bash
-# 无网络、无通知，仅检查配置结构
-node china_mobile_checkin.js --dry-run
-
-# 只查询登录及签到状态，不签到、不发通知；仍会向官方接口发送所配置的会话
-node china_mobile_checkin.js --status
-
-# 执行签到但不发通知，仅用于已获授权的验收
-node china_mobile_checkin.js --now --no-notify
-```
-
-普通定时运行依赖面板已有的同目录 `daily_checkin_common.js`，保留它的随机等待与通知行为。
-源码测试和 `--dry-run` 不会加载该通知模块。
+### 运行
 
 ```bash
-node --test china_mobile_checkin.test.js
+# 只查登录和签到状态，不签到
+python3 cmcc_auto.py --check
+
+# 签到；成功后发飞书通知
+python3 cmcc_auto.py
 ```
 
-替换时先保留旧脚本和任务元数据的受控备份，使用面板 API 更新原任务，不创建重复定时任务。
-在服务器上完成只查状态的真实验证，并核对面板生成的环境变量与正式脚本一致后，再启用
-当前会话的定时任务。验证失败时保留候选文件，原任务维持停用；不要用已失效的旧 Cookie
-反复尝试登录，也不要据离线测试宣称部署验收完成。
+青龙任务：
 
-已验证当前本人会话可以从本机和部署容器查询到已登录、今日已签到。正式入口的配置检查、
-状态查询和生成环境一致性检查均已通过；这些结果不包含自然过期后的原生取票验证。
+```text
+命令：task cmcc-checkin/cmcc_auto.py
+定时：0 9 * * *
+```
+
+脚本只输出登录状态、今日是否签到、本月签到天数，不打印 Cookie、token、手机号。
+
+### 验收
+
+```bash
+python3 cmcc_auto.py --check
+# 期望：登录=成功 今日已签到=True/False 本月签到=N
+```
+
+当前已在青龙容器实测：
+
+```text
+登录=成功 今日已签到=True 本月签到=5
+飞书通知已发送
+```
+
+## 旧版活动层适配器（保留）
+
+`china_mobile_checkin.js` 与 `china_mobile_act2510.js` 是早期实现，只做活动层请求，依赖手工抓取的 `chinaMobile` Cookie。会话约一天过期，不具备自动续期能力，现已由 `cmcc_auto.py` 替代；保留用于对照和回滚。
+
+旧版配置只放青龙环境变量，字段为 `cookie`、`fingerprint`、`userAgent`。不要将真实值写入仓库、命令行或日志。

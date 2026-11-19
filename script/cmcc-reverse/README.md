@@ -402,10 +402,10 @@ WireGuard 流量的连接目标可能是 IP 地址。对于 HTTP Host（HTTP/2 �
 - [x] 找到 qwhdhub / act2510 接口
 - [x] 拆出 SecurityGuard 组件和命令映射
 - [x] 确认 `doSignature` → `doCommand(10401)`
-- [ ] 取到 `appKey` / `authCode`
-- [ ] unidbg 跑通 SecurityGuard 签名
-- [ ] 取到 `QWHD_SESSION_TOKEN` 的刷新链路
-- [ ] 长期无人值守签到
+- [ ] 取到 `appKey` / `authCode`（运行时值，已改用等价原生登录绕过）
+- [ ] unidbg 跑通 SecurityGuard 签名（非当前关键路径）
+- [x] 取到活动会话刷新链路（autoLogin + appTokenLogin + getYDRZToken）
+- [x] 长期无人值守签到（青龙 `cmcc_auto.py`）
 
 公开项目 [cmcc-auto-checkin](https://github.com/mli84/cmcc-auto-checkin) 提供了原生自动登录
 和活动会话交换的研究线索，但仍依赖首次取得本人 App 的原生请求材料，且不同版本的服务端
@@ -420,7 +420,29 @@ WireGuard 流量的连接目标可能是 IP 地址。对于 HTTP Host（HTTP/2 �
 - 结论：原版 MuMu/AVD/BlueStacks 都不是干净非 root 环境；要在模拟器跑，需要预修改镜像或 Magisk + Shamiko + resetprop，成本高且可能被 `libZWRisk` 检测。
 - 实用路线：非 root 真机 + UI 自动化，见 `device/`。
 
-## 10. 注意
+## 10. 自动续期结果（2026-11-19）
+
+江苏 `act2510` 已改为等价原生登录，不再依赖手工 Cookie 或 SecurityGuard `authCode`：
+
+```text
+autoLogin（client.app.coc）       现签 App 会话
+→ appTokenLogin（qwhdsso）        换 QWHD 会话
+→ getYDRZToken(sourceId=039014)  换江苏 jtToken
+→ jtWx10086AuthLogin             换江苏活动 Cookie
+→ initIndexPage / doSign         查状态、签到
+```
+
+- 链路分析：[notes/jsyd-login-chain.md](notes/jsyd-login-chain.md)
+- 脱敏抓包样本：[analysis/samples/](analysis/samples/)
+- 接口探测：[analysis/jsyd_probe.py](analysis/jsyd_probe.py)
+- HAR 导入 profile：[analysis/import_auto_login.py](analysis/import_auto_login.py)
+- SecurityGuard harness：[unidbg/SecurityGuardHarness.java](unidbg/SecurityGuardHarness.java)
+- 青龙生产脚本：[../qinglong/cmcc-checkin/cmcc_auto.py](../qinglong/cmcc-checkin/cmcc_auto.py)
+
+首次仍需从 App 冷启动抓一次 `autoLogin` 以取得 `xk` / `cellNum` 模板；之后青龙每次运行自动续期。
+原始抓包、profile、Cookie、token 只保存在 `out/` 或青龙 `data/config/`，不入库。
+
+## 11. 注意
 
 - 不要把 APK、DEX、SO、抓包日志、Cookie、token 提交到仓库；
 - `out/` 已加入 `.gitignore`；

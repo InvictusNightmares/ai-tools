@@ -1,0 +1,68 @@
+{
+  "note": "已脱敏；*** 表示敏感值已移除",
+  "request": {
+    "method": "POST",
+    "url": "https://wap.js.10086.cn/nact/action.do",
+    "headers": {
+      "accept": "application/json, text/javascript, */*; q=0.01",
+      "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "origin": "https://wap.js.10086.cn",
+      "hgvhv": "***",
+      "user-agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148/wkwebview leadeon/12.0.5/CMCCIT",
+      "referer": "https://wap.js.10086.cn/nact/resource/2510/html/index.html",
+      "content-length": "162",
+      "x-requested-with": "XMLHttpRequest",
+      "accept-language": "zh-CN,zh-Hans;q=0.9",
+      "priority": "u=5, i",
+      "accept-encoding": "gzip, deflate, br, zstd",
+      "cookie": "gdp_user_id=***"
+    },
+    "body": "reqUrl=act2510&method=initChallengeFloor&operType=1&actCode=2510&isJtAPP=true&env=jt_app&extendParams=&ywcheckcode=&mywaytoopen=***"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 02:16:15 GMT",
+      "content-type": "text/html;charset=UTF-8",
+      "set-cookie": [
+        "cmtokenid=***; Domain=10086.cn; Path=/",
+        "userMobileForBigData=***; Domain=10086.cn; Path=/"
+      ],
+      "x-frame-options": "SAMEORIGIN",
+      "server": "Jsmcc_N",
+      "content-encoding": "gzip"
+    },
+    "body": {
+      "continue": true,
+      "errorCode": "",
+      "resultCode": "1",
+      "resultCom": {
+        "mobileInfo": "***",
+        "cityNo": "11",
+        "gdpMobile": "***",
+        "webtrendsCityNo": "0512",
+        "ch": "",
+        "webmobile": "***",
+        "appmobile": "***",
+        "touchmobile": "***",
+        "mobile": "***",
+        "bdmobile": "***",
+        "webtrendsMobile": "***"
+      },
+      "resultObj": {
+        "isLogin": true,
+        "targetDays": 10,
+        "rewardName": "",
+        "activityEndTime": "2026-12-31 23:59:59",
+        "tier": "1",
+        "lastMonthSignDays": 0,
+        "show": true,
+        "isApp": true,
+        "rewardAmount": "1288MB",
+        "state": "unreached",
+        "currentDays": 5
+      },
+      "success": true
+    }
+  }
+}

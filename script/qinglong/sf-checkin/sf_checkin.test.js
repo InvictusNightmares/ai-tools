@@ -164,6 +164,29 @@ test('Cookie mode keeps working without a native authentication request', async 
   assert.equal(urls.length, 4);
 });
 
+test('transient busy responses are retried before reporting failure', async () => {
+  const legacy = parseAccounts(`sessionId=SYNTHETIC_OLD; _login_user_id_=${userId}`)[0];
+  let membershipCalls = 0;
+  process.env.SF_BUSY_RETRY_MS = '0';
+  try {
+    const result = await checkin(legacy, async url => {
+      if (url.endsWith('~automaticSignFetchPackage')) {
+        membershipCalls++;
+        if (membershipCalls === 1) return { success: false, errorMessage: '活动太火爆了，请稍后再试试~' };
+        return { success: true, obj: { award: { giftBagName: 'SYNTHETIC_REWARD' } } };
+      }
+      if (url.endsWith('~getTodaySign')) return { success: true, obj: { signed: true, dayCount: 3 } };
+      return { success: true, obj: {} };
+    }, async () => { assert.fail('unexpected native request'); });
+    assert.equal(result.ok, true);
+    assert.equal(membershipCalls, 2);
+    assert.ok(result.lines.some(line => /获得 SYNTHETIC_REWARD/.test(line)));
+    assert.ok(!result.lines.some(line => /失败/.test(line)));
+  } finally {
+    delete process.env.SF_BUSY_RETRY_MS;
+  }
+});
+
 test('dry-run takes priority over session verification and does not load the notification runner', async () => {
   const prior = { env: process.env.sfsyUrl, log: console.log, fetch: global.fetch }; const lines = [];
   try {

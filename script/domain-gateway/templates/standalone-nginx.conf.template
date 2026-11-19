@@ -1,0 +1,15 @@
+server {
+    listen 127.0.0.1:{{SITE_TLS_PORT}} ssl proxy_protocol;
+    server_name {{SITE_DOMAIN}};
+
+    ssl_certificate {{SITE_FULLCHAIN}};
+    ssl_certificate_key {{SITE_KEY}};
+    root {{SITE_ROOT}};
+    index index.html;
+
+    if ($host != {{SITE_DOMAIN}}) { return 421; }
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}

@@ -22,11 +22,15 @@ import java.io.File;
  * Status: loads libsgmainso, executes JNI_OnLoad, calls 10101/10602/10401.
  * 10101 no longer crashes with the JNI stubs below, but 10602 still throws
  * SecException 106440105 because the runtime appKey/authCode/context are not
- * available in the standalone plugin. See README.md.
+ * available in the standalone plugin. The equivalent autoLogin login path is
+ * documented in notes/jsyd-login-chain.md; 10602 is no longer on the critical
+ * path.
  *
  * Env:
+ *   SG_ABI  arm64-v8a (default) or armeabi-v7a
  *   SG_APK  nested libsgmain.so (default: out/securityguard/libsgmain.so)
- *   SG_SO   libsgmainso-*.so  (default: out/securityguard/sgmain/lib/arm64-v8a/libsgmainso-5.6.230509.so)
+ *   SG_SO   libsgmainso-*.so  (default: out/securityguard/sgmain/lib/$SG_ABI/libsgmainso-5.6.230509.so)
+ *   SG_VERBOSE  1 to enable unidbg instruction logs
  */
 public class SecurityGuardHarness extends TestCase {
     private static class Jni extends AbstractJni {
@@ -133,7 +137,12 @@ public class SecurityGuardHarness extends TestCase {
     }
 
     public void test() throws Exception {
-        AndroidEmulator emulator = AndroidEmulatorBuilder.for64Bit()
+        String abi = System.getenv().getOrDefault("SG_ABI", "arm64-v8a");
+        boolean is32 = "armeabi-v7a".equals(abi);
+        AndroidEmulatorBuilder builder = is32
+                ? AndroidEmulatorBuilder.for32Bit()
+                : AndroidEmulatorBuilder.for64Bit();
+        AndroidEmulator emulator = builder
                 .setProcessName("com.greenpoint.android.mc10086.activity")
                 .addBackendFactory(new Unicorn2Factory(true))
                 .build();
@@ -143,10 +152,10 @@ public class SecurityGuardHarness extends TestCase {
 
             File sgApk = new File(System.getenv().getOrDefault("SG_APK", "out/securityguard/libsgmain.so"));
             File sgSo = new File(System.getenv().getOrDefault("SG_SO",
-                    "out/securityguard/sgmain/lib/arm64-v8a/libsgmainso-5.6.230509.so"));
+                    "out/securityguard/sgmain/lib/" + abi + "/libsgmainso-5.6.230509.so"));
             VM vm = emulator.createDalvikVM(sgApk);
             vm.setJni(new Jni());
-            vm.setVerbose(true);
+            vm.setVerbose("1".equals(System.getenv("SG_VERBOSE")));
 
             System.out.println("[smoke] resolve JNICLibrary=" + vm.resolveClass("com/taobao/wireless/security/adapter/JNICLibrary"));
             System.out.println("[smoke] resolve SecurityGuardMainPlugin=" + vm.resolveClass("com/alibaba/wireless/security/mainplugin/SecurityGuardMainPlugin"));
@@ -158,8 +167,10 @@ public class SecurityGuardHarness extends TestCase {
             System.out.println("[smoke] class=" + c);
             String sign = "doCommandNative(I[Ljava/lang/Object;)Ljava/lang/Object;";
             DvmObject<?> context = vm.resolveClass("android/content/Context").newObject(null);
-            String[] appKeys = {"", "0F09868011039", "jtztty_sdk#GD70958956615", "zgydAppSDK", "default", "android"};
-            String[] authCodes = {""};
+            String[] appKeys = {"0F09868011039", "jtztty_sdk#GD70958956615", "jtztty_sdk#ZH46048899506",
+                    "jtztty_sdk", "zgydAppSDK", "00000160", "default", "android"};
+            String[] authCodes = {"", "0F09868011039", "jtztty_sdk#GD70958956615", "jtztty_sdk#ZH46048899506",
+                    "00000160", "zgydAppSDK", "android", "default"};
             for (String appKey : appKeys) {
                 for (String authCode : authCodes) {
                     try {

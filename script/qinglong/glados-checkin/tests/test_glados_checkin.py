@@ -134,20 +134,33 @@ class CheckinFlowTests(unittest.TestCase):
 
 
 class NotifyTests(unittest.TestCase):
-    def test_all_repeat_is_silent_by_default(self):
+    def test_all_repeat_is_silent_after_daily_notification(self):
         with mock.patch.dict(os.environ, {}, clear=True):
-            self.assertFalse(g.should_notify([{"status": "repeat"}]))
+            self.assertFalse(g.should_notify([{"status": "repeat"}], notified_today=True))
+
+    def test_repeat_notifies_before_daily_notification(self):
+        with mock.patch.dict(os.environ, {}, clear=True):
+            self.assertTrue(g.should_notify([{"status": "repeat"}], notified_today=False))
 
     def test_repeat_can_be_forced(self):
         with mock.patch.dict(os.environ, {"GLADOS_NOTIFY_REPEAT": "1"}, clear=True):
-            self.assertTrue(g.should_notify([{"status": "repeat"}]))
+            self.assertTrue(g.should_notify([{"status": "repeat"}], notified_today=True))
 
     def test_success_and_failure_notify(self):
         with mock.patch.dict(os.environ, {}, clear=True):
-            self.assertTrue(g.should_notify([{"status": "success"}]))
-            self.assertTrue(g.should_notify([{"status": "turnstile"}]))
-            self.assertTrue(g.should_notify([{"status": "repeat"}, {"status": "auth"}]))
-            self.assertTrue(g.should_notify([{"status": "repeat"}, {"status": "success"}]))
+            self.assertTrue(g.should_notify([{"status": "success"}], notified_today=True))
+            self.assertTrue(g.should_notify([{"status": "turnstile"}], notified_today=True))
+            self.assertTrue(g.should_notify([{"status": "repeat"}, {"status": "auth"}], notified_today=True))
+            self.assertTrue(g.should_notify([{"status": "repeat"}, {"status": "success"}], notified_today=True))
+
+    def test_notification_state_round_trip(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, "state.json")
+            with mock.patch.dict(os.environ, {"GLADOS_NOTIFY_STATE": path}, clear=True):
+                self.assertEqual(g.load_notified_date(), "")
+                g.save_notified_date("2026-11-19")
+                self.assertEqual(g.load_notified_date(), "2026-11-19")
 
 
 if __name__ == "__main__":

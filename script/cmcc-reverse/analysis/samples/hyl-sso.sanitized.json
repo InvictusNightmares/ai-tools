@@ -1,0 +1,77 @@
+{
+  "note": "已脱敏；*** 表示敏感值已移除",
+  "request": {
+    "method": "POST",
+    "url": "https://wap.js.10086.cn/hyl/content/provider-user/sso/china/mobile",
+    "headers": {
+      "content-type": "application/json;charset=UTF-8",
+      "jsydcontentaccesstoken": "***",
+      "accept": "application/json, text/plain, */*",
+      "x-requested-with": "XMLHttpRequest",
+      "sec-fetch-site": "same-origin",
+      "jsydcontentrefreshtoken": "***",
+      "trackdata": "%7B%22appId%22%3Anull%2C%22device%22%3A%22iPhone%22%2C%22logTime%22%3A%2220261119100133%22%2C%22channelId%22%3A%221000000002110700006%22%2C%22messageId%22%3A%22%22%2C%22contentId%22%3A%22%22%2C%22plId%22%3A%22%22%2C%22pageId%22%3Anull%2C%22pageName%22%3Anull%2C%22pageUrl%22%3A%22https%3A%2F%2Fwap.js.10086.cn%2Fhyl%2Fcontent%2Fsuper-market%2Fmarket-index%3FchannelId%3D1000000002110700006%26orderEntr%3Dyjzt%26isZtCutover%3Dtrue%22%2C%22pathId%22%3Anull%2C%22vipTypeLevel%22%3A0%2C%22shortId%22%3A%22%22%2C%22videosId%22%3Anull%2C%22pChannelId%22%3A%22%22%2C%22channelAreaNum%22%3A%22%22%7D",
+      "chinamobile-sso-token": "***",
+      "sec-fetch-mode": "cors",
+      "origin": "https://wap.js.10086.cn",
+      "user-agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148/wkwebview leadeon/12.0.5/CMCCIT",
+      "referer": "https://wap.js.10086.cn/hyl/content/super-market/market-index?channelId=1000000002110700006&orderEntr=yjzt&isZtCutover=true",
+      "content-length": "17",
+      "sec-fetch-dest": "empty",
+      "accept-language": "zh-CN,zh-Hans;q=0.9",
+      "priority": "u=3, i",
+      "accept-encoding": "gzip, deflate, br, zstd",
+      "cookie": "gdp_user_id=***"
+    },
+    "body": {
+      "loginSource": 2
+    }
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 02:01:34 GMT",
+      "content-length": "876",
+      "vary": "Access-Control-Request-Headers",
+      "access-control-allow-origin": "https://wap.js.10086.cn",
+      "access-control-expose-headers": "*",
+      "access-control-allow-credentials": "true",
+      "expires": "0",
+      "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+      "x-xss-protection": "1; mode=block",
+      "pragma": "no-cache",
+      "x-frame-options": "ALLOW-FROM http://hfx.net/,https://hfx.net/,http://wap.js.10086.cn/,https://wap.js.10086.cn/,",
+      "x-content-type-options": "nosniff",
+      "set-cookie": [
+        "HttpOnly",
+        "Secure",
+        "HttpOnly",
+        "Secure"
+      ],
+      "strict-transport-security": "value",
+      "referrer-policy": "value",
+      "x-permitted-cross-domain-policies": "value",
+      "x-download-options": "value",
+      "server": "Jsmcc_N"
+    },
+    "body": {
+      "code": "1",
+      "success": true,
+      "data": {
+        "userInfo": {
+          "userId": 0,
+          "crmUserId": "***",
+          "mobile": "***",
+          "ispFlag": 1,
+          "overbookingCnt": 0,
+          "userBrand": 1,
+          "cityCode": "320500",
+          "creditLevel": 2
+        },
+        "expireIn": 43200,
+        "accessToken": "***",
+        "refreshToken": "***"
+      }
+    }
+  }
+}

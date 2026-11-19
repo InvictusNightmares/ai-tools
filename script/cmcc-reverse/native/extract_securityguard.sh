@@ -7,13 +7,14 @@ set -euo pipefail
 APK="${1:?usage: $0 <apk> [out-dir]}"
 OUT="${2:-$(pwd)/out}"
 APK="$(cd "$(dirname "$APK")" && pwd)/$(basename "$APK")"
+ABI="${SG_ABI:-arm64-v8a}"
 SG="$OUT/securityguard"
 
 mkdir -p "$OUT/libs" "$SG"
 
-echo "[*] extract arm64 libs"
-unzip -o -q "$APK" 'lib/arm64-v8a/*' -d "$OUT/_apk_libs"
-cp -a "$OUT/_apk_libs/lib/arm64-v8a/." "$OUT/libs/" 2>/dev/null || true
+echo "[*] extract $ABI libs"
+unzip -o -q "$APK" "lib/$ABI/*" -d "$OUT/_apk_libs"
+cp -a "$OUT/_apk_libs/lib/$ABI/." "$OUT/libs/" 2>/dev/null || true
 
 echo "[*] extract libsgmain.so"
 if [ ! -f "$OUT/libs/libsgmain.so" ]; then
@@ -44,4 +45,4 @@ fi
 
 echo "[*] SecurityGuard native libs"
 find "$SG/sgmain" -type f -name '*.so' -exec ls -lh {} \; 2>/dev/null || true
-echo "[*] done: $SG"
+echo "[*] done: $SG (abi=$ABI)"

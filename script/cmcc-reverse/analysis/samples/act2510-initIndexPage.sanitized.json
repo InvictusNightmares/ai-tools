@@ -1,0 +1,371 @@
+{
+  "note": "已脱敏；*** 表示敏感值已移除",
+  "request": {
+    "method": "POST",
+    "url": "https://wap.js.10086.cn/nact/action.do",
+    "headers": {
+      "accept": "application/json, text/javascript, */*; q=0.01",
+      "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+      "origin": "https://wap.js.10086.cn",
+      "hgvhv": "***",
+      "user-agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148/wkwebview leadeon/12.0.5/CMCCIT",
+      "referer": "https://wap.js.10086.cn/nact/resource/2510/html/index.html",
+      "content-length": "157",
+      "x-requested-with": "XMLHttpRequest",
+      "accept-language": "zh-CN,zh-Hans;q=0.9",
+      "priority": "u=5, i",
+      "accept-encoding": "gzip, deflate, br, zstd",
+      "cookie": "gdp_user_id=***"
+    },
+    "body": "reqUrl=act2510&method=initIndexPage&operType=1&actCode=2510&isJtAPP=true&env=jt_app&extendParams=&ywcheckcode=&mywaytoopen=***"
+  },
+  "response": {
+    "status_code": 200,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 02:01:36 GMT",
+      "content-type": "text/html;charset=UTF-8",
+      "set-cookie": [
+        "cmtokenid=***; Domain=10086.cn; Path=/",
+        "last_login_mobile=***; Domain=.js.10086.cn; Path=/",
+        "userMobileForBigData=***; Domain=10086.cn; Path=/"
+      ],
+      "x-frame-options": "SAMEORIGIN",
+      "server": "Jsmcc_N",
+      "content-encoding": "gzip"
+    },
+    "body": {
+      "continue": true,
+      "errorCode": "",
+      "resultCode": "1",
+      "resultCom": {
+        "mobileInfo": "***",
+        "cityNo": "11",
+        "gdpMobile": "***",
+        "webtrendsCityNo": "0512",
+        "ch": "",
+        "webmobile": "***",
+        "appmobile": "***",
+        "touchmobile": "***",
+        "mobile": "***",
+        "bdmobile": "***",
+        "webtrendsMobile": "***"
+      },
+      "resultObj": {
+        "isWednesday": false,
+        "indexAdvertFlag": false,
+        "monthSignCnt": 4,
+        "flowPendingMb": 1079,
+        "bottomAdvertCfg": [
+          {
+            "city": "1",
+            "endTime": "20290614000000000",
+            "id": "4",
+            "img": "../images/bottomBanner2504.png",
+            "jumpStatus": "1",
+            "pullUrl": "https://wx.10086.cn/qwhdhub/qwhdmark/1021122301?touch_id=JTST_P00000010729&yx=JHQD9999999999&channelId=P00000010729",
+            "startTime": "20230214000000000",
+            "status": "1",
+            "type": "3",
+            "url": "https://wap.js.10086.cn/nact/resource/2504/html/index.html"
+          }
+        ],
+        "isGetFreeChance": false,
+        "appFlag": false,
+        "isFreeMember": false,
+        "flowExtractRangeMax": 0,
+        "weekList": [
+          "20261116",
+          "20261117",
+          "20261118",
+          "20261119",
+          "20261120",
+          "20261121",
+          "20261122"
+        ],
+        "isLogin": true,
+        "flowExpireTime": "20261130235959999",
+        "today": "20261119",
+        "userIsHasCards": false,
+        "flowExtractRangeMin": 0,
+        "propShopCards": [
+          {
+            "bodyImg": "../images/useprop-content-BQ.png",
+            "cardDesc": "看热门新闻得",
+            "cardName": "补签卡",
+            "checkCycle": "0",
+            "headImg": "../images/usecard-buqian.png",
+            "isShowBag": "1",
+            "isShowBuy": "1",
+            "sortNum": "1",
+            "status": "1",
+            "type": "1"
+          },
+          {
+            "bodyImg": "../images/index-banner-MQ.png",
+            "cardDesc": "E豆兑换",
+            "cardEbean": "1000",
+            "cardName": "满签卡-e",
+            "cardNum": "3000799",
+            "checkCycle": "1",
+            "headImg": "../images/usecard-manqian.png",
+            "isShowBag": "1",
+            "isShowBuy": "1",
+            "limitCnt": "1",
+            "sortNum": "2",
+            "status": "1",
+            "type": "2"
+          }
+        ],
+        "toolFirstDayWeek": 0,
+        "toolLastDay": "20261130",
+        "isShowWeekendGift": false,
+        "medalStaff": false,
+        "freeChance": {
+          "areaNum": "11",
+          "ch": "wap",
+          "channel": "other",
+          "createTime": "20261113171603464",
+          "currentChance": "0",
+          "mobile": "***",
+          "totalChance": "1",
+          "updateTime": "20261113171628318"
+        },
+        "signxlcity": true,
+        "isApp": true,
+        "afficheNotice": "尊敬的用户，您好！自即日起，流量值提取为1.2倍次月流量券功能调整提取时间：“每月 1 日 0:00—21 日 23:59:59 可正常提取；每月 22 日 0:00 至当月月末暂停提取”。感谢您的理解与支持，由此带来不便，敬请谅解！",
+        "isBlack": false,
+        "flashViewCfg": [
+          {
+            "city": "1",
+            "endTime": "20261231235959999",
+            "hits": "已有1.16万人参加",
+            "id": "1",
+            "img": "../images/bannerLLYYYD.png",
+            "jumpStatus": "1",
+            "startTime": "20260407000000000",
+            "status": "1",
+            "type": "1",
+            "updateTime": "20260707000000030",
+            "url": "https://wap.js.10086.cn/nact/resource/2645/html/index.html?ch=7x50&jtNeedLog=1"
+          },
+          {
+            "city": "1",
+            "endTime": "20261231235959999",
+            "hits": "已有1.19万人参加",
+            "id": "2",
+            "img": "../images/bannerLLYYYD.png",
+            "jumpStatus": "1",
+            "startTime": "20260407000000000",
+            "status": "1",
+            "type": "2",
+            "updateTime": "20260707000000037",
+            "url": "https://wap.js.10086.cn/nact/resource/2645/html/index.html?ch=7x50&jtNeedLog=1"
+          },
+          {
+            "city": "1",
+            "endTime": "20261231235959999",
+            "hits": "已有1.79万人参加",
+            "id": "7",
+            "img": "../images/bannerZSCZR.png",
+            "jumpStatus": "1",
+            "startTime": "20260407000000000",
+            "status": "1",
+            "type": "1",
+            "updateTime": "20260707000000072",
+            "url": "https://wap.js.10086.cn/mb_nact/new/agilefront/apublish/3087622972879143274/3087622972879143279.html"
+          },
+          {
+            "city": "1",
+            "endTime": "20261231235959999",
+            "hits": "已有1.13万人参加",
+            "id": "7",
+            "img": "../images/bannerZSCZR.png",
+            "jumpStatus": "1",
+            "startTime": "20260407000000000",
+            "status": "1",
+            "type": "2",
+            "updateTime": "20260707000000078",
+            "url": "https://wap.js.10086.cn/mb_nact/new/agilefront/apublish/3087622972879143274/3087622972879143279.html"
+          },
+          {
+            "city": "1",
+            "endTime": "20270630235959999",
+            "hits": "已有1.01万人参加",
+            "id": "8",
+            "img": "../images/fyflll.png",
+            "jumpStatus": "1",
+            "startTime": "20261111000000000",
+            "status": "1",
+            "type": "2",
+            "updateTime": "20261111000000078",
+            "url": "https://wap.js.10086.cn/nact/resource/2650/html/index.html?ch=01d2"
+          },
+          {
+            "city": "1",
+            "endTime": "20290614000000000",
+            "hits": "已有1.92万人参加",
+            "id": "9",
+            "img": "../images/swiper-03.png",
+            "jumpStatus": "1",
+            "startTime": "20230214000000000",
+            "status": "1",
+            "type": "2",
+            "updateTime": "20260707000000091",
+            "url": "https://wx.10086.cn/qwhdhub/qwhdmark/1021122301?touch_id=JTST_P00000003818&yx=JHQD9999999999&channelId=P00000003818"
+          },
+          {
+            "city": "1",
+            "endTime": "20290614000000000",
+            "hits": "已有1.48万人参加",
+            "id": "9",
+            "img": "../images/swiper-03.png",
+            "jumpStatus": "1",
+            "startTime": "20230214000000000",
+            "status": "1",
+            "type": "1",
+            "updateTime": "20260707000000086",
+            "url": "https://wx.10086.cn/qwhdhub/qwhdmark/1021122301?touch_id=JTST_P00000010729&yx=JHQD9999999999&channelId=P00000010729"
+          },
+          {
+            "city": "1",
+            "endTime": "20261231235959999",
+            "hits": "已有1.37万人参加",
+            "id": "10",
+            "img": "../images/swiper-08.png",
+            "jumpStatus": "1",
+            "startTime": "20230214000000000",
+            "status": "1",
+            "type": "2",
+            "updateTime": "20260707000000091",
+            "url": "https://h.app.coc.10086.cn/activity/transferXcx/index.html?platform=cmcc&appId=8405952527514361&path=pages%2Findex%2Findex&mc=GD_QDJS&sc=GD_JSQD_0001&channel=40257751680&touchpoint=JSQD2026000001&token="
+          },
+          {
+            "city": "1",
+            "endTime": "20290614000000000",
+            "hits": "已有1.77万人参加",
+            "id": "11",
+            "img": "../images/bannerSTDYYL.png",
+            "jumpStatus": "1",
+            "startTime": "20230214000000000",
+            "status": "1",
+            "type": "1",
+            "updateTime": "20260707000000097",
+            "url": "https://wap.js.10086.cn/nact/resource/2622/html/index.html?ch=0151"
+          },
+          {
+            "city": "1",
+            "endTime": "20290614000000000",
+            "hits": "已有1.36万人参加",
+            "id": "11",
+            "img": "../images/bannerSTDYYL.png",
+            "jumpStatus": "1",
+            "startTime": "20230214000000000",
+            "status": "1",
+            "type": "2",
+            "updateTime": "20260707000000103",
+            "url": "https://wap.js.10086.cn/nact/resource/2622/html/index.html?ch=0151"
+          }
+        ],
+        "couponEnabled": false,
+        "toolSignList": [
+          {
+            "isMulti": "1",
+            "signDate": "20261128"
+          },
+          {
+            "isMulti": "1",
+            "isWeek": "1",
+            "signDate": "20261121"
+          },
+          {
+            "areaNum": "11",
+            "channel": "wap",
+            "signDate": "20261112",
+            "signState": "1",
+            "signTime": "20261112",
+            "state": "1",
+            "subChannel": "other",
+            "userType": "7"
+          },
+          {
+            "areaNum": "11",
+            "channel": "wap",
+            "signDate": "20261101",
+            "signState": "0",
+            "signTime": "20261113",
+            "state": "2",
+            "subChannel": "other",
+            "userType": "7"
+          },
+          {
+            "areaNum": "11",
+            "channel": "wap",
+            "signDate": "20261113",
+            "signState": "1",
+            "signTime": "20261113",
+            "state": "1",
+            "subChannel": "other",
+            "userType": "7"
+          },
+          {
+            "areaNum": "11",
+            "channel": "wap",
+            "isWeek": "1",
+            "signDate": "20261116",
+            "signState": "1",
+            "signTime": "20261116",
+            "state": "1",
+            "subChannel": "other",
+            "userType": "7"
+          }
+        ],
+        "propShopFatherCards": [
+          {
+            "bodyImg": "../images/new-buqian.png",
+            "cardDesc": "看新闻得补签卡",
+            "cardEbean": "0",
+            "cardName": "补签卡",
+            "cardNum": "10001",
+            "cardPrice": "0",
+            "checkCycle": "0",
+            "isShowBag": "0",
+            "isShowBuy": "1",
+            "sortNum": "1",
+            "status": "1",
+            "type": "1"
+          },
+          {
+            "bodyImg": "../images/new-manqian.png",
+            "cardDesc": "赢最高1GB流量",
+            "cardEbean": "0",
+            "cardName": "满签卡",
+            "cardNum": "10002",
+            "cardPrice": "100",
+            "checkCycle": "0",
+            "isShowBag": "0",
+            "isShowBuy": "1",
+            "sortNum": "2",
+            "status": "1",
+            "type": "2"
+          }
+        ],
+        "memberType": "0",
+        "isSignToday": false,
+        "indexBannerFlag": false,
+        "flowExtractMb": 1079,
+        "medalUserList": [
+          {
+            "createTime": "20261112135252311",
+            "medalId": "1",
+            "mobile": "***",
+            "qualifications": "3",
+            "state": "1",
+            "type": "1",
+            "updateTime": "20261116084801765"
+          }
+        ]
+      },
+      "success": true
+    }
+  }
+}

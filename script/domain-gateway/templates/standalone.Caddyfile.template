@@ -1,0 +1,10 @@
+{
+	servers {
+		protocols h1 h2
+	}
+}
+
+{{SITE_DOMAIN}} {
+	root * {{SITE_ROOT}}
+	file_server
+}

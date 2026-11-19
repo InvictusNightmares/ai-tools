@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{SITE_DOMAIN}}</title>
+  <style>
+    :root { color-scheme: light dark; font-family: Inter, "PingFang SC", sans-serif; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
+    main { padding: 2rem; }
+    h1 { margin: 0; font-size: clamp(2rem, 8vw, 4rem); letter-spacing: -0.04em; }
+    p { margin: 0.65rem 0 0; font-size: 1.125rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>{{SITE_DOMAIN}}</h1>
+    <p>站点已上线。</p>
+  </main>
+</body>
+</html>

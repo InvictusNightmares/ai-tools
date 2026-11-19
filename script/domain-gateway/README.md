@@ -2,6 +2,8 @@
 
 保存公网与 Tailscale 私网域名入口的配置模板、ACME 维护工具和 HTTPS 验收脚本。架构、部署顺序和本次实施范围见 [实施记录](../../doc/domain-gateway/implementation.md)。
 
+独立静态网站已从最初的 Caddy 主机迁至现有 Nginx 公网网关。根记录切换、独立证书续期及新旧域名的验收结果见[静态网站部署记录](../../doc/domain-gateway/standalone-site.md)。
+
 登录后功能、订阅来源链与遗漏修复见[后续复查](../../doc/domain-gateway/audit-followup.md)。页面返回成功不能代替应用内链接、外部订阅、分页读取和证书续期检查。
 
 代理、面板后端和订阅后端的证书迁移、共同重载及旧证书清理结果见[域名证书迁移](../../doc/domain-gateway/certificate-migration.md)。其中列明已完成的验收及仍存在的直连网络波动。

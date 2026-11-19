@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | `glados-checkin/` | GLaDOS 每日签到 | 纯 API + 远程 Browserless，自动处理 Turnstile |
 | `perkradar/` | PerkRadar 采集与飞书推送 | 常驻采集器 + 青龙定时推送 |
-| `cmcc-checkin/` | 中国移动江苏 act2510 签到 | 活动层适配器，依赖面板环境变量 |
+| `cmcc-checkin/` | 中国移动江苏 act2510 签到 | 自动续期：autoLogin → QWHD → 039014 → 江苏 Cookie |
 | `sf-checkin/` | 顺丰 App 签到 | App 自动取票 + 会员签到 |
 
 各目录的 README 说明部署、配置、运行模式和验收方式。真实 Cookie、令牌、Open ID、私有配置文件只放青龙环境变量或 `0600` 私有文件，不入库。

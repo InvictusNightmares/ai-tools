@@ -318,13 +318,25 @@ def _turnstile_widget_box(page):
     return None
 
 
-def _click_turnstile(page):
-    """点击 Turnstile 复选框。页面把组件渲染在跨域 iframe 里，
-    内部 DOM 不可读，但按组件坐标点击左侧复选框区域即可。"""
-    box = _turnstile_widget_box(page)
+def _click_turnstile(page, box=None):
+    """用接近真人的鼠标轨迹点击 Turnstile 复选框。
+
+    直接瞬移点击在部分出口上会被判为自动化；先移动再短暂停顿，
+    点击坐标取组件左侧复选框中心。
+    """
+    box = box or _turnstile_widget_box(page)
     if not box:
         return False
-    page.mouse.click(box["x"] + 30, box["y"] + box["height"] / 2)
+    x = box["x"] + 24
+    y = box["y"] + box["height"] / 2
+    try:
+        page.mouse.move(x - 60, y - 20, steps=8)
+        page.wait_for_timeout(300)
+        page.mouse.move(x, y, steps=8)
+        page.wait_for_timeout(200)
+        page.mouse.click(x, y, delay=90)
+    except Exception:  # noqa: BLE001
+        page.mouse.click(x, y)
     return True
 
 
@@ -424,15 +436,19 @@ def _browser_flow(page, cookie, ua, domain, wait_seconds, remote):
 
     log("    点击签到，等待页面完成验证……")
     btn.click()
-    clicked_ts = False
+    clicks = 0
+    last_click = 0.0
     deadline = time.monotonic() + wait_seconds
     while time.monotonic() < deadline:
         if captured.get("json"):
             break
-        if not clicked_ts:
-            clicked_ts = _click_turnstile(page)
-            if clicked_ts:
-                log("    已点击 Turnstile 人机验证复选框")
+        now = time.monotonic()
+        if clicks < 2 and (clicks == 0 or now - last_click > 5):
+            box = _turnstile_widget_box(page)
+            if box and _click_turnstile(page, box):
+                clicks += 1
+                last_click = now
+                log(f"    已点击 Turnstile 人机验证复选框（{clicks}/2）")
         page.wait_for_timeout(500)
     return captured.get("json")
 
@@ -500,20 +516,26 @@ def browser_checkin(cookie, ua, domains, account_idx, user_agent_override=None):
 
         try:
             for domain in domains:
-                page = None
-                try:
-                    _add_glados_cookies(context, cookie, domain)
-                    page = context.new_page()
-                    result = _browser_flow(page, cookie, ua, domain, wait_seconds, remote)
-                    if result:
-                        return result
-                    log(f"    {domain} 未拿到签到响应，尝试下一个域名")
-                finally:
-                    if page:
-                        try:
-                            page.close()
-                        except Exception:  # noqa: BLE001
-                            pass
+                for attempt in range(3):
+                    page = None
+                    try:
+                        _add_glados_cookies(context, cookie, domain)
+                        page = context.new_page()
+                        result = _browser_flow(page, cookie, ua, domain, wait_seconds, remote)
+                        if result and result.get("reason") == "turnstile" and attempt < 2:
+                            log(f"    Turnstile 拒绝，重新加载重试（{attempt + 2}/3）")
+                            time.sleep(6)
+                            continue
+                        if result:
+                            return result
+                        log(f"    {domain} 未拿到签到响应，尝试下一个域名")
+                        break
+                    finally:
+                        if page:
+                            try:
+                                page.close()
+                            except Exception:  # noqa: BLE001
+                                pass
             return {"request_failed": True, "reason": "browser-checkin-failed"}
         finally:
             try:
@@ -554,7 +576,7 @@ def account_overview(session, cookie, ua, domains):
 
 
 def send_feishu(title, content):
-    """通过青龙现有的飞书私聊应用发送文本消息。未配置时返回 None。"""
+    """飞书私聊；直连优先，失败后回退容器代理，每次请求重试 2 次。"""
     app_id = os.environ.get("QL_FEISHU_APP_ID", "").strip()
     app_secret = os.environ.get("QL_FEISHU_APP_SECRET", "").strip()
     open_id = os.environ.get("QL_FEISHU_OPEN_ID", "").strip()
@@ -563,16 +585,32 @@ def send_feishu(title, content):
     if not re.match(r"^ou_[A-Za-z0-9]+$", open_id):
         log("⚠️ 飞书通知跳过：QL_FEISHU_OPEN_ID 格式不正确")
         return False
-    try:
-        auth = requests.post(
+
+    def post(session, url, **kwargs):
+        last = None
+        for attempt in range(2):
+            try:
+                return session.post(url, timeout=15, **kwargs)
+            except requests.RequestException as exc:
+                last = exc
+                if attempt == 0:
+                    time.sleep(2)
+        log(f"⚠️ 飞书请求失败：{type(last).__name__}")
+        return None
+
+    for trust_env in (False, True):
+        session = requests.Session()
+        session.trust_env = trust_env
+        auth = post(
+            session,
             "https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal",
-            json={"app_id": app_id, "app_secret": app_secret}, timeout=15,
+            json={"app_id": app_id, "app_secret": app_secret},
         )
-        token = auth.json().get("tenant_access_token") if auth.ok else None
+        token = auth.json().get("tenant_access_token") if auth is not None and auth.ok else None
         if not token:
-            log(f"⚠️ 飞书通知失败：未获取访问凭据（HTTP {auth.status_code}）")
-            return False
-        resp = requests.post(
+            continue
+        resp = post(
+            session,
             "https://open.feishu.cn/open-apis/im/v1/messages?receive_id_type=open_id",
             headers={"Authorization": f"Bearer {token}"},
             json={
@@ -581,16 +619,15 @@ def send_feishu(title, content):
                 "content": json.dumps({"text": f"{title}\n\n{content}"}, ensure_ascii=False),
                 "uuid": str(uuid.uuid4()),
             },
-            timeout=15,
         )
-        data = resp.json()
+        try:
+            data = resp.json() if resp is not None else {}
+        except ValueError:
+            data = {}
         if data.get("code") == 0 and (data.get("data") or {}).get("message_id"):
             return True
         log(f"⚠️ 飞书通知失败：业务错误 {data.get('code')}")
-    except (requests.RequestException, ValueError) as exc:
-        log(f"⚠️ 飞书通知失败：{type(exc).__name__}")
     return False
-
 
 def send_push(title, content):
     """按已配置的渠道发送通知；任一成功即返回 True。"""
@@ -695,14 +732,45 @@ def run_account(idx, cookie, ua, domains, mode, check_only):
             "streak": streak, "detail": describe(result)}
 
 
-def should_notify(results):
-    """全部账号都是今日已签到时，默认不重复发通知。"""
+def notify_state_path():
+    return os.environ.get("GLADOS_NOTIFY_STATE", "/ql/data/config/glados_notify_state.json")
+
+
+def load_notified_date():
+    try:
+        with open(notify_state_path(), encoding="utf-8") as fh:
+            return str(json.load(fh).get("last_success_date") or "")
+    except (OSError, ValueError):
+        return ""
+
+
+def save_notified_date(day):
+    path = notify_state_path()
+    try:
+        parent = os.path.dirname(path)
+        if parent:
+            os.makedirs(parent, exist_ok=True)
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump({"last_success_date": day}, fh)
+        os.chmod(path, 0o600)
+    except OSError:
+        pass
+
+
+def should_notify(results, notified_today=None):
+    """失败或首次成功/已签到要通知；同一天已通知过的 repeat 默认静默。"""
     statuses = {r["status"] for r in results}
-    if statuses <= {"repeat"}:
-        return os.environ.get("GLADOS_NOTIFY_REPEAT", "0").strip().lower() in (
-            "1", "true", "yes", "on",
-        )
-    return True
+    if statuses - {"success", "repeat"}:
+        return True
+    if "success" in statuses:
+        return True
+    if os.environ.get("GLADOS_NOTIFY_REPEAT", "0").strip().lower() in (
+        "1", "true", "yes", "on",
+    ):
+        return True
+    if notified_today is None:
+        notified_today = load_notified_date() == time.strftime("%Y-%m-%d")
+    return not notified_today
 
 
 def main(argv):
@@ -770,10 +838,15 @@ def main(argv):
             title = "GLaDOS 签到 · 失败"
         body = time.strftime("%Y-%m-%d %H:%M") + "（北京时间）\n" + body
 
+        today = time.strftime("%Y-%m-%d")
+        notified_today = load_notified_date() == today
         log("----- 汇总 -----\n" + body)
-        if not should_notify(results):
-            log("全部账号今日已签到，跳过重复通知（GLADOS_NOTIFY_REPEAT=1 可强制发送）")
-        elif not send_push(title, body):
+        if not should_notify(results, notified_today):
+            log("今日已发过签到通知，跳过重复通知（GLADOS_NOTIFY_REPEAT=1 可强制发送）")
+        elif send_push(title, body):
+            if not ({r["status"] for r in results} - {"success", "repeat"}):
+                save_notified_date(today)
+        else:
             log("未配置可用的通知渠道（飞书 / PushPlus / ServerChan / Telegram）")
 
     ok_status = {"success", "repeat", "check-only"}

@@ -2,6 +2,7 @@
 // Sign-in endpoints adapted from smallfawn/QLScriptPublic daily/sfsy.py,
 // commit 640dbac72a991fbc3c8cdedb17ad204eee3c15d9. Only daily sign-ins are enabled.
 const { createHash, randomBytes } = require('node:crypto');
+const { setTimeout: sleep } = require('node:timers/promises');
 const { constants, openSync, fstatSync, readFileSync, closeSync } = require('node:fs');
 const { resolve } = require('node:path');
 const postJson = (...args) => require('./daily_checkin_common').postJson(...args);
@@ -11,6 +12,7 @@ const ORIGIN = 'https://mcs-mimp-web.sf-express.com';
 const APP_TICKET_URL = 'https://ccsp-egmas.sf-express.com/cx-app-member/member/app/user/universalSign';
 const APP_LOGIN_URL = ORIGIN + '/mcs-mimp/share/app/activityRedirect';
 const BASE = 'https://mcs-mimp-web.sf-express.com/mcs-mimp/commonPost/';
+const BUSY_MESSAGE = /活动太火爆|稍后再试|系统繁忙|请稍后/;
 const SIGN_PATHS = [
   ['每日签到', '~memberNonactivity~integralSignV2Service~sign', 'SFAPP', {}],
   ['会员签到', '~memberNonactivity~integralTaskSignPlusService~automaticSignFetchPackage', 'MINI_PROGRAM', { comeFrom: 'vioin', channelFrom: 'WEIXIN' }],
@@ -214,7 +216,14 @@ async function checkin(account, request = postJson, fetchImpl = fetch) {
   let failures = 0;
   for (const [name, path, platform, body] of SIGN_PATHS) {
     try {
-      const response = await request(BASE + path, signedHeaders(cookie, platform), body);
+      let response;
+      for (let attempt = 0; attempt < 3; attempt++) {
+        response = await request(BASE + path, signedHeaders(cookie, platform), body);
+        const message = String(response?.errorMessage || response?.errorCode || '');
+        if (response?.success === true || !BUSY_MESSAGE.test(message) || attempt === 2) break;
+        const delay = Number(process.env.SF_BUSY_RETRY_MS ?? 60000);
+        if (delay > 0) await sleep(delay * (attempt + 1));
+      }
       if (response?.success !== true) {
         const message = String(response?.errorMessage || response?.errorCode || '接口未确认成功').slice(0, 180);
         if (/今日已签到|今天已签到|您已签到/.test(message)) {
