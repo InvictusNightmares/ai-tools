@@ -351,6 +351,49 @@ def _add_glados_cookies(context, cookie, domain):
         context.add_cookies([spec])
 
 
+REMOTE_STEALTH_JS = """
+Object.defineProperty(navigator, 'webdriver', {get: () => false});
+Object.defineProperty(navigator, 'platform', {get: () => 'MacIntel'});
+Object.defineProperty(navigator, 'hardwareConcurrency', {get: () => 8});
+Object.defineProperty(navigator, 'deviceMemory', {get: () => 8});
+Object.defineProperty(navigator, 'languages', {get: () => ['zh-CN', 'zh', 'en']});
+if (!window.chrome) Object.defineProperty(window, 'chrome', {value: {runtime: {}}});
+try {
+  const patch = (proto) => {
+    if (!proto) return;
+    const orig = proto.getParameter;
+    proto.getParameter = function (p) {
+      if (p === 37445) return 'Apple Inc.';
+      if (p === 37446) return 'ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)';
+      return orig.apply(this, arguments);
+    };
+  };
+  patch(window.WebGLRenderingContext && WebGLRenderingContext.prototype);
+  patch(window.WebGL2RenderingContext && WebGL2RenderingContext.prototype);
+} catch (e) {}
+try {
+  Object.defineProperty(screen, 'width', {get: () => 1512});
+  Object.defineProperty(screen, 'height', {get: () => 982});
+  Object.defineProperty(screen, 'availWidth', {get: () => 1512});
+  Object.defineProperty(screen, 'availHeight', {get: () => 950});
+  Object.defineProperty(screen, 'colorDepth', {get: () => 24});
+  Object.defineProperty(screen, 'pixelDepth', {get: () => 24});
+  Object.defineProperty(window, 'outerWidth', {get: () => 1512});
+  Object.defineProperty(window, 'outerHeight', {get: () => 982});
+} catch (e) {}
+"""
+
+
+def _remote_mac_ua(browser):
+    """用远程浏览器实际 Chrome 版本构造 macOS UA，避免 UA 版本与环境不一致。"""
+    major = (getattr(browser, "version", "") or "152").split(".")[0]
+    return (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        f"Chrome/{major}.0.0.0 Safari/537.36"
+    )
+
+
 def _apply_mac_ua_metadata(page, ua):
     """远程 Linux Chrome 需要同时伪装 UA-CH，否则 Turnstile 易判环境不一致。"""
     match = re.search(r"Chrome/(\d+)", ua or "")
@@ -376,13 +419,17 @@ def _apply_mac_ua_metadata(page, ua):
                 ],
                 "fullVersion": f"{major}.0.0.0",
                 "platform": "macOS",
-                "platformVersion": "10.15.7",
-                "architecture": "x86",
+                "platformVersion": "15.6.0",
+                "architecture": "arm",
                 "model": "",
                 "mobile": False,
                 "bitness": "64",
                 "wow64": False,
             },
+        })
+        cdp.send("Emulation.setDeviceMetricsOverride", {
+            "width": 1512, "height": 982, "deviceScaleFactor": 2, "mobile": False,
+            "screenWidth": 1512, "screenHeight": 982,
         })
     except Exception:  # noqa: BLE001 - 元数据伪装失败不阻断主流程
         pass
@@ -485,10 +532,13 @@ def browser_checkin(cookie, ua, domains, account_idx, user_agent_override=None):
 
         if browser is not None:
             remote = True
+            ua = _remote_mac_ua(browser)
             context = browser.new_context(
-                user_agent=ua or None, locale="zh-CN", timezone_id="Asia/Shanghai",
+                user_agent=ua, viewport={"width": 1512, "height": 982},
+                device_scale_factor=2, locale="zh-CN", timezone_id="Asia/Shanghai",
             )
-            log("    浏览器通道：远程 Browserless（headed）")
+            context.add_init_script(REMOTE_STEALTH_JS)
+            log("    浏览器通道：远程 Browserless（headed, macOS 指纹）")
         else:
             channel = None
             errors = []
