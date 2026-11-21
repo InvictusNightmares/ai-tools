@@ -165,3 +165,82 @@ class NotifyTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+class RemoteHeaderTests(unittest.TestCase):
+    def test_hybrid_header_override(self):
+        mac_ua = (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/157.0.0.0 Safari/537.36"
+        )
+        headers = g._hybrid_checkin_headers({"user-agent": "Linux", "accept": "*/*"}, mac_ua)
+        self.assertEqual(headers["user-agent"], mac_ua)
+        self.assertEqual(headers["sec-ch-ua-platform"], '"macOS"')
+        self.assertIn('"Google Chrome";v="157"', headers["sec-ch-ua"])
+        self.assertEqual(headers["accept"], "*/*")
+
+    def test_remote_mac_ua_uses_browser_major(self):
+        class Browser:
+            version = "152.0.7357.0"
+
+        ua = g._remote_mac_ua(Browser())
+        self.assertIn("Macintosh", ua)
+        self.assertIn("Chrome/152.0.0.0", ua)
+
+class FakeRoute:
+    def __init__(self):
+        self.kwargs = None
+
+    def continue_(self, **kwargs):
+        self.kwargs = kwargs
+
+
+class FakeRequest:
+    def __init__(self, method, url, headers=None):
+        self.method = method
+        self.url = url
+        self.headers = headers or {}
+
+
+class FakePage:
+    def __init__(self):
+        self.pattern = None
+        self.handler = None
+
+    def route(self, pattern, handler):
+        self.pattern = pattern
+        self.handler = handler
+
+
+class HybridRouteTests(unittest.TestCase):
+    def setUp(self):
+        self.mac_ua = (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/157.0.0.0 Safari/537.36"
+        )
+
+    def test_only_checkin_post_gets_mac_headers(self):
+        page = FakePage()
+        g._install_checkin_header_override(page, self.mac_ua)
+        self.assertEqual(page.pattern, "**/api/user/checkin")
+
+        post = FakeRoute()
+        page.handler(post, FakeRequest("POST", "https://glados.cloud/api/user/checkin"))
+        self.assertEqual(post.kwargs["headers"]["user-agent"], self.mac_ua)
+        self.assertEqual(post.kwargs["headers"]["sec-ch-ua-platform"], '"macOS"')
+
+        get = FakeRoute()
+        page.handler(get, FakeRequest("GET", "https://glados.cloud/api/user/checkin/challenge"))
+        self.assertNotIn("headers", get.kwargs or {})
+
+class CdpUrlTests(unittest.TestCase):
+    def test_ip_url_unchanged(self):
+        self.assertEqual(
+            g._resolve_cdp_url("http://127.0.0.1:9224"), "http://127.0.0.1:9224"
+        )
+
+    def test_localhost_resolves_to_ip(self):
+        self.assertEqual(
+            g._resolve_cdp_url("http://localhost:9224"), "http://127.0.0.1:9224"
+        )

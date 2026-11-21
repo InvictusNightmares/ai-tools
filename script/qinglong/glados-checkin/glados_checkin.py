@@ -33,9 +33,11 @@ import hashlib
 import json
 import os
 import re
+import socket
 import sys
 import time
 import uuid
+from urllib.parse import quote, urlsplit, urlunsplit
 from datetime import datetime
 from urllib.parse import urlsplit
 
@@ -384,6 +386,30 @@ try {
 """
 
 
+def _hybrid_checkin_headers(headers, mac_ua):
+    """原生 Linux 浏览器过 Turnstile，签到 POST 头改成登录时的 macOS。"""
+    major = (re.search(r"Chrome/(\d+)", mac_ua or "") or [None, "157"])[1]
+    out = dict(headers)
+    out["user-agent"] = mac_ua
+    out["sec-ch-ua"] = (
+        f'"Chromium";v="{major}", "Google Chrome";v="{major}", "Not_A Brand";v="99"'
+    )
+    out["sec-ch-ua-platform"] = '"macOS"'
+    out["sec-ch-ua-mobile"] = "?0"
+    out["sec-ch-ua-platform-version"] = '"15.6.0"'
+    return out
+
+
+def _install_checkin_header_override(page, mac_ua):
+    def handler(route, request):
+        if request.method == "POST" and "/api/user/checkin" in request.url:
+            route.continue_(headers=_hybrid_checkin_headers(request.headers, mac_ua))
+        else:
+            route.continue_()
+
+    page.route("**/api/user/checkin", handler)
+
+
 def _remote_mac_ua(browser):
     """用远程浏览器实际 Chrome 版本构造 macOS UA，避免 UA 版本与环境不一致。"""
     major = (getattr(browser, "version", "") or "152").split(".")[0]
@@ -435,8 +461,25 @@ def _apply_mac_ua_metadata(page, ua):
         pass
 
 
+def _resolve_cdp_url(url):
+    """DevTools 的 Host 头只接受 IP/localhost；把容器名解析成 IP。"""
+    parts = urlsplit(url)
+    host = parts.hostname
+    if not host:
+        return url
+    try:
+        ip = socket.gethostbyname(host)
+    except OSError:
+        ip = host
+    netloc = ip if not parts.port else f"{ip}:{parts.port}"
+    return urlunsplit((parts.scheme, netloc, parts.path, parts.query, parts.fragment))
+
+
 def _remote_browser(pw):
-    """连接 Browserless/远程 Chrome；未配置时返回 None。"""
+    """连接持久 Chrome/ Browserless；未配置时返回 None。"""
+    cdp_url = os.environ.get("GLADOS_CDP_URL", "").strip()
+    if cdp_url:
+        return pw.chromium.connect_over_cdp(_resolve_cdp_url(cdp_url), timeout=60000)
     ws = os.environ.get("GLADOS_BROWSER_WS", "").strip()
     if not ws:
         return None
@@ -450,8 +493,18 @@ def _remote_browser(pw):
 
 def _browser_flow(page, cookie, ua, domain, wait_seconds, remote):
     """打开签到页 -> 点击签到 -> 点 Turnstile 复选框 -> 等 POST 响应。"""
-    if remote:
+    mode = os.environ.get("GLADOS_REMOTE_MODE", "hybrid").strip().lower()
+    if remote and mode == "mac-spoof":
         _apply_mac_ua_metadata(page, ua)
+    elif remote and mode == "hybrid":
+        _install_checkin_header_override(page, ua)
+    if remote and os.environ.get("GLADOS_CDP_URL", "").strip():
+        try:
+            cdp = page.context.new_cdp_session(page)
+            cdp.send("Emulation.setTimezoneOverride", {"timezoneId": "Asia/Shanghai"})
+            cdp.send("Emulation.setLocaleOverride", {"locale": "zh-CN"})
+        except Exception:  # noqa: BLE001
+            pass
     page.bring_to_front()
     page.goto(domain + "/console/checkin", wait_until="domcontentloaded", timeout=60000)
     page.wait_for_timeout(2500)  # 页面挂载时先取 challenge，给它一点时间渲染组件
@@ -521,6 +574,7 @@ def browser_checkin(cookie, ua, domains, account_idx, user_agent_override=None):
     )
     os.makedirs(profile, exist_ok=True)
 
+    cdp_mode = bool(os.environ.get("GLADOS_CDP_URL", "").strip())
     with sync_playwright() as pw:
         remote = False
         browser = None
@@ -532,13 +586,24 @@ def browser_checkin(cookie, ua, domains, account_idx, user_agent_override=None):
 
         if browser is not None:
             remote = True
-            ua = _remote_mac_ua(browser)
-            context = browser.new_context(
-                user_agent=ua, viewport={"width": 1512, "height": 982},
-                device_scale_factor=2, locale="zh-CN", timezone_id="Asia/Shanghai",
-            )
-            context.add_init_script(REMOTE_STEALTH_JS)
-            log("    浏览器通道：远程 Browserless（headed, macOS 指纹）")
+            mode = os.environ.get("GLADOS_REMOTE_MODE", "hybrid").strip().lower()
+            if cdp_mode:
+                context = browser.contexts[0] if browser.contexts else browser.new_context(
+                    locale="zh-CN", timezone_id="Asia/Shanghai",
+                )
+                log("    浏览器通道：持久 Chrome（CDP, 原生 UA + 签到头伪装）")
+            elif mode == "mac-spoof":
+                ua = _remote_mac_ua(browser)
+                context = browser.new_context(
+                    user_agent=ua, viewport={"width": 1512, "height": 982},
+                    device_scale_factor=2, locale="zh-CN", timezone_id="Asia/Shanghai",
+                )
+                context.add_init_script(REMOTE_STEALTH_JS)
+                log("    浏览器通道：远程 Browserless（headed, macOS 指纹）")
+            else:
+                context = browser.new_context(locale="zh-CN", timezone_id="Asia/Shanghai")
+                log("    浏览器通道：远程 Browserless（headed, 原生 UA + 签到头伪装）" if mode == "hybrid"
+                    else "    浏览器通道：远程 Browserless（headed, 原生 UA）")
         else:
             channel = None
             errors = []
@@ -588,15 +653,16 @@ def browser_checkin(cookie, ua, domains, account_idx, user_agent_override=None):
                                 pass
             return {"request_failed": True, "reason": "browser-checkin-failed"}
         finally:
-            try:
-                context.close()
-            except Exception:  # noqa: BLE001
-                pass
-            if browser is not None:
+            if not cdp_mode:
                 try:
-                    browser.close()
+                    context.close()
                 except Exception:  # noqa: BLE001
                     pass
+                if browser is not None:
+                    try:
+                        browser.close()
+                    except Exception:  # noqa: BLE001
+                        pass
 
 
 def _safe_json(resp):
