@@ -461,6 +461,9 @@ def _apply_mac_ua_metadata(page, ua):
         pass
 
 
+_REMOTE_FALLBACK = False
+
+
 def _resolve_cdp_url(url):
     """DevTools 的 Host 头只接受 IP/localhost；把容器名解析成 IP。"""
     parts = urlsplit(url)
@@ -477,9 +480,14 @@ def _resolve_cdp_url(url):
 
 def _remote_browser(pw):
     """连接持久 Chrome/ Browserless；未配置时返回 None。"""
+    global _REMOTE_FALLBACK
     cdp_url = os.environ.get("GLADOS_CDP_URL", "").strip()
     if cdp_url:
-        return pw.chromium.connect_over_cdp(_resolve_cdp_url(cdp_url), timeout=60000)
+        try:
+            return pw.chromium.connect_over_cdp(_resolve_cdp_url(cdp_url), timeout=60000)
+        except Exception as exc:  # noqa: BLE001
+            _REMOTE_FALLBACK = True
+            log(f"    CDP 浏览器连接失败：{type(exc).__name__}，回退 Browserless")
     ws = os.environ.get("GLADOS_BROWSER_WS", "").strip()
     if not ws:
         return None
@@ -587,7 +595,8 @@ def browser_checkin(cookie, ua, domains, account_idx, user_agent_override=None):
         if browser is not None:
             remote = True
             mode = os.environ.get("GLADOS_REMOTE_MODE", "hybrid").strip().lower()
-            if cdp_mode:
+            effective_cdp = cdp_mode and not _REMOTE_FALLBACK
+            if effective_cdp:
                 context = browser.contexts[0] if browser.contexts else browser.new_context(
                     locale="zh-CN", timezone_id="Asia/Shanghai",
                 )
@@ -602,8 +611,9 @@ def browser_checkin(cookie, ua, domains, account_idx, user_agent_override=None):
                 log("    浏览器通道：远程 Browserless（headed, macOS 指纹）")
             else:
                 context = browser.new_context(locale="zh-CN", timezone_id="Asia/Shanghai")
-                log("    浏览器通道：远程 Browserless（headed, 原生 UA + 签到头伪装）" if mode == "hybrid"
-                    else "    浏览器通道：远程 Browserless（headed, 原生 UA）")
+                log("    浏览器通道：远程 Browserless（回退, 原生 UA + 签到头伪装）" if _REMOTE_FALLBACK else
+                    ("    浏览器通道：远程 Browserless（headed, 原生 UA + 签到头伪装）" if mode == "hybrid"
+                     else "    浏览器通道：远程 Browserless（headed, 原生 UA）"))
         else:
             channel = None
             errors = []
@@ -653,7 +663,7 @@ def browser_checkin(cookie, ua, domains, account_idx, user_agent_override=None):
                                 pass
             return {"request_failed": True, "reason": "browser-checkin-failed"}
         finally:
-            if not cdp_mode:
+            if not (cdp_mode and not _REMOTE_FALLBACK):
                 try:
                     context.close()
                 except Exception:  # noqa: BLE001

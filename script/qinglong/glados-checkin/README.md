@@ -7,7 +7,8 @@
 | 场景 | 可行性 | 说明 |
 | --- | --- | --- |
 | 青龙 + 纯 API（`GLADOS_MODE=api`） | 视账号与出口 IP | 请求流程已完全还原，Cookie 与 UA 匹配时可直接签到；机房 IP / 高风险出口大概率被 Turnstile 拒 |
-| 青龙 + 远程 Browserless（`GLADOS_MODE=browser` + WS） | 已验证可用 | 由脚本自动点击 Turnstile 复选框，机房出口也能完成签到 |
+| 青龙 + 远程 Browserless（`GLADOS_MODE=browser` + WS） | 已验证可用 | 由脚本自动点击 Turnstile 复选框，机房出口也能完成签到；但 Browserless 每次新建临时 profile，长期稳定性差 |
+| 青龙 + 持久 Chrome（CDP） | 推荐 | 固定 profile 保留 Turnstile 信任；原生 Linux 过验证，签到 POST 头切成登录 macOS 过设备检查 |
 | 本机 + Chrome/Edge | 可用 | 需本机有桌面；脚本同样自动点击 Turnstile 复选框 |
 | 旧脚本（`koa:sess` + `token=glados.one`） | 已失效 | 新版认证改用 `gld:sess`，签到要求 nonce + proof |
 
@@ -132,6 +133,25 @@ python3 glados_checkin.py --check
 ```
 
 或先从浏览器复制请求为 cURL，再用 `import_curl.py .curl.txt` 解析。`.env.local`、`.curl.txt`、`cookie*.txt` 均已被本目录 `.gitignore` 排除。
+
+## 服务器持久 Chrome（CDP）
+
+Browserless 的 Playwright 路由使用 `launchServer`，每次会话新建 `/tmp/browserless-data-dirs/*` 并在结束后删除。每天都是全新浏览器，Turnstile 容易判定风险；把 UA 伪装成 macOS 又会和 Linux 指纹冲突。长期稳定方案是在服务器上保留一个固定 profile 的 Chrome：
+
+```text
+Chrome --user-data-dir=/data/glados-profile --remote-debugging-port=9223
+  -> 本地转发 0.0.0.0:9224
+  -> 青龙设置 GLADOS_CDP_URL=http://<chrome-container>:9224
+```
+
+- 脚本把容器名解析成 IP 再连接，因为 Chrome DevTools 只接受 IP/localhost 的 Host 头。
+- CDP 模式使用默认持久 context，不关闭浏览器；profile 里的历史和 Cookie 会保留。
+- `GLADOS_REMOTE_MODE=hybrid`（默认）：浏览器保持原生 Linux UA 过 Turnstile，只把 `POST /api/user/checkin` 的 `User-Agent` / `sec-ch-ua*` 改成 `GLADOS_USER_AGENT`（登录时的 macOS UA）过设备检查。
+- CDP 连不上时自动回退 Browserless；`GLADOS_BROWSER_WS` 保留作为兜底。
+- Chrome 和转发器建议由宿主机 systemd 在签到窗口前拉起、窗口后停止，例如 `09:25–09:45 / 12:25–12:45 / 20:25–20:45`（Asia/Shanghai），这样非窗口时间不占常驻内存。
+- 固定 profile 约 190–225 MB；如果容器重建会丢失，需要重新养 profile。
+
+宿主机启动脚本和定时器属于部署配置，不随脚本提交；只需保证 `GLADOS_CDP_URL` 指向一个可用的 CDP 转发端口。
 
 ## 本机浏览器模式
 
