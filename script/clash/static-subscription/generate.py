@@ -97,6 +97,7 @@ class Settings:
     nginx_check_command: tuple[str, ...] = ()
     nginx_reload_command: tuple[str, ...] = ()
     server_overrides: dict[str, dict[str, str]] = field(default_factory=dict)
+    node_options: dict[str, dict[str, str | int]] = field(default_factory=dict)
 
     @classmethod
     def load(cls, path: Path):
@@ -127,6 +128,25 @@ class Settings:
                     "server override must contain only from and to")
             require(all(valid_server_address(change[key]) for key in ("from", "to")),
                     "server override requires a hostname or IP without URL or port")
+        node_options = data.get("node_options", {})
+        require(isinstance(node_options, dict), "node_options must be a name mapping")
+        allowed_node_opts = {"ports", "hop-interval", "up", "down", "packet-encoding"}
+        for name, opts in node_options.items():
+            require(isinstance(name, str) and bool(name.strip()), "node_options node name is invalid")
+            require(isinstance(opts, dict) and bool(opts) and set(opts) <= allowed_node_opts,
+                    "node_options contains unsupported keys")
+            if "ports" in opts:
+                require(isinstance(opts["ports"], str) and bool(re.fullmatch(r"[0-9]+(?:-[0-9]+)?(?:,[0-9]+(?:-[0-9]+)?)*", opts["ports"])),
+                        "node_options ports must be a valid port range")
+            if "hop-interval" in opts:
+                positive_int(opts["hop-interval"], "hop-interval")
+            for bw_key in ("up", "down"):
+                if bw_key in opts:
+                    require(isinstance(opts[bw_key], str) and bool(re.fullmatch(r"[0-9]+(?:\.[0-9]+)?\s*(?:Mbps|Kbps|Gbps|bps)", opts[bw_key])),
+                            f"node_options {bw_key} must be a valid bandwidth string")
+            if "packet-encoding" in opts:
+                require(opts["packet-encoding"] in ("xudp", "packetaddr"),
+                        "node_options packet-encoding is invalid")
         data["output_dir"] = absolute_path(data["output_dir"], "output_dir")
         outside_repository(data["output_dir"])
         for key in ("required_base_nodes", "protected_groups"):
@@ -290,6 +310,17 @@ def merge(base, extra, settings):
         require(not uses_tls or bool(node.get("servername") or node.get("sni")),
                 "TLS server override requires an explicit existing SNI")
         node["server"] = change["to"]
+    for name, opts in settings.node_options.items():
+        require(name in merged_nodes, "node_options target is missing")
+        node = merged_nodes[name]
+        if set(opts) & {"ports", "hop-interval", "up", "down"}:
+            require(node.get("type") in ("hysteria2", "hy2"),
+                    "hysteria2 transport options require a hysteria2 node")
+        if "packet-encoding" in opts:
+            require(node.get("type") in ("vless", "vmess"),
+                    "packet-encoding requires a vless or vmess node")
+        for key, value in opts.items():
+            node[key] = value
     return merged
 
 
@@ -411,6 +442,12 @@ def withdraw_if_expired(settings, now, revoked=False):
 def publish(candidate, stats, settings, now):
     root = settings.output_dir
     previous = current_target(root)
+    previous_headers = None
+    if previous:
+        try:
+            previous_headers = (root / previous / "headers.conf").read_bytes()
+        except OSError:
+            previous_headers = None
     generation = root / ("generation-" + uuid.uuid4().hex)
     generation.mkdir(mode=0o700)
     switched = False
@@ -418,13 +455,13 @@ def publish(candidate, stats, settings, now):
         permissions(generation, settings, directory=True)
         write_private(generation / "subscription.yaml", candidate, settings)
         header = "; ".join(f"{key}={stats[key]}" for key in ("upload", "download", "total", "expire"))
-        write_private(generation / "headers.conf",
-                      f'add_header Subscription-Userinfo "{header}" always;\n'.encode(), settings)
+        headers_bytes = f'add_header Subscription-Userinfo "{header}" always;\n'.encode()
+        write_private(generation / "headers.conf", headers_bytes, settings)
         state = {"generated_at": now, "valid_until": stats["expire"] or now + settings.max_stale_seconds}
         write_private(generation / "state.json", json.dumps(state).encode(), settings)
         switch_current(root, generation.name)
         switched = True
-        if settings.nginx_check_command:
+        if settings.nginx_check_command and headers_bytes != previous_headers:
             run_command(settings.nginx_check_command, 30, "nginx configuration check")
             run_command(settings.nginx_reload_command, 30, "nginx reload")
     except BaseException:

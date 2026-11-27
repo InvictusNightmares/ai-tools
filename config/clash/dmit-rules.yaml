@@ -10,9 +10,9 @@ proxy-groups:
     filter: '^(US-)?(Hysteria2|Vless)$'
     empty-fallback: REJECT
     url: https://www.gstatic.com/generate_204
-    interval: 30
-    tolerance: 50
-    lazy: false
+    interval: 180
+    tolerance: 80
+    lazy: true
     expected-status: 204
   - name: PROXY
     type: select

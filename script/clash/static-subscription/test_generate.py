@@ -98,6 +98,23 @@ class MergeTests(Fixture):
         self.assertEqual(self.base, original)
         self.assertEqual(subject.merge(migrated, self.extra, settings), migrated)
 
+    def test_node_options_applies_whitelisted_hysteria2_and_vless_fields(self):
+        self.base["proxies"][0].update(type="vless", tls=True, servername="cover.example.invalid")
+        self.base["proxies"][1].update(type="hysteria2", sni="certificate.example.invalid")
+        settings = replace(self.settings, node_options={
+            "BASE-SS-01": {"packet-encoding": "xudp"},
+            "BASE-SS-02": {"ports": "20000-30000", "hop-interval": 30, "up": "50 Mbps", "down": "35 Mbps"},
+        })
+        merged = subject.merge(self.base, self.extra, settings)
+        self.assertEqual(merged["proxies"][0]["packet-encoding"], "xudp")
+        self.assertEqual(merged["proxies"][1]["ports"], "20000-30000")
+        self.assertEqual(merged["proxies"][1]["hop-interval"], 30)
+        self.assertEqual(merged["proxies"][1]["up"], "50 Mbps")
+        self.assertEqual(merged["proxies"][1]["down"], "35 Mbps")
+        bad_type = replace(self.settings, node_options={"BASE-SS-03": {"ports": "20000-30000"}})
+        with self.assertRaisesRegex(subject.Failure, "hysteria2"):
+            subject.merge(self.base, self.extra, bad_type)
+
     def test_address_migration_rejects_missing_node_changed_source_or_implicit_sni(self):
         cases = [
             {"missing-node": {"from": "proxy.example.invalid", "to": "node.example.invalid"}},
@@ -353,15 +370,26 @@ class PublicationTests(Fixture):
         previous = self.publish()
         settings = replace(self.settings, nginx_check_command=("nginx", "-t"),
                            nginx_reload_command=("nginx", "-s", "reload"))
+        changed_header = HEADER.replace("upload=10", "upload=11")
         for step in (0, 1):
             with self.subTest(step=step):
                 results = [None] * step + [subject.Failure("synthetic command failure")]
                 with patch.object(subject, "run_command", side_effect=results), subject.publish_lock(settings):
                     with self.assertRaises(subject.Failure):
-                        subject.publish(b"new subscription", subject.userinfo(HEADER, 1000), settings, 1000)
+                        subject.publish(b"new subscription", subject.userinfo(changed_header, 1000), settings, 1000)
                 self.assertEqual(subject.current_target(settings.output_dir), previous)
                 self.assertEqual((settings.output_dir / "current/subscription.yaml").read_bytes(), b"previous subscription\n")
                 self.assertEqual(len(list(settings.output_dir.glob("generation-*"))), 1)
+
+    def test_unchanged_headers_skips_nginx_reload(self):
+        previous = self.publish()
+        settings = replace(self.settings, nginx_check_command=("nginx", "-t"),
+                           nginx_reload_command=("nginx", "-s", "reload"))
+        with patch.object(subject, "run_command") as command, subject.publish_lock(settings):
+            subject.publish(b"updated yaml only\n", subject.userinfo(HEADER, 1100), settings, 1100)
+        command.assert_not_called()
+        self.assertNotEqual(subject.current_target(settings.output_dir), previous)
+        self.assertEqual((settings.output_dir / "current/subscription.yaml").read_bytes(), b"updated yaml only\n")
 
     def test_failed_first_publication_leaves_no_current(self):
         settings = replace(self.settings, nginx_check_command=("nginx", "-t"),
