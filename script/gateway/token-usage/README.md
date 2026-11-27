@@ -56,6 +56,8 @@
 
 2026-11-11 已补齐东京 4000 王亚新（Key 160）的 **产品** 分类；线上已有 Key 为 active，资源组为 `codex-B`。同时确认美西 4001 周曙天（用户 ID 81）通过 `usage_logs.user_id` 按个人账号自动归入 **研发**，后续所有个人 Key 的用量合并到本人，无需新增 CSV 映射。本地与 GPU 映射一致，共 229 条；正式日报入口对 11 月 11 日的 dry-run 通过，未映射与姓名差异均为 0，三张图片校验通过，未发送验证邮件。核对时两人当天尚无调用记录，产生用量后纳入对应日期日报。验证摘要见 GPU `/data/ai-gateway-token-usage/ops/add-west81-tokyo160-20261111/verification.json`。
 
+2026-11-25 已补齐东京 4000 孙莹莹（Key 161）的 **产品** 分类；线上已有 Key 为 active，资源组为 `codex-A`。本地与 GPU 映射一致，共 230 条；正式日报入口对 11 月 25 日的 dry-run 通过，未映射与姓名差异均为 0，三张图片校验通过，未发送验证邮件。核对时孙莹莹当天尚无调用记录，产生用量后纳入产品组统计。验证摘要见 GPU `/data/ai-gateway-token-usage/ops/add-tokyo161-20261125/verification.json`。
+
 回归检查（运行环境需安装 Pillow）：
 
 ```sh
