@@ -82,9 +82,17 @@ flowchart LR
   - 原面板域名去除面板反代（根路径返回 404），仅在原随机路径下托管只读静态原始订阅与 Clash 订阅文件，并移除公网旧面板/订阅端口。
   - 更新证书自动热载脚本与配置，使定时续期后校验并重启官方 Hysteria2 容器并重载网关，避免等待已下线的面板进程。
 
-### 4. Clash 规则与订阅侧调整
+### 4. Clash 规则、广告规则集与客户端 DNS 优化
 
-- 更新 [dmit-rules.yaml](../../config/clash/dmit-rules.yaml) 中的 `Auto` 策略组：`interval` 由 `30` 调整为 `180`，`tolerance` 由 `50` 调整为 `80`，`lazy` 由 `false` 调整为 `true`，减少待机周期探测与临界抖动切换（规则改动需推送至远程仓库默认分支后由面板在线规则拉取生效）。
+- **消除规则链不必要的本地 DNS 触发**：
+  - 在 [dmit-rules.yaml](../../config/clash/dmit-rules.yaml) 中为 `GEOIP,private,DIRECT` 补齐 `,no-resolve`，并在 `GEOSITE,CN,DIRECT` 与 `GEOIP,CN,DIRECT` 之间插入 `GEOSITE,geolocation-!cn,PROXY`，避免常规国内外域名在 `fake-ip` 模式下被提前触发跨代理 DoH 解析，由远端出口就近解析海外域名。
+  - 清理被 `GEOSITE,CN` 覆盖的重复国内 `GEOSITE` 条目，保持规则精简。
+- **拆分广告规则集（Trie 匹配 + `no-resolve`）**：
+  - 将 [广告规则更新脚本](../../script/clash/update-johnshall-shadowrocket-ad.sh) 与定时工作流改为生成两份独立规则集：`behavior: domain`（`+.domain` 文本格式，走域名 Trie 树，零 DNS 触发）和 `behavior: ipcidr`（规则处带 `,no-resolve`，仅匹配纯 IP 连接），替代原先 5.4 万条混合 `classical` 规则集。
+- **调整 `Auto` 为稳定优先的 `fallback` 策略**：
+  - 因 Mihomo `include-all-proxies` 按名称字母序排序，在 [dmit-rules.yaml](../../config/clash/dmit-rules.yaml) 中引入两个隐藏筛选辅助组（`Auto-Vless`、`Auto-Hysteria2`）供 `Auto`（`type: fallback`、`interval: 180`、`lazy: true`）按顺序编排，实现日常优先走更稳定的 VLESS、故障时自动切换 Hysteria2，且继续只对外展示单一 `PROXY` 选择组并兼容仅含双节点的保留订阅（规则改动需推送至远程仓库默认分支后由面板在线规则拉取生效）。
+- **精简客户端 DNS 配置**：
+  - 更新 [dmit-client.yaml](../../config/clash/dmit-client.yaml)：移除 `direct-nameserver` 中易劫持/偏慢的上游并仅保留两家国内 DNS，移除 `default-nameserver` 慢节点与 `nameserver` 第三家冗余 DoH，补充 `nameserver-policy`（国内与私网域名直连解析）以及 macOS NTP、WebRTC STUN 等常见 `fake-ip-filter` 条目。
 - 触发静态订阅生成器发布新版本，确认主用户唯一总订阅保持 7 个节点（含两台主机直连节点、服务端中转节点与两个既有附加外部节点），保留用户原生 Clash 订阅仍仅含公网主机 A 的 2 个节点且凭据与额度未变。
 
 ## 验证结果与关键数据

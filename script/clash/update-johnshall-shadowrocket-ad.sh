@@ -8,7 +8,8 @@ repo_root="$(cd "${script_dir}/../.." && pwd)"
 source_repo="Johnshall/Shadowrocket-ADBlock-Rules-Forever"
 source_branch="release"
 source_name="sr_ad_only.conf"
-target_file="${repo_root}/config/clash/rule-providers/johnshall-shadowrocket-ad.txt"
+domain_target_file="${repo_root}/config/clash/rule-providers/johnshall-shadowrocket-ad-domain.txt"
+ip_target_file="${repo_root}/config/clash/rule-providers/johnshall-shadowrocket-ad-ip.txt"
 
 mode="update"
 source_file=""
@@ -21,13 +22,14 @@ Usage:
   script/clash/update-johnshall-shadowrocket-ad.sh [--check] --source-file PATH --source-commit SHA
 
 Options:
-  --check              Verify whether the generated provider is current without changing it.
+  --check              Verify whether the generated providers are current without changing them.
   --source-file PATH   Use an already downloaded sr_ad_only.conf instead of the network.
   --source-commit SHA  Pin the source commit; required with --source-file.
   -h, --help           Show this help without downloading or changing files.
 
 Without --check, the script updates only:
-  config/clash/rule-providers/johnshall-shadowrocket-ad.txt
+  config/clash/rule-providers/johnshall-shadowrocket-ad-domain.txt
+  config/clash/rule-providers/johnshall-shadowrocket-ad-ip.txt
 EOF
 }
 
@@ -73,9 +75,11 @@ update_tmp_dir="$(mktemp -d)"
 trap 'rm -rf "${update_tmp_dir}"' EXIT INT TERM
 
 downloaded_source="${update_tmp_dir}/${source_name}"
-payload_file="${update_tmp_dir}/payload.txt"
+domain_payload_file="${update_tmp_dir}/domain-payload.txt"
+ip_payload_file="${update_tmp_dir}/ip-payload.txt"
 stats_file="${update_tmp_dir}/stats.txt"
-generated_file="${update_tmp_dir}/johnshall-shadowrocket-ad.txt"
+generated_domain_file="${update_tmp_dir}/johnshall-shadowrocket-ad-domain.txt"
+generated_ip_file="${update_tmp_dir}/johnshall-shadowrocket-ad-ip.txt"
 
 if [[ -n "${source_file}" ]]; then
   [[ -f "${source_file}" ]] || { printf 'Source file not found: %s\n' "${source_file}" >&2; exit 1; }
@@ -100,14 +104,14 @@ if (( source_bytes < 1000000 || source_bytes > 5000000 )); then
   exit 1
 fi
 
-awk -F',' -v payload_file="${payload_file}" -v stats_file="${stats_file}" '
+awk -F',' -v domain_payload_file="${domain_payload_file}" -v ip_payload_file="${ip_payload_file}" -v stats_file="${stats_file}" '
   /^[[:space:]]*($|#|\[)/ { next }
   {
     sub(/\r$/, "", $3)
 
     valid_type = ($1 == "DOMAIN-SUFFIX" || $1 == "IP-CIDR")
     valid_value = ($2 != "")
-    if ($1 == "DOMAIN-SUFFIX") valid_value = ($2 ~ /^[A-Za-z0-9._-]+$/)
+    if ($1 == "DOMAIN-SUFFIX") valid_value = ($2 ~ /^[A-Za-z0-9_-][A-Za-z0-9._-]*$/)
     if ($1 == "IP-CIDR") valid_value = ($2 ~ /^[0-9.]+\/[0-9]+$/)
 
     if (NF != 3 || !valid_type || !valid_value || $3 != "Reject") {
@@ -120,7 +124,11 @@ awk -F',' -v payload_file="${payload_file}" -v stats_file="${stats_file}" '
     type_count[$1]++
     key = $1 FS $2
     if (!seen[key]++) {
-      print key > payload_file
+      if ($1 == "DOMAIN-SUFFIX") {
+        print "+." $2 > domain_payload_file
+      } else {
+        print $2 > ip_payload_file
+      }
       unique_count++
       unique_type_count[$1]++
     }
@@ -128,7 +136,7 @@ awk -F',' -v payload_file="${payload_file}" -v stats_file="${stats_file}" '
   END {
     if (bad) exit 1
     duplicates = raw_count - unique_count
-    print raw_count, type_count["DOMAIN-SUFFIX"], type_count["IP-CIDR"], unique_count, unique_type_count["DOMAIN-SUFFIX"], unique_type_count["IP-CIDR"], duplicates > stats_file
+    print raw_count, type_count["DOMAIN-SUFFIX"] + 0, type_count["IP-CIDR"] + 0, unique_count + 0, unique_type_count["DOMAIN-SUFFIX"] + 0, unique_type_count["IP-CIDR"] + 0, duplicates + 0 > stats_file
   }
 ' "${downloaded_source}"
 
@@ -154,30 +162,47 @@ else
 fi
 
 {
-  printf '%s\n' "# Johnshall Shadowrocket ad rules converted for Mihomo classical rule-provider."
+  printf '%s\n' "# Johnshall Shadowrocket ad domain rules converted for Mihomo domain rule-provider."
   printf '# Source: https://github.com/%s/blob/%s/%s\n' "${source_repo}" "${source_commit}" "${source_name}"
   printf '# Source commit: %s\n' "${source_commit}"
   printf '# Source SHA-256: %s\n' "${source_sha256}"
-  printf '%s\n' "# Transform: removed Shadowrocket section/comments and Reject policy; removed exact duplicates; preserved rule order."
-  printf '# Effective rules: %s (%s DOMAIN-SUFFIX + %s IP-CIDR; %s exact duplicates removed).\n' \
-    "${unique_count}" "${unique_domain_count}" "${unique_ip_count}" "${duplicate_count}"
+  printf '%s\n' "# Transform: extracted DOMAIN-SUFFIX entries as +.domain; removed Shadowrocket section/comments, Reject policy, and exact duplicates; preserved rule order."
+  printf '# Effective rules: %s domains (from %s total effective rules; %s exact duplicates removed).\n' \
+    "${unique_domain_count}" "${unique_count}" "${duplicate_count}"
   printf '%s\n' "# License: CC BY-SA 4.0, same as the source (https://creativecommons.org/licenses/by-sa/4.0/)."
   printf '\n'
-  while IFS= read -r rule; do
-    printf '%s\n' "${rule}"
-  done < "${payload_file}"
-} > "${generated_file}"
+  cat "${domain_payload_file}"
+} > "${generated_domain_file}"
 
-if [[ -f "${target_file}" ]] && cmp -s "${generated_file}" "${target_file}"; then
-  printf 'Provider is current: %s rules from %s\n' "${unique_count}" "${source_commit}"
+{
+  printf '%s\n' "# Johnshall Shadowrocket ad IP-CIDR rules converted for Mihomo ipcidr rule-provider."
+  printf '# Source: https://github.com/%s/blob/%s/%s\n' "${source_repo}" "${source_commit}" "${source_name}"
+  printf '# Source commit: %s\n' "${source_commit}"
+  printf '# Source SHA-256: %s\n' "${source_sha256}"
+  printf '%s\n' "# Transform: extracted IP-CIDR entries; removed Shadowrocket section/comments, Reject policy, and exact duplicates; preserved rule order."
+  printf '# Effective rules: %s IP-CIDRs (from %s total effective rules; %s exact duplicates removed).\n' \
+    "${unique_ip_count}" "${unique_count}" "${duplicate_count}"
+  printf '%s\n' "# License: CC BY-SA 4.0, same as the source (https://creativecommons.org/licenses/by-sa/4.0/)."
+  printf '\n'
+  cat "${ip_payload_file}"
+} > "${generated_ip_file}"
+
+if [[ -f "${domain_target_file}" && -f "${ip_target_file}" ]] \
+  && cmp -s "${generated_domain_file}" "${domain_target_file}" \
+  && cmp -s "${generated_ip_file}" "${ip_target_file}"; then
+  printf 'Providers are current: %s rules (%s domain + %s ip) from %s\n' \
+    "${unique_count}" "${unique_domain_count}" "${unique_ip_count}" "${source_commit}"
   exit 0
 fi
 
 if [[ "${mode}" == "check" ]]; then
-  printf 'Provider is stale: expected %s rules from %s\n' "${unique_count}" "${source_commit}" >&2
+  printf 'Providers are stale: expected %s rules (%s domain + %s ip) from %s\n' \
+    "${unique_count}" "${unique_domain_count}" "${unique_ip_count}" "${source_commit}" >&2
   exit 1
 fi
 
-mkdir -p "$(dirname "${target_file}")"
-cp "${generated_file}" "${target_file}"
-printf 'Updated provider: %s rules from %s\n' "${unique_count}" "${source_commit}"
+mkdir -p "$(dirname "${domain_target_file}")"
+cp "${generated_domain_file}" "${domain_target_file}"
+cp "${generated_ip_file}" "${ip_target_file}"
+printf 'Updated providers: %s rules (%s domain + %s ip) from %s\n' \
+  "${unique_count}" "${unique_domain_count}" "${unique_ip_count}" "${source_commit}"

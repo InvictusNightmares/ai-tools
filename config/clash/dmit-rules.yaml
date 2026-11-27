@@ -3,15 +3,27 @@
 # Client-only DNS/IPv6 defaults are in dmit-client.yaml; see dmit-setup.md.
 
 proxy-groups:
+  - name: Auto-Vless
+    hidden: true
+    type: select
+    include-all-proxies: true
+    filter: '^(US-)?Vless$'
+    empty-fallback: REJECT
+  - name: Auto-Hysteria2
+    hidden: true
+    type: select
+    include-all-proxies: true
+    filter: '^(US-)?Hysteria2$'
+    empty-fallback: REJECT
   - name: Auto
     hidden: true
-    type: url-test
-    include-all-proxies: true
-    filter: '^(US-)?(Hysteria2|Vless)$'
+    type: fallback
+    proxies:
+      - Auto-Vless
+      - Auto-Hysteria2
     empty-fallback: REJECT
     url: https://www.gstatic.com/generate_204
     interval: 180
-    tolerance: 80
     lazy: true
     expected-status: 204
   - name: PROXY
@@ -23,15 +35,24 @@ proxy-groups:
     default-selected: Auto
 
 rule-providers:
-  johnshall-shadowrocket-ad:
+  johnshall-shadowrocket-ad-domain:
     type: http
-    behavior: classical
+    behavior: domain
     format: text
-    url: https://raw.githubusercontent.com/InvictusNightmares/ai-tools/main/config/clash/rule-providers/johnshall-shadowrocket-ad.txt
-    path: ./ruleset/johnshall-shadowrocket-ad.txt
+    url: https://raw.githubusercontent.com/InvictusNightmares/ai-tools/main/config/clash/rule-providers/johnshall-shadowrocket-ad-domain.txt
+    path: ./ruleset/johnshall-shadowrocket-ad-domain.txt
     interval: 86400
     proxy: PROXY
     size-limit: 4194304
+  johnshall-shadowrocket-ad-ip:
+    type: http
+    behavior: ipcidr
+    format: text
+    url: https://raw.githubusercontent.com/InvictusNightmares/ai-tools/main/config/clash/rule-providers/johnshall-shadowrocket-ad-ip.txt
+    path: ./ruleset/johnshall-shadowrocket-ad-ip.txt
+    interval: 86400
+    proxy: PROXY
+    size-limit: 65536
 
 rules:
   # 手工确认的直连入口。必须置于广告规则前，避免上游宽泛规则误杀。
@@ -66,14 +87,15 @@ rules:
   - IP-CIDR,203.205.254.0/23,DIRECT,no-resolve
   - IP-CIDR,179.253.245.229/32,DIRECT,no-resolve
 
-  # 局域网与私有地址始终直连
+  # 局域网与私有地址始终直连（GEOIP 加 no-resolve，避免域名在此处触发本地 DNS 解析）
   - GEOSITE,private,DIRECT
-  - GEOIP,private,DIRECT
+  - GEOIP,private,DIRECT,no-resolve
 
-  # 广告与统计：保留现有规则，并叠加完整 Shadowrocket 广告 provider。
+  # 广告与统计：保留 geosite 广告库，并将 Shadowrocket 广告拆为 domain（Trie 匹配）与 ipcidr（no-resolve）。
   - GEOSITE,category-ads-all,REJECT
   - DOMAIN,analytics.strava.com,REJECT
-  - RULE-SET,johnshall-shadowrocket-ad,REJECT
+  - RULE-SET,johnshall-shadowrocket-ad-domain,REJECT
+  - RULE-SET,johnshall-shadowrocket-ad-ip,REJECT,no-resolve
 
   # DeepSeek 走代理，优先于国内域名与 IP 直连规则。
   - DOMAIN-SUFFIX,deepseek.com,PROXY
@@ -82,18 +104,17 @@ rules:
   # 字节海外测速入口走代理，优先于国内域名直连规则。
   - DOMAIN,perfops2.byte-test.com,PROXY
 
-  # 国内域名
-  - GEOSITE,apple@cn,DIRECT
+  # 国内域名（已去除被 CN 覆盖的重复 geosite 条目）
   - GEOSITE,apple-cn,DIRECT
-  - GEOSITE,google@cn,DIRECT
   - GEOSITE,google-cn,DIRECT
   - GEOSITE,steam@cn,DIRECT
-  - GEOSITE,category-companies@cn,DIRECT
-  - GEOSITE,geolocation-cn,DIRECT
   - GEOSITE,CN,DIRECT
 
-  # 未命中国内域名规则的请求按目标 IP 判断，国内 IP 仍然直连。
+  # 常见海外域名直接走代理，跳过下方 GEOIP,CN 的本地 DNS 查询，交由远端节点解析。
+  - GEOSITE,geolocation-!cn,PROXY
+
+  # 未命中域名规则的请求按目标 IP 判断，国内 IP 仍然直连。
   - GEOIP,CN,DIRECT
 
-  # 其余流量全部走 DMIT 的自动切换/选择组。
+  # 其余流量全部走自动切换/选择组。
   - MATCH,PROXY

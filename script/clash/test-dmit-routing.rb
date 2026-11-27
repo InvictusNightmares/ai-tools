@@ -80,6 +80,14 @@ def candidates(group, nodes)
   result.empty? ? [group.fetch('empty-fallback', 'COMPATIBLE')] : result
 end
 
+def resolved_auto_chain(groups, nodes)
+  by_name = groups.each_with_object({}) { |group, map| map[group.fetch('name')] = group }
+  auto = by_name.fetch('Auto')
+  candidates(auto, nodes).flat_map do |member|
+    by_name.key?(member) ? candidates(by_name[member], nodes) : [member]
+  end
+end
+
 begin
   check(ARGV.length <= 1, "Usage: ruby #{$PROGRAM_NAME} [FILE|-]")
   input = ARGV.first || File.expand_path('../../config/clash/dmit-rules.yaml', __dir__)
@@ -95,39 +103,57 @@ begin
   names = groups.map { |group| group.fetch('name').strip }
   check(names.uniq.length == names.length, 'duplicate remote proxy-group names')
 
+  # Performance and DNS-avoidance rule invariants
+  providers = overlay.fetch('rule-providers', {})
+  ad_domain = providers['johnshall-shadowrocket-ad-domain']
+  ad_ip = providers['johnshall-shadowrocket-ad-ip']
+  check(ad_domain.is_a?(Hash) && ad_domain['behavior'] == 'domain' && ad_domain['format'] == 'text', 'johnshall-shadowrocket-ad-domain must be a text domain provider')
+  check(ad_ip.is_a?(Hash) && ad_ip['behavior'] == 'ipcidr' && ad_ip['format'] == 'text', 'johnshall-shadowrocket-ad-ip must be a text ipcidr provider')
+  check(rules.include?('GEOIP,private,DIRECT,no-resolve'), 'GEOIP,private,DIRECT must carry no-resolve')
+  check(!rules.include?('GEOIP,private,DIRECT'), 'GEOIP,private,DIRECT without no-resolve must not appear')
+  check(rules.include?('RULE-SET,johnshall-shadowrocket-ad-domain,REJECT'), 'ad domain provider rule must exist')
+  check(rules.include?('RULE-SET,johnshall-shadowrocket-ad-ip,REJECT,no-resolve'), 'ad ipcidr provider rule must carry no-resolve')
+  cn_idx = rules.index('GEOSITE,CN,DIRECT')
+  non_cn_idx = rules.index('GEOSITE,geolocation-!cn,PROXY')
+  geoip_cn_idx = rules.index('GEOIP,CN,DIRECT')
+  check(cn_idx && non_cn_idx && geoip_cn_idx && cn_idx < non_cn_idx && non_cn_idx < geoip_cn_idx, 'GEOSITE,geolocation-!cn,PROXY must appear after GEOSITE,CN,DIRECT and before GEOIP,CN,DIRECT')
+
   scenarios = {
-    'legacy nodes' => [%w[Vless Hysteria2 unrelated-node Hysteria2-copy Vless-copy], %w[Hysteria2 Vless], %w[Auto Hysteria2 Vless]],
-    'legacy Vless only' => [%w[Vless], %w[Vless], %w[Auto Vless]],
-    'legacy Hysteria2 only' => [%w[Hysteria2], %w[Hysteria2], %w[Auto Hysteria2]],
-    'US and SG nodes' => [%w[US-Vless US-Hysteria2 SG-Vless SG-Hysteria2 US-Vless-copy SG-Hysteria2-copy unrelated-node], %w[US-Hysteria2 US-Vless], %w[Auto SG-Hysteria2 SG-Vless US-Hysteria2 US-Vless]],
+    'legacy nodes' => [%w[Vless Hysteria2 unrelated-node Hysteria2-copy Vless-copy], %w[Vless Hysteria2], %w[Auto Hysteria2 Vless]],
+    'legacy Vless only' => [%w[Vless], %w[Vless REJECT], %w[Auto Vless]],
+    'legacy Hysteria2 only' => [%w[Hysteria2], %w[REJECT Hysteria2], %w[Auto Hysteria2]],
+    'US and SG nodes' => [%w[US-Vless US-Hysteria2 SG-Vless SG-Hysteria2 US-Vless-copy SG-Hysteria2-copy unrelated-node], %w[US-Vless US-Hysteria2], %w[Auto SG-Hysteria2 SG-Vless US-Hysteria2 US-Vless]],
     'main subscription with one server relay' => [
       %w[US-Hysteria2 US-Vless SG-Vless US-Vless-SG-Hysteria2 US-Vless-iOS],
-      %w[US-Hysteria2 US-Vless],
+      %w[US-Vless US-Hysteria2],
       %w[Auto SG-Vless US-Hysteria2 US-Vless US-Vless-SG-Hysteria2]
     ],
     'seven direct and relay nodes' => [
       %w[US-Hysteria2 US-Vless SG-Vless US-Hysteria2-SG-Hysteria2 US-Vless-SG-Hysteria2 US-Hysteria2-SG-Vless US-Vless-SG-Vless SG-Hysteria2 US-Vless-SG-Vless-copy unrelated-node],
-      %w[US-Hysteria2 US-Vless],
+      %w[US-Vless US-Hysteria2],
       %w[Auto SG-Hysteria2 SG-Vless US-Hysteria2 US-Hysteria2-SG-Hysteria2 US-Hysteria2-SG-Vless US-Vless US-Vless-SG-Hysteria2 US-Vless-SG-Vless]
     ],
-    'relay nodes without US direct' => [%w[US-Hysteria2-SG-Hysteria2 US-Vless-SG-Vless], %w[REJECT], %w[Auto US-Hysteria2-SG-Hysteria2 US-Vless-SG-Vless]],
-    'US nodes only' => [%w[US-Vless US-Hysteria2], %w[US-Hysteria2 US-Vless], %w[Auto US-Hysteria2 US-Vless]],
-    'SG nodes only' => [%w[SG-Vless SG-Hysteria2], %w[REJECT], %w[Auto SG-Hysteria2 SG-Vless]],
-    'partial US rename' => [%w[US-Vless Hysteria2 SG-Vless SG-Hysteria2], %w[Hysteria2 US-Vless], %w[Auto Hysteria2 SG-Hysteria2 SG-Vless US-Vless]],
-    '3x-ui validation-node' => [%w[validation-node], %w[REJECT], %w[Auto]]
+    'relay nodes without US direct' => [%w[US-Hysteria2-SG-Hysteria2 US-Vless-SG-Vless], %w[REJECT REJECT], %w[Auto US-Hysteria2-SG-Hysteria2 US-Vless-SG-Vless]],
+    'US nodes only' => [%w[US-Vless US-Hysteria2], %w[US-Vless US-Hysteria2], %w[Auto US-Hysteria2 US-Vless]],
+    'SG nodes only' => [%w[SG-Vless SG-Hysteria2], %w[REJECT REJECT], %w[Auto SG-Hysteria2 SG-Vless]],
+    'partial US rename' => [%w[US-Vless Hysteria2 SG-Vless SG-Hysteria2], %w[US-Vless Hysteria2], %w[Auto Hysteria2 SG-Hysteria2 SG-Vless US-Vless]],
+    '3x-ui validation-node' => [%w[validation-node], %w[REJECT REJECT], %w[Auto]]
   }
-  scenarios.each do |scenario, (nodes, expected_auto, expected_proxy)|
+  scenarios.each do |scenario, (nodes, expected_auto_chain, expected_proxy)|
     config = merge_remote(overlay, nodes)
     merged_groups = config.fetch('proxy-groups')
     merged_names = merged_groups.map { |group| group.fetch('name') }
-    check(merged_names.sort == %w[Auto PROXY], "#{scenario}: expected only Auto and PROXY after remote merge; got #{merged_names.join(', ')}")
+    check(merged_names.sort == %w[Auto Auto-Hysteria2 Auto-Vless PROXY], "#{scenario}: expected Auto helpers, Auto, and PROXY after remote merge; got #{merged_names.join(', ')}")
     check_references(config, scenario)
+    auto_vless = merged_groups.find { |group| group['name'] == 'Auto-Vless' }
+    auto_hy2 = merged_groups.find { |group| group['name'] == 'Auto-Hysteria2' }
     auto = merged_groups.find { |group| group['name'] == 'Auto' }
     proxy = merged_groups.find { |group| group['name'] == 'PROXY' }
-    check(auto['hidden'] == true && proxy['hidden'] != true, "#{scenario}: only Auto must be hidden")
-    check(auto['type'] == 'url-test' && auto['include-all-proxies'] == true && auto.fetch('proxies', []).empty?, "#{scenario}: Auto must use url-test and dynamically include nodes, not hard-code them")
-    check(auto['empty-fallback'] == 'REJECT', "#{scenario}: an empty Auto must REJECT, never go DIRECT")
-    check(candidates(auto, nodes) == expected_auto, "#{scenario}: Auto must contain only US/legacy nodes in Hysteria2-first order, or REJECT when empty")
+    check(auto_vless['hidden'] == true && auto_hy2['hidden'] == true && auto['hidden'] == true && proxy['hidden'] != true, "#{scenario}: only PROXY must be visible")
+    check(auto_vless['type'] == 'select' && auto_vless['include-all-proxies'] == true && auto_vless['empty-fallback'] == 'REJECT', "#{scenario}: Auto-Vless must dynamically filter VLESS with REJECT empty-fallback")
+    check(auto_hy2['type'] == 'select' && auto_hy2['include-all-proxies'] == true && auto_hy2['empty-fallback'] == 'REJECT', "#{scenario}: Auto-Hysteria2 must dynamically filter Hysteria2 with REJECT empty-fallback")
+    check(auto['type'] == 'fallback' && auto['proxies'] == %w[Auto-Vless Auto-Hysteria2] && auto['empty-fallback'] == 'REJECT', "#{scenario}: Auto must use fallback prioritizing Auto-Vless over Auto-Hysteria2")
+    check(resolved_auto_chain(merged_groups, nodes) == expected_auto_chain, "#{scenario}: Auto failover chain must prioritize VLESS then Hysteria2, falling back to REJECT when missing")
     check(proxy['type'] == 'select' && proxy.fetch('proxies', []).include?('Auto'), "#{scenario}: PROXY must offer Auto")
     check(proxy['default-selected'] == 'Auto', "#{scenario}: PROXY must default to Auto")
     check(candidates(proxy, nodes) == expected_proxy, "#{scenario}: PROXY must offer only Auto and matching nodes, never the default DIRECT candidate")
