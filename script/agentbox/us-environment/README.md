@@ -6,30 +6,13 @@ The downloaded rules, rule providers and routing groups remain unchanged;
 desktop merge/scripts are skipped for this cloud profile. Local settings only
 adapt DNS, TUN and headless runtime ports.
 
-- `AGENTBOX-US` is an added DNS-only group using VLESS/Hysteria2 nodes from the privately configured proxy address. If a
-  refresh contains no eligible node, compilation fails and keeps the current
-  working configuration. DNS has no DIRECT fallback. Ordinary traffic follows
-  the subscription's original DIRECT/REJECT/PROXY rules and their original order.
-- Public DNS uses Cloudflare (`https://1.1.1.1/dns-query`), Google
-  (`https://8.8.8.8/dns-query`), and Quad9 (`tls://9.9.9.9`), all through that
-  proxy group with normal certificate verification. Quad9 DoT is used because
-  its HTTPS endpoints timed out from the configured proxy exit during live validation.
-- The host uses local DNS, and Docker uses the host's bridge address. Only the
-  local machine and Agentbox egress bridge can reach the DNS listener; UFW
-  retains its default deny inbound policy. Tailnet names use Tailscale MagicDNS.
-- The production TUN handles applications that do not honor HTTP proxy variables.
-  Tailscale, local networks, and the proxy transport remain outside the TUN.
-  A separate nftables OUTPUT/FORWARD gate keeps ordinary processes behind the
-  TUN and blocks external port 53/853 DNS bypasses. The `mihomo` service UID may
-  reach public destinations directly when the subscription says DIRECT.
-- Chrome uses the managed `WebRtcIPHandling=disable_non_proxied_udp` policy,
-  so WebRTC does not independently expose an IP through non-proxied UDP.
-- Both 7897 and 7898 use the same downloaded subscription rules, providers and
-  groups. Tailscale, Docker downloads and subscription downloads use 7897;
-  ordinary shell/container traffic uses 7898. Only 7898 enables the TUN.
-  Each process keeps its own configuration, data cache and encrypted DNS:
-  7897 listens on loopback port 1054, 7898 on port 53, and update candidates on
-  loopback port 1053. DNS policy remains identical across all three.
+- `AGENTBOX-US` is an added DNS-only fallback group using direct primary VLESS/Hysteria2 nodes from the privately configured primary proxy address (excluding cross-region relay nodes). On port `7897` (`mihomo-bootstrap`), `AGENTBOX-BOOTSTRAP` extends the fallback chain with any privately configured `fallback-servers` (e.g. primary VLESS -> primary Hysteria2 -> secondary VLESS -> secondary Hysteria2) and routes bootstrap's `PROXY` group and overseas DNS through it so Tailscale and subscription updates survive primary outages or SNI rotations. If a refresh contains no eligible primary node, compilation fails closed and keeps the current working configuration.
+- Split zero-leak encrypted DNS: domestic/private domains (`geosite:cn,private`, NTP, and standard connectivity probes; no STUN wildcards) resolve via literal-IP domestic DoH (`https://223.5.5.5/dns-query#DIRECT`, `https://1.12.12.12/dns-query#DIRECT`) with zero plaintext port-53 bootstrap lookups; Tailnet names use Tailscale MagicDNS (`100.100.100.100#tailscale0`); all other overseas domains resolve 100% through `https://1.1.1.1/dns-query` and `https://8.8.8.8/dns-query` over `AGENTBOX-US` (or `AGENTBOX-BOOTSTRAP` on `7897`).
+- Runtime tuning aligns with the client baseline: `ipv6: false`, `log-level: warning`, `tcp-concurrent: true`, `keep-alive-idle: 15`, `keep-alive-interval: 15`, `geo-auto-update: true`, `profile.store-selected: false`, overseas UDP/443 QUIC rejection from the online ruleset, and `backlog=128` on `agentbox-container-proxy`.
+- The host uses local DNS (`/etc/resolv.conf` pinned to `127.0.0.1` and protected against `dhcpcd` overwrites), and Docker uses the host's bridge address (`172.18.0.1`). Only the local machine and Agentbox egress bridge can reach the DNS listener; UFW retains its default deny inbound policy.
+- The production TUN handles applications that do not honor HTTP proxy variables. Tailscale, local networks, and all configured primary/fallback proxy transport IPs remain outside the TUN. A separate nftables OUTPUT/FORWARD gate keeps ordinary processes behind the TUN and blocks external port 53/853 DNS bypasses before the `mihomo` service UID exception, while still letting `mihomo` honor domestic `DIRECT` rules and `fwmark 0x80000` Tailscale traffic.
+- Chrome uses the managed `WebRtcIPHandling=disable_non_proxied_udp` policy, so WebRTC does not independently expose an IP through non-proxied UDP.
+- Tailscale and subscription downloads use `7897` (`mihomo-bootstrap`); Docker image pulls and ordinary shell/container traffic use `7898` (`mihomo`). Only `7898` enables the TUN. Each process keeps its own configuration, data cache and encrypted DNS: `7897` listens on loopback port `1054`, `7898` on port `53`, and update candidates on loopback port `1053`. See [refactor-2026-11.md](../../../doc/agentbox/refactor-2026-11.md) for the full 2026-11 refactor details.
 - Each refresh downloads once and validates before activating either instance.
   Unchanged configurations are not restarted. Any activation/health-check error
   restores both previous configurations; successful updates remove transaction
@@ -56,7 +39,7 @@ refreshes use `update-agentbox-proxy --force`. Do not run a second installer ove
 an existing US egress service.
 
 Validate exact equality with downloaded rules, actual DIRECT and PROXY log
-matches, UDP/TCP DNS, a fresh key SSH connection, container egress, and `site-check`.
+matches, UDP/TCP DNS, a fresh key SSH connection, and container egress.
 Run `node --test script/agentbox/test-profile-rules.mjs script/agentbox/test-proxy-transaction.mjs` and
 `node script/agentbox/agentbox-profile-compiler.js --self-test` before deployment.
 Existing installations must also add the Mihomo UID exception to the managed

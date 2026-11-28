@@ -327,37 +327,190 @@ function sanitizeHeadless(config, port) {
   return sortTopLevel(result);
 }
 
-// Keep subscription routing intact; local settings only control DNS and TUN.
+const HOSTNAME_RE = /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/;
+const DIRECT_US_NAME_RE = /^(?:US-)?(?:Vless|Hysteria2)$/i;
+const DIRECT_NODE_NAME_RE = /^(?:[A-Z]{2}-)?(?:Vless|Hysteria2)$/i;
+const DOMESTIC_DOH = [
+  'https://223.5.5.5/dns-query#DIRECT',
+  'https://1.12.12.12/dns-query#DIRECT',
+];
+const DOMESTIC_POLICY_DOMAINS = [
+  'geosite:cn,private',
+  'time.*.com',
+  'time.*.apple.com',
+  'ntp.*.com',
+  '*.msftncsi.com',
+  'www.msftconnecttest.com',
+  'localhost.ptlogin2.qq.com',
+  'localhost.sec.qq.com',
+];
+
+function validateHostname(hostname, label) {
+  if (hostname !== undefined && (typeof hostname !== 'string' ||
+      !HOSTNAME_RE.test(hostname) || isIP(hostname))) {
+    fail(`Invalid Agentbox ${label}.`);
+  }
+}
+
+function pinAndSelectProxies(allProxies, server, hostname, preferDirectUs = false) {
+  const matched = allProxies.filter((p) => isObject(p) &&
+    (p.server === server || (hostname !== undefined && p.server === hostname)) &&
+    typeof p.name === 'string' && ['vless', 'hysteria2'].includes(p.type));
+  for (const proxy of matched) {
+    if (hostname !== undefined && proxy.server === hostname) {
+      // Bootstrap must dial the approved address before its proxy DNS is available.
+      if (proxy.type === 'vless' && proxy.tls && !proxy.servername) proxy.servername = hostname;
+      if (proxy.type === 'hysteria2' && !proxy.sni) proxy.sni = hostname;
+      proxy.server = server;
+    }
+  }
+  let selected = matched.filter((p) => !p['dialer-proxy']);
+  if (selected.length === 0) selected = matched;
+  if (preferDirectUs) {
+    const directUs = selected.filter((p) => DIRECT_US_NAME_RE.test(p.name));
+    if (directUs.length > 0) selected = directUs;
+  } else {
+    const directFallback = selected.filter((p) => DIRECT_NODE_NAME_RE.test(p.name));
+    if (directFallback.length > 0) selected = directFallback;
+  }
+  const rank = (type) => (type === 'vless' ? 0 : 1);
+  return [...selected].sort((a, b) => rank(a.type) - rank(b.type));
+}
+
+// Keep subscription routing intact; local settings control DNS, TUN, and rescue failover.
 function applyUsPolicy(config, policy, port) {
   if (policy.environment !== 'us' || isIP(policy['proxy-server']) !== 4 ||
       !/^[a-z0-9-]+\.ts\.net$/.test(policy['tailnet-domain'] || '')) {
     fail('Invalid Agentbox US environment policy.');
   }
   const server = policy['proxy-server'];
-  const proxies = (config.proxies || []).filter(p => isObject(p) && p.server === server &&
-    typeof p.name === 'string' && ['vless', 'hysteria2'].includes(p.type));
-  if (!proxies.length) fail('The subscription has no eligible US proxy; refusing a direct fallback.');
-  const group = 'AGENTBOX-US';
-  if (config.proxies.some(p => p.name === group) ||
-      (config['proxy-groups'] || []).some(g => g.name === group)) fail('Reserved DNS policy name is already used.');
-  config['proxy-groups'] = config['proxy-groups'] || [];
-  config['proxy-groups'].push({ name: group, type: 'fallback', proxies: proxies.map(p => p.name),
-    url: 'https://www.gstatic.com/generate_204', interval: 300, lazy: false });
-  const excludes = ['127.0.0.0/8', '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16',
-    '100.64.0.0/10', '169.254.0.0/16', `${server}/32`, '::1/128', 'fc00::/7', 'fe80::/10'];
+  const hostname = policy['proxy-server-hostname'];
+  validateHostname(hostname, 'proxy server hostname');
+
+  const fallbackSpecs = policy['fallback-servers'] === undefined ? [] : policy['fallback-servers'];
+  if (!Array.isArray(fallbackSpecs)) fail('Invalid Agentbox fallback servers list.');
+  for (const entry of fallbackSpecs) {
+    if (!isObject(entry) || isIP(entry.server) !== 4) fail('Invalid Agentbox fallback server entry.');
+    validateHostname(entry.hostname, 'fallback proxy server hostname');
+  }
+
+  const allProxies = Array.isArray(config.proxies) ? config.proxies : [];
+  const usProxies = pinAndSelectProxies(allProxies, server, hostname, true);
+  if (!usProxies.length) fail('The subscription has no eligible US proxy; refusing a direct fallback.');
+
+  const serverIps = [server];
+  const fallbackProxies = [];
+  for (const entry of fallbackSpecs) {
+    if (!serverIps.includes(entry.server)) serverIps.push(entry.server);
+    for (const proxy of pinAndSelectProxies(allProxies, entry.server, entry.hostname, false)) {
+      fallbackProxies.push(proxy);
+    }
+  }
+
+  const usGroup = 'AGENTBOX-US';
+  const bootstrapGroup = 'AGENTBOX-BOOTSTRAP';
+  const isBootstrap = port === 7897;
+  const reservedGroups = isBootstrap ? [usGroup, bootstrapGroup] : [usGroup];
+  for (const name of reservedGroups) {
+    if (allProxies.some((p) => p.name === name) ||
+        (config['proxy-groups'] || []).some((g) => g.name === name)) {
+      fail(`Reserved DNS policy name is already used: ${name}`);
+    }
+  }
+
+  config['proxy-groups'] = Array.isArray(config['proxy-groups']) ? config['proxy-groups'] : [];
+  config['proxy-groups'].push({
+    name: usGroup,
+    type: 'fallback',
+    proxies: usProxies.map((p) => p.name),
+    url: 'https://www.gstatic.com/generate_204',
+    interval: 180,
+    lazy: false,
+    'expected-status': 204,
+  });
+
+  let dnsGroup = usGroup;
+  if (isBootstrap) {
+    const chain = [];
+    for (const proxy of [...usProxies, ...fallbackProxies]) {
+      if (!chain.includes(proxy.name)) chain.push(proxy.name);
+    }
+    config['proxy-groups'].push({
+      name: bootstrapGroup,
+      type: 'fallback',
+      proxies: chain,
+      url: 'https://www.gstatic.com/generate_204',
+      interval: 120,
+      lazy: false,
+      'expected-status': 204,
+    });
+    // Route bootstrap's PROXY/MATCH rules through the full primary->fallback chain
+    // so Tailscale and subscription updates survive primary node outages or SNI rotations.
+    config['proxy-groups'] = config['proxy-groups'].map((group) => (
+      isObject(group) && group.name === 'PROXY'
+        ? { name: 'PROXY', type: 'select', proxies: [bootstrapGroup] }
+        : group
+    ));
+    dnsGroup = bootstrapGroup;
+  }
+
+  const excludes = [
+    '127.0.0.0/8', '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16',
+    '100.64.0.0/10', '169.254.0.0/16',
+    ...serverIps.map((ip) => `${ip}/32`),
+    '::1/128', 'fc00::/7', 'fe80::/10',
+  ];
+
   config.ipv6 = false;
-  config.dns = {
-    enable: true, listen: port === 7898 ? '0.0.0.0:53' :
-      port === 7897 ? '127.0.0.1:1054' : '127.0.0.1:1053',
-    ipv6: false, 'enhanced-mode': 'redir-host', 'use-hosts': true, 'use-system-hosts': true,
-    // Literal DoH IPs and literal proxy IPs require no public bootstrap lookup.
-    'default-nameserver': ['1.1.1.1'],
-    nameserver: [`https://1.1.1.1/dns-query#${group}`, `https://8.8.8.8/dns-query#${group}`, `tls://9.9.9.9#${group}`],
-    'nameserver-policy': { [`+.${policy['tailnet-domain']}`]: '100.100.100.100#tailscale0' },
+  config['log-level'] = 'warning';
+  config['tcp-concurrent'] = true;
+  config['keep-alive-idle'] = 15;
+  config['keep-alive-interval'] = 15;
+  config['geo-auto-update'] = true;
+  config['geo-update-interval'] = 168;
+  config['unified-delay'] = true;
+  config.profile = { 'store-selected': false, 'store-fake-ip': false };
+
+  const nameserverPolicy = {
+    [`+.${policy['tailnet-domain']}`]: '100.100.100.100#tailscale0',
   };
-  config.tun = { enable: port === 7898, device: 'ab-us', stack: 'gvisor', mtu: 1400,
-    'auto-route': true, 'auto-detect-interface': true, 'strict-route': true,
-    'iproute2-table-index': 2022, 'iproute2-rule-index': 9000,
+  for (const domain of DOMESTIC_POLICY_DOMAINS) {
+    nameserverPolicy[domain] = [...DOMESTIC_DOH];
+  }
+
+  config.dns = {
+    enable: true,
+    listen: port === 7898 ? '0.0.0.0:53' :
+      port === 7897 ? '127.0.0.1:1054' : '127.0.0.1:1053',
+    ipv6: false,
+    'enhanced-mode': 'redir-host',
+    'prefer-h3': false,
+    'respect-rules': true,
+    'use-hosts': true,
+    'use-system-hosts': true,
+    // Literal IP DoH endpoints require no plaintext port-53 bootstrap query.
+    'default-nameserver': ['223.5.5.5', '1.12.12.12'],
+    'nameserver-policy': nameserverPolicy,
+    nameserver: [
+      `https://1.1.1.1/dns-query#${dnsGroup}`,
+      `https://8.8.8.8/dns-query#${dnsGroup}`,
+    ],
+    'direct-nameserver': [...DOMESTIC_DOH],
+    'direct-nameserver-follow-policy': true,
+    'proxy-server-nameserver': [...DOMESTIC_DOH],
+    fallback: [],
+  };
+
+  config.tun = {
+    enable: port === 7898,
+    device: 'ab-us',
+    stack: 'gvisor',
+    mtu: 1400,
+    'auto-route': true,
+    'auto-detect-interface': true,
+    'strict-route': true,
+    'iproute2-table-index': 2022,
+    'iproute2-rule-index': 9000,
     'route-exclude-address': excludes,
   };
   return config;
@@ -466,6 +619,40 @@ function selfTest() {
   if (!prod.tun.enable || candidate.tun.enable || prod.dns.listen === candidate.dns.listen ||
       JSON.stringify(prod.rules) !== JSON.stringify(fixture.rules) ||
       prod.dns.nameserver.some(s => !s.endsWith('#AGENTBOX-US'))) fail('US policy isolation self-test failed');
+  const hostname = 'proxy.example.com';
+  const named = applyUsPolicy({
+    ...structuredClone(fixture),
+    proxies: [
+      { name: 'US-Hysteria2', type: 'hysteria2', server: hostname },
+      { name: 'US-Vless-SG-Hysteria2', type: 'vless', server: hostname, tls: true, servername: 'relay.example.com' },
+      { name: 'US-Vless', type: 'vless', server: hostname, tls: true, servername: 'tls.example.com' },
+      { name: 'SG-Hysteria2', type: 'hysteria2', server: 'sg.example.com' },
+      { name: 'SG-Vless', type: 'vless', server: 'sg.example.com', tls: true, servername: 'sg-tls.example.com' },
+      { name: 'Other', type: 'vless', server: 'other.example.com' },
+    ],
+    'proxy-groups': [{ name: 'PROXY', type: 'select', proxies: ['Auto'] }],
+  }, {
+    ...policy,
+    'proxy-server-hostname': hostname,
+    'fallback-servers': [{ server: '198.51.100.8', hostname: 'sg.example.com' }],
+  }, 7897);
+  const byName = Object.fromEntries(named.proxies.map((p) => [p.name, p]));
+  const usGrp = named['proxy-groups'].find((g) => g.name === 'AGENTBOX-US');
+  const bsGrp = named['proxy-groups'].find((g) => g.name === 'AGENTBOX-BOOTSTRAP');
+  const proxyGrp = named['proxy-groups'].find((g) => g.name === 'PROXY');
+  if (byName['US-Vless'].server !== policy['proxy-server'] || byName['US-Vless'].servername !== 'tls.example.com' ||
+      byName['US-Hysteria2'].server !== policy['proxy-server'] || byName['US-Hysteria2'].sni !== hostname ||
+      byName['SG-Vless'].server !== '198.51.100.8' || byName['SG-Hysteria2'].sni !== 'sg.example.com' ||
+      byName.Other.server !== 'other.example.com' ||
+      usGrp.proxies.join() !== 'US-Vless,US-Hysteria2' ||
+      bsGrp.proxies.join() !== 'US-Vless,US-Hysteria2,SG-Vless,SG-Hysteria2' ||
+      proxyGrp.proxies.join() !== 'AGENTBOX-BOOTSTRAP' ||
+      !named.dns.nameserver.every((s) => s.endsWith('#AGENTBOX-BOOTSTRAP')) ||
+      !named.tun['route-exclude-address'].includes('198.51.100.8/32') ||
+      named.dns['nameserver-policy']['+.stun.*.*'] !== undefined ||
+      named['log-level'] !== 'warning' || !named['tcp-concurrent']) {
+    fail('US policy bootstrap failover and DNS self-test failed');
+  }
   let refused = false;
   try { applyUsPolicy({...fixture, proxies: []}, policy, 7898); } catch { refused = true; }
   if (!refused) fail('Missing US node must fail closed');

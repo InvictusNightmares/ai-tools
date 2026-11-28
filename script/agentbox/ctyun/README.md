@@ -10,7 +10,7 @@
 - 登录及短信验证码由人手动输入，不回显。没有 OCR、验证码第三方上传或后台自动尝试登录。登录/API/WebSocket 均保留 TLS 验证并禁止 HTTP 自动重定向。
 - 账号密码、固定设备码和登录会话存于私密 `/data`，不放到镜像、环境变量或日志。会话绑定账号和设备码，后台及重启复用。平台使会话失效后，需执行人工登录命令重新认证；不能承诺永远无需人工。
 - 登录和后台进程互斥。`agentbox-ctyun login` 实际执行停止后台、交互登录、成功后启动；登录失败时保持停止，修正后重试该命令，或确定旧会话仍有效时显式 `start`。
-- 容器无宿主机端口、无 Docker socket、无额外 capability，根文件系统只读。使用既有 `agentbox-egress` 网络和 7898 出口，Docker 拉镜像仍用宿主机既有 7897 配置。
+- 容器无宿主机端口、无 Docker socket、无额外 capability，根文件系统只读。使用既有 `agentbox-egress` 网络和 7898 出口；2026-11 重构后 Docker 拉镜像也已切至宿主机主代理 7898，救生代理 7897 专供 Tailscale 与订阅刷新。
 
 ## 构建
 
@@ -86,3 +86,9 @@ docker inspect --format '{{.RestartCount}} {{.State.Running}} {{json .HostConfig
 验收后，删除本次上传的压缩包、构建上下文、编译日志、验证码图片与临时凭据副本。保留 `/srv/agentbox/ctyun/data` 中正在使用的账号、设备码和会话。它们是保活运行状态，删除会中断重启后的自动恢复。构建缓存和不用的 SDK 镜像需先核对只属于本次构建，再按具体镜像 ID 清理，不清理其他容器/卷。
 
 `agentbox-ctyun status` 查看健康和脱敏日志；`stop` 停止保活，`start` 用已有会话启动。连续 `KEEPALIVE_RETRY` 时先检查代理和官方平台连通性；网络正常但会话过期时执行 `login`。不通过循环登录、短信或验证码自动识别绕过人工认证。
+
+## 宿主机监控告警与备份（2026-11）
+
+- **5 分钟健康巡检**：宿主机部署 `monitor.py`（`/usr/local/libexec/agentbox-ctyun-monitor.py`）及 [agentbox-ctyun-monitor.service](../systemd/agentbox-ctyun-monitor.service) / [agentbox-ctyun-monitor.timer](../systemd/agentbox-ctyun-monitor.timer)（`OnUnitInactiveSec=5min`），每 5 分钟检查容器 `healthy` 状态与 `/srv/agentbox/ctyun/data/health.json`（`State == "connected"` 且时间戳未过期）。异常时通过私密 `0600` 文件 `/srv/agentbox/secrets/ctyun-monitor.env` 中的飞书应用发私聊告警，按稳定去重键 `reason_key` 冷却 1 小时防刷屏、故障升级时立即告警、恢复后发送一次恢复通知。单测见 `python3 script/agentbox/ctyun/test-monitor.py -v`。
+- **受控备份**：`/srv/agentbox/ctyun/data` 已纳入每日定时执行的 [backup.sh](../hermes/backup.sh)（排除 `worker.lock`，保留 3 份 `0600` 归档）。
+- **内核 QXL 死锁隔离**：宿主机禁用 `qxl` 内核驱动后回落至 `VGA+` 文本控制台，经冷重启实测不影响本容器对平台 SPICE `MAIN` 通道的握手保活，详见 [2026-11 重构手册](../../../doc/agentbox/refactor-2026-11.md)。

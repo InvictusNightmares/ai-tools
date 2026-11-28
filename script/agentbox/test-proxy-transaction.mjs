@@ -8,8 +8,13 @@ import { test } from 'node:test';
 // Execute the real activation/EXIT rollback code against temporary files and
 // stub service/network commands. Never touch local services or /etc configs.
 const updater = readFileSync(new URL('./update-agentbox-proxy.sh', import.meta.url), 'utf8');
-const cleanup = updater.slice(updater.indexOf('cleanup() {'), updater.indexOf('chmod 0700 "$work"'));
+const cleanup = updater.slice(updater.indexOf('stop_candidate() {'), updater.indexOf('chmod 0700 "$work"'));
 const activation = updater.slice(updater.indexOf('check_proxy() {'));
+
+test('settings read avoids background process substitution (no orphan node on early exit)', () => {
+  assert.doesNotMatch(updater, /<\s*<\s*\(\s*node\b/);
+  assert.match(updater, /settings_output=\$\(node "\$compiler"/);
+});
 
 for (const failure of ['none', 'production-restart', 'bootstrap-restart', 'bootstrap-dns', 'source-cache']) {
   test(`dual proxy transaction: ${failure}`, () => {

@@ -24,13 +24,37 @@ test('online subscription routing survives local enhancements and future refresh
     put('verge.yaml', { enable_builtin_enhanced: false });
     put('profiles/Merge.yaml', { rules: ['MATCH,REJECT'] });
     writeFileSync(path.join(bundle, 'profiles/Script.js'), 'function main(c){c.rules=["MATCH,DIRECT"];return c}');
-    put('agentbox-policy.yaml', { environment: 'us', 'proxy-server': '203.0.113.7', 'tailnet-domain': 'tail123.ts.net' });
+    put('agentbox-policy.yaml', {
+      environment: 'us',
+      'proxy-server': '203.0.113.7',
+      'proxy-server-hostname': 'us.example.test',
+      'tailnet-domain': 'tail123.ts.net',
+      'fallback-servers': [{ server: '198.51.100.9', hostname: 'sg.example.test' }],
+    });
     for (const generation of [1, 2]) {
       const source = {
-        proxies: [{ name: 'US', type: 'vless', server: '203.0.113.7', port: 443 }],
-        'proxy-groups': [{ name: 'PROXY', type: 'select', proxies: ['US'] }],
+        proxies: [
+          { name: 'US-Hysteria2', type: 'hysteria2', server: 'us.example.test', port: 443 },
+          { name: 'US-Vless-SG-Hysteria2', type: 'vless', server: 'us.example.test', port: 443, tls: true, servername: 'relay.example.test' },
+          { name: 'US-Vless', type: 'vless', server: 'us.example.test', port: 443, tls: true, servername: 'us-tls.example.test' },
+          { name: 'SG-Vless', type: 'vless', server: 'sg.example.test', port: 443, tls: true, servername: 'sg-tls.example.test' },
+          { name: 'SG-Hysteria2', type: 'hysteria2', server: 'sg.example.test', port: 443 },
+          { name: 'SG-Vless-US-Hysteria2', type: 'vless', server: 'sg.example.test', port: 443, tls: true, 'dialer-proxy': 'US-Hysteria2' },
+        ],
+        'proxy-groups': [
+          { name: 'Auto', type: 'fallback', proxies: ['US-Vless', 'US-Hysteria2'] },
+          { name: 'PROXY', type: 'select', proxies: ['Auto', 'US-Vless', 'US-Hysteria2'] },
+        ],
         'rule-providers': { ads: { type: 'inline', behavior: 'domain', payload: ['ads.example'] } },
-        rules: [`DOMAIN,direct-${generation}.example,DIRECT`, 'RULE-SET,ads,REJECT', 'GEOIP,CN,DIRECT', 'MATCH,PROXY'],
+        rules: [
+          `DOMAIN,direct-${generation}.example,DIRECT`,
+          'RULE-SET,ads,REJECT',
+          'AND,((NETWORK,UDP),(DST-PORT,443),(GEOSITE,geolocation-!cn)),REJECT',
+          'GEOSITE,geolocation-!cn,PROXY',
+          'GEOIP,CN,DIRECT',
+          'AND,((NETWORK,UDP),(DST-PORT,443)),REJECT',
+          'MATCH,PROXY',
+        ],
       };
       put('profiles/Rtest.yaml', source);
       put('download.yaml', source);
@@ -41,12 +65,43 @@ test('online subscription routing survives local enhancements and future refresh
         const actual = yaml.load(readFileSync(output, 'utf8'));
         assert.deepEqual(actual.rules, source.rules, 'subscription rule order and targets must remain exact');
         assert.deepEqual(actual['rule-providers'], source['rule-providers']);
-        assert.deepEqual(actual['proxy-groups'].filter(g => g.name !== 'AGENTBOX-US'), source['proxy-groups']);
-        assert.deepEqual(actual.dns.nameserver, ['https://1.1.1.1/dns-query#AGENTBOX-US',
-          'https://8.8.8.8/dns-query#AGENTBOX-US', 'tls://9.9.9.9#AGENTBOX-US']);
+        assert.equal(actual.ipv6, false);
+        assert.equal(actual['log-level'], 'warning');
+        assert.equal(actual['tcp-concurrent'], true);
+        assert.equal(actual['keep-alive-idle'], 15);
+        assert.equal(actual['keep-alive-interval'], 15);
+        assert.equal(actual['geo-auto-update'], true);
+        assert.deepEqual(actual.profile, { 'store-selected': false, 'store-fake-ip': false });
+        assert.deepEqual(actual.dns['nameserver-policy']['geosite:cn,private'], [
+          'https://223.5.5.5/dns-query#DIRECT',
+          'https://1.12.12.12/dns-query#DIRECT',
+        ]);
+        assert.equal(actual.dns['nameserver-policy']['+.stun.*.*'], undefined, 'STUN must not leak to domestic DNS');
+        assert.deepEqual(actual.dns['nameserver-policy']['+.tail123.ts.net'], '100.100.100.100#tailscale0');
         assert.equal(actual.tun.enable, port === 7898);
+        assert.ok(actual.tun['route-exclude-address'].includes('203.0.113.7/32'));
+        assert.ok(actual.tun['route-exclude-address'].includes('198.51.100.9/32'));
         assert.equal(actual.dns.listen, port === 7898 ? '0.0.0.0:53' :
           port === 7897 ? '127.0.0.1:1054' : '127.0.0.1:1053');
+        const usGroup = actual['proxy-groups'].find((g) => g.name === 'AGENTBOX-US');
+        assert.deepEqual(usGroup.proxies, ['US-Vless', 'US-Hysteria2']);
+        if (port === 7897) {
+          const bsGroup = actual['proxy-groups'].find((g) => g.name === 'AGENTBOX-BOOTSTRAP');
+          assert.deepEqual(bsGroup.proxies, ['US-Vless', 'US-Hysteria2', 'SG-Vless', 'SG-Hysteria2']);
+          assert.deepEqual(actual['proxy-groups'].find((g) => g.name === 'PROXY'), {
+            name: 'PROXY', type: 'select', proxies: ['AGENTBOX-BOOTSTRAP'],
+          });
+          assert.deepEqual(actual.dns.nameserver, [
+            'https://1.1.1.1/dns-query#AGENTBOX-BOOTSTRAP',
+            'https://8.8.8.8/dns-query#AGENTBOX-BOOTSTRAP',
+          ]);
+        } else {
+          assert.deepEqual(actual['proxy-groups'].filter((g) => g.name !== 'AGENTBOX-US'), source['proxy-groups']);
+          assert.deepEqual(actual.dns.nameserver, [
+            'https://1.1.1.1/dns-query#AGENTBOX-US',
+            'https://8.8.8.8/dns-query#AGENTBOX-US',
+          ]);
+        }
       }
     }
   } finally {

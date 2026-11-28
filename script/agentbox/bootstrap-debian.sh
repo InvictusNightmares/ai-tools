@@ -425,7 +425,7 @@ case ${PROXY_TARGET_PORT:-} in
     ''|*[!0-9]*) exit 1 ;;
 esac
 exec /usr/bin/socat \
-    "TCP4-LISTEN:7898,bind=$PROXY_BIND_ADDRESS,reuseaddr,fork" \
+    "TCP4-LISTEN:7898,bind=$PROXY_BIND_ADDRESS,reuseaddr,backlog=128,fork" \
     "TCP4:127.0.0.1:$PROXY_TARGET_PORT"
 EOF
 chmod 0755 /usr/local/sbin/agentbox-container-proxy

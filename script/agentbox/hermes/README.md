@@ -14,9 +14,9 @@
 
 ## 私网 HTTPS 后台
 
-网页入口为 `https://<ASSISTANT_DOMAIN>`。访问设备须连接 Tailscale，并在现有访问规则的允许范围内。网关只绑定私网地址，沿用原 Dashboard 用户、密码及会话机制。
+网页入口为 `https://<ASSISTANT_DOMAIN>`。访问设备须连接 Tailscale，并在现有访问规则的允许范围内。2026-11 重构后 Hermes 升级为官方稳定版 `v0.23.5` 全新部署，容器仅发布至宿主机回环地址 `127.0.0.1:9119`，统一由 `private-domain-gateway` 在 Tailscale 地址转发并为 Cookie 增加 Secure 属性（已移除旧版 `agentbox-container-ready.service`）。证书通过 DNS-01 自动续期，无需将应用公开到互联网。完整架构、留空凭据接入步骤及验收记录见 [2026-11 重构手册](../../../doc/agentbox/refactor-2026-11.md)，网关部署、访问规则及客户端 DNS 配置见[服务域名实施记录](../../../doc/domain-gateway/implementation.md)。
 
-原应用入口仍保留。域名 HTTPS 网关转发至该入口，并为上游 Cookie 增加 Secure 属性。证书通过 DNS-01 自动续期，无需将应用公开到互联网。部署、访问规则及客户端 DNS 配置见[服务域名实施记录](../../../doc/domain-gateway/implementation.md)。
+备份脚本 `backup.sh` 会在停机并以 `10000:10000` 递归对 `data/` 下全部 SQLite 数据库执行 WAL checkpoint 后归档 `compose.yaml`、`data`、`workspace` 与 `/srv/agentbox/ctyun/data`，自动排除日志、缓存、锁文件与 WAL/SHM 文件，最多保留 3 份。
 
 后续复查已验证可信 TLS、域名匹配、登录后的会话列表及 Gateway 运行状态，并将当前选中上游的 `providers.<selected>.api` 改为新 API 域名。使用现有出网配置读取模型列表成功，专属服务重载后运行配置仍使用新入口；模型选择、协议和凭据保持原样。检查必须以部署端选中的 provider 为准，不能照抄基础模板中的名称。
 

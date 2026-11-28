@@ -4,19 +4,15 @@ PerkRadar 常驻独立容器；青龙用 `*/15 * * * *` 全天触发一次完整
 
 ## 文件与部署
 
-- `compose.yaml`：以固定上游提交 `2688cc5c396b318c4b2b151b98c0153b8bc514e0` 加本目录补丁构建网页镜像；从相邻 `source/` 目录读取源码，数据保存在相邻 `data/`。只绑定回环地址，并接入青龙现有 Docker 网络。`feed-egress` 是仅供指定 RSS 使用的网络辅助容器，继续使用原基础镜像。
+- `compose.yaml`：以固定上游提交 `2688cc5c396b318c4b2b151b98c0153b8bc514e0` 加本目录补丁构建网页镜像；从相邻 `source/` 目录读取源码，数据保存在相邻 `data/`。只绑定回环地址 `127.0.0.1:38471`，并接入统一容器出网网络 `agentbox-egress`。
 - `patches/0001-board-read-deadline.patch`：将整批分页读取的总时限从 15 秒调整为 60 秒。保留页面关闭时取消、单次请求在途保护及原轮询间隔，不改变采集与通知逻辑。
 - `perkradar_notify.js`：采集、筛选、持久化去重和发送队列。
 - `perkradar_feishu.js`：使用专用飞书应用和接收人，也兼容青龙已有的共享通知配置。
 - `perkradar_notify.test.js`：去重、重试、部分失败和并发行为测试。
 
-私密 `.env` 放在实际部署目录，不加入版本控制，权限设为 `0600`，包含 `PERKRADAR_ACCESS_TOKEN`（至少 32 位随机字符）和 `PERKRADAR_NETWORK`（青龙现有 Docker 网络名）。构建阶段使用主机网络下载官方 npm 依赖，运行时仍使用独立容器网络。`DISABLE_SCHEDULER=1` 只关闭上游内置定时器，采集由青龙统一调度，避免两套定时器重复触发。
+私密 `.env` 放在实际部署目录，不加入版本控制，权限设为 `0600`，包含 `PERKRADAR_ACCESS_TOKEN`（至少 32 位随机字符）和 `PERKRADAR_NETWORK`（默认 `agentbox-egress`）。构建阶段使用主机网络下载官方 npm 依赖，运行时仍使用独立容器网络。`DISABLE_SCHEDULER=1` 只关闭上游内置定时器，采集由青龙统一调度，避免两套定时器重复触发。
 
-小众软件与异次元 RSS 使用已授权的现有代理出口。辅助容器复用采集器基础镜像，挂载已有 Mihomo 二进制和私密配置，不发布宿主端口。私密 `.env` 还需设置 `PERKRADAR_FEED_PROXY_URL`、`PERKRADAR_FEED_PROXY_PORT`、`PERKRADAR_PROXY_BINARY` 和 `PERKRADAR_PROXY_CONFIG`。真实地址、路径、端口与凭据只保存在部署端。
-
-辅助代理配置须启用认证，只允许 `www.appinn.com`、`www.iplaysoft.com`、`feed.iplaysoft.com` 走既有出口，末尾使用 `MATCH,REJECT`。配置文件只读挂载，并仅向容器运行用户开放读取；其余五个来源和内部健康请求通过 `NO_PROXY` 保持原有路径。替换上游代理凭据时同步更新这份私密配置。采集器使用 Node 22.21+ 的[原生环境代理支持](https://nodejs.org/download/release/v22.23.0/docs/api/cli.html#node_use_env_proxy1)，来源地址及采集实现保持上游版本。
-
-容器网络若要求使用宿主提供的出网中继，在辅助配置中通过 `dialer-proxy` 连接该既有中继，再连接已授权的上游节点。不要为此放宽主机转发规则；先分别验证容器能否连接中继和抓取指定 RSS。中继地址与上游节点配置同样只保存在私密文件中。
+2026-11 重构后已彻底移除独立的 `perkradar-feed-egress` 辅助代理容器及旧基础镜像 `perkradar:2688cc5`。采集器直接通过 Node 22.21+ 的[原生环境代理支持](https://nodejs.org/download/release/v22.23.0/docs/api/cli.html#node_use_env_proxy1)（`NODE_USE_ENV_PROXY=1` + `HTTP_PROXY`/`HTTPS_PROXY=http://172.18.0.1:7898`）复用宿主机统一主代理分流（国内直连、海外走代理），内部回环与容器间地址写入 `NO_PROXY`（注：`feed.iplaysoft.com` 命中 `GeoSite/CN -> DIRECT` 且源站走 Cloudflare，部分轮次在直连路径下可能偶发 5s 超时而降级为部分成功）。迁移或备份 `deals.db` 前务必先执行 SQLite `PRAGMA wal_checkpoint(TRUNCATE)`。详见 [2026-11 重构手册](../../../doc/agentbox/refactor-2026-11.md)。
 
 ```sh
 git -C source apply --check ../patches/0001-board-read-deadline.patch
@@ -25,9 +21,9 @@ docker compose build web
 docker compose up -d
 ```
 
-补丁只应用一次；已应用时先用 `git -C source apply --reverse --check ../patches/0001-board-read-deadline.patch` 核对，不要重复叠加。升级上游时重新核对分页实现和时限。已有部署只更新网页服务时使用 `docker compose up -d --no-deps web`，保留现有网络辅助容器。
+补丁只应用一次；已应用时先用 `git -C source apply --reverse --check ../patches/0001-board-read-deadline.patch` 核对，不要重复叠加。升级上游时重新核对分页实现和时限。已有部署仅重建网页服务时使用 `docker compose up -d --force-recreate web`。
 
-上线验收须分别核对两个 RSS 的有效内容、其他来源的绕行规则、辅助代理认证和拒绝规则，再检查青龙完整采集与去重推送；进程健康不能代替这些检查。
+上线验收须分别核对各来源的有效内容与代理/直连路由，再检查青龙完整采集与去重推送；进程健康不能代替这些检查。
 
 将两个运行脚本放入同一个青龙脚本目录。运行环境需要支持 `node:sqlite` 的 Node.js。青龙任务命令为 `task perkradar_notify.js`。私密配置示例：
 
@@ -73,6 +69,6 @@ node perkradar_notify.js --no-refresh
 
 `--dry-run` 只读取现有看板并报告可推送数量，不发送、不预占条目；`--no-refresh` 不重新采集，但会发送尚未推送的条目，不能当作只读命令。正常任务不带参数。实际验收需检查采集来源状态、飞书返回的消息 ID、第二次运行发送数量为零，以及青龙任务已启用；健康检查成功仅说明 API 和数据库可用。
 
-停用时先禁用青龙任务，再停止采集器与辅助容器；保留采集数据目录、私密配置和推送状态数据库。升级前备份这些数据及专用网络配置，并重新核对上游 API、分类和调度行为。只恢复采集库而丢失推送状态可能导致旧内容重新发送。
+停用时先禁用青龙任务，再停止 `perkradar` 容器；保留采集数据目录、私密配置和推送状态数据库。升级前备份这些数据及专用网络配置，并重新核对上游 API、分类和调度行为。只恢复采集库而丢失推送状态可能导致旧内容重新发送。
 
 上游：[PerkRadar](https://github.com/luobinger/PerkRadar)。飞书幂等字段参见[官方发送消息接口](https://open.feishu.cn/document/server-docs/im-v1/message/create)。

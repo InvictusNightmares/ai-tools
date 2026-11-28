@@ -1,0 +1,11 @@
+[Unit]
+Description=Run agentbox-ctyun keepalive health monitor every 5 minutes
+
+[Timer]
+OnBootSec=3min
+OnUnitInactiveSec=5min
+AccuracySec=30s
+Unit=agentbox-ctyun-monitor.service
+
+[Install]
+WantedBy=timers.target

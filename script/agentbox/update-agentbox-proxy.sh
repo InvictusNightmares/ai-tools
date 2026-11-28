@@ -30,7 +30,8 @@ if ! flock -n 9; then
   exit 0
 fi
 
-read -r enabled interval_minutes < <(node "$compiler" --bundle "$bundle" --settings)
+settings_output=$(node "$compiler" --bundle "$bundle" --settings)
+read -r enabled interval_minutes <<<"$settings_output"
 if [[ $enabled != 1 && $force -ne 1 ]]; then
   echo 'automatic profile refresh is disabled in the imported profile'
   exit 0
@@ -54,14 +55,19 @@ candidate_pid=''
 production_changed=0
 bootstrap_changed=0
 committed=0
+stop_candidate() {
+  if [[ -n $candidate_pid ]] && kill -0 "$candidate_pid" 2>/dev/null; then
+    pkill -TERM -P "$candidate_pid" 2>/dev/null || true
+    kill "$candidate_pid" 2>/dev/null || true
+    wait "$candidate_pid" 2>/dev/null || true
+  fi
+  candidate_pid=''
+}
 cleanup() {
   local rc=$?
   trap - EXIT
   set +e
-  if [[ -n $candidate_pid ]] && kill -0 "$candidate_pid" 2>/dev/null; then
-    kill "$candidate_pid" 2>/dev/null || true
-    wait "$candidate_pid" 2>/dev/null || true
-  fi
+  stop_candidate
   if [[ $committed -ne 1 ]]; then
     # Restore both files before restarting either service. A failed restart or
     # unexpected error after the first replacement must also trigger rollback.
@@ -157,9 +163,7 @@ fi
 if [[ -e $bundle/agentbox-policy.yaml ]]; then
   python3 /usr/local/libexec/agentbox-check-dns.py 127.0.0.1 1053
 fi
-kill "$candidate_pid" 2>/dev/null || true
-wait "$candidate_pid" 2>/dev/null || true
-candidate_pid=''
+stop_candidate
 
 check_proxy() {
   local service=$1 port=$2

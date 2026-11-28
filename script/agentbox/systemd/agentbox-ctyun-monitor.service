@@ -1,0 +1,11 @@
+[Unit]
+Description=Check agentbox-ctyun keepalive health and alert via Feishu on failure
+After=docker.service mihomo.service
+Wants=docker.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=/srv/agentbox/secrets/ctyun-monitor.env
+ExecStart=/usr/bin/python3 /usr/local/libexec/agentbox-ctyun-monitor.py
+UMask=0077
+TimeoutStartSec=60s

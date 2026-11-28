@@ -1,7 +1,7 @@
 name: agentbox-hermes
 services:
   hermes:
-    image: nousresearch/hermes-agent:v2026.8.31@sha256:87af7c6a5ee383834f75eb9a3fb509ccaacbab5d54084b086b48b84917e28efc
+    image: nousresearch/hermes-agent:v0.23.5@sha256:bc79a80fc9cb97521f4380c5d5b2ad88e2469e50fc1d5027339bbb42cc206854
     platform: linux/amd64
     container_name: agentbox-hermes
     pull_policy: never
@@ -28,15 +28,16 @@ services:
       - ./data:/opt/data
       - ./workspace:/workspace
     networks: [agentbox-egress, agentbox-browser]
-    # Publish only on CTYun's Tailscale address; existing firewall admits tailscale0.
+    dns: [172.18.0.1]
+    # Publish only on loopback; fronted by private-domain-gateway on Tailscale.
     ports:
-      - '100.121.133.84:9119:9119'
+      - '127.0.0.1:9119:9119'
     healthcheck:
       test:
         - CMD
         - /opt/hermes/.venv/bin/python
         - -c
-        - "from gateway.status import get_running_pid; raise SystemExit(0 if get_running_pid() else 1)"
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:9119/api/status', timeout=5)"
       interval: 60s
       timeout: 15s
       start_period: 120s
