@@ -103,7 +103,10 @@ class MergeTests(Fixture):
         self.base["proxies"][1].update(type="hysteria2", sni="certificate.example.invalid")
         settings = replace(self.settings, node_options={
             "BASE-SS-01": {"packet-encoding": "xudp"},
-            "BASE-SS-02": {"ports": "20000-30000", "hop-interval": 30, "up": "50 Mbps", "down": "35 Mbps"},
+            "BASE-SS-02": {
+                "ports": "20000-30000", "hop-interval": 30, "up": "50 Mbps", "down": "35 Mbps",
+                "obfs": "salamander", "obfs-password": "synthetic-obfs-password",
+            },
         })
         merged = subject.merge(self.base, self.extra, settings)
         self.assertEqual(merged["proxies"][0]["packet-encoding"], "xudp")
@@ -111,9 +114,14 @@ class MergeTests(Fixture):
         self.assertEqual(merged["proxies"][1]["hop-interval"], 30)
         self.assertEqual(merged["proxies"][1]["up"], "50 Mbps")
         self.assertEqual(merged["proxies"][1]["down"], "35 Mbps")
+        self.assertEqual(merged["proxies"][1]["obfs"], "salamander")
+        self.assertEqual(merged["proxies"][1]["obfs-password"], "synthetic-obfs-password")
         bad_type = replace(self.settings, node_options={"BASE-SS-03": {"ports": "20000-30000"}})
         with self.assertRaisesRegex(subject.Failure, "hysteria2"):
             subject.merge(self.base, self.extra, bad_type)
+        bad_obfs = self.config(node_options={"BASE-SS-02": {"obfs": "salamander"}})
+        with self.assertRaisesRegex(subject.Failure, "obfs"):
+            subject.Settings.load(bad_obfs)
 
     def test_address_migration_rejects_missing_node_changed_source_or_implicit_sni(self):
         cases = [

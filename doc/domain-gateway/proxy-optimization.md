@@ -76,7 +76,8 @@ flowchart LR
     - **排查修复**：初始配置将云内网递归 DNS 直接写入 `dns.servers` 时，因内网 DNS 落在 `geoip:private` 范围而被 Xray 自身路由规则拦截导致首包超时约 9 秒；改为 `"servers": ["localhost"]`（走系统宿主机内网解析器并绕开 Xray 自身路由）并保留 `queryStrategy: "UseIPv4"` 后彻底消除超时，同时保留毫秒级本地解析。
   - **官方 `hysteria` v2 容器**：采用 `network_mode: host` 直绑标准 UDP 入口，复用既有域名证书与认证凭据，使用本地静态页伪装；配置大 QUIC 接收窗口（单流 8 MB / 连接 20 MB）、开启 PMTUD（`disablePathMTUDiscovery: false`），并结合实测的持续出口带宽上限将服务端 `bandwidth` 精准设为匹配值（`ignoreClientBandwidth: false`），使服务端中转自动协商 BBR、直连客户端按需协商 Brutal；ACL 显式拦截私网与 SMTP 25 端口。
 - **UDP 端口跳跃**：新增持久化 systemd 单元在宿主机 `nat PREROUTING` 将 `<UDP_HOP_RANGE>` 重定向至标准 UDP 入口，配合云安全组入方向放行已完成随机跳跃端口端到端实测验证。
-- **静态订阅传输参数注入**：在[静态订阅生成器](../../script/clash/static-subscription/generate.py)中新增白名单校验字段 `node_options`，在主用户静态总订阅中为落地 Hysteria2 节点注入 `ports`、`hop-interval` 及贴合实测上限的 Brutal 带宽参数，并为 VLESS 节点启用 `packet-encoding: xudp`（不触碰任何凭据或保留用户订阅）。
+- **静态订阅传输参数注入**：在[静态订阅生成器](../../script/clash/static-subscription/generate.py)中新增白名单校验字段 `node_options`，在主用户静态总订阅中为落地 Hysteria2 节点注入 `ports`、`hop-interval`、贴合实测上限的 Brutal 带宽参数与 `obfs`/`obfs-password`（Salamander 混淆），并为 VLESS 节点启用 `packet-encoding: xudp`（不触碰任何凭据或保留用户订阅）。
+- **Hysteria2 Salamander 混淆**：针对 QUIC 明文 SNI 触发中间设备伪造回包导致握手超时的问题，为公网主机 A 入站（`finalmask.udp`）、公网主机 B 落地（`obfs.salamander`）以及主机 A 指向主机 B 的中转出站均启用各自独立的 Salamander 混淆密码（仅存私有配置），并同步更新静态订阅与原始订阅输出，实现全链路零伪造包干扰。
 - **网关与证书热载衔接**：
   - 公网主机 B 网关同样添加 `worker_shutdown_timeout 60s` 与 `worker_connections 4096`，移除回环双跳，将默认流量直接通过 `unix:<UNIX_SOCKET_PATH>` 送往 `xray-core`；保留独立静态站点配置不变。
   - 原面板域名去除面板反代（根路径返回 404），仅在原随机路径下托管只读静态原始订阅与 Clash 订阅文件，并移除公网旧面板/订阅端口。
@@ -92,7 +93,7 @@ flowchart LR
 - **调整 `Auto` 为稳定优先的 `fallback` 策略**：
   - 因 Mihomo `include-all-proxies` 按名称字母序排序，在 [dmit-rules.yaml](../../config/clash/dmit-rules.yaml) 中引入两个隐藏筛选辅助组（`Auto-Vless`、`Auto-Hysteria2`）供 `Auto`（`type: fallback`、`interval: 180`、`lazy: true`）按顺序编排，实现日常优先走更稳定的 VLESS、故障时自动切换 Hysteria2，且继续只对外展示单一 `PROXY` 选择组并兼容仅含双节点的保留订阅（规则改动需推送至远程仓库默认分支后由面板在线规则拉取生效）。
 - **精简客户端 DNS 配置**：
-  - 更新 [dmit-client.yaml](../../config/clash/dmit-client.yaml)：移除 `direct-nameserver` 中易劫持/偏慢的上游并仅保留两家国内 DNS，移除 `default-nameserver` 慢节点与 `nameserver` 第三家冗余 DoH，补充 `nameserver-policy`（国内与私网域名直连解析）以及 macOS NTP、WebRTC STUN 等常见 `fake-ip-filter` 条目。
+  - 更新 [dmit-client.yaml](../../config/clash/dmit-client.yaml)：移除 `direct-nameserver` 中易劫持/偏慢的上游并统一为两家国内 DoH，移除 `default-nameserver` 慢节点与 `nameserver` 第三家冗余 DoH，补充 `nameserver-policy`（国内与私网域名走国内 DoH）以及 macOS NTP、WebRTC STUN 等常见 `fake-ip-filter` 条目。
 - 触发静态订阅生成器发布新版本，确认主用户唯一总订阅保持 7 个节点（含两台主机直连节点、服务端中转节点与两个既有附加外部节点），保留用户原生 Clash 订阅仍仅含公网主机 A 的 2 个节点且凭据与额度未变。
 
 ## 验证结果与关键数据
@@ -107,11 +108,11 @@ flowchart LR
 | 5 条自有节点端到端连通与出口 | — | 全部通过独立客户端隔离测试，出口地域与 TLS 1.3 均符合预期 |
 | 吞吐实测（20 MB 单流下载） | 中转与 UDP 受 208 KB 缓冲压制 | 主机 A 直连 200–314 Mbps；经主机 A 中转至主机 B 跑出 **~99% 主机 B 出口带宽上限**；修复 `localhost` DNS 后直连 TCP 首包与吞吐恢复正常 |
 | 离线回归测试 | — | 静态订阅单测 47 项通过（含 `node_options` 与未变更跳过重载）；Clash 离线路由回归 12 项通过 |
-| 端口跳跃端到端实测 | 单端口 UDP 易受限速 | 随机跳跃端口连通与 Brutal 20 MB 单流下载通过，跑满主机 B 持续出口上限 |
+| 端口跳跃与 Salamander 混淆实测 | 单端口 UDP 易受限速；明文 QUIC SNI 触发伪造回包超时 | 主机 A/B 直连与中转三条链路均 100% 连通，伪造包命中 **0 次**；随机跳跃端口跑满主机 B 持续出口上限 |
 
 ## 运维与回滚要点
 
-- 两台主机的变更前备份均保存在各自受控目录 `<BACKUP_DIR>`（权限 `0700`），公网主机 B 的原面板数据库与配置保留在磁盘冷备。确认稳定运行一段时间后再按需清理备份文件。
+- 两台主机完成端到端验收后，已停用冗余宿主机守护进程并清理本轮优化产生的临时备份与旧版未使用镜像，同时完整保留证书、ACME 续期状态、现网凭据与公网主机 B 的旧数据库冷备。
 - 静态订阅生成器测试命令：
 
 ```sh

@@ -130,7 +130,7 @@ class Settings:
                     "server override requires a hostname or IP without URL or port")
         node_options = data.get("node_options", {})
         require(isinstance(node_options, dict), "node_options must be a name mapping")
-        allowed_node_opts = {"ports", "hop-interval", "up", "down", "packet-encoding"}
+        allowed_node_opts = {"ports", "hop-interval", "up", "down", "packet-encoding", "obfs", "obfs-password"}
         for name, opts in node_options.items():
             require(isinstance(name, str) and bool(name.strip()), "node_options node name is invalid")
             require(isinstance(opts, dict) and bool(opts) and set(opts) <= allowed_node_opts,
@@ -147,6 +147,12 @@ class Settings:
             if "packet-encoding" in opts:
                 require(opts["packet-encoding"] in ("xudp", "packetaddr"),
                         "node_options packet-encoding is invalid")
+            if "obfs" in opts or "obfs-password" in opts:
+                require(opts.get("obfs") == "salamander"
+                        and isinstance(opts.get("obfs-password"), str)
+                        and bool(opts["obfs-password"])
+                        and not any(ch.isspace() for ch in opts["obfs-password"]),
+                        "node_options obfs requires salamander and a non-whitespace obfs-password")
         data["output_dir"] = absolute_path(data["output_dir"], "output_dir")
         outside_repository(data["output_dir"])
         for key in ("required_base_nodes", "protected_groups"):
@@ -313,7 +319,7 @@ def merge(base, extra, settings):
     for name, opts in settings.node_options.items():
         require(name in merged_nodes, "node_options target is missing")
         node = merged_nodes[name]
-        if set(opts) & {"ports", "hop-interval", "up", "down"}:
+        if set(opts) & {"ports", "hop-interval", "up", "down", "obfs", "obfs-password"}:
             require(node.get("type") in ("hysteria2", "hy2"),
                     "hysteria2 transport options require a hysteria2 node")
         if "packet-encoding" in opts:
