@@ -110,11 +110,17 @@ rules:
   - GEOSITE,steam@cn,DIRECT
   - GEOSITE,CN,DIRECT
 
+  # 拦截常见海外站点的 QUIC（UDP/443），让浏览器即时回落 HTTP/2，避免 QUIC-over-TCP 双重拥塞；国内 QUIC 仍放行。
+  - AND,((NETWORK,UDP),(DST-PORT,443),(GEOSITE,geolocation-!cn)),REJECT
+
   # 常见海外域名直接走代理，跳过下方 GEOIP,CN 的本地 DNS 查询，交由远端节点解析。
   - GEOSITE,geolocation-!cn,PROXY
 
   # 未命中域名规则的请求按目标 IP 判断，国内 IP 仍然直连。
   - GEOIP,CN,DIRECT
+
+  # 拦截剩余未归类海外流量的 QUIC（UDP/443），已在上一步放行所有国内 IP 的 QUIC。
+  - AND,((NETWORK,UDP),(DST-PORT,443)),REJECT
 
   # 其余流量全部走自动切换/选择组。
   - MATCH,PROXY

@@ -96,18 +96,35 @@ flowchart LR
   - 更新 [dmit-client.yaml](../../config/clash/dmit-client.yaml)：移除 `direct-nameserver` 中易劫持/偏慢的上游并统一为两家国内 DoH，移除 `default-nameserver` 慢节点与 `nameserver` 第三家冗余 DoH，补充 `nameserver-policy`（国内与私网域名走国内 DoH）以及 macOS NTP、WebRTC STUN 等常见 `fake-ip-filter` 条目。
 - 触发静态订阅生成器发布新版本，确认主用户唯一总订阅保持 7 个节点（含两台主机直连节点、服务端中转节点与两个既有附加外部节点），保留用户原生 Clash 订阅仍仅含公网主机 A 的 2 个节点且凭据与额度未变。
 
+### 5. 二轮深度审计与收口优化
+
+基于对两台主机现网、Clash 规则与本机客户端的二次深度复盘，继续落了以下高价值收口项：
+
+- **公网主机 A（入口 / 面板 / API 网关）**：
+  - **收口非标公网中转端口**：为中转 VLESS 入站配置独立的非 Apple Reality 目标并启用 `acceptProxyProtocol = true`，在网关 `stream` SNI 映射中经标准 HTTPS 端口转发，同时通过 `externalProxy` 保持原节点名与标准 HTTPS 入口端口不变；随后移除容器非标端口映射与防火墙放行，公网 TCP 彻底收口为标准管理/HTTP/HTTPS。
+  - **Xray 内核 DNS 与 QUIC 深调**：在模板中补齐进程内 `"dns"` 缓存（`UseIPv4` + `serveStale`），移除未使用的冗余出站与容器内冗余 `crond`；为 Hysteria2 入站与中转出站统一配置完整大窗口 `quicParams`（8 MB / 20 MB、`keepAlivePeriod: 15`、`maxIdleTimeout: 60`、`disablePathMTUDiscovery: false`）并启用 `enableSessionResumption: true`，消除中转长连接 ~32 秒空闲断链。
+  - **网关与宿主机收尾**：TLS vhost 启用 `http2 on;`，为 API 后端配置 `upstream keepalive` 连接池并修正 `Connection` 头默认映射，关闭全局扫描访问日志；限制 `systemd-journald` 体积（磁盘由 ~282 MiB 压降至 32 MiB）、调高 `tcp_max_tw_buckets`、补齐 `/etc/docker/daemon.json`（`nofile=65535`、`local` 日志驱动）、删除 API 栈冗余默认网桥、证书热载 timer 放宽至 6 小时。
+- **公网主机 B（落地）**：
+  - **全容器 `network_mode: host`**：将网关与 `xray-core` 容器一并切至 `host` 网络（移除网关失效的容器桥接 `resolver` 并删除旧网桥），彻底省去 `docker-proxy` 与桥接 NAT；网关站点开启 `http2 on;`。
+  - **缓存 DNS 与 Brutal 限速贴合**：`xray-core` 切至 `tcp+local://<CLOUD_DNS>:53`（兼顾 0 ms 云内网解析、进程内缓存与 `serveStale`，原生绕过 `geoip:private`）；将 Hysteria2 服务端上行上限与客户端下行参数由 `35 Mbps` 下调至 `28 Mbps`，避开 30 Mbps 硬限速墙造成的限速器丢包震荡；同步独立静态订阅文件并持久化网卡 `fq flow_limit 1000` 与 6 小时证书热载 timer。
+- **Clash 规则与本机客户端模板沉淀**：
+  - 在 [dmit-rules.yaml](../../config/clash/dmit-rules.yaml) 中通过两条分段 `AND,((NETWORK,UDP),(DST-PORT,443),...),REJECT` 规则精准拦截海外 QUIC（使浏览器即时回落 HTTP/2、避免经 TCP 节点跑 QUIC-over-TCP 双重拥塞），同时保留 `GEOSITE,CN` 与 `GEOIP,CN` 国内 QUIC，并在 [test-dmit-routing.rb](../../script/clash/test-dmit-routing.rb) 中固化位置断言。
+  - 在 [dmit-client.yaml](../../config/clash/dmit-client.yaml) 中补充 `tcp-concurrent`、`keep-alive-idle/interval`、`geo-auto-update` 及通用 `fake-ip-filter` 对应的 `nameserver-policy`（消除 NTP/STUN/连通性检测域名绕走海外 DoH 的百毫秒级延迟）。
+  - 新增两份面向 Clash Verge Rev 2.5.5+ 的脱敏多机参考模板：[clash-verge-global-merge.yaml](../../config/clash/clash-verge-global-merge.yaml) 与 [clash-verge-dns-override.yaml](../../config/clash/clash-verge-dns-override.yaml)，并在 [dmit-setup.md](../../config/clash/dmit-setup.md) 中补充 TUN `stack: mixed` 与 `dns-hijack`（`any:53` + `tcp://any:53`）说明。
+- **刻意保留的边界**：入口端 Xray 保持 `sniffing.routeOnly = false`（兼顾保留用户防本地 DNS 污染及中转至主机 B 的就近 CDN 解析）；API 域名在现用域名阶段维持走代理以规避直连 SNI 干扰。
+
 ## 验证结果与关键数据
 
 | 验证项 | 改造前 | 改造后实测结果 |
 | --- | --- | --- |
 | 公网主机 A UDP 缓冲丢包 (`UdpRcvbufErrors`) | 累计 52,038 次丢包（208 KB 缓冲） | 20 MB 连续压测后新增 **0 次**（16 MB 缓冲） |
 | 公网主机 A 网关 worker 与内存 | 12 个僵持 worker / >135 MiB，曾 OOM | **1 个活跃 worker / ~5–9 MiB** |
-| 公网主机 A 容器内存与端口 | 面板 174 MiB、暴露 3 个旧管理/订阅端口 | 面板 ~67 MiB，公网仅留标准管理/HTTP/HTTPS/中转口 |
-| 公网主机 B 容器 `ulimit -n` 与可用内存 | `ulimit -n = 1024`，可用内存 431 MiB | `ulimit -n = 65535`，可用内存 **~586 MiB**（代理双容器合计 ~25 MiB） |
-| 公网主机 B 端口与证书自动热载 | 公网暴露旧面板/订阅口 | 公网 TCP 仅留标准管理/HTTP/HTTPS；强制热载演练返回 `reloaded` |
-| 5 条自有节点端到端连通与出口 | — | 全部通过独立客户端隔离测试，出口地域与 TLS 1.3 均符合预期 |
-| 吞吐实测（20 MB 单流下载） | 中转与 UDP 受 208 KB 缓冲压制 | 主机 A 直连 200–314 Mbps；经主机 A 中转至主机 B 跑出 **~99% 主机 B 出口带宽上限**；修复 `localhost` DNS 后直连 TCP 首包与吞吐恢复正常 |
-| 离线回归测试 | — | 静态订阅单测 47 项通过（含 `node_options` 与未变更跳过重载）；Clash 离线路由回归 12 项通过 |
+| 公网主机 A 容器内存、日志与端口 | 面板 174 MiB、日志 282 MiB、暴露 4 个旧/非标端口 | 公网 TCP 仅留标准管理/HTTP/HTTPS（中转复用标准 HTTPS SNI 分流），`journald` 压至 **32 MiB** |
+| 公网主机 B 网络模式与内存 | 桥接 + 2 个 `docker-proxy`，`ulimit -n = 1024` | 3 个容器全员 `network_mode: host`（0 个 `docker-proxy`），`ulimit -n = 65535`，`tcp+local` 缓存 DNS 零报错 |
+| 公网主机 B 端口与证书自动热载 | 公网暴露旧面板/订阅口 | 公网 TCP 仅留标准管理/HTTP/HTTPS（开启 HTTP/2）；强制热载演练返回 `reloaded` |
+| 5 条自有节点端到端连通与出口 | — | 全部 5 条（含复用标准 HTTPS 的中转节点与 `tcp+local` 落地节点）实测 0 报错通过，出口与 HTTP/2 均符合预期 |
+| 吞吐实测（20 MB 单流下载） | 中转与 UDP 受 208 KB 缓冲压制 | 主机 A 直连 200–314 Mbps；经主机 A 中转至主机 B 跑出 **~99% 主机 B 出口带宽上限**；直连 Hysteria2 限速贴合至 `28 Mbps` 避免撞限速器 |
+| 离线回归测试 | — | 静态订阅单测 47 项通过（含 `node_options`、`obfs` 与未变更跳过重载）；Clash 离线路由回归 12 项通过（含双段海外 QUIC 拦截断言） |
 | 端口跳跃与 Salamander 混淆实测 | 单端口 UDP 易受限速；明文 QUIC SNI 触发伪造回包超时 | 主机 A/B 直连与中转三条链路均 100% 连通，伪造包命中 **0 次**；随机跳跃端口跑满主机 B 持续出口上限 |
 
 ## 运维与回滚要点

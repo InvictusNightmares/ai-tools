@@ -1,0 +1,16 @@
+# Clash Verge Rev 2.5.5+ 全局扩展配置（profiles/Merge.yaml）。
+# 仅保留非 DNS 的通用性能与缓存参数；DNS 项放在应用内「DNS 覆写」页（见 clash-verge-dns-override.yaml）。
+# TUN 协议栈（mixed）与 dns-hijack（any:53 + tcp://any:53）在应用「TUN 设置」页配置。
+
+tcp-concurrent: true
+keep-alive-idle: 15
+keep-alive-interval: 15
+geo-auto-update: true
+geo-update-interval: 168
+
+profile:
+  store-selected: true
+  store-fake-ip: true
+
+dns:
+  use-system-hosts: false

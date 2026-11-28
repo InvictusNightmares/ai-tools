@@ -1,0 +1,75 @@
+# Clash Verge Rev 2.5.5+ 应用内「DNS 覆写」页 YAML 参考模板（dns_config.yaml）。
+# 仅包含通用配置；私有公司/内网/自建域名请在本机「DNS 覆写」页单独追加到 fake-ip-filter 与 nameserver-policy，
+# 不要提交到公开仓库。
+
+dns:
+  enable: true
+  ipv6: false
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter-mode: blacklist
+  prefer-h3: false
+  respect-rules: true
+  use-hosts: false
+  use-system-hosts: false
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  nameserver:
+    - https://1.1.1.1/dns-query
+    - https://8.8.8.8/dns-query
+  direct-nameserver:
+    - https://223.5.5.5/dns-query
+    - https://doh.pub/dns-query
+  direct-nameserver-follow-policy: true
+  proxy-server-nameserver:
+    - https://223.5.5.5/dns-query
+    - https://doh.pub/dns-query
+  fake-ip-filter:
+    - '*.lan'
+    - '*.local'
+    - '*.arpa'
+    - 'time.*.com'
+    - 'time.*.apple.com'
+    - 'ntp.*.com'
+    - '+.stun.*.*'
+    - '+.stun.*.*.*'
+    - localhost.ptlogin2.qq.com
+    - localhost.sec.qq.com
+    - '*.msftncsi.com'
+    - www.msftconnecttest.com
+    # 本机按需追加私有内网/公司/自建服务域名，不要提交到公开仓库。
+  nameserver-policy:
+    'geosite:cn,private':
+      - https://223.5.5.5/dns-query
+      - https://doh.pub/dns-query
+    'time.*.com':
+      - https://223.5.5.5/dns-query
+      - https://doh.pub/dns-query
+    'time.*.apple.com':
+      - https://223.5.5.5/dns-query
+      - https://doh.pub/dns-query
+    'ntp.*.com':
+      - https://223.5.5.5/dns-query
+      - https://doh.pub/dns-query
+    '+.stun.*.*':
+      - https://223.5.5.5/dns-query
+      - https://doh.pub/dns-query
+    '+.stun.*.*.*':
+      - https://223.5.5.5/dns-query
+      - https://doh.pub/dns-query
+    '*.msftncsi.com':
+      - https://223.5.5.5/dns-query
+      - https://doh.pub/dns-query
+    www.msftconnecttest.com:
+      - https://223.5.5.5/dns-query
+      - https://doh.pub/dns-query
+    localhost.ptlogin2.qq.com:
+      - https://223.5.5.5/dns-query
+      - https://doh.pub/dns-query
+    localhost.sec.qq.com:
+      - https://223.5.5.5/dns-query
+      - https://doh.pub/dns-query
+    # 本机按需追加私有域名解析策略（内网专属跳板机可指向 system，公网国内域名可指向上述国内 DoH）。
+  fallback: []
+hosts: {}

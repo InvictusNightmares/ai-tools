@@ -65,6 +65,31 @@ https://raw.githubusercontent.com/InvictusNightmares/ai-tools/main/config/clash/
 
 ## 每台电脑只做一次的配置
 
+### 通用客户端基础参数（适用 2.5.5+ 开启 DNS 覆写）
+
+1. **导入订阅**：导入并选中统一 Clash/Mihomo 订阅，建议将自动更新间隔设为 `720` 分钟（12 小时），并关闭不用的旧订阅自动更新。
+2. **全局扩展配置（`profiles/Merge.yaml`）**：直接复制 [clash-verge-global-merge.yaml](clash-verge-global-merge.yaml) 的内容（不要在 2.5.5+ 开启 DNS 覆写时把 `dns:` 整段贴进 Merge）：
+
+```yaml
+tcp-concurrent: true
+keep-alive-idle: 15
+keep-alive-interval: 15
+geo-auto-update: true
+geo-update-interval: 168
+
+profile:
+  store-selected: true
+  store-fake-ip: true
+
+dns:
+  use-system-hosts: false
+```
+
+3. **设置 → Clash 设置**：选择“规则”模式、关闭全局 IPv6；在 **TUN 设置** 中启用 TUN 时，将协议栈设为 `mixed`（macOS 原生内核 TCP + gVisor UDP，若遇兼容问题可改 `mips`），`dns-hijack` 同时包含 `any:53` 与 `tcp://any:53`；按本机需要填写私有内网 `route-exclude-address`（不写进仓库）。
+4. **DNS 覆写页**：切到 YAML 编辑模式，参照 [clash-verge-dns-override.yaml](clash-verge-dns-override.yaml) 填入通用 DNS 配置，再按本机需要在应用 DNS 页追加私有/公司内网 `fake-ip-filter` 与对应的 `nameserver-policy`（不提交到公开仓库）。
+
+### 2.5.2 关闭 DNS 覆写的旧模式
+
 以 Clash Verge Rev 2.5.2 为例：
 
 1. 导入并选中 3x-ui 的 Clash/Mihomo 订阅。

@@ -114,9 +114,13 @@ begin
   check(rules.include?('RULE-SET,johnshall-shadowrocket-ad-domain,REJECT'), 'ad domain provider rule must exist')
   check(rules.include?('RULE-SET,johnshall-shadowrocket-ad-ip,REJECT,no-resolve'), 'ad ipcidr provider rule must carry no-resolve')
   cn_idx = rules.index('GEOSITE,CN,DIRECT')
+  non_cn_quic_idx = rules.index('AND,((NETWORK,UDP),(DST-PORT,443),(GEOSITE,geolocation-!cn)),REJECT')
   non_cn_idx = rules.index('GEOSITE,geolocation-!cn,PROXY')
   geoip_cn_idx = rules.index('GEOIP,CN,DIRECT')
-  check(cn_idx && non_cn_idx && geoip_cn_idx && cn_idx < non_cn_idx && non_cn_idx < geoip_cn_idx, 'GEOSITE,geolocation-!cn,PROXY must appear after GEOSITE,CN,DIRECT and before GEOIP,CN,DIRECT')
+  fallback_quic_idx = rules.index('AND,((NETWORK,UDP),(DST-PORT,443)),REJECT')
+  match_idx = rules.index('MATCH,PROXY')
+  check(cn_idx && non_cn_quic_idx && non_cn_idx && geoip_cn_idx && fallback_quic_idx && match_idx, 'missing expected CN/non-CN/QUIC/MATCH rules')
+  check(cn_idx < non_cn_quic_idx && non_cn_quic_idx < non_cn_idx && non_cn_idx < geoip_cn_idx && geoip_cn_idx < fallback_quic_idx && fallback_quic_idx < match_idx, 'overseas UDP/443 REJECT rules must bracket geolocation-!cn and GEOIP,CN without blocking domestic QUIC')
 
   scenarios = {
     'legacy nodes' => [%w[Vless Hysteria2 unrelated-node Hysteria2-copy Vless-copy], %w[Vless Hysteria2], %w[Auto Hysteria2 Vless]],

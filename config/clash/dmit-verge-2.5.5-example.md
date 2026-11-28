@@ -10,9 +10,10 @@
 
 正确结构：
 
-- DNS 值 → 应用 DNS 覆写页（本机设置）
-- Merge → 只保留 `mode`、`ipv6`、`profile` 等非 DNS 字段
-- `dmit-client.yaml` → 仅用于关闭 DNS 覆写的 2.5.2 模式，不要整份贴进 2.5.5+ 的 Merge
+- DNS 值 → 应用 DNS 覆写页（本机设置，参照 [dmit-client.yaml](dmit-client.yaml) 中的 `dns:` 字段，并在此页追加本机私有内网域名与对应 `nameserver-policy`）
+- TUN 设置 → 应用 TUN 设置页（`stack: mixed`、`dns-hijack: ['any:53', 'tcp://any:53']`，私有 `route-exclude-address` 仅存本机）
+- 全局 Merge（`Merge.yaml`）→ 只保留 `tcp-concurrent`、`keep-alive-idle`、`keep-alive-interval`、`geo-auto-update`、`geo-update-interval`、`profile.store-selected`、`profile.store-fake-ip` 等非 DNS 字段
+- `dmit-client.yaml` → 仅用于关闭 DNS 覆写的 2.5.2 模式（或作为 2.5.5+ 应用 DNS 页的字段对照参考），不要整份贴进 2.5.5+ 的 Merge
 
 下面是原 Merge 的**脱敏对照**，不是 2.5.5 中要再次粘贴的配置。两个内网地址和跳板机域名使用不能直接应用的占位符；其余 8 条过滤项与截图保持一致。填写界面时必须从原配置复制实际值，不要复制占位符，也不要把本机内网地址或公司域名提交到公开仓库。
 
