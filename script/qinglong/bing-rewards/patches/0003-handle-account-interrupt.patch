@@ -1,0 +1,161 @@
+diff --git a/src/browser/auth/Login.ts b/src/browser/auth/Login.ts
+index 7eacaf0..dbd0ac0 100644
+--- a/src/browser/auth/Login.ts
++++ b/src/browser/auth/Login.ts
+@@ -800,6 +800,124 @@ export class Login {
+                 this.bot.logger.debug(this.bot.isMobile, 'LOGIN', 'Login redirect is still in progress, waiting')
+                 return true
+ 
++            case 'ACCOUNT_INTERRUPT': {
++                const rawUrl = detectedUrl
++                const url = new URL(rawUrl)
++                const inspect = await page
++                    .evaluate(() => {
++                        const isVisible = (el: HTMLElement) => {
++                            const st = getComputedStyle(el)
++                            return (
++                                st.visibility !== 'hidden' &&
++                                st.display !== 'none' &&
++                                el.getClientRects().length > 0
++                            )
++                        }
++                        const headings = Array.from(document.querySelectorAll<HTMLElement>('h1, h2, [role="heading"]'))
++                            .filter(isVisible)
++                            .map(el => (el.innerText || '').replace(/\s+/g, ' ').trim())
++                            .filter(Boolean)
++                            .slice(0, 4)
++                        const actions = Array.from(
++                            document.querySelectorAll<HTMLElement>(
++                                'button, a, input[type="button"], input[type="submit"], [role="button"]'
++                            )
++                        )
++                            .filter(isVisible)
++                            .map((el, idx) => ({
++                                idx,
++                                id: el.id || '',
++                                testId: el.getAttribute('data-testid') || '',
++                                text: ((el as HTMLInputElement).value || el.innerText || el.getAttribute('aria-label') || '')
++                                    .replace(/\s+/g, ' ')
++                                    .trim()
++                            }))
++                            .filter(a => a.text || a.id || a.testId)
++                            .slice(0, 12)
++                        return { headings, actions }
++                    })
++                    .catch(() => ({
++                        headings: [] as string[],
++                        actions: [] as Array<{ idx: number; id: string; testId: string; text: string }>
++                    }))
++
++                if (!this.capturedUnknownUrls.has(rawUrl)) {
++                    this.capturedUnknownUrls.add(rawUrl)
++                    const summary = inspect.actions
++                        .map(a => `${a.text || '(no-text)'}${a.id ? `#${a.id}` : ''}${a.testId ? `[${a.testId}]` : ''}`)
++                        .join(' | ')
++                    this.bot.logger.info(
++                        this.bot.isMobile,
++                        'LOGIN',
++                        `Account interrupt at ${url.hostname}${url.pathname} | heading="${inspect.headings.join(' / ')}" | actions="${summary}"`
++                    )
++                }
++
++                const safeSelectors = [
++                    '#iCancel',
++                    '#iSkip',
++                    '#iLooksGood',
++                    '#idBtn_Back',
++                    'button[data-testid="secondaryButton"]'
++                ]
++                for (const sel of safeSelectors) {
++                    if (await this.tryClick(page, sel, `account interrupt (${sel})`, 1200)) {
++                        return true
++                    }
++                }
++
++                const skipRe =
++                    /^(skip(\s+for\s+now)?|not\s+now|no\s+thanks|cancel|looks\s+good|maybe\s+later|dismiss|close|暂不(设置|需要)?|暂时跳过|跳过(此步骤)?|以后再说|下次再说|不，?谢谢|取消|没问题|保持不变|关闭)$/i
++                const matched = inspect.actions.find(a => skipRe.test(a.text))
++                if (matched) {
++                    const clicked = await page
++                        .evaluate(targetText => {
++                            const isVisible = (el: HTMLElement) => {
++                                const st = getComputedStyle(el)
++                                return (
++                                    st.visibility !== 'hidden' &&
++                                    st.display !== 'none' &&
++                                    el.getClientRects().length > 0
++                                )
++                            }
++                            const nodes = Array.from(
++                                document.querySelectorAll<HTMLElement>(
++                                    'button, a, input[type="button"], input[type="submit"], [role="button"]'
++                                )
++                            ).filter(isVisible)
++                            const el = nodes.find(
++                                n =>
++                                    ((n as HTMLInputElement).value || n.innerText || n.getAttribute('aria-label') || '')
++                                        .replace(/\s+/g, ' ')
++                                        .trim() === targetText
++                            )
++                            if (!el) return false
++                            el.click()
++                            return true
++                        }, matched.text)
++                        .catch(() => false)
++                    if (clicked) {
++                        await this.waitForIdle(page, 'after account interrupt text dismiss')
++                        this.bot.logger.info(
++                            this.bot.isMobile,
++                            'LOGIN',
++                            `Dismissed account interrupt via "${matched.text}"`
++                        )
++                        return true
++                    }
++                }
++
++                if (inspect.actions.length === 0) {
++                    return true
++                }
++                this.bot.logger.warn(
++                    this.bot.isMobile,
++                    'LOGIN',
++                    `Account interrupt at ${url.hostname}${url.pathname} requires manual attention or unsupported action`
++                )
++                return false
++            }
++
+             case 'UNKNOWN': {
+                 const rawUrl = detectedUrl
+                 const url = new URL(rawUrl)
+diff --git a/src/browser/auth/LoginStateDetector.ts b/src/browser/auth/LoginStateDetector.ts
+index 81387d3..53335eb 100644
+--- a/src/browser/auth/LoginStateDetector.ts
++++ b/src/browser/auth/LoginStateDetector.ts
+@@ -19,6 +19,7 @@ export type LoginState =
+     | 'PASSWORDLESS_SEND_CODE'
+     | 'OTP_CODE_ENTRY'
+     | 'PAGE_TRANSITION'
++    | 'ACCOUNT_INTERRUPT'
+     | 'UNKNOWN'
+     | 'CHROMEWEBDATA_ERROR'
+ 
+@@ -171,6 +172,9 @@ export class LoginStateDetector {
+         let foundStates = results.filter((s): s is LoginState => s !== null)
+ 
+         if (foundStates.length === 0) {
++            if (hostname === 'account.live.com' && url.pathname.toLowerCase().startsWith('/interrupt/')) {
++                return 'ACCOUNT_INTERRUPT'
++            }
+             return 'UNKNOWN'
+         }
+ 
+@@ -183,6 +187,9 @@ export class LoginStateDetector {
+         }
+ 
+         if (foundStates.length === 0) {
++            if (hostname === 'account.live.com' && url.pathname.toLowerCase().startsWith('/interrupt/')) {
++                return 'ACCOUNT_INTERRUPT'
++            }
+             return 'UNKNOWN'
+         }
+ 

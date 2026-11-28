@@ -4,6 +4,8 @@
 
 | 目录 | 任务 | 说明 |
 | --- | --- | --- |
+| `common/` | 青龙共用辅助脚本 | 飞书私聊推送（`feishu_private_notify.js`）、每日签到通用封装（`daily_checkin_common.js`）与蔚来签到包装器（`weilai_checkin.js`） |
+| `bing-rewards/` | 微软 Rewards 每日任务 | 自定义青龙 Playwright 镜像、`v5` 补丁、09:15–12:15 随机启动、慢速防风控配置、验证码桥接与飞书汇总 |
 | `glados-checkin/` | GLaDOS 每日签到 | 纯 API + 远程 Browserless，自动处理 Turnstile |
 | `perkradar/` | PerkRadar 采集与飞书推送 | 常驻采集器 + 青龙定时推送 |
 | `cmcc-checkin/` | 中国移动江苏 act2510 签到 | 自动续期：autoLogin → QWHD → 039014 → 江苏 Cookie |

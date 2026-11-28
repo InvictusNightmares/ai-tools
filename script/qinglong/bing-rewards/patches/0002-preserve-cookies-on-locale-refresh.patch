@@ -1,0 +1,28 @@
+diff --git a/src/browser/BrowserManager.ts b/src/browser/BrowserManager.ts
+--- a/src/browser/BrowserManager.ts
++++ b/src/browser/BrowserManager.ts
+@@ -111,11 +111,12 @@ class BrowserManager {
+             const savedFingerprint = shouldUseFingerprint ? session?.fingerprint : null
+             const profileMatches =
+                 !savedFingerprint || this.userAgentManager.matchesFingerprint(savedFingerprint, this.bot.isMobile)
+-            const reuseFingerprint =
+-                savedFingerprint && profileMatches && fingerprintMatchesLocale(savedFingerprint, this.bot.accountLocale)
++            const localeMatches =
++                !savedFingerprint || fingerprintMatchesLocale(savedFingerprint, this.bot.accountLocale)
++            const reuseFingerprint = Boolean(savedFingerprint && profileMatches && localeMatches)
+ 
+             const restoredStorageState =
+-                !fresh && session?.storageState && reuseFingerprint ? session.storageState : null
++                !fresh && session?.storageState && savedFingerprint && profileMatches ? session.storageState : null
+ 
+             if (restoredStorageState && session) {
+                 const ageMinutes = Math.max(0, Math.floor((Date.now() - session.updatedAt) / 60000))
+@@ -132,7 +133,7 @@ class BrowserManager {
+                 this.bot.logger.warn(
+                     this.bot.isMobile,
+                     'SESSION',
+-                    `Discarding saved cookies because the paired fingerprint is unavailable or incompatible | shouldUseFingerprint=${shouldUseFingerprint} | savedFingerprintPresent=${!!session.fingerprint} | profileMatch=${profileMatches} | localeMatch=${!!savedFingerprint && fingerprintMatchesLocale(savedFingerprint, this.bot.accountLocale)}`
++                    `Discarding saved cookies because the paired fingerprint is unavailable or incompatible | shouldUseFingerprint=${shouldUseFingerprint} | savedFingerprintPresent=${!!session.fingerprint} | profileMatch=${profileMatches} | localeMatch=${localeMatches}`
+                 )
+             } else {
+                 this.bot.logger.info(

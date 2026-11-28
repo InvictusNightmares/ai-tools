@@ -1,0 +1,122 @@
+{
+  "sessionPath": "sessions",
+  "headless": true,
+  "clusters": 1,
+  "rewardsMode": "browser",
+  "errorDiagnostics": false,
+  "ensureStreakProtection": true,
+  "autoClaimPunchcardRewards": true,
+  "continueOnBotWarning": false,
+  "skipNonPointTasks": true,
+  "accountDelay": {
+    "min": "1min",
+    "max": "3min"
+  },
+  "taskDelay": {
+    "min": "15sec",
+    "max": "30sec"
+  },
+  "workers": {
+    "doDailySet": true,
+    "doClaimBonusPoints": true,
+    "doMorePromotions": true,
+    "doPunchCards": true,
+    "doAppPromotions": true,
+    "doOtherPromotions": true,
+    "doDesktopSearch": true,
+    "doMobileSearch": true,
+    "doBonusSearches": true,
+    "doDailyCheckIn": true,
+    "doReadToEarn": true,
+    "doActivateSearchPerk": true,
+    "doVisualSearch": true
+  },
+  "activities": {
+    "urlReward": true,
+    "searchOnBing": true
+  },
+  "searchOnBingLocalQueries": false,
+  "globalTimeout": "50sec",
+  "searchSettings": {
+    "scrollRandomResults": false,
+    "clickRandomResults": false,
+    "runOnZeroPoints": false,
+    "maxBonusSearches": 10,
+    "maxSearchOnBingAttempts": 3,
+    "parallelSearching": false,
+    "clusterSearch": false,
+    "useAccountLocale": true,
+    "queryEngines": [
+      "local"
+    ],
+    "searchResultVisitTime": "20sec",
+    "searchDelay": {
+      "min": "6min",
+      "max": "12min"
+    },
+    "readDelay": {
+      "min": "6min",
+      "max": "11min"
+    }
+  },
+  "experimental": {
+    "blockMedia": false,
+    "edgeBrowsing": true,
+    "browserSearchApiReport": false
+  },
+  "debugLogs": false,
+  "consoleLogFilter": {
+    "enabled": false,
+    "mode": "whitelist",
+    "levels": [
+      "error",
+      "warn"
+    ],
+    "keywords": [
+      "starting account",
+      "Fraud_UserWarning_BotScore_UX"
+    ],
+    "regexPatterns": []
+  },
+  "proxy": {
+    "queryEngine": true,
+    "ignoreCertificateErrors": false
+  },
+  "webhook": {
+    "discord": {
+      "enabled": false,
+      "url": ""
+    },
+    "telegram": {
+      "enabled": false,
+      "botToken": "",
+      "chatId": ""
+    },
+    "ntfy": {
+      "enabled": false,
+      "url": "",
+      "topic": "",
+      "token": "",
+      "title": "Microsoft-Rewards-Script",
+      "tags": [
+        "bot",
+        "notify"
+      ],
+      "priority": 3
+    },
+    "webhookLogFilter": {
+      "enabled": false,
+      "mode": "whitelist",
+      "levels": [
+        "error"
+      ],
+      "keywords": [
+        "starting account",
+        "select number",
+        "collected",
+        "Fraud_UserWarning_BotScore_UX"
+      ],
+      "regexPatterns": []
+    }
+  }
+}

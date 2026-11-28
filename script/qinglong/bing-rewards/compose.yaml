@@ -1,0 +1,38 @@
+name: qinglong
+
+services:
+  qinglong:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      network: host
+    image: agentbox-qinglong:2.24.0-playwright
+    container_name: qinglong
+    pull_policy: never
+    restart: unless-stopped
+    tty: true
+    shm_size: 1gb
+    ports:
+      - "127.0.0.1:5700:5700"
+    environment:
+      TZ: Asia/Shanghai
+      PLAYWRIGHT_BROWSERS_PATH: /ql/data/browsers
+      HTTP_PROXY: ${AGENTBOX_PROXY_URL:-http://172.18.0.1:7898}
+      HTTPS_PROXY: ${AGENTBOX_PROXY_URL:-http://172.18.0.1:7898}
+      NO_PROXY: localhost,127.0.0.1,::1,172.18.0.0/16,perkradar,agentbox-headless-chrome,headless-chrome
+    volumes:
+      - ./data:/ql/data
+    networks:
+      - agentbox-egress
+    dns:
+      - 172.18.0.1
+    logging:
+      driver: local
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+networks:
+  agentbox-egress:
+    external: true
+    name: ${AGENTBOX_EGRESS_NETWORK:-agentbox-egress}
