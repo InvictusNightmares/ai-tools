@@ -1,9 +1,9 @@
 # Johnshall Shadowrocket ad IP-CIDR rules converted for Mihomo ipcidr rule-provider.
-# Source: https://github.com/Johnshall/Shadowrocket-ADBlock-Rules-Forever/blob/fff7295b1665d300afb7e17110688ff996ad7b10/sr_ad_only.conf
-# Source commit: fff7295b1665d300afb7e17110688ff996ad7b10
-# Source SHA-256: cba9d39304e840cd8a262032b99e6076de55a2443ce037c7826820d5fb01f408
+# Source: https://github.com/Johnshall/Shadowrocket-ADBlock-Rules-Forever/blob/fcaa2c7036cc13461e51c0ae01bfeb981d8e329f/sr_ad_only.conf
+# Source commit: fcaa2c7036cc13461e51c0ae01bfeb981d8e329f
+# Source SHA-256: 4d2d2202cab0d81e456f46b6bf5d953e9afde1a4133b53cdbc56709cf0df513a
 # Transform: extracted IP-CIDR entries; removed Shadowrocket section/comments, Reject policy, and exact duplicates; preserved rule order.
-# Effective rules: 128 IP-CIDRs (from 54015 total effective rules; 29 exact duplicates removed).
+# Effective rules: 128 IP-CIDRs (from 54400 total effective rules; 29 exact duplicates removed).
 # License: CC BY-SA 4.0, same as the source (https://creativecommons.org/licenses/by-sa/4.0/).
 
 101.227.14.80/29
