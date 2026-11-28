@@ -1,2 +1,5 @@
 .session.local
 *.session.json
+*.state.json
+*.state.json.lock
+cmcc_profile*.json

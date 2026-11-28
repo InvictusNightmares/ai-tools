@@ -249,6 +249,23 @@ class CaptureTests(unittest.TestCase):
         self.assertEqual(len(records), 1, "native token exchanges must not be filtered out")
         self.assertEqual(records[0]["kind"], "native-api")
 
+    def test_uamrandcodelogin_auto_login_is_tagged_as_native_auto_login(self):
+        auto = self.flow(
+            "https://client.app.coc.10086.cn/biz-orange/LN/uamrandcodelogin/autoLogin",
+            b"SYNTHETIC_ENCRYPTED_AUTO_LOGIN",
+        )
+        auto_slash = self.flow(
+            "https://client.app.coc.10086.cn/biz-orange/LN/uamrandcodelogin/autoLogin/",
+            b"SYNTHETIC_ENCRYPTED_AUTO_LOGIN",
+        )
+        other = self.flow(
+            "https://client.app.coc.10086.cn/biz-orange/LN/uamrandcodelogin/sendSms",
+            b"SYNTHETIC_ENCRYPTED_SMS",
+        )
+        self.assertEqual(self.capture.capture_kind(auto), "native-auto-login")
+        self.assertEqual(self.capture.capture_kind(auto_slash), "native-auto-login")
+        self.assertEqual(self.capture.capture_kind(other), "native-login")
+
     def test_jiangsu_sso_is_exactly_scoped(self):
         for path in [
             "/vw/gateway/auth/auth/jtWx10086AuthLogin",

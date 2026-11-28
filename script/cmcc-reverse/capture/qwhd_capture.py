@@ -126,10 +126,10 @@ def capture_kind(flow: http.HTTPFlow) -> str | None:
             "/hyl/content/provider-user/sso/china/mobile",
         }:
             return "jiangsu-sso"
-    if host in NATIVE_HOSTS and "/uamonekeylogin/" in path:
-        return "native-auto-login" if path.endswith("/autoLogin") else "native-login"
+    if host in NATIVE_HOSTS and ("/uamonekeylogin/" in path or "/uamrandcodelogin/" in path):
+        return "native-auto-login" if path.rstrip("/").endswith("/autoLogin") else "native-login"
     if host in NATIVE_HOSTS and path.startswith("/biz-orange/"):
-        return "native-api"
+        return "native-auto-login" if path.rstrip("/").endswith("/autoLogin") else "native-api"
     return None
 
 
